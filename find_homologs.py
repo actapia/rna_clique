@@ -17,7 +17,6 @@ def parse_arguments():
         type=re.compile,
         default=re.compile("^.*g([0-9]+)_i([0-9]+)")
     )
-    parser.add_argument("--gene-group", "-g", type=int, default=1)
     parser.add_argument("-e", "--evalue", type=float, default=1e-50)
     parser.add_argument(
         "-n",
