@@ -70,7 +70,4 @@ class BlastnSearch:
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
-        #self._hits = tuple(BlastHit.parse_blast_lines(out.decode("utf-8").splitlines()))
-        # for l in proc.stderr:
-        #     print(l)
         self._hits = pd.read_csv(proc.stdout, names=self._out_columns, delim_whitespace=True)
