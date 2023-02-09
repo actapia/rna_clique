@@ -25,6 +25,12 @@ def parse_arguments():
         default=1,
         help="use top n matches"
     )
+    parser.add_argument(
+        "--keep-all",
+        "-k",
+        action="store_true",
+        help="keep all pairs in case of a tie"
+    )
     return parser.parse_args()
 
 def parse_seq_id(regex, s):
@@ -87,6 +93,7 @@ def main():
             ).reset_index(drop=True),
             groupby=merge_columns
         ),
+        keep=["first", "all"][args.keep_all]
     )    
     dedup = best_matches[merge_columns].drop_duplicates()
     for match in dedup.itertuples(index=False):
