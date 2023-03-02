@@ -128,80 +128,122 @@ def highest_bitscores(
         )["bitscore"].nlargest(n, **kwargs).index.get_level_values(-1)
     ]
 
+class HomologFinder:
+    merge_columns = ["qgene", "sgene"]
+    
+    def __init__(self, regex: str, top_n: int, evalue: float, keep_all: bool):
+        # self.regex = regex
+        # self.top_n = top_n
+        # self.evalue = evalue
+        # Partially apply some functions to make the code below less repetitive.
+        parse = functools.partial(parse_seq_id, regex)
+        self.gm = functools.partial(
+            gene_matches,
+            parse=parse,
+            evalue=evalue,
+            n=top_n,
+            additional_columns=["gaps", "nident"]
+        )
+        self.keep_all = keep_all
+
+    def get_match_table(
+            self,
+            transcripts1: str,
+            transcripts2: str
+    ) -> pd.DataFrame:
+        # Search in both the forward and reverse direction to get the isotigs
+        # (and corresponding gene IDs) in one sample that best match genes in
+        # the other.
+        eprint("Getting forward matches.")
+        forward_matches = self.gm(
+            path1=transcripts1,
+            path2=transcripts2
+        )
+        eprint("Getting backward matches.")
+        backward_matches = self.gm(
+            path1=transcripts2,
+            path2=transcripts1
+        )
+        # We rename the columns in the reverse matches to enable merging.
+        backward_matches.rename(
+            columns={
+                a+v : b+v
+                for (a,b) in [("q","s"),("s","q")]
+                for v in ["seqid","gene","iso"]
+            },
+            inplace=True
+        )
+        # Compute the "intersection" of the forward and reverse matches.
+        #
+        # A row (hit) in either dataframe with query gene ID q and subject gene ID s
+        # is kept if and only if there is a row with query gene ID q and subject
+        # gene ID s in both dataframes.
+        #
+        # The resulting dataframe has two columns---index_x and index_y---that
+        # indicate where in the original dataframes the rows were found.
+        #
+        # (Keep in mind that we swapped the order order of query and subject in the
+        # reverse dataframe, so "query" is always something in sample 1, and
+        # "subject" is always something in sample 2 from now on.)
+        intersection = pd.merge(
+            forward_matches[self.merge_columns].reset_index(),
+            backward_matches[self.merge_columns].reset_index(),
+            how="inner",
+            on=self.merge_columns
+        )
+        # Get the hits (and subject gene ID) with the highest bitscore for each
+        # query gene.
+        return highest_bitscores(
+            # Get the hits with highest bitscore for each pair of homologous genes.
+            highest_bitscores(
+                # Get the original rows back from the forward and reverse
+                # dataframes.
+                pd.concat(
+                    [
+                        forward_matches.loc[
+                            intersection["index_x"].drop_duplicates()
+                        ],
+                        backward_matches.loc[
+                            intersection["index_y"].drop_duplicates()
+                        ],
+                    ]
+                ).reset_index(drop=True),
+                groupby=self.merge_columns,
+                # TODO: Decide if "all" is the right choice here.
+                keep="all"
+            ),
+            keep=["first", "all"][self.keep_all]
+        )        
+        # Compute distances at a gene level.
+        # best_matches["dist"] = \
+        #     best_matches["nident"] / \
+        #     (best_matches["length"] - best_matches["gaps"])
+        # Ignore rows with identical query and subject gene IDs.
+        # return best_matches[merge_columns + ["dist"]].drop_duplicates()
+
+    @classmethod
+    def without_duplicates(
+            cls,
+            df: pd.DataFrame,
+            columns: list[str] = None
+    ) -> pd.DataFrame:
+        if columns is None:
+            columns = cls.merge_columns
+        return df[columns].drop_duplicates()
+
 def main():
     args = parse_arguments()
-    # Partially apply some functions to make the code below less repetitive.
-    parse = functools.partial(parse_seq_id, args.regex)
-    gm = functools.partial(
-        gene_matches,
-        parse=parse,
-        evalue=args.evalue,
-        n=args.top_n,
-        additional_columns=["gaps", "nident"]
+    match_finder = HomologFinder(
+        args.regex,
+        args.top_n,
+        args.evalue,
+        args.keep_all
     )
-    # Search in both the forward and reverse direction to get the isotigs
-    # (and corresponding gene IDs) in one sample that best match genes in the
-    # other.
-    eprint("Getting forward matches.")
-    forward_matches = gm(path1=args.transcripts1, path2=args.transcripts2)
-    eprint("Getting backward matches.")
-    backward_matches = gm(path1=args.transcripts2, path2=args.transcripts1)
-    # We rename the columns in the reverse matches to enable merging.
-    backward_matches.rename(
-        columns={
-            a+v : b+v
-            for (a,b) in [("q","s"),("s","q")]
-            for v in ["seqid","gene","iso"]
-        },
-        inplace=True
+    best_matches = match_finder.get_match_table(
+        args.transcripts1,
+        args.transcripts2,        
     )
-    # Compute the "intersection" of the forward and reverse matches.
-    #
-    # A row (hit) in either dataframe with query gene ID q and subject gene ID s
-    # is kept if and only if there is a row with query gene ID q and subject
-    # gene ID s in both dataframes.
-    #
-    # The resulting dataframe has two columns---index_x and index_y---that
-    # indicate where in the original dataframes the rows were found.
-    #
-    # (Keep in mind that we swapped the order order of query and subject in the
-    # reverse dataframe, so "query" is always something in sample 1, and
-    # "subject" is always something in sample 2 from now on.)
-    merge_columns = ["qgene", "sgene"]
-    intersection = pd.merge(
-        forward_matches[merge_columns].reset_index(),
-        backward_matches[merge_columns].reset_index(),
-        how="inner",
-        on=merge_columns
-    )
-    # Get the hits (and subject gene ID) with the highest bitscore for each
-    # query gene.
-    best_matches = highest_bitscores(
-        # Get the hits with highest bitscore for each pair of homologous genes.
-        highest_bitscores(
-            # Get the original rows back from the forward and reverse
-            # dataframes.
-            pd.concat(
-                [
-                    forward_matches.loc[
-                        intersection["index_x"].drop_duplicates()
-                    ],
-                    backward_matches.loc[
-                        intersection["index_y"].drop_duplicates()
-                    ],
-                ]
-            ).reset_index(drop=True),
-            groupby=merge_columns,
-            # TODO: Decide if "all" is the right choice here.
-            keep="all"
-        ),
-        keep=["first", "all"][args.keep_all]
-    )
-    # Compute distances at a gene level.
-    best_matches["dist"] = \
-        best_matches["nident"] / (best_matches["length"] - best_matches["gaps"])
-    # Ignore rows with identical query and subject gene IDs.
-    dedup = best_matches[merge_columns + ["dist"]].drop_duplicates()
+    dedup = match_finder.without_duplicates(best_matches)
     if not args.quiet:
         for match in dedup.itertuples(index=False):
             print(*match)
