@@ -131,7 +131,14 @@ def highest_bitscores(
 class HomologFinder:
     merge_columns = ["qgene", "sgene"]
     
-    def __init__(self, regex: str, top_n: int, evalue: float, keep_all: bool):
+    def __init__(
+            self,
+            regex: str,
+            top_n: int,
+            evalue: float,
+            keep_all: bool,
+            **blast_kwargs
+    ):
         # self.regex = regex
         # self.top_n = top_n
         # self.evalue = evalue
@@ -142,7 +149,8 @@ class HomologFinder:
             parse=parse,
             evalue=evalue,
             n=top_n,
-            additional_columns=["gaps", "nident"]
+            additional_columns=["gaps", "nident"],
+            **blast_kwargs
         )
         self.keep_all = keep_all
 

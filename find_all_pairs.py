@@ -5,6 +5,7 @@ import functools
 import itertools
 from pathlib import Path
 from find_homologs import HomologFinder
+from blastdb_cache import BlastDBCache
 from joblib import Parallel, delayed
 from tqdm import tqdm
 
@@ -12,6 +13,7 @@ def handle_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--inputs", nargs="+", type=Path, required=True)
     parser.add_argument("-O", "--output-dir", type=Path, required=True)
+    parser.add_argument("-D", "--db-cache-dir", type=Path)
     parser.add_argument(
         "--gene-regex",
         "-r",
@@ -70,11 +72,29 @@ def make_output_path(dir_, t1, t2, regex=None, extension="pkl"):
     if regex:
         t1 = regex.match(t1).group(1)
         t2 = regex.match(t2).group(1)
-    return dir_ / ("{}--{}.{}".format(t1, t2, extension))    
+    return dir_ / ("{}--{}.{}".format(t1, t2, extension))
+
+def make_one_db(db_loc, seq_file_path):
+    cache = BlastDBCache(db_loc)
+    cache.makedb(seq_file_path)
+    return cache
+
+def make_all_dbs(db_loc, seqs, jobs=1):
+    cdict = {}
+    for cache in Parallel(n_jobs=jobs)(
+            delayed(make_one_db)(db_loc, p) for p in seqs
+    ):
+        cdict |= cache._cache
+    cache = BlastDBCache(db_loc)
+    cache._cache = cdict
+    return cache
 
 def main():
     args = handle_arguments()
     args.output_dir.mkdir(exist_ok=True)
+    cache = None
+    if args.db_cache_dir:
+        cache = make_all_dbs(args.db_cache_dir, args.inputs, jobs=args.jobs)        
     fh = functools.partial(
         find_homologs_and_save,
         hf_args=[
@@ -82,7 +102,10 @@ def main():
             args.top_n,
             args.evalue,
             args.keep_all
-        ]
+        ],
+        hf_kwargs={
+            "db_cache": cache
+        }
     )
     mop = functools.partial(
         make_output_path,

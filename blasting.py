@@ -1,6 +1,8 @@
 import subprocess
 import pandas as pd
-from typing import List
+from typing import List, Optional
+
+from blastdb_cache import BlastDBCache
 
 default_out_columns = ['qseqid',
  'sseqid',
@@ -35,7 +37,8 @@ class BlastnSearch:
             seq2_path: str,
             evalue: float = 1e-20,
             out_columns: List[str] = default_out_columns,
-            additional_columns: List[str] = []
+            additional_columns: List[str] = [],
+            db_cache: Optional[BlastDBCache] = None
     ):
         """Construct a BlastnSearch with the specified settings.
 
@@ -72,13 +75,14 @@ class BlastnSearch:
             evalue (float):     Expect value cutoff to use in BLAST search.
             out_columns:        Output columns to include in results.
             additional_columns: Additional output columns to include in results.
-
+            db_cache:           BlastDBCache that tells where to find BLAST DBs.
         """
         self._seq1_path = seq1_path
         self._seq2_path = seq2_path
         self._evalue = evalue
         self._hits = None
         self._out_columns = list(out_columns + additional_columns)
+        self._db_cache = db_cache
 
     @property
     def seq1_path(self) -> str:
@@ -96,6 +100,11 @@ class BlastnSearch:
         return self._evalue
 
     @property
+    def db_cache(self) -> Optional[BlastDBCache]:
+        """Return a cache of BLAST DBs to be used in the search."""
+        return self._db_cache
+
+    @property
     def hits(self) -> pd.DataFrame:
         """Return a dataframe containing this search's BLAST results."""
         if self._hits is None:
@@ -108,20 +117,24 @@ class BlastnSearch:
     # def __iter__(self):
     #     yield from self.hits
 
+    def _build_blast_command(self):
+        command = ["blastn"]
+        if self._db_cache and self.seq1_path in self._db_cache:
+            command = command + ["-db", self._db_cache[self.seq1_path]]
+        else:
+            command = command + ["-subject", self.seq1_path]
+        command = command + [
+            "-evalue",
+            str(self.evalue),
+            "-outfmt",
+            " ".join(["6"] + self._out_columns)
+        ]
+        return command
+            
+
     def _get_hits(self):
         proc = subprocess.Popen(
-            [
-                "blastn",
-                "-subject",
-                self.seq1_path,
-                "-query",
-                self.seq2_path,
-                "-evalue",
-                str(self.evalue),
-                "-outfmt",
-                " ".join(["6"] + self._out_columns)
-            ]
-            ,
+            self._build_blast_command(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
