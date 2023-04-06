@@ -1,6 +1,7 @@
 import subprocess
 import pandas as pd
 from typing import List, Optional
+import sys
 
 from blastdb_cache import BlastDBCache
 
@@ -124,11 +125,14 @@ class BlastnSearch:
         else:
             command = command + ["-subject", self.seq1_path]
         command = command + [
+            "-query",
+            str(self.seq2_path),
             "-evalue",
             str(self.evalue),
             "-outfmt",
             " ".join(["6"] + self._out_columns)
         ]
+        #print(" ".join(command), file=sys.stderr)
         return command
             
 

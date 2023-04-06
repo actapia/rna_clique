@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-declare -a fasta_files
+if ! [[ -v INCSEQ ]]; then
+    INCSEQ="./incseq.sh"
+fi
 jobs=$(($(nproc) - 1))
 step=1000
 transcripts="transcripts.fasta"
 clean_level=0
+OUTDIR_ROOT="."
+declare -a fasta_files
 while [ "$#" -gt 0 ]; do
     case "$1" in
 	"-j" | "--jobs")
@@ -30,7 +34,10 @@ while [ "$#" -gt 0 ]; do
 	    shift
 	    clean_level="$1"
 	    ;;
-
+	"-O" | "--out")
+	    shift
+	    OUTDIR_ROOT="$1"
+	    ;;
 	*)
 	    fasta_files+=("$1")
 	    ;;
@@ -52,5 +59,7 @@ if ! [[ -v max ]]; then
     done
 fi
 export clean_level
->&2 echo "Running $(bash incseq.sh "$min" "$step" "$max" | wc -l) tests with $jobs jobs."
-bash incseq.sh "$min" "$step" "$max" | TRY_PARAMS_JOBS="$jobs" bash try_params.sh -n "${fasta_files[@]}"
+export OUTDIR_ROOT
+>&2 echo "Incseq: $INCSEQ"
+>&2 echo "Running $("$INCSEQ" "$min" "$step" "$max" | wc -l) tests with $jobs jobs."
+"$INCSEQ" "$min" "$step" "$max" | TRY_PARAMS_JOBS="$jobs" bash try_params.sh -n "${fasta_files[@]}" --keep-all

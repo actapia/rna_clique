@@ -10,6 +10,8 @@ readonly sample_regex_flag="--sample-regex"
 readonly keep_all_flag="--keep-all"
 readonly output_graph_flag="--output-graph"
 readonly gene_regex_flag="--gene-regex"
+readonly jobs_flag="--jobs"
+readonly cache_dir_flag="--cache-dir"
 readonly help_flag="--help"
 transcripts_fn="transcripts.fasta"
 top_n=10000
@@ -20,6 +22,7 @@ sample_regex="^(.*?)_.*$"
 do_help=false
 evalue=1e-99
 keep_all=false
+jobs=1
 declare -A ARG_HELP
 ARG_HELP["$top_n_flag"]="Top n genes to select."
 ARG_HELP["$top_N_flag"]="Count a match if isoform is within top N in both directions."
@@ -32,6 +35,8 @@ ARG_HELP["$sample_regex_flag"]="Regular expression matching sample names."
 ARG_HELP["$gene_regex_flag"]="Regular expression matching gene and isoform IDs."
 ARG_HELP["$keep_all_flag"]="Keep all matches in case of a tie."
 ARG_HELP["$output_graph_flag"]="Path to output graph."
+ARG_HELP["$jobs_flag"]="Number of parallel jobs to use."
+ARG_HELP["$cache_dir_flag"]="Directory in which to store BLAST DBs."
 ARG_HELP["$help_flag"]="Show this help and exit."
 declare -a dirlist
 while [ "$#" -gt 0 ]; do
@@ -73,15 +78,21 @@ while [ "$#" -gt 0 ]; do
 	    gene_regex="$1"
 	    ;;
 	"$keep_all_flag")
-	    shift;
-	    keep_all="$1"
+	    keep_all=true
 	    ;;
 	"$output_graph_flag")
 	    shift;
 	    output_graph="$1"
 	    ;;
-	"$help_flag")
+	"$jobs_flag")
 	    shift;
+	    jobs="$1"
+	    ;;
+	"$cache_dir_flag")
+	    shift;
+	    cache_dir="$1"
+	    ;;
+	"$help_flag")
 	    do_help=true
 	    ;;
 	*)
@@ -163,18 +174,25 @@ if ! [[ -v output_graph ]]; then
     >&2 echo "Missing required argument $output_graph_flag."
     exit 1
 fi
+cd_flag=
+if [[ -v cache_dir ]]; then
+    cd_flag="-D $cache_dir"
+fi
 if [ "$keep_all" = true ]; then
     ka_flag="-k"
 else
     ka_flag=
 fi
 set -e
-bash select_top_genes/select_top_sets_all.sh -t "$transcripts_fn" -n "$top_n" -o "$out_dir_1" -p "$pattern" -j 1 "${dirlist[@]}"
-python find_all_pairs.py -i "$out_dir_1"/*.fasta -O "$out_dir_2" -r "$gene_regex" -R "$sample_regex" -e "$evalue" -n "$top_N" $ka_flag -j 1
+bash select_top_genes/select_top_sets_all.sh -t "$transcripts_fn" -n "$top_n" -o "$out_dir_1" -p "$pattern" -j "$jobs" "${dirlist[@]}"
+python find_all_pairs.py -i "$out_dir_1"/*.fasta -O "$out_dir_2" -r "$gene_regex" -R "$sample_regex" -e "$evalue" -n "$top_N" $ka_flag $cd_flag -j "$jobs"
 python build_graph.py -i "$out_dir_2"/*.pkl -o "$output_graph"
-if [[ -v "$clean_level" ]]; then
+if [[ -v clean_level ]]; then
     if [ "$clean_level" -ge 1 ]; then
 	rm -r "$out_dir_1"/*.fasta
+	if [ -n "$cache_dir" ]; then
+	    rm -r "$cache_dir"
+	fi
     fi
     if [ "$clean_level" -ge 2 ]; then
 	rm -r "$out_dir_2"/*.pkl

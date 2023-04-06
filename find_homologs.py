@@ -1,5 +1,6 @@
 import argparse
 import sys
+import pickle
 import re
 import functools
 from blasting import BlastnSearch
@@ -137,6 +138,7 @@ class HomologFinder:
             top_n: int,
             evalue: float,
             keep_all: bool,
+            debug: bool = False,
             **blast_kwargs
     ):
         # self.regex = regex
@@ -153,6 +155,7 @@ class HomologFinder:
             **blast_kwargs
         )
         self.keep_all = keep_all
+        self.debug = debug
 
     def get_match_table(
             self,
@@ -162,12 +165,14 @@ class HomologFinder:
         # Search in both the forward and reverse direction to get the isotigs
         # (and corresponding gene IDs) in one sample that best match genes in
         # the other.
-        eprint("Getting forward matches.")
+        if self.debug:
+            eprint("Getting forward matches.")
         forward_matches = self.gm(
             path1=transcripts1,
             path2=transcripts2
         )
-        eprint("Getting backward matches.")
+        if self.debug:
+            eprint("Getting backward matches.")
         backward_matches = self.gm(
             path1=transcripts2,
             path2=transcripts1
@@ -193,12 +198,15 @@ class HomologFinder:
         # (Keep in mind that we swapped the order order of query and subject in the
         # reverse dataframe, so "query" is always something in sample 1, and
         # "subject" is always something in sample 2 from now on.)
-        intersection = pd.merge(
-            forward_matches[self.merge_columns].reset_index(),
-            backward_matches[self.merge_columns].reset_index(),
-            how="inner",
-            on=self.merge_columns
-        )
+        if forward_matches.empty or backward_matches.empty:
+            intersection = pd.DataFrame(columns=self.merge_columns + ["index_x", "index_y"])
+        else:
+            intersection = pd.merge(
+                forward_matches[self.merge_columns].reset_index(),
+                backward_matches[self.merge_columns].reset_index(),
+                how="inner",
+                on=self.merge_columns
+            )
         # Get the hits (and subject gene ID) with the highest bitscore for each
         # query gene.
         return highest_bitscores(

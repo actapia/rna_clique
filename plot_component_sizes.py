@@ -26,7 +26,7 @@ def handle_arguments():
     parser.add_argument("-r", "--ratio-plot", type=Path)
     parser.add_argument("-d", "--density-plot", type=Path)
     parser.add_argument("-g", "--graphviz", type=Path)
-    parser.add_argument("-x", "--export", nargs="+")
+    parser.add_argument("-x", "--export", nargs="+", type=Path)
     parser.add_argument("--samples", type=int)
     parser.add_argument(
         "--statistics",

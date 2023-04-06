@@ -4,7 +4,7 @@ import multiprocessing
 import functools
 import itertools
 from pathlib import Path
-from find_homologs import HomologFinder
+from find_homologs import HomologFinder, eprint
 from blastdb_cache import BlastDBCache
 from joblib import Parallel, delayed
 from tqdm import tqdm
@@ -82,7 +82,7 @@ def make_one_db(db_loc, seq_file_path):
 def make_all_dbs(db_loc, seqs, jobs=1):
     cdict = {}
     for cache in Parallel(n_jobs=jobs)(
-            delayed(make_one_db)(db_loc, p) for p in seqs
+            delayed(make_one_db)(db_loc, p) for p in tqdm(seqs)
     ):
         cdict |= cache._cache
     cache = BlastDBCache(db_loc)
@@ -94,6 +94,8 @@ def main():
     args.output_dir.mkdir(exist_ok=True)
     cache = None
     if args.db_cache_dir:
+        args.db_cache_dir.mkdir(exist_ok=True)
+        eprint("Building BLAST DBs.")
         cache = make_all_dbs(args.db_cache_dir, args.inputs, jobs=args.jobs)        
     fh = functools.partial(
         find_homologs_and_save,

@@ -32,7 +32,8 @@ class BlastDBCache:
             stderr=subprocess.DEVNULL
         )
         proc.communicate()
-        proc.check_returncode()
+        if proc.returncode:
+            raise subprocess.CalledProcessError(proc.returncode, proc.args)
         self._cache[seq_file_path] = db_name
 
     def __getitem__(self, k):
