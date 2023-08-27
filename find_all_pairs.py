@@ -5,9 +5,12 @@ import functools
 import itertools
 from pathlib import Path
 from find_homologs import HomologFinder, eprint
-from blastdb_cache import BlastDBCache
+from simple_blast import BlastDBCache
 from joblib import Parallel, delayed
+import os
 from tqdm import tqdm
+
+default_sample_regex = re.compile(os.environ.get("SAMPLE_RE", "^(.*?)_.*$"))
 
 def handle_arguments():
     parser = argparse.ArgumentParser()
@@ -24,7 +27,7 @@ def handle_arguments():
         "--sample-regex",
         "-R",
         type=re.compile,
-        default=re.compile("^(.*?)_.*$")
+        default=default_sample_regex
     )
     parser.add_argument("-e", "--evalue", type=float, default=1e-50)
     parser.add_argument(

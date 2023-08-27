@@ -21,6 +21,7 @@ declare -a fasta_files
 declare -a other
 out_root="."
 out_fn="top_n_tests_%d_samples"
+do_shuffle=true
 while [ "$#" -gt 0 ]; do
     case "$1" in
 	"-O" | "--out-dir")
@@ -30,6 +31,9 @@ while [ "$#" -gt 0 ]; do
 	"-o" | "--out")
 	    shift
 	    out_fn="$1"
+	    ;;
+	"--no-shuffle")
+	    do_shuffle=false;
 	    ;;
 	-*)
 	    other+=("$1")
@@ -46,7 +50,11 @@ done
 # set -x
 declare -a shuffled
 export -f get_seeded_random
-readarray -t shuffled < <(shuf --random-source=<(get_seeded_random 485) -e "${fasta_files[@]}")
+if [ "$do_shuffle" = true ]; then
+    readarray -t shuffled < <(shuf --random-source=<(get_seeded_random 485) -e "${fasta_files[@]}")
+else
+    shuffled=("${fasta_files[@]}")
+fi
 declare -a current
 # for f in "${shuffled[@]}"; do
 #     echo "$f"

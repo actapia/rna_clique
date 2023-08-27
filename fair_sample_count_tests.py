@@ -10,6 +10,8 @@ from datetime import datetime, timedelta
 from dataclasses import dataclass
 from queue import PriorityQueue
 
+from find_homologs import eprint
+
 
 smallest_size = 4
 
@@ -17,33 +19,40 @@ def handle_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("-O", "--out-dir", type=Path, default=Path("."))
     parser.add_argument("-C", "--aggressive-cleanup", action="store_true")
+    parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--dry-run", action="store_true")
     # parser.add_argument(
     #     "-o",
     #     "--out",
     #     type=Path,
     #     default="top_n_tests_{}_sampels"
     # )
+    return parse_args_and_remainder(parser)
+
+
+def parse_args_and_remainder(parser):
     args, remainder = parser.parse_known_args()
     args.fasta = []
-    rem = argparse.Namespace
+    rem = argparse.Namespace()
     while remainder:
         if remainder[0].startswith("-"):
-            key = remainder.pop()
+            key = remainder.pop(0)
             value = True
             if remainder and not remainder[0].startswith("-"):
-                value = remainder.pop()
+                value = remainder.pop(0)
             setattr(rem, key, value)
         else:
-            args.fasta.append(remainder.pop())
-    return args, remainder
+            args.fasta.append(remainder.pop(0))
+    return args, rem
 
 class TopnTest():
     def __init__(self, files, out_dir, args=None):
         if args is None:
             args = []
-        self.files = files
+        self.files = list(files)
         self.out_dir = out_dir
-        self.args = args
+        self.args = list(args)
 
     def _build_command(self):
         return [
@@ -57,6 +66,7 @@ class TopnTest():
     def run(self):
         command = self._build_command()
         proc = subprocess.Popen(
+            command
         )
         start = time.perf_counter()
         proc.communicate()
@@ -77,7 +87,7 @@ class SampleSizeElement:
 
 def make_arg_arr(d):
     args = []
-    for k, v in d.items():
+    for k, v in d.__dict__.items():
         args.append(k)
         if v is not True:
             args.append(v)
@@ -109,9 +119,22 @@ class CustomRemainingBar(tqdm.tqdm):
 
     def set_unknown(self):
         self.bar_format = self.base_format + " [{elapsed}<?]"
+
+#from IPython import embed
+
+def test_done(test_dir):
+    return test_dir.is_dir() and all(
+        out_dir.is_dir() and (out_dir / "graph.pkl").exists()
+        for out_dir in test_dir.glob("out_*")
+    )
         
 def main():
     args, remainder = handle_arguments()
+    args.out_dir.mkdir(exist_ok=True)
+    if args.seed is not None:
+        random.seed(args.seed)
+        with open(args.out_dir / "seed", "w") as seed_file:
+            seed_file.write(str(args.seed) + "\n")
     extra_args = make_arg_arr(remainder)
     subsets = {
         s: list(itertools.combinations(args.fasta, s))
@@ -122,6 +145,8 @@ def main():
         random.shuffle(s)
     sample_size_queue = PriorityQueue()
     sample_sizes = []
+    # from IPython import embed
+    # embed()
     for i in range(smallest_size, len(args.fasta) + 1):
         elem = SampleSizeElement(0, i)
         sample_sizes.append(elem)
@@ -134,14 +159,24 @@ def main():
             out_dir = args.out_dir / \
                 f"out_{elem.size}_samples" / \
                 f"shuffle_{elem.shuffles}"
-            out_dir.mkdir(parents=True, exist_ok=True)
-            task = TopnTest(files, out_dir, extra_args)
-            elem.time += task.run()
+            if not (args.resume and test_done(out_dir)):
+                if not args.dry_run:
+                    out_dir.mkdir(parents=True, exist_ok=True)
+                    task = TopnTest(files, out_dir, extra_args)
+                    elem.time += task.run()
+                else:
+                    eprint(f"Would generate {out_dir}.")
+            elif args.dry_run:
+                eprint(f"{out_dir} is done already. Skipping.")
             elem.shuffles += 1
             if args.aggressive_cleanup:
-                shutil.rmtree(out_dir)
+                if not args.dry_run:
+                    shutil.rmtree(out_dir)
+                else:
+                    eprint(f"Would remove {out_dir}")
             # Add back to queue.
-            sample_size_queue.put(elem)
+            if subsets[elem.size]:
+                sample_size_queue.put(elem)
             # Compute remaining time.
             if all(el.shuffles > 0 for el in sample_sizes):
                 prog.set_remaining(
@@ -155,3 +190,6 @@ def main():
             else:
                 prog.set_unknown()
             prog.update()
+
+if __name__ == "__main__":
+    main()

@@ -5,3 +5,10 @@ out_n*
 *.svg
 *.pkl
 *.graphml
+csv_out/
+*_dist/
+*_out/
+*.csv
+*.tar.*
+*.cyjs
+*.dot

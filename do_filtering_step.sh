@@ -18,7 +18,11 @@ top_n=10000
 top_N=1
 pattern="^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)"
 gene_regex="^.*g([0-9]+)_i([0-9]+)"
-sample_regex="^(.*?)_.*$"
+if [[ -v SAMPLE_RE ]]; then
+    sample_regex="$SAMPLE_RE"
+else
+    sample_regex="^(.*?)_.*$"
+fi
 do_help=false
 evalue=1e-99
 keep_all=false

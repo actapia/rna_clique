@@ -3,7 +3,7 @@ import sys
 import pickle
 import re
 import functools
-from blasting import BlastnSearch
+from simple_blast.blasting import BlastnSearch
 import numpy as np
 
 from fractions import Fraction
