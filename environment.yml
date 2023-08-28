@@ -1,0 +1,25 @@
+name: alignment
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python
+  - tqdm
+  - ipython
+  - pandas
+  - pyflakes
+  - joblib
+  - networkx
+  - matplotlib
+  - seaborn
+  - pydot
+  - lxml
+  - beautifulsoup4
+  - requests
+  - ipdb
+  - jupyterlab
+  - scikit-bio
+  - ipympl
+  - dendropy
+  - pygraphviz
+  - cmasher
