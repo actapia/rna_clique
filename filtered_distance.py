@@ -1,14 +1,22 @@
 import argparse
 import pickle
 import sys
+import functools
+
 import numpy as np
 import pandas as pd
-import functools
+import networkx as nx
+
 from functools import cached_property
 from fractions import Fraction
 from pathlib import Path
+from typing import Optional
+from collections.abc import Iterable, Iterator
+
 from plot_component_sizes import component_subgraphs
 from find_homologs import eprint
+from multiset_key_dict import MultisetKeyDict
+
 from IPython import embed
 from tqdm import tqdm
 
@@ -20,6 +28,9 @@ def get_ideal_components(g, samples):
     for s in component_subgraphs(g):
         if len(s) == samples and is_complete(s):
             yield s
+
+def id_(x):
+    return x
 
 def handle_arguments():
     parser = argparse.ArgumentParser()
@@ -68,16 +79,27 @@ def print_mat(m):
     np.savetxt(sys.stdout, m, fmt="%s", delimiter=' ')
 
 class SampleSimilarity:
-    def __init__(self, graph, comparison_dfs, sample_count=None):
+    def __init__(
+            self,
+            graph: nx.Graph,
+            comparison_dfs: Iterable[tuple[frozenset[str, str], pd.DataFrame]],
+            sample_count: Optional[int] = None
+    ):
         self.graph = graph
         self.comparison_dfs = comparison_dfs
         self._sample_count = sample_count
         self._samples = None
 
     @classmethod
-    def load_pickles(cls, pickles):
+    def load_pickles(
+            cls,
+            pickles
+    ) -> Iterator[tuple[frozenset[str, str], pd.DataFrame]]:
         for pick in pickles:
-            yield pd.read_pickle(pick)
+            comp_df = pd.read_pickle(pick)
+            qsample = comp_df["qsample"][0]
+            ssample = comp_df["ssample"][0]
+            yield frozenset((qsample, ssample)), comp_df
 
     @property
     def sample_count(self):
@@ -103,21 +125,26 @@ class SampleSimilarity:
             columns=["sample", "gene"]
         )
 
+    def restricted(self, comp_df):
+        return functools.reduce(
+            functools.partial(
+                restrict_to,
+                self.valid
+            ),
+            [
+                [a + b for b in ["sample", "gene"]]
+                for a in ["s", "q"]
+            ],
+            comp_df
+        )
+
+    def restricted_comparison_dfs(self):
+        for k, df in self.comparison_dfs.multiset_iter():
+            yield k, self.restricted(df)
+
     def _similarity_helper(self):
-        for comp_df in self.comparison_dfs:
-            qsample = comp_df["qsample"][0]
-            ssample = comp_df["ssample"][0]
-            restricted = functools.reduce(
-                functools.partial(
-                    restrict_to,
-                    self.valid
-                ),
-                [
-                    [a + b for b in ["sample", "gene"]]
-                    for a in ["s", "q"]
-                ],
-                comp_df
-            )
+        for (qsample, ssample), comp_df in self.comparison_dfs:
+            restricted = self.restricted(comp_df)
             dist = Fraction(
                 restricted["nident"].sum(),
                 restricted["length"].sum() - restricted["gaps"].sum()
@@ -126,12 +153,21 @@ class SampleSimilarity:
 
     @cached_property
     def similarities(self):
-        sims = dict(self._similarity_helper())
-        self._samples = sorted(list(set(s for p in sims for s in p)))
-        return sims | {frozenset([s]): 1 for s in self._samples}
+        sims = MultisetKeyDict(self._similarity_helper())
+        self._samples = sorted(list(sims.key_elements()))
+        #print(sims._dict)
+        res = sims | MultisetKeyDict(
+            {(s, s): 1 for s in self._samples}
+        )
+        #print(res._dict)
+        return res
 
     def get_dissimilarities(self):
-        return {p: 1 - s for (p, s) in self.similarities.items()}
+        #res = MultisetKeyDict(self.similarities)
+        #for k, v in res.
+        return MultisetKeyDict(
+            {p: 1 - s for (p, s) in self.similarities.items()}
+        )
 
     def get_similarities(self):
         return self.similarities
@@ -147,7 +183,7 @@ class SampleSimilarity:
             [
                 [
                     float(
-                        d[frozenset([a, b])]
+                        d[[a, b]]
                     ) for b in self.samples
                 ] for a in self.samples
             ]
@@ -160,10 +196,21 @@ class SampleSimilarity:
         return self._pair_dict_to_matrix(self.get_dissimilarities())
 
     @classmethod
-    def from_filenames(cls, graph_fn, comparison_fns, *args, **kwargs):
+    def from_filenames(
+            cls,
+            graph_fn,
+            comparison_fns,
+            store_dfs=True,
+            *args,
+            **kwargs
+    ):
         with open(graph_fn, "rb") as f:
             graph = pickle.load(f)
-        return cls(graph, cls.load_pickles(comparison_fns), *args, **kwargs)
+        if store_dfs:
+            f = MultisetKeyDict
+        else:
+            f = id_
+        return cls(graph, f(cls.load_pickles(comparison_fns)), *args, **kwargs)
     
         
 def main():
