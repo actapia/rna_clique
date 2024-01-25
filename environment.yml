@@ -4,6 +4,7 @@ channels:
   - defaults
 dependencies:
   - python
+  - pip
   - tqdm
   - pandas
   - joblib>=1.3.2
