@@ -29,7 +29,7 @@ The BioPerl Bio::SeqIO module isn't present in Ubuntu default repositories, so
 we will install `cpanm` to help us install that library.
 
 ```bash
-sudo apt install cpanm
+sudo apt install cpanminus
 ```
 
 ## Installing Bio::SeqIO
@@ -57,6 +57,9 @@ Then, run the installer.
 ```bash
 bash Miniconda3-latest-Linux-x86_64.sh
 ```
+
+Unless you have a reason to install somewhere else, you can install to the
+default locaton Miniconda suggests.
 
 When asked about initializing Miniconda for the current shell, say yes.
 

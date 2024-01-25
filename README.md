@@ -36,4 +36,4 @@ The requirements below represent one tested configuration. This software may wor
 
 ### Installation guides
 
-* [Ubuntu](
+* [Ubuntu](docs/installation_guides/ubuntu.md)

@@ -15,3 +15,10 @@ csv_out/
 *.tar.*
 *.cyjs
 *.dot
+*.xlsx
+.ipynb_checkpoints/
+.dir-locals.el
+#*#
+*.zip
+*_images*/
+*out*/
