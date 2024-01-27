@@ -17,3 +17,8 @@ dependencies:
       - dendropy
       - nice-colorsys
       - simple-blast
+      # For simulator:
+      - more_itertools
+      - PyYAML
+  # For simulator:
+  - scipy
