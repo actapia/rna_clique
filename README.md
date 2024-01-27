@@ -38,6 +38,36 @@ The requirements below represent one tested configuration. This software may wor
 
 * [Ubuntu](docs/installation_guides/ubuntu.md)
 
+### Testing the installation
+
+After you have downloaded RNA-clique and installed its dependencies, you can
+test your installation using a script included in this repository.
+
+First, make sure your rna-clique conda environment is active.
+
+```bash
+conda activate rna-clique
+```
+
+Then, if you are in the root the repository, you can run the following command
+to begin the test script.
+
+```bash
+bash tests/test_install/test_install.sh && echo "Success!"
+```
+
+The script generates a small test dataset and runs RNA-clique on the generated
+data. On a modern desktop with one thread, the test should take around one
+minute to complete. On machines with multiple threads, the test script should
+take advantage of parallelism to complete the test more quickly.
+
+If you ran the script with the above command and see "Success!," then the
+installation was succesful. Otherwise, you will need to investigate the output
+of the test script to see what failed and why.
+
+If the test script fails despite having a correct installation, you should
+submit a bug report on GitHub at https://github.com/actapia/rna_clique/issues .
+
 ## Usage
 
 Running RNA-clique broadly involves two phases. In the first phase, the
@@ -53,8 +83,18 @@ with typical parameter settings.
 ### Phase 1: Building the gene matches graph
 
 The simplest usage of `typical_filtering_step.sh` provides only an output
-directory, a value for the number of top genes to select, `n`, and the
-transcriptomes to be analyzed.
+directory, a value for the number of top genes to select (`n`), and the
+directories containing the transcriptomes to be analyzed.
+
+The script assumes that the transcriptomes are stored in FASTA files with the
+*identical names* in different directories. By default, RNA-clique assumes the
+files are all named `transcripts.fasta`, since this is the default output name
+for the SPAdes assembler, but this behavior may be overridden by a command-line
+argument. 
+
+For example, the first transcriptome might be located at
+`sample1/transcripts.fasta`, and the second might be located
+at`sample2/assembly.fasta`.
 
 **WARNING: The transcriptomes are identified internally by their filenames, so
 every transcriptome must have a unique filename!**
@@ -94,4 +134,3 @@ from Phase 1 if you used the `typical_filtering_step.sh` script.)
 The script outputs a genetic similarity matrix to standard output by default. To
 get a distance matrix, you can provide the `-o dis` option to
 `filtered_distance.py`.
-
