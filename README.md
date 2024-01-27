@@ -96,17 +96,19 @@ For example, the first transcriptome might be located at
 `sample1/transcripts.fasta`, and the second might be located
 at`sample2/assembly.fasta`.
 
-**WARNING: The transcriptomes are identified internally by their filenames, so
-every transcriptome must have a unique filename!**
+**WARNING: The transcriptomes are identified internally by the names of the
+directories in which they are contained, so every transcriptome must be located
+in a directory with a unique name!**
 
 ```bash
-bash typical_filtering_step.sh -n TOP_GENES -o OUTPUT_DIR TRANSCRIPTOME1 TRANSCRIPTOME2 ...
+bash typical_filtering_step.sh -n TOP_GENES -o OUTPUT_DIR DIR1 DIR2 ...
 ```
 
 In the command above, `TOP_GENES` must be replaced by the number of top genes to
 select. `OUTPUT_DIR` should be replaced by the path to the directory in which to
-store output files. `TRANSCRIPTOME1 TRANSCRIPTOME2 ...` are the paths to the
-transcriptomes to be analyzed.
+store output files. `DIR1 DIR2 ...` are the paths to the directories containing
+the transcriptomes to be analyzed. The transcriptomes are assumed be located at
+files named `transcripts.fasta` within those directories.
 
 When the script finishes, it creates `graph.pkl` in the specified output
 directory. `graph.pkl` is a Python pickle file representing the constructed
