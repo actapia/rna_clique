@@ -188,6 +188,7 @@ else
     ka_flag=
 fi
 set -e
+set -x
 bash select_top_genes/select_top_sets_all.sh -t "$transcripts_fn" -n "$top_n" -o "$out_dir_1" -p "$pattern" -j "$jobs" "${dirlist[@]}"
 python find_all_pairs.py -i "$out_dir_1"/*.fasta -O "$out_dir_2" -r "$gene_regex" -R "$sample_regex" -e "$evalue" -n "$top_N" $ka_flag $cd_flag -j "$jobs"
 python build_graph.py -i "$out_dir_2"/*.pkl -o "$output_graph"
