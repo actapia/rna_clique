@@ -22,3 +22,4 @@ csv_out/
 *.zip
 *_images*/
 *out*/
+*.ipynb
