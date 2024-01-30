@@ -1,14 +1,22 @@
 # RNA-clique
 
-This is the repository for RNA-clique, a tool for computing pairwise genetic distances from RNA-seq data. The software accepts as input assembled transcriptomes from two or more samples and produces as its output a matrix containing pairwise distances ranging from 0 to 1.
+This is the repository for RNA-clique, a tool for computing pairwise genetic
+distances from RNA-seq data. The software accepts as input assembled
+transcriptomes from two or more samples and produces as its output a matrix
+containing pairwise distances ranging from 0 to 1.
 
 ## Installation
 
-This software is written in Python, Perl, and Bash. The software additionally requires NCBI BLAST+ and several Python and Perl libraries. The section below lists the software requirements, and [guides](#installation-guides) are provided for installation of specific systems.
+This software is written in Python, Perl, and Bash. The software additionally
+requires NCBI BLAST+ and several Python and Perl libraries. The section below
+lists the software requirements, and [guides](#installation-guides) are provided
+for installation of specific systems.
 
 ### Requirements
 
-The requirements below represent one tested configuration. This software may work with different versions of the dependencies listed, but such configurations are considered untested.
+The requirements below represent one tested configuration. This software may
+work with different versions of the dependencies listed, but such configurations
+are considered untested.
 
 #### Main software
 
@@ -68,7 +76,7 @@ of the test script to see what failed and why.
 If the test script fails despite having a correct installation, you should
 submit a bug report on GitHub at https://github.com/actapia/rna_clique/issues .
 
-## Usage
+## Command-line usage
 
 Running RNA-clique broadly involves two phases. In the first phase, the
 transcriptomes are aligned, and the gene matches graph is built. In the second
@@ -136,3 +144,77 @@ from Phase 1 if you used the `typical_filtering_step.sh` script.)
 The script outputs a genetic similarity matrix to standard output by default. To
 get a distance matrix, you can provide the `-o dis` option to
 `filtered_distance.py`.
+
+Both the rows and the columns of the matrix are sorted alphabetically by sample
+ID. To print the order of the samples to standard error, you can provide the
+`-l` flag to `filtered_distance.py`.
+
+### Downstream analyses
+
+The `filtered_distance.py` script prints the calculated matrix to the standard
+output, so you can use redirection or pipes to save the results to a file. You
+could then use the matrix in any downstream application capable of loading
+arbitrary matrices from files.
+
+For example, if you output the matrix to a file named `distances`, you could
+load the matrix in R using the following code:
+
+```R
+dis <- as.matrix(read.table("distances", sep=" "))
+```
+
+If you are using Python, you may wish to skip Phase 2 and [use RNA-clique
+directly in your code instead](#using-rna-clique-in-python-code).
+
+
+## Using RNA-clique in Python code
+
+Since parts of Phase 1 are implemented in Bash and Perl, there is currently no
+official way to perform Phase 1 from custom Python code, but since Phase 2 is
+written exclusively in Python, we describe an official way of performing that
+phase in custom code here.
+
+The `filtered_distance.py` is a straightforward command-line interface to
+RNA-clique's `SampleSimilarity` class. If you are planning to use the distance
+matrix computed by RNA-clique in a downstream analysis implemented in Python, it
+may be easier to simply use `SampleSimilarity` directly instead of running
+`filtered_distance.py` and loading the calculated matrix back into Python.
+
+The `SampleSimilarity` class is ordinarily constructed with the following
+arguments:
+ 
+ * A NetworkX graph representing the gene matches graph.
+ * An Iterable of pairs to be interpreted as a mapping between unordered pairs
+   of sample names and dataframes containing the parsed BLAST results for the
+   pairs' comparisons. (For example, if you had a `dict` `d` mapping
+   `frozenset`s containing pairs of sample names to the BLAST results for those
+   pairs of samples, then `d.items()` would be an appropriate actual parameter.)
+ * An optional integer indicating how many samples are present. (If no value is
+   provided for this parameter, it will be calculated automatically.)
+   
+This constructor may be difficult to use if you are simply given the file paths
+to the pickles for the graph and the BLAST comparisons, so `SampleSimilarity`
+also includes a `from_filenames` classmethod that constructs a
+`SampleSimilarity` object using the following parameters:
+
+* A path to the pickle containing the gene matches graph.
+* A list of paths to the BLAST comparisons.
+* An optional `bool` indicating whether to keep the comparison dataframes after
+  the distance computation has finished.
+
+`SampleSimilarity` computes the similarities lazily; it won't do any of the
+time-consuming work until it's asked for results. `SampleSimilarity` offers
+several ways to view the results.
+
+`get_similarities` and `get_dissimilarities` return a `MultisetKeyDict` that
+maps unordered pairs of sample names to their similarities or dissimilarities
+(distances), respectively. The `MultisetKeyDict` for the  similarities may also
+be accessed via the `similarities` property, but note that there is no
+corresponding `dissimilarities` or `distances` property.
+
+`get_similarity_matrix` and `get_dissimilarity_matrix` offer the same
+information as matrices&mdash;i.e., NumPy arrays. The returned matrices are
+symmetric, but the distances are only computed in one direction by
+RNA-clique. The rows and columns of the matrix correspond to the samples sorted
+alphabetically by name. To get this ordered list of samples, you can use the
+`samples` property of `SampleSimilarity`.

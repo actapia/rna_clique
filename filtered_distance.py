@@ -58,6 +58,11 @@ def handle_arguments():
         choices=["sim", "dis"], # Similarity, dissimilarity
         default="sim"
     )
+    parser.add_argument(
+        "-l",
+        "--print-sample-list",
+        action="store_true"
+    )
     return parser.parse_args()
 
 def restrict_to(df2, df1, columns):
@@ -220,6 +225,8 @@ def main():
         tqdm(args.comparisons),
         args.samples
     )
+    if args.print_sample_list:
+        print("\n".join(sim.samples))
     if args.out_type == "sim":
         print_mat(sim.get_similarity_matrix())
     elif args.out_type == "dis":
