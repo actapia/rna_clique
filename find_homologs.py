@@ -7,30 +7,48 @@ from simple_blast.blasting import BlastnSearch
 import numpy as np
 
 from fractions import Fraction
+from pathlib import Path
 
 import pandas as pd
 
-from typing import Callable
+from typing import Callable, Optional
 
 from IPython import embed
 
 def parse_arguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("transcripts1")
-    parser.add_argument("transcripts2")
+    parser = argparse.ArgumentParser(
+        description="get the genetic distance for a pair of samples"
+    )
+    parser.add_argument(
+        "transcripts1",
+        type=Path,
+        help="path to the (top n) transcripts for the first sample"
+    )
+    parser.add_argument(
+        "transcripts2",
+        type=Path,
+        help="path to the (top n) transcripts for the second sample"
+    )
     parser.add_argument(
         "--regex",
         "-r",
         type=re.compile,
-        default=re.compile("^.*g([0-9]+)_i([0-9]+)")
+        default=re.compile("^.*g([0-9]+)_i([0-9]+)"),
+        help="Python regex for parsing sequence IDs"
     )
-    parser.add_argument("-e", "--evalue", type=float, default=1e-50)
+    parser.add_argument(
+        "-e",
+        "--evalue",
+        type=float,
+        default=1e-50,
+        help="e-value threshold to use for BLAST alignments"
+    )
     parser.add_argument(
         "-n",
         "--top-n",
         type=int,
         default=1,
-        help="use top n matches"
+        help="use top n matches (parameter big N)"
     )
     parser.add_argument(
         "--keep-all",
@@ -87,7 +105,7 @@ def gene_matches(
         path1 (str):    Path to the FASTA file used as the BLAST search query.
         path2 (str):    Path to the FASTA file used as the BLAST search subject.
         evalue (float): Expect value cutoff for BLAST search.
-        n (int):        Number of top isotigs to select for each query gene.
+        n (int):        Number of top matches to select for each query gene.
 
     Returns:
         A dataframe of BLAST hits for subject isotigs best matching query genes.
@@ -130,6 +148,13 @@ def highest_bitscores(
     ]
 
 class HomologFinder:
+    """Obtains gene matches tables using given parameters.
+
+    Attributes:
+        keep_all (bool): Whether to keep all rows in the case of ties.
+        debug (bool):    Whether debug behavior is enabled.
+    """
+    # When the forward and reverse matches are merged, these columns are used.
     merge_columns = ["qgene", "sgene"]
     
     def __init__(
@@ -141,11 +166,22 @@ class HomologFinder:
             debug: bool = False,
             **blast_kwargs
     ):
+        """Constructs a HomomlogFinder that uses the provided parameters.
+
+        Parameters:
+            regex (str):     A string representing a regex for parsing seq IDs.
+            top_n (int):     Top hits to select for each query gene (big N).
+            evalue (float):  e-value cutoff to use for BLAST searches
+            keep_all (bool): Whether to keep all matches in the case of ties.
+            debug (bool):    Whether debug behavior is enabled.
+        """            
         # self.regex = regex
         # self.top_n = top_n
         # self.evalue = evalue
         # Partially apply some functions to make the code below less repetitive.
         parse = functools.partial(parse_seq_id, regex)
+        # gm is a function that obtains unidirectional best matches for a pair
+        # of samples using the given parameters.
         self.gm = functools.partial(
             gene_matches,
             parse=parse,
@@ -159,12 +195,22 @@ class HomologFinder:
 
     def get_match_table(
             self,
-            transcripts1: str,
-            transcripts2: str
+            transcripts1: Path,
+            transcripts2: Path
     ) -> pd.DataFrame:
-        # Search in both the forward and reverse direction to get the isotigs
-        # (and corresponding gene IDs) in one sample that best match genes in
-        # the other.
+        """Obtains the gene matches table for the pair of transcriptomes.
+
+        This function searches in both the forward and reverse direction to get
+        the isotigs  (and corresponding gene IDs) in one sample that best match
+        genes in the other.
+
+        Parameters:
+            transcripts1: A path to the (top n) transcripts for sample 1.
+            transcripts2: A path to the (top n) transcripts for sample 2.
+
+        Returns:
+            A Pandas dataframe representing the samples' gene matches table.
+        """
         if self.debug:
             eprint("Getting forward matches.")
         forward_matches = self.gm(
@@ -172,7 +218,7 @@ class HomologFinder:
             path2=transcripts2
         )
         if self.debug:
-            eprint("Getting backward matches.")
+            eprint("Getting reverse matches.")
         backward_matches = self.gm(
             path1=transcripts2,
             path2=transcripts1
@@ -188,18 +234,20 @@ class HomologFinder:
         )
         # Compute the "intersection" of the forward and reverse matches.
         #
-        # A row (hit) in either dataframe with query gene ID q and subject gene ID s
-        # is kept if and only if there is a row with query gene ID q and subject
-        # gene ID s in both dataframes.
+        # A row (hit) in either dataframe with query gene ID q and subject gene
+        # ID s is kept if and only if there is a row with query gene ID q and
+        # subject gene ID s in both dataframes.
         #
         # The resulting dataframe has two columns---index_x and index_y---that
         # indicate where in the original dataframes the rows were found.
-        #
-        # (Keep in mind that we swapped the order order of query and subject in the
-        # reverse dataframe, so "query" is always something in sample 1, and
+        # 
+        # (Keep in mind that we swapped the order order of query and subject in
+        # the reverse dataframe, so "query" is always something in sample 1, and
         # "subject" is always something in sample 2 from now on.)
         if forward_matches.empty or backward_matches.empty:
-            intersection = pd.DataFrame(columns=self.merge_columns + ["index_x", "index_y"])
+            intersection = pd.DataFrame(
+                columns=self.merge_columns + ["index_x", "index_y"]
+            )
         else:
             intersection = pd.merge(
                 forward_matches[self.merge_columns].reset_index(),
@@ -210,7 +258,8 @@ class HomologFinder:
         # Get the hits (and subject gene ID) with the highest bitscore for each
         # query gene.
         return highest_bitscores(
-            # Get the hits with highest bitscore for each pair of homologous genes.
+            # Get the hits with highest bitscore for each pair of homologous
+            # genes.
             highest_bitscores(
                 # Get the original rows back from the forward and reverse
                 # dataframes.
@@ -234,15 +283,15 @@ class HomologFinder:
         # best_matches["dist"] = \
         #     best_matches["nident"] / \
         #     (best_matches["length"] - best_matches["gaps"])
-        # Ignore rows with identical query and subject gene IDs.
-        # return best_matches[merge_columns + ["dist"]].drop_duplicates()
 
     @classmethod
     def without_duplicates(
             cls,
             df: pd.DataFrame,
-            columns: list[str] = None
+            columns: Optional[list[str]] = None
     ) -> pd.DataFrame:
+        """Returns the given columns of the dataframe, excluding duplicate rows.
+        """
         if columns is None:
             columns = cls.merge_columns
         return df[columns].drop_duplicates()

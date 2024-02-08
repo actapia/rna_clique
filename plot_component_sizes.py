@@ -6,6 +6,7 @@ from fractions import Fraction
 
 from collections import Counter
 from pathlib import Path
+from typing import Iterator
 
 import numpy as np
 import networkx as nx
@@ -18,25 +19,72 @@ from find_homologs import eprint
 from IPython import embed
 
 def handle_arguments():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description=("generate exports, visualizations, or statistics for a "
+                     "gene matches graph")
+    )
     #parser.add_argument("-i", "--inputs", nargs="+", type=Path, required=True)
-    parser.add_argument("graph", type=Path)
-    parser.add_argument("-s", "--size-plot", type=Path)
-    parser.add_argument("-S", "--sample-plot", type=Path)
-    parser.add_argument("-r", "--ratio-plot", type=Path)
-    parser.add_argument("-d", "--density-plot", type=Path)
-    parser.add_argument("-g", "--graphviz", type=Path)
-    parser.add_argument("-x", "--export", nargs="+", type=Path)
-    parser.add_argument("--samples", type=int)
+    parser.add_argument(
+        "graph",
+        type=Path,
+        help="path to the gene matches graph pickle"
+    )
+    parser.add_argument(
+        "-s",
+        "--size-plot",
+        type=Path,
+        help="output path for component size histogram"
+    )
+    parser.add_argument(
+        "-S",
+        "--sample-plot",
+        type=Path,
+        help="output path for represented sample count plot"
+    )
+    parser.add_argument(
+        "-r",
+        "--ratio-plot",
+        type=Path,
+        help="output path for KDE of represented sample count / component size"
+    )
+    parser.add_argument(
+        "-d",
+        "--density-plot",
+        type=Path,
+        help="output path for KDE of component density"
+    )
+    parser.add_argument(
+        "-g",
+        "--graphviz",
+        type=Path,
+        help="output path for graphviz (dot) representation"
+    )
+    parser.add_argument(
+        "-x",
+        "--export",
+        nargs="+",
+        type=Path,
+        help="output paths for export to {}.".format(
+            " or ".join(type_name.values())
+        )
+    )
+    parser.add_argument(
+        "--samples",
+        type=int,
+        help="number of samples in the analysis"
+    )
     parser.add_argument(
         "--statistics",
         nargs="?",
         choices=["h", "m"],
-        const="h"
+        const="h",
+        help=("print statistics in the desired format (human or "
+              "machine-readable)")
     )
     return parser.parse_args()
 
-def export_cytoscape(graph, out_file):
+def export_cytoscape(graph : nx.Graph, out_file : Path):
+    """Export the given graph as a Cytoscape JSON file."""
     with open(out_file, "w") as jf:
         json.dump(nx.cytoscape_data(graph), jf)
 
@@ -63,7 +111,8 @@ stat_labels = [
 ]
 
 
-def component_subgraphs(g):
+def component_subgraphs(g : nx.Graph) -> Iterator[nx.Graph]:
+    """Yields the connected components of the given graph as subgraphs."""
     for c in nx.connected_components(g):
         yield g.subgraph(c)
 
