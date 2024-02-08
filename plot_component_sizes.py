@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from find_homologs import eprint
+from build_graph import component_subgraphs
 
 from IPython import embed
 
@@ -109,12 +110,6 @@ stat_labels = [
     "Components >= samples",
     "Ideal components"
 ]
-
-
-def component_subgraphs(g : nx.Graph) -> Iterator[nx.Graph]:
-    """Yields the connected components of the given graph as subgraphs."""
-    for c in nx.connected_components(g):
-        yield g.subgraph(c)
 
 def main():
     args = handle_arguments()

@@ -14,7 +14,7 @@ from typing import Optional, Any
 from collections.abc import Iterable, Iterator
 from numbers import Number
 
-from plot_component_sizes import component_subgraphs
+from build_graph import component_subgraphs
 from find_homologs import eprint
 from multiset_key_dict import MultisetKeyDict, FrozenMultiset
 

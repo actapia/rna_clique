@@ -37,6 +37,11 @@ def handle_arguments():
     )
     return parser.parse_args()
 
+def component_subgraphs(g : nx.Graph) -> Iterator[nx.Graph]:
+    """Yields the connected components of the given graph as subgraphs."""
+    for c in nx.connected_components(g):
+        yield g.subgraph(c)
+
 def make_edge(r):
     return ((r[0], r[1]), (r[2], r[3]))
 
