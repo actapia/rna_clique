@@ -1,4 +1,17 @@
 #!/usr/bin/env bash
+#
+# This script performs the first "phase" of RNA-clique, which involves the
+# following steps:
+#
+# 1. Selecting the top n genes from each sample.
+# 2. Obtaining the gene matches tables for each pair of samples. (This involves
+#    a pairwise reciprocal BLAST search.)
+# 3. Building the gene matches graph from the gene matches tables.
+#
+# This script allows the user to set various parameters that control the
+# behavior of RNA-clique in this first phase. For many parameters, reasonable
+# defaults are provided, so it is not always necessary to provide every
+# parameter.
 readonly top_n_flag="-n"
 readonly top_N_flag="-N"
 readonly transcripts_flag="--transcripts"
@@ -13,11 +26,13 @@ readonly gene_regex_flag="--gene-regex"
 readonly jobs_flag="--jobs"
 readonly cache_dir_flag="--cache-dir"
 readonly help_flag="--help"
+# Default values.
 transcripts_fn="transcripts.fasta"
 top_n=10000
 top_N=1
 pattern="^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)"
 gene_regex="^.*g([0-9]+)_i([0-9]+)"
+# SAMPLE_RE may also be provided as an environment variable.
 if [[ -v SAMPLE_RE ]]; then
     sample_regex="$SAMPLE_RE"
 else
@@ -29,7 +44,7 @@ keep_all=false
 jobs=1
 declare -A ARG_HELP
 ARG_HELP["$top_n_flag"]="Top n genes to select."
-ARG_HELP["$top_N_flag"]="Count a match if isoform is within top N in both directions."
+ARG_HELP["$top_N_flag"]="Count a match if it is within top N in both directions."
 ARG_HELP["$transcripts_flag"]="Name of transcripts files."
 ARG_HELP["$out_dir_1_flag"]="Intermediate output file directory containing top genes."
 ARG_HELP["$out_dir_2_flag"]="Intermediate output file directory containing matches."
@@ -42,6 +57,22 @@ ARG_HELP["$output_graph_flag"]="Path to output graph."
 ARG_HELP["$jobs_flag"]="Number of parallel jobs to use."
 ARG_HELP["$cache_dir_flag"]="Directory in which to store BLAST DBs."
 ARG_HELP["$help_flag"]="Show this help and exit."
+declare -A METAVAR
+for flag in "$transcripts_flag" "$out_dir_1_flag" "$out_dir_2_flag" \
+	       "$pattern_flag" "$evalue_flag" "$sample_regex_flag" \
+	       "$gene_regex_flag" "$output_graph_flag" "$jobs_flag" \
+	       "$cache_dir_flag" "$help_flag"; do
+    mv="${flag//[^A-Za-z]/}"   
+    METAVAR["$flag"]="${mv^^}"
+done
+METAVAR["$top_n_flag"]="TOPNGENES"
+METAVAR["$top_N_flag"]="TOPNMATCHES"
+declare -A REQUIRED
+for flag in 	"$out_dir_1_flag" \
+		"$out_dir_2_flag" \
+		"$output_graph_flag"; do
+    REQUIRED["$flag"]=
+done
 declare -a dirlist
 while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -115,19 +146,40 @@ if [ "$do_help" = true ]; then
     printf "Usage: $0 "
     longest=0
     for arg in "${!ARG_HELP[@]}"; do
-	printf "[$arg] "
+	arg_str="$arg"
+	if [[ -v "METAVAR[$arg]" ]]; then
+	    arg_str="$arg_str ${METAVAR[$arg]}"
+	fi
+	if ! [[ -v "REQUIRED[$arg]" ]]; then
+	    arg_str="[$arg_str]"
+	fi
+	printf "%s " "$arg_str"
 	if [ "${#arg}" -gt "$longest" ]; then
 	    longest="${#arg}"
 	fi
     done
-    printf "DIR ..."
+    printf "DIR1 DIR2 ..."
     longest=$((longest+3))
     echo
     echo
+    echo "positional arguments:"
+    printf "  %-${longest}s" "DIR1 DIR2 ..."
+    echo "Directories containing transcript FASTA files."
+    echo
+    echo "required arguments:"
+    for arg in "${!ARG_HELP[@]}"; do
+	if [[ -v "REQUIRED[$arg]" ]]; then
+	    printf "  %-${longest}s" "$arg"
+	    echo "${ARG_HELP[$arg]}"
+	fi
+    done
+    echo
     echo "optional arguments:"
     for arg in "${!ARG_HELP[@]}"; do
-	printf "  %-${longest}s" "$arg"
-	echo "${ARG_HELP[$arg]}"
+	if ! [[ -v "REQUIRED[$arg]" ]]; then
+	    printf "  %-${longest}s" "$arg"
+	    echo "${ARG_HELP[$arg]}"
+	fi
     done
     exit 0
 fi
@@ -189,8 +241,14 @@ else
 fi
 set -e
 set -x
-bash select_top_genes/select_top_sets_all.sh -t "$transcripts_fn" -n "$top_n" -o "$out_dir_1" -p "$pattern" -j "$jobs" "${dirlist[@]}"
-python find_all_pairs.py -i "$out_dir_1"/*.fasta -O "$out_dir_2" -r "$gene_regex" -R "$sample_regex" -e "$evalue" -n "$top_N" $ka_flag $cd_flag -j "$jobs"
+# Get top genes.
+bash select_top_genes/select_top_sets_all.sh -t "$transcripts_fn" -n "$top_n" \
+     -o "$out_dir_1" -p "$pattern" -j "$jobs" "${dirlist[@]}"
+# Get gene matches tables.
+python find_all_pairs.py -i "$out_dir_1"/*.fasta -O "$out_dir_2" \
+       -r "$gene_regex" -R "$sample_regex" -e "$evalue" -n "$top_N" $ka_flag \
+       $cd_flag -j "$jobs"
+# Get gene matches graph.
 python build_graph.py -i "$out_dir_2"/*.pkl -o "$output_graph"
 if [[ -v clean_level ]]; then
     if [ "$clean_level" -ge 1 ]; then

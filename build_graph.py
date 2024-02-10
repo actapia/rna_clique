@@ -6,6 +6,7 @@ from pathlib import Path
 from find_homologs import eprint
 
 from collections.abc import Iterable
+from typing import Iterator
 
 import pandas as pd
 import networkx as nx
