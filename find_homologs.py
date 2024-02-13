@@ -60,7 +60,7 @@ def parse_arguments():
         "-q",
         "--quiet",
         action="store_true",
-        help="hide presumed ortholog distances"
+        help="hide the matches found"
     )
     parser.add_argument(
         "-f",

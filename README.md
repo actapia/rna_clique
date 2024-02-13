@@ -218,3 +218,7 @@ symmetric, but the distances are only computed in one direction by
 RNA-clique. The rows and columns of the matrix correspond to the samples sorted
 alphabetically by name. To get this ordered list of samples, you can use the
 `samples` property of `SampleSimilarity`.
+
+## Additional documentation
+
+[Command-line usage guide](docs/usage.md)

@@ -18,7 +18,7 @@ from build_graph import component_subgraphs
 from find_homologs import eprint
 from multiset_key_dict import MultisetKeyDict, FrozenMultiset
 
-from IPython import embed
+
 from tqdm import tqdm
 
 def is_complete(g : nx.Graph) -> bool:
@@ -362,6 +362,7 @@ def main():
     elif args.out_type == "dis":
         print_mat(sim.get_dissimilarity_matrix())
     if args.embed:
+        from IPython import embed
         embed()
 
         

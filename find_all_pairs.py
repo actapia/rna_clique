@@ -34,7 +34,7 @@ def handle_arguments():
         "--output-dir",
         type=Path,
         required=True,
-        help="directory in which to write BLAST results"
+        help="directory in which to write results"
     )
     parser.add_argument(
         "-D",

@@ -74,8 +74,8 @@ declare -A ARG_HELP
 ARG_HELP["$out_dir_flag"]="Parent output directory"
 ARG_HELP["$jobs_flag"]="Number of parallel jobs to use"
 ARG_HELP["$top_genes_flag"]="Number of top genes to select by k-mer coverage."
-ARG_HELP["$raw_flag"]="Keep the raw BLAST alignments."
-ARG_HELP["$intermed_flag"]="Keep intermediate results."
+#ARG_HELP["$raw_flag"]="Keep the raw BLAST alignments."
+#ARG_HELP["$intermed_flag"]="Keep intermediate results."
 ARG_HELP["$help_flag"]="Print this help message and exit."
 declare -A METAVAR
 for flag in "$out_dir_flag" "$jobs_flag" "$top_genes_flag"; do
