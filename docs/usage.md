@@ -472,3 +472,19 @@ have been removed or replaced for simplicity.
 | Variable name | Description                                                     | Corresponding argument            |
 |---------------|-----------------------------------------------------------------|-----------------------------------|
 | `SAMPLE_RE`   | Python regex used to extract sample names from directory names. | [`--sample-regex`](#sample-regex) |
+
+## select\_top\_sets.pl
+
+This Perl script selects the top genes ("isotig sets") from an assembled
+transcriptome by $k$-mer coverage. 
+
+See more details in the [documentation for
+select\_top\_genes](select_top_genes/README.md#select_top_setspl).
+
+## select\_top\_sets_all.sh
+
+This Perl script selects the top genes from multiple assembled transcriptomes in
+parallel.
+
+See more details in the [documentation for
+select\_top\_genes](select_top_genes/README.md#select_top_sets_allsh).
