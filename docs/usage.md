@@ -350,7 +350,7 @@ which is also understood by Cytoscape.
 
 ##### Example
 
-```json
+```js
 {
     "data": [],
     "directed": false,
