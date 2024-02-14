@@ -36,9 +36,9 @@ fine-grained control is needed.**
 
 ### Positional arguments
 
-| Argument name | Description                                                                      |
-|---------------|----------------------------------------------------------------------------------|
-| `DIR ...`     | Each argument is a directory containing a transcripts FASTA file to be analyzed. |
+| Argument name | Description                                                                                                      |
+|---------------|------------------------------------------------------------------------------------------------------------------|
+| `DIR ...`     | Each argument is a directory containing a transcripts FASTA file to be analyzed (`transcripts.fasta`, by default). |
 
 ### Options
 
@@ -47,7 +47,7 @@ fine-grained control is needed.**
 | `--cache-dir`                     | Directory in which to store BLAST DBs for top $n$ genes.                                              |                                                   | No       |
 | `--evalue`                        | e-value cutoff to use for BLAST searches                                                              | `1e-99` ($10^{-99}$)                              | No       |
 | [`--gene-regex`](#gene-regex)     | Python regex used to extract gene and isoform IDs from FASTA sequence headers.                        | `^.*g([0-9]+)_i([0-9]+)`                          | No       |
-| `--help`                          | Display a help message a quit.                                                                        | false                                             | No       |
+| `--help`                          | Display a help message and quit.                                                                      | false                                             | No       |
 | `--jobs`                          | Number of parallel jobs to use.                                                                       | 1                                                 | No       |
 | [`--keep-all`](#keep-all)         | Whether to keep all matches in the case of a tie in the last step of creating the gene matches table. | false                                             | No       |
 | [`-N`](#n-big-n)                  | A match between genes is counted if it is among the top $N$ in both directions.                       | 1                                                 | No       |
@@ -113,7 +113,8 @@ following capture groups are expected:
 |---------------|--------------------------------------------------------|
 | 1             | $k$-mer coverage, expressed as a floating-point number |
 | 2             | Gene ID, a non-negative integer                        |
-| 3             | Isoform ID, a non-negative integer                     |
+
+Additional capture groups will be ignored.
 
 #### sample-regex
 
