@@ -31,7 +31,7 @@ occur:
 This script offers many command line options for controlling the behavior of
 RNA-clique. For most analyses, most of these options are probably
 unnecessary. Hence, **it is recommended to use the
-[`typical_filtering_step.sh`](#typical_filtering_step.sh) script instead unless
+[`typical_filtering_step.sh`](#typical_filtering_stepsh) script instead unless
 fine-grained control is needed.**
 
 ### Positional arguments
@@ -377,9 +377,9 @@ which is also understood by Cytoscape.
                     "name": "('SRR6847395_out_top.fasta', 5289)"
                 }
             },
-			// ...
-		],
-		"edges": [
+            // ...
+        ],
+        "edges": [
             {
                 "data": {
                     "source": [
@@ -404,9 +404,9 @@ which is also understood by Cytoscape.
                     ]
                 }
             },
-			// ...
-		]
-	}
+            // ...
+        ]
+    }
 }
 ```
 
@@ -424,11 +424,11 @@ describing graphs.
     <node id="('SRR6847395_out_top.fasta', 6)" />
     <node id="('SRR6847395_out_top.fasta', 5289)" />
     <node id="('SRR6847395_out_top.fasta', 1672)" />
-	<!-- More nodes here ... -->
-	<edge source="('SRR6847395_out_top.fasta', 6)" target="('SRR6847396_out_top.fasta', 0)" />
+    <!-- More nodes here ... -->
+    <edge source="('SRR6847395_out_top.fasta', 6)" target="('SRR6847396_out_top.fasta', 0)" />
     <edge source="('SRR6847395_out_top.fasta', 5289)" target="('SRR6847396_out_top.fasta', 48)" />
     <edge source="('SRR6847395_out_top.fasta', 5289)" target="('SRR6847398_out_top.fasta', 2189)" />
-	<!-- More edges here ... -->
+    <!-- More edges here ... -->
   </graph>
 </graphml>
 ```
@@ -439,7 +439,7 @@ GraphML import.](./images/cytoscape_example.svg)
 
 ## typical\_filtering\_step.sh
 
-This script wraps [`do_filtering_step.sh`](#do-filtering-step.sh) to provide a
+This script wraps [`do_filtering_step.sh`](#do_filtering_stepsh) to provide a
 simpler user interface and better defaults. Like `do_filtering_step.sh`, the
 purpose of this script is to automate the first phase of RNA-clique.
 
@@ -479,7 +479,7 @@ This Perl script selects the top genes ("isotig sets") from an assembled
 transcriptome by $k$-mer coverage. 
 
 See more details in the [documentation for
-select\_top\_genes](select_top_genes/README.md#select_top_setspl).
+select\_top\_genes](/select_top_genes/README.md#select_top_setspl).
 
 ## select\_top\_sets_all.sh
 
@@ -487,4 +487,4 @@ This Perl script selects the top genes from multiple assembled transcriptomes in
 parallel.
 
 See more details in the [documentation for
-select\_top\_genes](select_top_genes/README.md#select_top_sets_allsh).
+select\_top\_genes](/select_top_genes/README.md#select_top_sets_allsh).
