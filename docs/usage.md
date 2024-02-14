@@ -479,7 +479,7 @@ This Perl script selects the top genes ("isotig sets") from an assembled
 transcriptome by $k$-mer coverage. 
 
 See more details in the [documentation for
-select\_top\_genes](/select_top_genes/README.md#select_top_setspl).
+select\_top\_genes](https://github.com/actapia/select_top_genes/blob/master/README.md#select_top_setspl).
 
 ## select\_top\_sets_all.sh
 
@@ -487,4 +487,4 @@ This Perl script selects the top genes from multiple assembled transcriptomes in
 parallel.
 
 See more details in the [documentation for
-select\_top\_genes](/select_top_genes/README.md#select_top_sets_allsh).
+select\_top\_genes](https://github.com/actapia/select_top_genes/blob/master/README.md#select_top_sets_allsh).
