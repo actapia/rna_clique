@@ -3,7 +3,8 @@
 The script in this directory tests that distances do not violate symmetry or the
 triangle inequality for the given FASTA files. The script is not part of the
 main RNA-clique program but was used for results reported in the paper
-*RNA-clique: A method for computing genetic distances from RNA-seq data*.
+*RNA-clique: A method for computing genetic distances from RNA-seq data*. Hence,
+no detailed documentation for this script is provided (yet).
 
 ## Usage
 
