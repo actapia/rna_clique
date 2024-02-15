@@ -9,7 +9,7 @@ provided here.
 ## Usage
 
 Most scripts in this directory expect to be in the root of the RNA-clique
-directory. Before using them, run a command like the following from the root of
+repository. Before using them, run a command like the following from the root of
 the repository.
 
 ```bash
