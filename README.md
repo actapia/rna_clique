@@ -20,26 +20,33 @@ are considered untested.
 
 #### Main software
 
-* Python 3.11
+* Python 3.12
 * Perl 5.36.0
 * Bash 5.2.15
 * ncbi-blast 2.12.0+
 * Python libraries
-  * tqdm
-  * pandas
-  * joblib
-  * networkx
-  * [simple-blast](https://github.com/actapia/simple_blast)
+  * tqdm 4.64.1
+  * pandas 2.2.0
+  * joblib 1.3.2
+  * networkx 3.0
+  * [simple-blast](https://github.com/actapia/simple_blast) 0.0.5
 * Perl libraries
-  * Bio::SeqIO
-  
-  
+  * Bio::SeqIO 1.7.8
+    
 #### Phylogenetics and Visualization
 
 * Python libraries
-  * BioPython
-  * matplotlib
-  * seaborn
+  * BioPython 1.83
+  * matplotlib 3.8.2
+  * seaborn 0.12.2
+  * scikit-bio 0.6 (in development)
+  
+#### Sequence simulation (needed for testing installation)
+
+* Python libraries
+  * more-itertools 10.2.0
+  * PyYAML 6.0.1
+  * SciPy 1.11.4
   
 
 ### Installation guides
