@@ -1,6 +1,5 @@
 import argparse
 import sys
-import pickle
 import re
 import functools
 from simple_blast.blasting import BlastnSearch
@@ -12,8 +11,6 @@ from pathlib import Path
 import pandas as pd
 
 from typing import Callable, Optional
-
-from IPython import embed
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -75,7 +72,7 @@ def parse_seq_id(regex: re.compile, s: pd.Series) -> pd.DataFrame:
     return s.str.extract(regex).astype(np.int32)
 
 def gene_matches(
-        parse: Callable[[re.compile, pd.Series], pd.DataFrame],
+        parse: Callable[[pd.Series], pd.DataFrame],
         path1: str,
         path2: str,
         evalue: float,
@@ -122,7 +119,7 @@ eprint = functools.partial(print, file=sys.stderr)
 def highest_bitscores(
         df: pd.DataFrame,
         n: int = 1,
-        groupby: str = "qgene",
+        groupby: str | list[str] = "qgene",
         **kwargs
 ) -> pd.DataFrame:
     """Select the rows (hits) with the highest bitscore for each group.
@@ -227,8 +224,8 @@ class HomologFinder:
         backward_matches.rename(
             columns={
                 a+v : b+v
-                for (a,b) in [("q","s"),("s","q")]
-                for v in ["seqid","gene","iso"]
+                for (a, b) in [("q", "s"), ("s", "q")]
+                for v in ["seqid", "gene", "iso"]
             },
             inplace=True
         )
@@ -241,8 +238,8 @@ class HomologFinder:
         # The resulting dataframe has two columns---index_x and index_y---that
         # indicate where in the original dataframes the rows were found.
         # 
-        # (Keep in mind that we swapped the order order of query and subject in
-        # the reverse dataframe, so "query" is always something in sample 1, and
+        # (Keep in mind that we swapped the order of query and subject in the
+        # reverse dataframe, so "query" is always something in sample 1, and
         # "subject" is always something in sample 2 from now on.)
         if forward_matches.empty or backward_matches.empty:
             intersection = pd.DataFrame(

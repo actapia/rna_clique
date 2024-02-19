@@ -12,12 +12,10 @@ from fractions import Fraction
 from pathlib import Path
 from typing import Optional, Any
 from collections.abc import Iterable, Iterator
-from numbers import Number
+from numbers import Real
 
 from build_graph import component_subgraphs
-from find_homologs import eprint
 from multiset_key_dict import MultisetKeyDict, FrozenMultiset
-
 
 from tqdm import tqdm
 
@@ -144,7 +142,7 @@ class SampleSimilarity:
 
     Attributes:
         graph:         The gene matches graph representing gene orthologies.
-        comparion_dfs: An iterable mapping sample pairs to comparisons.
+        comparison_dfs: An iterable mapping sample pairs to comparisons.
     """
     def __init__(
             self,
@@ -260,7 +258,7 @@ class SampleSimilarity:
         #print(res._dict)
         return res
 
-    def get_dissimilarities(self) -> MultisetKeyDict[Any, Number]:
+    def get_dissimilarities(self) -> MultisetKeyDict[Any, Real]:
         """Returns the dissimilarities between pairs of samples."""
         #res = MultisetKeyDict(self.similarities)
         #for k, v in res.
@@ -268,7 +266,7 @@ class SampleSimilarity:
             {p: 1 - s for (p, s) in self.similarities.items()}
         )
 
-    def get_similarities(self) -> MultisetKeyDict[Any, Number]:
+    def get_similarities(self) -> MultisetKeyDict[Any, Real]:
         """Returns the similarities between pairs of samples."""
         return self.similarities
 
@@ -287,7 +285,7 @@ class SampleSimilarity:
 
     def _pair_dict_to_matrix(
             self,
-            d : MultisetKeyDict[Any, Number]
+            d : MultisetKeyDict[Any, Real]
     ) -> np.ndarray:
         return np.vstack(
             [

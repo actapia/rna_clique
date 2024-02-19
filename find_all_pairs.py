@@ -3,8 +3,8 @@ import re
 import multiprocessing
 import functools
 import itertools
-from typing import Optional
-from collections.abc import Iterable
+from typing import Optional, Any
+from collections.abc import Iterable, Mapping
 from pathlib import Path
 from find_homologs import HomologFinder, eprint
 from simple_blast import BlastDBCache
@@ -89,8 +89,8 @@ def find_homologs_and_save(
         transcripts1 : Path,
         transcripts2 : Path,
         out_path : Path,
-        hf_args=None,
-        hf_kwargs=None
+        hf_args : Optional[Iterable] = None,
+        hf_kwargs : Optional[Mapping[str, Any]] = None
 ):
     """Get the gene matches tables for the given FASTA files and save results.
 
@@ -98,6 +98,8 @@ def find_homologs_and_save(
         transcripts1: Path to the top n transcripts FASTA for the first sample.
         transcripts2: Path to the top n transcripts FASTA for the second sample.
         out_path:     Output file in which to store the gene matches table.
+        hf_args:      Arguments to pass to HomologFinder constructor.
+        hf_kwargs:    Keyword arguments to pass to HomologFinder constructor.
     """
     if hf_args is None:
         hf_args = []
@@ -162,7 +164,7 @@ def make_all_dbs(
 
     Parameters:
         db_loc:     Path to the directory in which to make the databases.
-        seqs:       Paths to the FASTA files for which to makes the databases.
+        seqs:       Paths to the FASTA files for which to make the databases.
         jobs (int): The number of parallel jobs to use.
 
     Returns:

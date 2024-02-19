@@ -2,11 +2,7 @@ import argparse
 import pickle
 import json
 
-from fractions import Fraction
-
-from collections import Counter
 from pathlib import Path
-from typing import Iterator
 
 import numpy as np
 import networkx as nx
@@ -16,8 +12,6 @@ import seaborn as sns
 
 from find_homologs import eprint
 from build_graph import component_subgraphs
-
-from IPython import embed
 
 def handle_arguments():
     parser = argparse.ArgumentParser(
@@ -111,6 +105,21 @@ stat_labels = [
     "Ideal components"
 ]
 
+def component_hist(data: list[int], samples: int):
+    hist, bins = np.histogram(
+        data,
+        bins=range(1, max(data) + 2)
+    )
+    # embed()
+    plt.bar(bins[:-1], hist, width=np.diff(bins), color="C0", align="center")
+    plt.bar(
+        bins[samples - 1],
+        hist[samples - 1],
+        width=np.diff(bins),
+        color="C1",
+        align="center"
+    )
+
 def main():
     args = handle_arguments()
     with open(args.graph, "rb") as f:
@@ -127,19 +136,7 @@ def main():
         # cs_counter = Counter(component_sizes)
         # max_size = max(cs_counter)
         # size_counts = [cs_counter[k] for k in range(1, max_size)]
-        hist, bins = np.histogram(
-            component_sizes,
-            bins=range(1, max(component_sizes) + 2)
-        )
-        #embed()
-        plt.bar(bins[:-1], hist, width=np.diff(bins), color="C0", align="center")
-        plt.bar(
-            bins[args.samples-1],
-            hist[args.samples-1],
-            width=np.diff(bins),
-            color="C1",
-            align="center"
-        )
+        component_hist(component_sizes, args.samples)
         #plt.hist(component_sizes, bins=range(1, max_size))
         plt.xlabel("Component size")
         plt.ylabel("Frequency")
@@ -150,19 +147,7 @@ def main():
         # sc_counter = Counter(sample_counts)
         # max_size = max(sc_counter)
         # size_counts = [sc_counter[k] for k in range(1, max_size)]
-        hist, bins = np.histogram(
-            sample_counts,
-            bins=range(1, max(sample_counts) + 2)
-        )
-        # embed()
-        plt.bar(bins[:-1], hist, width=np.diff(bins), color="C0", align="center")
-        plt.bar(
-            bins[args.samples-1],
-            hist[args.samples-1],
-            width=np.diff(bins),
-            color="C1",
-            align="center"
-        )
+        component_hist(sample_counts, args.samples)
         plt.xlabel("Sample count")
         plt.ylabel("Frequency")
         plt.savefig(args.sample_plot)
@@ -199,7 +184,7 @@ def main():
                 component_sizes,
                 sample_counts
             )
-                    if len(c) == args.samples and g == args.samples and \
+            if len(c) == args.samples and g == args.samples and
             2*len(c.edges) == s*(s-1)
         )
         gt_samples = sum(1 for c in components if len(c) >= args.samples)

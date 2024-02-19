@@ -1,9 +1,8 @@
 import operator
-import functools
 
 
 from collections import Counter
-from collections.abc import MutableMapping, Mapping, Set, Iterable
+from collections.abc import Mapping, Set, Iterable
 from typing import Optional, Iterator, Union
 
 # def as_frozen_multiset(c):
@@ -80,8 +79,8 @@ class MultisetKeyDict[KT, VT]:
 
         If mapping is neither a MultisetKeyDict nor a dict, then the constructor
         will assume that mapping is an iterable of key-value pairs. The
-        constructed MultisetKeyDict will have contain the same key-value pairs,
-        with every key converted to a FrozenMultiset.
+        constructed MultisetKeyDict will contain the same key-value pairs, with
+        every key converted to a FrozenMultiset.
         """
         self._dict = {}
         if mapping is not None:
@@ -178,5 +177,3 @@ class MultisetKeyDict[KT, VT]:
     def key_elements(self) -> frozenset[KT]:
         """Returns all distinct elements of keys."""
         return frozenset.union(*self.set_keys())
-
-

@@ -13,8 +13,6 @@ import networkx as nx
 
 from tqdm import tqdm
 
-from IPython import embed
-
 # Since sum doesn't work on all objects.
 sum_ = functools.partial(functools.reduce, operator.add)
 
@@ -34,6 +32,7 @@ def handle_arguments():
         "-o",
         "--output-graph",
         type=Path,
+        required=True,
         help="the output pickle of the gene matches graph"
     )
     return parser.parse_args()
@@ -44,7 +43,7 @@ def component_subgraphs(g : nx.Graph) -> Iterator[nx.Graph]:
         yield g.subgraph(c)
 
 def make_edge(r):
-    return ((r[0], r[1]), (r[2], r[3]))
+    return (r[0], r[1]), (r[2], r[3])
 
 def build_graph(dfs : Iterable[pd.DataFrame]) -> nx.Graph:
     """Build a gene matches graph from gene matches tables (dataframes).
@@ -79,11 +78,8 @@ def build_graph(dfs : Iterable[pd.DataFrame]) -> nx.Graph:
 def main():
     args = handle_arguments()
     graph = build_graph(pd.read_pickle(f) for f in tqdm(args.inputs))
-    if args.output_graph:
-        with open(args.output_graph, "wb") as f:
-            pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
-    else:
-        embed()
+    with open(args.output_graph, "wb") as f:
+        pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
 
 if __name__ == "__main__":
     main()
