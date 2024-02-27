@@ -307,6 +307,27 @@ class SampleSimilarity:
         """
         return self._pair_dict_to_matrix(self.get_similarities())
 
+    def _matrix_to_df(self, mat: np.ndarray) -> pd.DataFrame:
+        return pd.DataFrame(
+            mat
+        ).set_axis(
+            self.samples,
+            axis=1
+        ).set_axis(
+            self.samples,
+            axis=0
+        )
+
+    def get_similarity_df(self) -> pd.DataFrame:
+        """Returns the pairwise similarity matrix as a Pandas dataframe.
+
+        Rows and columns are indexed with the sample names.
+
+        Returns:
+            A Pandas dataframe giving pairwise similarities for all samples.
+        """
+        return self._matrix_to_df(self.get_similarity_matrix())
+
     def get_dissimilarity_matrix(self) -> np.ndarray:
         """Returns the computed pairwise dissimilarity (distance) matrix.
 
@@ -316,6 +337,16 @@ class SampleSimilarity:
             A matrix giving the dissimilarity for each pair of samples.
         """
         return self._pair_dict_to_matrix(self.get_dissimilarities())
+
+    def get_dissimilarity_df(self) -> pd.DataFrame:
+        """Returns the pairwise dissimilarity matrix as a Pandas dataframe.
+
+        Rows and columns are indexed with the sample names.
+
+        Returns:
+            A Pandas dataframe giving pairwise dissimilarities for all samples.
+        """
+        return self._matrix_to_df(self.get_dissimilarity_matrix())
 
     @classmethod
     def from_filenames(

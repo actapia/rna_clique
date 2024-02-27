@@ -202,18 +202,18 @@ if ! [[ -v n ]]; then
     >&2 echo "Missing required argument -n."
     exit 1
 fi
-intermed_flag=()
+intermed_add=()
 if [ "$intermed" = true ]; then
-    intermed_flag=(--intermed-dir "$out_dir/intermed")
+    intermed_add=(--intermed-dir "$out_dir/intermed")
 fi
-raw_flag=()
+raw_add=()
 if [ "$raw" = true ]; then
-    raw_flag=(--raw-dir "$out_dir/raw")
+    raw_add=(--raw-dir "$out_dir/raw")
 fi
 mkdir -p "$out_dir"
 set -e
 set -x
 bash do_filtering_step.sh --jobs "$jobs" --out-dir-1 "$out_dir/od1" \
      --out-dir-2 "$out_dir/od2" -n "$n" --output-graph "$out_dir/graph.pkl" \
-     --cache-dir "$out_dir/db_cache" "${intermed_flag[@]}" "${raw_flag[@]}" \
+     --cache-dir "$out_dir/db_cache" "${intermed_add[@]}" "${raw_add[@]}" \
      --keep-all "${rem[@]}" 
