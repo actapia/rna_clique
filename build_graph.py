@@ -2,6 +2,7 @@ import argparse
 import functools
 import operator
 import pickle
+import re
 from pathlib import Path
 from find_homologs import eprint
 
@@ -15,6 +16,8 @@ from tqdm import tqdm
 
 # Since sum doesn't work on all objects.
 sum_ = functools.partial(functools.reduce, operator.add)
+
+default_filter_regex = re.compile("(.*)")
 
 def handle_arguments():
     parser = argparse.ArgumentParser(
@@ -34,6 +37,25 @@ def handle_arguments():
         type=Path,
         required=True,
         help="the output pickle of the gene matches graph"
+    )
+    parser.add_argument(
+        "--filter",
+        "-f",
+        nargs="+",
+        help="samples to include (if not provided, the problem includes all)"
+    )
+    parser.add_argument(
+        "--filter-regex",
+        "-r",
+        help="regular expression to apply to sample names",
+        type=re.compile,
+        default=default_filter_regex
+    )
+    parser.add_argument(
+        "--filter-file",
+        "-F",
+        type=Path,
+        help="file containing sample to include"
     )
     return parser.parse_args()
 
@@ -74,10 +96,35 @@ def build_graph(dfs : Iterable[pd.DataFrame]) -> nx.Graph:
             make_edge(r) for r in df[sum_(all_cols)].itertuples(index=False)
         )
     return graph
+
+def filtered_tables(tables, include=None, filter_regex=default_filter_regex):
+    if include is None:
+        return tables
+    else:
+        for t in tables:
+            if all(
+                    filter_regex.search(t[x + "sample"]).group(1) in include
+                    for x in ["s", "q"]
+            ):
+                yield t
         
 def main():
     args = handle_arguments()
-    graph = build_graph(pd.read_pickle(f) for f in tqdm(args.inputs))
+    include = set(args.filter)
+    try:
+        with open(args.filter_file, "r") as filter_file:
+            include |= set(l.rstrip() for l in filter_file)
+    except TypeError:
+        pass
+    if not include:
+        include = None
+    graph = build_graph(
+        filtered_tables(
+            (pd.read_pickle(f) for f in tqdm(args.inputs)),
+            include=include,
+            filter_regex=args.filter_regex
+        )
+    )
     with open(args.output_graph, "wb") as f:
         pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
 
