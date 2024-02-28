@@ -42,6 +42,7 @@ def handle_arguments():
         "--filter",
         "-f",
         nargs="+",
+        default=[],
         help="samples to include (if not provided, the problem includes all)"
     )
     parser.add_argument(
@@ -103,7 +104,9 @@ def filtered_tables(tables, include=None, filter_regex=default_filter_regex):
     else:
         for t in tables:
             if all(
-                    filter_regex.search(t[x + "sample"]).group(1) in include
+                    filter_regex.search(
+                        t[x + "sample"].iloc[0]
+                    ).group(1) in include
                     for x in ["s", "q"]
             ):
                 yield t

@@ -156,15 +156,20 @@ class SampleSimilarity:
         self._samples = None
 
     @classmethod
+    def mapping_from_dfs(cls, dfs):
+        for df in dfs:
+            qsample = df["qsample"][0]
+            ssample = df["ssample"][0]
+            yield frozenset((qsample, ssample)), comp_df
+            
+
+    @classmethod
     def _load_pickles(
             cls,
             pickles: Iterable[Path]
     ) -> Iterator[tuple[frozenset[str, str], pd.DataFrame]]:
-        for pick in pickles:
-            comp_df = pd.read_pickle(pick)
-            qsample = comp_df["qsample"][0]
-            ssample = comp_df["ssample"][0]
-            yield frozenset((qsample, ssample)), comp_df
+        return cls.mapping_from_dfs(map(pd.read_pickle, pickles))
+            
 
     @property
     def sample_count(self):
