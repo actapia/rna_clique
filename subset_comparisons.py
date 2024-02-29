@@ -1,4 +1,5 @@
 import argparse
+import os
 import re
 
 from pathlib import Path
@@ -13,7 +14,7 @@ default_filter_regex = re.compile("(.*)")
 
 def handle_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_arguments(
+    parser.add_argument(
         "-O",
         "--output-dir",
         type=Path,
@@ -61,9 +62,12 @@ def matcher(included, filter_regex):
         return x in included or (filter_regex and filter_regex.search(x))
     return inner
 
+def relative_to(p1: Path, p2: Path):
+    return Path(os.path.relpath(str(p1), str(p2)))
+
 def main():
     args = handle_arguments()
-    args.out_dir.mkdir(exist_ok=True)
+    args.output_dir.mkdir(exist_ok=True)
     include = set(args.filter)
     try:
         with open(args.filter_file, "r") as filter_file:
@@ -75,14 +79,14 @@ def main():
         df = pd.read_pickle(df_path)
         if all(
                 matches(
-                    args.file_regex.search(
-                        df[x + "sample"].iloc[0]
-                    ).group(1)
-                    for x in ["q", "s"]
+                    args.sample_name_regex.search(
+                        Path(df[x + "sample"].iloc[0]).name
+                    ).group(1)                    
                 )
+                for x in ["q", "s"]
         ):
-            dest = args.out_dir / df_path.name
-            dest.symlink_to(df_path.relative_to(dest))
+            dest = args.output_dir / df_path.name
+            dest.symlink_to(relative_to(df_path, dest.parent))
             
 if __name__ == "__main__":
     main()
