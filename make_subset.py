@@ -1,18 +1,18 @@
 import argparse
-import os
 import re
+import pickle
 
 from pathlib import Path
 
-import pandas as pd
-
 from tqdm import tqdm
 
+from subset_comparisons import (
+    default_filter_regex,
+    handle_filters,
+    matcher,
+    make_subset_comparisons
+)
 from build_graph import build_graph
-
-from more_itertools import consume
-
-default_filter_regex = re.compile("(.*)")
 
 def handle_arguments():
     parser = argparse.ArgumentParser()
@@ -21,15 +21,14 @@ def handle_arguments():
         "--output-dir",
         type=Path,
         required=True,
-        help="path to the directory in which to store filtered comparisons"
+        help="directory in which to store subset comparisons and graph"
     )
     parser.add_argument(
-        "-i",
-        "--inputs",
-        nargs="+",
+        "-I",
+        "--input-dir",
         type=Path,
         required=True,
-        help="pickles containing the gene matches tables"
+        help="directory for full set of data"
     )
     parser.add_argument(
         "--filter",
@@ -59,53 +58,28 @@ def handle_arguments():
     )
     return parser.parse_args()
 
-def matcher(included, filter_regex):
-    def inner(x):
-        return x in included or (filter_regex and filter_regex.search(x))
-    return inner
-
-def relative_to(p1: Path, p2: Path):
-    return Path(os.path.relpath(str(p1), str(p2)))
-
-def make_subset_comparisons(inputs, output_dir, matches, sample_name_regex):
-    for df_path in inputs:
-        df = pd.read_pickle(df_path)
-        if all(
-                matches(
-                    sample_name_regex.search(
-                        Path(df[x + "sample"].iloc[0]).name
-                    ).group(1)                    
-                )
-                for x in ["q", "s"]
-        ):
-            dest = output_dir / df_path.name
-            dest.symlink_to(relative_to(df_path, dest.parent))
-            yield df
-
-def handle_filters(include, include_file):
-    include = set(include)
-    try:
-        with open(include_file, "r") as filter_file:
-            include |= set(l.rstrip() for l in filter_file)
-    except TypeError:
-        pass
-    return include
-
 def main():
     args = handle_arguments()
     args.output_dir.mkdir(exist_ok=True)
+    od2 = args.output_dir / "od2"
+    od2.mkdir(exist_ok=True)
     matches = matcher(
         handle_filters(args.filter, args.filter_file),
         args.filter_regex
     )
-    consume(
+    graph = build_graph(
         make_subset_comparisons(
-            tqdm(args.inputs),
-            args.output_dir,
+            tqdm(args.input_dir.glob("*pkl")),
+            od2,
             matches,
             args.sample_name_regex
         )
     )
-            
+    with open(args.output_dir / "graph.pkl", "wb") as f:
+        pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
+
 if __name__ == "__main__":
     main()
+
+
+    
