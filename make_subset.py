@@ -69,7 +69,7 @@ def main():
     )
     graph = build_graph(
         make_subset_comparisons(
-            tqdm(args.input_dir.glob("*pkl")),
+            tqdm(list((args.input_dir / "od2").glob("*pkl"))),
             od2,
             matches,
             args.sample_name_regex
