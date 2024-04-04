@@ -15,7 +15,7 @@ class SublistedColormap(mpl.colors.ListedColormap):
         """Create a SublistedColormap from a ListedColormap"""
         return SublistedColormap(colormap.colors)
 
-def convert_to_slcm(cm: mpl.color.Colormap) -> mpl.color.Colormap:
+def convert_to_slcm(cm: mpl.colors.Colormap) -> mpl.colors.Colormap:
     """Converts ListedColormaps to SublistedColormaps and leaves others alone.
 
     Parameters:
