@@ -14,7 +14,7 @@ def matcher(
         included: Container[str],
         filter_regex: Optional[re.Pattern] = None
 ) -> Callable[[str], bool]:
-    """Returns a funciton that checks if a string meets certain criteria.
+    """Returns a function that checks if a string meets certain criteria.
 
     Specifically, the returned function returns a bool indicating whether its
     argument is in the provided Container or matches the given regex.
