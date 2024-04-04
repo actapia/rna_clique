@@ -160,7 +160,7 @@ class SampleSimilarity:
         for df in dfs:
             qsample = df["qsample"][0]
             ssample = df["ssample"][0]
-            yield frozenset((qsample, ssample)), comp_df
+            yield frozenset((qsample, ssample)), df
             
 
     @classmethod
