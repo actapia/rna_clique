@@ -1,6 +1,7 @@
 import matplotlib as mpl
 
 class SublistedColormap(mpl.colors.ListedColormap):
+    """ListedColormap that supports slicing."""
     def __getitem__(self, idx):
         try:
             return SublistedColormap(
@@ -10,10 +11,19 @@ class SublistedColormap(mpl.colors.ListedColormap):
             return self.colors[idx]
 
     @classmethod
-    def from_listedcolormap(cls, colormap):
+    def from_listedcolormap(cls, colormap: mpl.colors.ListedColormap):
+        """Create a SublistedColormap from a ListedColormap"""
         return SublistedColormap(colormap.colors)
 
-def convert_to_slcm(cm):
+def convert_to_slcm(cm: mpl.color.Colormap) -> mpl.color.Colormap:
+    """Converts ListedColormaps to SublistedColormaps and leaves others alone.
+
+    Parameters:
+        cm: A Colormap to possibly convert.
+
+    Returns:
+        If cm is a ListedColormap, a corresponding SublistedColormap, else cm.
+    """
     if isinstance(cm, mpl.colors.ListedColormap):
         return SublistedColormap.from_listedcolormap(cm)
     else:
