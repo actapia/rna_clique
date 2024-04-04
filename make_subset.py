@@ -7,15 +7,17 @@ from pathlib import Path
 from tqdm import tqdm
 
 from subset_comparisons import (
-    default_filter_regex,
     handle_filters,
     matcher,
     make_subset_comparisons
 )
+from path_to_sample import sample_re
 from build_graph import build_graph
 
 def handle_arguments():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description="subset a previous analysis, creating a new graph"
+    )
     parser.add_argument(
         "-O",
         "--output-dir",
@@ -31,15 +33,15 @@ def handle_arguments():
         help="directory for full set of data"
     )
     parser.add_argument(
-        "--filter",
-        "-f",
+        "--include",
+        "-y",
         nargs="+",
         default=[],
-        help="samples to include (if not provided, the problem includes all)"
+        help="samples to include (default is all)"
     )
     parser.add_argument(
-        "--filter-regex",
-        "-R",
+        "--include-regex",
+        "-Y",
         type=re.compile,
         help="regular expression specifying which sample names to include"
     )
@@ -48,11 +50,10 @@ def handle_arguments():
         "-r",
         help="regular expression to apply to sample names",
         type=re.compile,
-        default=default_filter_regex
+        default=sample_re
     )
     parser.add_argument(
         "--filter-file",
-        "-F",
         type=Path,
         help="file containing sample to include"
     )

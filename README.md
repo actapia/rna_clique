@@ -229,4 +229,4 @@ alphabetically by name. To get this ordered list of samples, you can use the
 ## Additional documentation
 
 * [Command-line usage guide](docs/usage.md)
-* [Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](docs/tutorials/from_rna_seq_data.md)
+* [Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](docs/tutorials/reads2tree/README.md)

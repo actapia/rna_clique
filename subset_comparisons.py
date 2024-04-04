@@ -1,4 +1,3 @@
-import argparse
 import os
 import re
 
@@ -6,75 +5,59 @@ from pathlib import Path
 
 import pandas as pd
 
-from tqdm import tqdm
-
-from build_graph import build_graph
-
-from more_itertools import consume
+from typing import Optional, Callable
+from collections.abc import Container, Iterable
 
 default_filter_regex = re.compile("(.*)")
 
-def handle_arguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-O",
-        "--output-dir",
-        type=Path,
-        required=True,
-        help="path to the directory in which to store filtered comparisons"
-    )
-    parser.add_argument(
-        "-i",
-        "--inputs",
-        nargs="+",
-        type=Path,
-        required=True,
-        help="pickles containing the gene matches tables"
-    )
-    parser.add_argument(
-        "--filter",
-        "-f",
-        nargs="+",
-        default=[],
-        help="samples to include (if not provided, the problem includes all)"
-    )
-    parser.add_argument(
-        "--filter-regex",
-        "-R",
-        type=re.compile,
-        help="regular expression specifying which sample names to include"
-    )
-    parser.add_argument(
-        "--sample-name-regex",
-        "-r",
-        help="regular expression to apply to sample names",
-        type=re.compile,
-        default=default_filter_regex
-    )
-    parser.add_argument(
-        "--filter-file",
-        "-F",
-        type=Path,
-        help="file containing sample to include"
-    )
-    return parser.parse_args()
+def matcher(
+        included: Container[str],
+        filter_regex: Optional[re.Pattern] = None
+) -> Callable[[str], bool]:
+    """Returns a funciton that checks if a string meets certain criteria.
 
-def matcher(included, filter_regex):
+    Specifically, the returned function returns a bool indicating whether its
+    argument is in the provided Container or matches the given regex.
+
+    Parameters:
+        included:     A container of strings to be included.
+        filter_regex: A regular expression to match.
+
+    Returns:
+        A function that checks if a str matches the regex or included strings.
+    """
     def inner(x):
         return x in included or (filter_regex and filter_regex.search(x))
     return inner
 
-def relative_to(p1: Path, p2: Path):
+def relative_to(p1: Path, p2: Path) -> Path:
+    """Returns the first path relative to the second."""
     return Path(os.path.relpath(str(p1), str(p2)))
 
-def make_subset_comparisons(inputs, output_dir, matches, sample_name_regex):
+def make_subset_comparisons(
+        inputs: Iterable[Path],
+        output_dir: Path,
+        matches: Callable[[str], bool],
+        sample_name_regex: re.Pattern
+):
+    """Creates symlinks to pickled dataframes whose samples satisfy a predicate.
+
+    Parameters:
+        inputs:            The Paths to the input dataframe pickles.
+        output_dir:        The directory in which to create the symlinks.
+        matches:           A function indicating whether a sample is included.
+        sample_name_regex: A regular expression for parsing sample names.
+
+    Returns:
+        A generator yielding the dataframes whose samples satisfy the predicate.
+    """
     for df_path in inputs:
         df = pd.read_pickle(df_path)
         if all(
                 matches(
                     sample_name_regex.search(
                         Path(df[x + "sample"].iloc[0]).name
-                    ).group(1)                    
+                    ).group(1)
                 )
                 for x in ["q", "s"]
         ):
@@ -82,7 +65,8 @@ def make_subset_comparisons(inputs, output_dir, matches, sample_name_regex):
             dest.symlink_to(relative_to(df_path, dest.parent))
             yield df
 
-def handle_filters(include, include_file):
+def handle_filters(include: Iterable[str], include_file: Path) -> set[str]:
+    """Creates a set including both the given iterable and file's contents."""
     include = set(include)
     try:
         with open(include_file, "r") as filter_file:
@@ -90,22 +74,3 @@ def handle_filters(include, include_file):
     except TypeError:
         pass
     return include
-
-def main():
-    args = handle_arguments()
-    args.output_dir.mkdir(exist_ok=True)
-    matches = matcher(
-        handle_filters(args.filter, args.filter_file),
-        args.filter_regex
-    )
-    consume(
-        make_subset_comparisons(
-            tqdm(args.inputs),
-            args.output_dir,
-            matches,
-            args.sample_name_regex
-        )
-    )
-            
-if __name__ == "__main__":
-    main()

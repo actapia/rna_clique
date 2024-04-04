@@ -226,6 +226,50 @@ The `--quiet` option may be used to suppress printing the gene matches table,
 and the `--report-float` option may be used to express the distance as a
 floating-point number instead of a fraction.
 
+## make\_subsets.py
+
+This script creates links to gene matches tables and a gene matches graph for a
+subset of samples from a previously completed run of RNA-clique (specifically,
+phase 1 of RNA-clique). `make_subsets.py` is useful when you want to compute
+distances for a subset of samples that you've already analyzed with
+RNA-clique. This script is typically much faster than re-running Phase 1 on a
+subset of the input FASTA files since this script does not need to repeat any of
+the BLAST searches from the prior analysis.
+
+The symbolic links to the gene matches tables belonging to the subset are placed
+in an `od2` subdirectory of the specified output directory. The new gene matches
+graph is saved in a file named `graph.pkl` directly under the output directory.
+
+### Options
+
+| Short name | Long name                                   | Description                                                                                      | Default           | Required |
+|------------|---------------------------------------------|--------------------------------------------------------------------------------------------------|-------------------|----------|
+| `-h`       | `--help`                                    | Print a help message and exit.                                                                   |                   | No       |
+| `-O`       | `--output-dir`                              | Directory in which to store links to subset gene matches tables and graph.                       |                   | Yes      |
+| `-I`       | `--input-dir`                               | Directory containing gene matches tables in `od2` subdirectory.                                  |                   | Yes      |
+| `-y`       | `--include`                                 | A list of samples to include. If none are provided, the list is not used for selecting a subset. |                   | No       |
+| `-Y`       | `--include-regex`                           | A regular expression that matches samples to include.                                            |                   | No       |
+| `-r`       | [`--sample-name-regex`](#sample-name-regex) | A regular expression for parsing the samples found in gene matches tables into sample names.     | `(.*)_top\.fasta` | No       |
+|            | `--filter-file`                             | A file whose lines contain names of samples to include in the subset.                            |                   | No       |
+
+#### sample-name-regex
+
+Each gene matches table created in Phase 1 of RNA-clique keeps track of the
+paths to the files used in the comparison. These are stored in the `qsample` and
+`ssample` columns of each dataframe.
+
+`sample-name-regex` is a regular expression used to transform these basenames of
+the file paths back into sample names. The capture groups of this regular
+expression are as follows:
+
+| Capture group | Description |
+|---------------|-------------|
+| 1             | Sample name |
+
+Since `select_top_sets_all.sh` saves the sequences for the top $n$ genes of a
+sample named `$sample_name` in a file named `${sample_name}_top.fasta`, the
+default setting for this parameter is `(.*)_top\.fasta`.
+
 ## plot\_component\_sizes.py
 
 Despite its name, `plot_component_sizes.py` offers a variety of features useful
