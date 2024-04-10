@@ -1,10 +1,8 @@
 import functools
 
-
 import pandas as pd
 import numpy as np
 import seaborn as sns
-import matplotlib as mpl
 from matplotlib import pyplot as plt
 
 from typing import Union, Optional, Callable, Literal
@@ -42,7 +40,6 @@ axis_to_pos = dict(map(reversed, enumerate(["x", "y"])))
 axis_to_ha = {"y": "left", "x": "center"}
 axis_to_va = {"y": "center", "x": "bottom"}
 
-
 def draw_heatmap(
         mat: pd.DataFrame,
         *heatmap_args,
@@ -78,6 +75,37 @@ def draw_heatmap(
     """
 
     def _draw_group_labels(axis: Literal["x", "y"], padding: int = 0):
+        
+        def draw_labels(perp_pos=0):
+            texts = []
+            max_width = 0
+            for group, df in sample_metadata.groupby(order_by):
+                avg_pos = sum(
+                    pos_dict[sample] for sample in df["index"]
+                )/len(df)
+                pos = [0, 0]
+                pos[para] = avg_pos
+                pos[perp] = perp_pos
+                group_label = make_group_label(group)
+                texts.append(
+                    plt.text(
+                        *pos,
+                        group_label,
+                        horizontalalignment=axis_to_ha[axis],
+                        verticalalignment=axis_to_va[axis],
+                        fontsize=10
+                    )
+                )
+                max_width = max(
+                    max_width,
+                    abs(
+                        texts[-1].get_window_extent(
+                            plt.gcf().canvas.renderer
+                        ).transformed(ax.transData.inverted()).bounds[2+perp]
+                    )
+                )
+            return texts, max_width
+
         tick_labels = getattr(ax, f"get_{axis}ticklabels")()
         para = axis_to_pos[axis]
         perp = (para + 1)%2
@@ -95,53 +123,11 @@ def draw_heatmap(
             for t in tick_labels
         )
         print(axis, edge)
-        max_width = 0
-        texts = []
-        for group, df in sample_metadata.groupby(order_by):
-            avg_pos = sum(
-                pos_dict[sample] for sample in df["index"]
-            )/len(df)
-            pos = [0, 0]
-            pos[para] = avg_pos
-            group_label = make_group_label(group)
-            texts.append(
-                plt.text(
-                    *pos,
-                    group_label,
-                    horizontalalignment=axis_to_ha[axis],
-                    verticalalignment=axis_to_va[axis],
-                    fontsize=10
-                )
-            )
-            max_width = max(
-                max_width,
-                abs(
-                    texts[-1].get_window_extent(
-                        plt.gcf().canvas.renderer
-                    ).transformed(ax.transData.inverted()).bounds[2+perp]
-                )
-            )
+        texts, max_width = draw_labels()
         for text in texts:
             text.remove()
-        texts = []
         perp_pos = edge - sign*(max_width + padding)
-        for group, df in sample_metadata.groupby(order_by):
-            avg_pos = sum(
-                pos_dict[sample] for sample in df["index"]
-            )/len(df)
-            pos = [0, 0]
-            pos[para] = avg_pos
-            pos[perp] = perp_pos
-            group_label = make_group_label(group)
-            texts.append(
-                plt.text(
-                    *pos,
-                    group_label,
-                    horizontalalignment=axis_to_ha[axis],
-                    verticalalignment=axis_to_va[axis],
-                    fontsize=10
-                )
-            )
+        draw_labels(perp_pos)
         return perp_pos
     
     #print(sample_metadata)
