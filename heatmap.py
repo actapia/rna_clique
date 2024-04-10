@@ -1,4 +1,5 @@
 import functools
+import typing
 
 import pandas as pd
 import numpy as np
@@ -35,6 +36,7 @@ def default_group_label_maker(group_values: str | Iterable[str]) -> str:
     else:
         return ", ".join(map(str, group_values))
 
+# noinspection PyTypeChecker
 axis_to_pos = dict(map(reversed, enumerate(["x", "y"])))
 axis_to_ha = {"y": "left", "x": "center"}
 axis_to_va = {"y": "center", "x": "bottom"}
@@ -79,28 +81,37 @@ def draw_heatmap(
         y_label_kwargs (dict):    kwargs to give to plt.text for y group labels
     """
 
-    def _draw_group_labels(axis: Literal["x", "y"], padding: int = 0, **kwargs):
+    def _draw_group_labels(
+            axis: Literal["x", "y"],
+            padding: float = 0,
+            **kwargs
+    ):
         
-        def draw_labels(perp_pos=0):
+        def draw_labels(ppos=0):
             texts = []
             max_width = 0
             for group, df in sample_metadata.groupby(order_by):
                 avg_pos = sum(
                     pos_dict[sample] for sample in df["index"]
                 )/len(df)
-                pos = [0, 0]
-                pos[para] = avg_pos
-                pos[perp] = perp_pos
-                group_label = make_group_label(group)
+                coords = [0, 0]
+                coords[para] = avg_pos
+                coords[perp] = ppos
+                group_label = make_group_label(typing.cast(Iterable, group))
+                # PyCharm's type checker doesn't seem to recognize that *pos
+                # covers the first two arguments.
+                # noinspection PyTypeChecker
                 texts.append(
                     plt.text(
-                        *pos,
+                        *coords,
                         group_label,
                         horizontalalignment=axis_to_ha[axis],
                         verticalalignment=axis_to_va[axis],
                         **kwargs
                     )
                 )
+                # canvas.renderer exists, but only when we're actually drawing
+                # noinspection PyUnresolvedReferences
                 max_width = max(
                     max_width,
                     abs(
@@ -113,25 +124,26 @@ def draw_heatmap(
 
         tick_labels = getattr(ax, f"get_{axis}ticklabels")()
         para = axis_to_pos[axis]
-        perp = (para + 1)%2
+        perp = (para + 1) % 2
         pos_dict = {
             t.get_text(): t.get_position()[para]
             for t in tick_labels
         }
         sign = para*2-1
+        # noinspection PyUnresolvedReferences
         edge = min(
             sign*min(
                 sign*t.get_window_extent(
                     plt.gcf().canvas.renderer
-                ).transformed(ax.transData.inverted()).get_points()[:,perp]
+                ).transformed(ax.transData.inverted()).get_points()[:, perp]
             )
             for t in tick_labels
         )
-        texts, max_width = draw_labels()
-        for text in texts:
+        text_elems, m_width = draw_labels()
+        for text in text_elems:
             text.remove()
         perp_pos = edge - sign*(
-            max_width + (ax_to_data([padding], perp)[0] % 1)
+            m_width + (ax_to_data([padding], perp)[0] % 1)
         )
         draw_labels(perp_pos)
         return perp_pos
@@ -143,7 +155,7 @@ def draw_heatmap(
             sample_name_column
         ).loc[mat.columns].reset_index().sort_values(order_by)
         #embed()
-        mat = mat.iloc[sample_metadata.index].iloc[:,sample_metadata.index]
+        mat = mat.iloc[sample_metadata.index].iloc[:, sample_metadata.index]
     if digit_annot is not None:
         heatmap_kwargs["annot"] = (
             mat * 10**((-np.floor(np.log10(mat))).min(None) + digit_annot - 1)
@@ -161,7 +173,7 @@ def draw_heatmap(
     # https://stackoverflow.com/a/49608671
     mask = np.zeros_like(mat)
     mask[np.tril_indices_from(mask)] = True
-    sns.set(rc={"figure.figsize": (15,7)})
+    sns.set(rc={"figure.figsize": (15, 7)})
     sns.set_style("white")
     ax = sns.heatmap(
         mat,
@@ -187,8 +199,8 @@ def draw_heatmap(
     major_weight = 2
     minor_weight = 1.5
     base_kwargs = {"color": divider_color, "alpha": 0.15}
-    major_kwargs = base_kwargs |  {"lw": major_weight}
-    minor_kwargs = base_kwargs |  {"lw": minor_weight}
+    major_kwargs = base_kwargs | {"lw": major_weight}
+    minor_kwargs = base_kwargs | {"lw": minor_weight}
     ax_to_data = functools.partial(
         _transform_ax,
         BasicCompositeTransform(ax.transAxes, ax.transData.inverted())
@@ -222,5 +234,7 @@ def draw_heatmap(
             pos += 1
             ax.plot(xpos, [pos, pos], clip_on=False, **minor_kwargs)
             ax.plot([pos, pos], ypos, clip_on=False, **minor_kwargs)
+    # noinspection PyTypeChecker
     plt.xlabel(None)
+    # noinspection PyTypeChecker
     plt.ylabel(None)
