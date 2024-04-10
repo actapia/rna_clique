@@ -147,7 +147,7 @@ def draw_heatmap(
     if digit_annot is not None:
         heatmap_kwargs["annot"] = (
             mat * 10**((-np.floor(np.log10(mat))).min(None) + digit_annot - 1)
-        ).round().map(lambda x: str(int(x)).zfill(digit_annot))
+        ).round()
     if label_kwargs is None:
         label_kwargs = {}
     if x_label_kwargs is None:
