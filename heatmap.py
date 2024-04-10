@@ -193,8 +193,11 @@ def draw_heatmap(
         _transform_ax,
         BasicCompositeTransform(ax.transAxes, ax.transData.inverted())
     )
-    group_label_dist_x = _draw_group_labels("y", label_padding_x)
-    group_label_dist_y = _draw_group_labels("x", label_padding_y)
+    group_label_dist_x = 0
+    group_label_dist_y = ax_to_data([1], 1)[0]
+    if draw_group_labels:
+        group_label_dist_x = _draw_group_labels("y", label_padding_x)
+        group_label_dist_y = _draw_group_labels("x", label_padding_y)
     xpos = [group_label_dist_x] + ax_to_data([1], 0)
     ypos = [0] + [group_label_dist_y]
     for pos in sample_metadata.reset_index(
