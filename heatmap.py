@@ -5,7 +5,7 @@ import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-from typing import Union, Optional, Callable, Literal
+from typing import Union, Optional, Callable, Literal, Any
 from collections.abc import Iterable
 
 #from IPython import embed
@@ -52,6 +52,9 @@ def draw_heatmap(
         digit_annot: int = None,
         label_padding_x: float = 0.44,
         label_padding_y: float = 0.44,
+        label_kwargs: dict[str, Any] = None,
+        x_label_kwargs: dict[str, Any] = None,
+        y_label_kwargs: dict[str, Any] = None,
         **heatmap_kwargs
 ):
     """Draw a heatmap representing a (dis)similarity matrix.
@@ -72,9 +75,12 @@ def draw_heatmap(
         digit_annot (int):        Annotate with the most significant digits.
         label_padding_x (float):  x padding to add to group labels on y axis.
         label_padding_y (float):  y padding to add to group labels on x axis.
+        label_kwargs (dict):      kwargs to give to plt.text for group labels
+        x_label_kwargs (dict):    kwargs to give to plt.text for x group labels
+        y_label_kwargs (dict):    kwargs to give to plt.text for y group labels
     """
 
-    def _draw_group_labels(axis: Literal["x", "y"], padding: int = 0):
+    def _draw_group_labels(axis: Literal["x", "y"], padding: int = 0, **kwargs):
         
         def draw_labels(perp_pos=0):
             texts = []
@@ -93,7 +99,7 @@ def draw_heatmap(
                         group_label,
                         horizontalalignment=axis_to_ha[axis],
                         verticalalignment=axis_to_va[axis],
-                        fontsize=10
+                        **kwargs
                     )
                 )
                 max_width = max(
@@ -143,6 +149,15 @@ def draw_heatmap(
         heatmap_kwargs["annot"] = (
             mat * 10**((-np.floor(np.log10(mat))).min(None) + digit_annot - 1)
         ).round().map(lambda x: str(int(x)).zfill(digit_annot))
+    if label_kwargs is None:
+        label_kwargs = {}
+    if x_label_kwargs is None:
+        x_label_kwargs = {}
+    if y_label_kwargs is None:
+        y_label_kwargs = {}
+    label_kwargs.setdefault("fontsize", 10)
+    x_label_kwargs = label_kwargs | x_label_kwargs
+    y_label_kwargs = label_kwargs | y_label_kwargs
     # This trick comes from PyRsquared on Stack Overflow
     # https://stackoverflow.com/a/49608671
     mask = np.zeros_like(mat)
@@ -182,8 +197,16 @@ def draw_heatmap(
     group_label_dist_x = 0
     group_label_dist_y = ax_to_data([1], 1)[0]
     if draw_group_labels:
-        group_label_dist_x = _draw_group_labels("y", label_padding_x)
-        group_label_dist_y = _draw_group_labels("x", label_padding_y)
+        group_label_dist_x = _draw_group_labels(
+            "y",
+            label_padding_x,
+            **y_label_kwargs
+        )
+        group_label_dist_y = _draw_group_labels(
+            "x",
+            label_padding_y,
+            **x_label_kwargs
+        )
     xpos = [group_label_dist_x] + ax_to_data([1], 0)
     ypos = [0] + [group_label_dist_y]
     for pos in sample_metadata.reset_index(
