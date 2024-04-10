@@ -18,7 +18,6 @@ class BasicCompositeTransform:
     def transform_point(self, p):
         """Transform the point by applying each transform in order."""
         for t in self.transforms:
-            #print(t)
             p = t.transform_point(p)
         return p
 
@@ -50,8 +49,8 @@ def draw_heatmap(
         draw_group_labels: bool = False,
         make_group_label: Callable[[Iterable], str] = default_group_label_maker,
         digit_annot: int = None,
-        label_padding_x: float = 0.44,
-        label_padding_y: float = 0.44,
+        label_padding_x: float = 0.0275,
+        label_padding_y: float = 0.05,
         label_kwargs: dict[str, Any] = None,
         x_label_kwargs: dict[str, Any] = None,
         y_label_kwargs: dict[str, Any] = None,
@@ -128,15 +127,15 @@ def draw_heatmap(
             )
             for t in tick_labels
         )
-        print(axis, edge)
         texts, max_width = draw_labels()
         for text in texts:
             text.remove()
-        perp_pos = edge - sign*(max_width + padding)
+        perp_pos = edge - sign*(
+            max_width + (ax_to_data([padding], perp)[0] % 1)
+        )
         draw_labels(perp_pos)
         return perp_pos
     
-    #print(sample_metadata)
     if order_by:
         if isinstance(order_by, str):
             order_by = [order_by]
