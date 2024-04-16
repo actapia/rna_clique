@@ -7,6 +7,7 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 
 from typing import Union, Optional, Callable, Literal, Any
+from itertools import zip_longest
 from collections.abc import Iterable
 
 #from IPython import embed
@@ -36,6 +37,13 @@ def default_group_label_maker(group_values: str | Iterable[str]) -> str:
     else:
         return ", ".join(map(str, group_values))
 
+def _keyed_multi_sort(df, columns, keys=None):
+    if keys is None or (len(columns) == 1 and len(keys) == 1):
+        return df.sort_values(columns, key=keys)
+    for column, key in reversed(list(zip_longest(columns, keys))):
+        df = df.sort_values(column, key=key, kind="stable")
+    return df
+
 # noinspection PyTypeChecker
 axis_to_pos = dict(map(reversed, enumerate(["x", "y"])))
 axis_to_ha = {"y": "left", "x": "center"}
@@ -48,6 +56,7 @@ def draw_heatmap(
         sample_name_column: str = "name",
         order_by: Optional[Union[str, Iterable[str]]] = None,
         square: bool = True,
+        group_by = None,
         draw_group_labels: bool = False,
         make_group_label: Callable[[Iterable], str] = default_group_label_maker,
         digit_annot: Optional[int] = None,
@@ -72,6 +81,7 @@ def draw_heatmap(
         sample_name_column (str): Column in sample_metadata for sample name.
         order_by:                 Columns by which to order samples.
         square (bool):            Whether to draw heatmap cells as squares.
+        group_by:                 Columns to use for grouping.
         draw_group_labels (bool): Whether to draw labels for order_by values.
         make_group_label:         Function to get group label from group values.
         digit_annot (int):        Annotate with the most significant digits.
@@ -92,7 +102,7 @@ def draw_heatmap(
         def draw_labels(ppos=0):
             texts = []
             max_width = 0
-            for group, df in sample_metadata.groupby(order_by):
+            for group, df in sample_metadata.groupby(group_by):
                 avg_pos = sum(
                     pos_dict[sample] for sample in df["index"]
                 )/len(df)
@@ -153,11 +163,21 @@ def draw_heatmap(
     if order_by:
         if isinstance(order_by, str):
             order_by = [order_by]
-        sample_metadata = sample_metadata.set_index(
-            sample_name_column
-        ).loc[mat.columns].reset_index().sort_values(order_by, key=sort_key)
+        sample_metadata = _keyed_multi_sort(
+            sample_metadata.set_index(
+                sample_name_column
+            ).loc[mat.columns].reset_index(),
+            order_by,
+            keys=sort_key
+        )
         #embed()
         mat = mat.iloc[sample_metadata.index].iloc[:, sample_metadata.index]
+    if group_by:
+        if isinstance(group_by, str):
+            group_by = [group_by]
+        assert order_by[:len(group_by)] == group_by
+    elif order_by:
+        group_by = order_by
     if digit_annot is not None:
         heatmap_kwargs["annot"] = (
             mat * 10**((-np.floor(np.log10(mat))).min(None) + digit_annot - 1)
@@ -224,12 +244,12 @@ def draw_heatmap(
     ypos = [0] + [group_label_dist_y]
     for pos in sample_metadata.reset_index(
             drop=True
-    ).groupby(order_by[0]).tail(1).head(-1).index:
+    ).groupby(group_by[0]).tail(1).head(-1).index:
         pos += 1
         ax.plot(xpos, [pos, pos], clip_on=False, **major_kwargs)
         ax.plot([pos, pos], ypos, clip_on=False, **major_kwargs)
 
-    if len(order_by) > 1:
+    if len(group_by) > 1:
         for pos in sample_metadata.reset_index(
                 drop=True
         ).groupby(order_by).tail(1).head(-1).index:
