@@ -50,12 +50,13 @@ def draw_heatmap(
         square: bool = True,
         draw_group_labels: bool = False,
         make_group_label: Callable[[Iterable], str] = default_group_label_maker,
-        digit_annot: int = None,
+        digit_annot: Optional[int] = None,
         label_padding_x: float = 0.0275,
         label_padding_y: float = 0.05,
-        label_kwargs: dict[str, Any] = None,
-        x_label_kwargs: dict[str, Any] = None,
-        y_label_kwargs: dict[str, Any] = None,
+        sort_key: Optional[Callable[[pd.Series], pd.Series]] = None,
+        label_kwargs: Optional[dict[str, Any]] = None,
+        x_label_kwargs: Optional[dict[str, Any]] = None,
+        y_label_kwargs: Optional[dict[str, Any]] = None,
         **heatmap_kwargs
 ):
     """Draw a heatmap representing a (dis)similarity matrix.
@@ -76,6 +77,7 @@ def draw_heatmap(
         digit_annot (int):        Annotate with the most significant digits.
         label_padding_x (float):  x padding to add to group labels on y axis.
         label_padding_y (float):  y padding to add to group labels on x axis.
+        sort_key:                 Function to transform sort column to sort key.
         label_kwargs (dict):      kwargs to give to plt.text for group labels
         x_label_kwargs (dict):    kwargs to give to plt.text for x group labels
         y_label_kwargs (dict):    kwargs to give to plt.text for y group labels
@@ -153,7 +155,7 @@ def draw_heatmap(
             order_by = [order_by]
         sample_metadata = sample_metadata.set_index(
             sample_name_column
-        ).loc[mat.columns].reset_index().sort_values(order_by)
+        ).loc[mat.columns].reset_index().sort_values(order_by, key=sort_key)
         #embed()
         mat = mat.iloc[sample_metadata.index].iloc[:, sample_metadata.index]
     if digit_annot is not None:
