@@ -6,6 +6,8 @@ import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
 
+from plots import default_group_label_maker, _keyed_multi_sort
+
 from typing import Union, Optional, Callable, Literal, Any
 from itertools import zip_longest
 from collections.abc import Iterable
@@ -30,20 +32,6 @@ def _transform_ax(trans, coords, axis):
         return p
     return [trans.transform_point(get_point(coord))[axis] for coord in coords]
 
-def default_group_label_maker(group_values: str | Iterable[str]) -> str:
-    """Return a single str or return multiple values joined by commas."""
-    if isinstance(group_values, str):
-        return group_values
-    else:
-        return ", ".join(map(str, group_values))
-
-def _keyed_multi_sort(df, columns, keys=None):
-    if keys is None or (len(columns) == 1 and len(keys) == 1):
-        return df.sort_values(columns, key=keys)
-    for column, key in reversed(list(zip_longest(columns, keys))):
-        df = df.sort_values(column, key=key, kind="stable")
-    return df
-
 # noinspection PyTypeChecker
 axis_to_pos = dict(map(reversed, enumerate(["x", "y"])))
 axis_to_ha = {"y": "left", "x": "center"}
@@ -56,7 +44,7 @@ def draw_heatmap(
         sample_name_column: str = "name",
         order_by: Optional[Union[str, Iterable[str]]] = None,
         square: bool = True,
-        group_by = None,
+        group_by: Optional[Union[str, Iterable[str]]] = None,
         draw_group_labels: bool = False,
         make_group_label: Callable[[Iterable], str] = default_group_label_maker,
         digit_annot: Optional[int] = None,
