@@ -6,31 +6,18 @@ import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-from plots import default_group_label_maker, _keyed_multi_sort
+from plots import (
+    default_group_label_maker,
+    _keyed_multi_sort,
+    BasicCompositeTransform,
+    _transform_ax
+)
 
 from typing import Union, Optional, Callable, Literal, Any
 from itertools import zip_longest
 from collections.abc import Iterable
 
 #from IPython import embed
-
-class BasicCompositeTransform:
-    """A composition of multiple matplotlib transforms."""
-    def __init__(self, *args):
-        self.transforms = args
-        
-    def transform_point(self, p):
-        """Transform the point by applying each transform in order."""
-        for t in self.transforms:
-            p = t.transform_point(p)
-        return p
-
-def _transform_ax(trans, coords, axis):
-    def get_point(coord):
-        p = [0, 0]
-        p[axis] = coord
-        return p
-    return [trans.transform_point(get_point(coord))[axis] for coord in coords]
 
 # noinspection PyTypeChecker
 axis_to_pos = dict(map(reversed, enumerate(["x", "y"])))
@@ -49,7 +36,7 @@ def draw_heatmap(
         make_group_label: Callable[[Iterable], str] = default_group_label_maker,
         digit_annot: Optional[int] = None,
         label_padding_x: float = 0.0275,
-        label_padding_y: float = 0.05,
+        label_padding_y: float = 0.0275,
         sort_key: Optional[Callable[[pd.Series], pd.Series]] = None,
         label_kwargs: Optional[dict[str, Any]] = None,
         x_label_kwargs: Optional[dict[str, Any]] = None,
@@ -131,8 +118,8 @@ def draw_heatmap(
         }
         sign = para*2-1
         # noinspection PyUnresolvedReferences
-        edge = min(
-            sign*min(
+        edge = sign*min(
+            min(
                 sign*t.get_window_extent(
                     plt.gcf().canvas.renderer
                 ).transformed(ax.transData.inverted()).get_points()[:, perp]
@@ -142,9 +129,8 @@ def draw_heatmap(
         text_elems, m_width = draw_labels()
         for text in text_elems:
             text.remove()
-        perp_pos = edge - sign*(
-            m_width + (ax_to_data([padding], perp)[0] % 1)
-        )
+        a2d = ax_to_data([padding], perp)[0] - ax_to_data([0], perp)[0]
+        perp_pos = edge - sign*m_width - a2d
         draw_labels(perp_pos)
         return perp_pos
     

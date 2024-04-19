@@ -17,3 +17,21 @@ def _keyed_multi_sort(df, columns, keys=None):
     for column, key in reversed(list(zip_longest(columns, keys))):
         df = df.sort_values(column, key=key, kind="stable")
     return df
+
+class BasicCompositeTransform:
+    """A composition of multiple matplotlib transforms."""
+    def __init__(self, *args):
+        self.transforms = args
+        
+    def transform_point(self, p):
+        """Transform the point by applying each transform in order."""
+        for t in self.transforms:
+            p = t.transform_point(p)
+        return p
+
+def _transform_ax(trans, coords, axis):
+    def get_point(coord):
+        p = [0, 0]
+        p[axis] = coord
+        return p
+    return [trans.transform_point(get_point(coord))[axis] for coord in coords]
