@@ -3,6 +3,10 @@ import numpy as np
 import functools
 import matplotlib as mpl
 
+import dendropy
+
+from io import StringIO
+
 from plots import _transform_ax, BasicCompositeTransform
 
 from nice_colorsys import *
@@ -116,8 +120,12 @@ def draw_clade_labels(
             line_color = color
             text_color = color
         #max_x = max(pos_dict[t.name][0] for t in clade.get_terminals())
-        min_y = min(bbox_min_y(bbox_dict[t.name]) for t in clade.get_terminals())
-        max_y = max(bbox_max_y(bbox_dict[t.name] )for t in clade.get_terminals())
+        min_y = min(
+            bbox_min_y(bbox_dict[t.name]) for t in clade.get_terminals()
+        )
+        max_y = max(
+            bbox_max_y(bbox_dict[t.name] )for t in clade.get_terminals()
+        )
         mid_y = (min_y + max_y)/2
         #print(label, max_x, (min_y, mid_y, max_y))
         ax.plot([max_x, max_x], [min_y, max_y], clip_on=False, color=line_color)
@@ -132,3 +140,28 @@ def draw_clade_labels(
             verticalalignment="center",
             color=text_color
         )
+
+def phylo_to_dendropy(tree, ns=None):
+    sio = StringIO()
+    Bio.Phylo.write(tree, sio, format="newick")
+    return dendropy.Tree.get(
+        data=sio.getvalue(),
+        schema="newick",
+        taxon_namespace=ns
+    )
+
+def multi_phylo_to_dendropy(*trees, ns=None):
+    ns = None
+    for tree in trees:
+        new = phylo_to_dendropy(tree, ns=ns)
+        ns = new.taxon_namespace
+        yield new
+
+def get_clades(tree, sample_metadata, sample_name_column, group_by):
+    terminals = {c.name: c for c in tree.get_terminals()}
+    for group, df in sample_metadata.groupby(group_by):
+        clade = tree.common_ancestor(
+            *(terminals[n] for n in df[sample_name_column])
+        )
+        if clade.count_terminals() == df.shape[0]:
+            yield group, clade

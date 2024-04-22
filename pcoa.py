@@ -8,6 +8,9 @@ from plots import default_group_label_maker, _keyed_multi_sort
 from typing import Callable, Union, Optional
 from collections.abc import Iterable, Sequence, Mapping
 
+def empty_dict(*args, **kwargs):
+    return {}
+
 def draw_pcoa_2d(
         dis_df: pd.DataFrame,
         sample_metadata: pd.DataFrame,
@@ -22,13 +25,13 @@ def draw_pcoa_2d(
             ]
         ] = None,
         legend: bool = True,
-        index_to_kwargs: Optional[Callable[[int], dict]] = None,
-        group_to_kwargs: Optional[
-            Callable[[str], dict] | Callable[[Iterable[str]], dict]
-        ] = None,
-        index_group_to_kwargs: Optional[
-            Callable[[int, str], dict] | Callable[[int, Iterable[str]], dict]
-        ] = None,
+        index_to_kwargs: Callable[[int], dict] = empty_dict,
+        group_to_kwargs: Callable[
+            [str], dict
+        ] | Callable[[Iterable[str]], dict] = empty_dict,
+        index_group_to_kwargs: Callable[
+            [int, str], dict
+        ] | Callable[[int, Iterable[str]], dict] = empty_dict,
         order_by: str | Iterable[str] = None,
         sort_key: Optional[
             Union[
@@ -52,20 +55,14 @@ def draw_pcoa_2d(
             sort_key = [sort_key]
         joined = _keyed_multi_sort(joined, order_by, sort_key)
     for i, (ge, df) in enumerate(joined.groupby(group_by, sort=not order_by)):
-        kwargs = {}
-        try:
-            kwargs = index_group_to_kwargs(i, ge)
-        except TypeError:
-            pass
-        try:
-            kwargs |= index_to_kwargs(i)
-        except TypeError:
-            pass
+        kwargs = index_group_to_kwargs(i, ge)
+        kwargs |= index_to_kwargs(i)
         try:
             kwargs |= group_to_kwargs(ge)
         except TypeError:
-            pass
-        kwargs.setdefault("label", ge)
+            kwargs |= group_to_kwargs(*ge)
+        kwargs.setdefault("label", make_group_label(ge))
+        color = None
         try:
             color = colors.colors[i]
         except AttributeError:
@@ -75,7 +72,8 @@ def draw_pcoa_2d(
                 color = colors[i]
             except TypeError:
                 pass
-        kwargs.setdefault("color", color)
+        if color is not None:
+            kwargs.setdefault("color", color)
         kwargs |= scatter_kwargs
         #print(df, kwargs)
         plt.scatter(
