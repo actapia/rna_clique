@@ -11,13 +11,14 @@ dependencies:
   - networkx
   - matplotlib
   - seaborn
+  - scikit-bio
   - pip:
       - biopython
       - dendropy
       - nice-colorsys
       - simple-blast
       # scikit-bio 0.6.0 (in development)
-      - git+https://github.com/scikit-bio/scikit-bio.git@df931a0f518f105cb648b29fe38b2a114b5ece96
+#      - git+https://github.com/scikit-bio/scikit-bio.git@df931a0f518f105cb648b29fe38b2a114b5ece96
       # For simulator:
       - more_itertools
       - PyYAML

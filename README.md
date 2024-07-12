@@ -39,7 +39,7 @@ are considered untested.
   * BioPython 1.83
   * matplotlib 3.8.2
   * seaborn 0.12.2
-  * scikit-bio 0.6 (in development)
+  * scikit-bio 0.6
   
 #### Sequence simulation (needed for testing installation)
 
