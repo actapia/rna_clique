@@ -101,7 +101,7 @@ we will assume that RNA-clique is located at the path specified in the
 into the Git repository and run
 
 ```bash
-RNA_CLIQUE=$PWD
+export RNA_CLIQUE=$PWD
 ```
 
 We recommend putting the directory for this tutorial *outside* of the RNA-clique
@@ -113,7 +113,7 @@ in the root of the Git repository, you could run
 cd ..
 mkdir tutorial
 cd tutorial
-TUTORIAL_DIR=$PWD
+export TUTORIAL_DIR=$PWD
 ```
 
 ### Check that environment variables are set
@@ -161,7 +161,7 @@ flag to run the download with multiple jobs and the `-r` flag to remove the SRA
 files after downloading and extracting.
 
 ```bash
-cut -d, -f1 "$RNA_CLIQUE/docs/tutorials/tall_fescue_accs.csv" | \
+cut -d, -f1 "$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv" | \
 	download_sra.sh -j $(nproc) -r 
 ```
 
@@ -288,14 +288,14 @@ The script requires some modules found in the root of the RNA-clique repository,
 so you can run it as follows:
 
 ```bash
-PYTHONPATH='.' python docs/tutorials/make_tree.py
+PYTHONPATH='.' python docs/tutorials/reads2tree/make_tree.py
 ```
 
 ### Getting a PCoA plot
 
 We can use `scikit-bio` to create a PCoA plot from our distance matrix. To
 distinguish points by genotype, we will need to use the metadata for the samples
-stored at `$RNA_CLIQUE/docs/tutorials/tall_fescue_accs.csv`.
+stored at `$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv`.
 
 The code below draws a 3D and 2D PCoA plot and stores the results as SVG files
 in the `rna_clique_out` directory as `pcoa_3d.svg` and `pcoa_2d.svg`,
@@ -359,7 +359,7 @@ if __name__ == "__main__":
 The example can be run as follows from the root of the RNA-clique repository.
 
 ```bash
-PYTHONPATH="." python docs/tutorials/make_pcoa.py
+PYTHONPATH="." python docs/tutorials/reads2tree/make_pcoa.py
 ```
 
 ### Getting a heatmap
@@ -369,7 +369,7 @@ distance matrix as a heatmap. The function uses the Seaborn `heatmap` function
 behind the scenes, and arbitrary arguments given to `draw_heatmap` will be
 passed to Seaborn.
 
-The code below is also found in `docs/tutorials/make_heatmap.py`. It draws a
+The code below is also found in `docs/tutorials/reads2tree/make_heatmap.py`. It draws a
 heatmap and saves the resulting figure in the `rna_clique_out` directory as
 `distance_heatmap.svg`. 
 
@@ -415,5 +415,5 @@ To generate a heatmap using this code, you can run the Python script as follows
 from the RNA-clique repository root.
 
 ```bash
-PYTHONPATH="." python docs/tutorials/make_heatmap.py
+PYTHONPATH="." python docs/tutorials/reads2tree/make_heatmap.py
 ```
