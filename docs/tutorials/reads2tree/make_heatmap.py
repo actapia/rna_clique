@@ -8,7 +8,7 @@ from filtered_distance import SampleSimilarity
 from path_to_sample import path_to_sample
 from heatmap import draw_heatmap
 
-tutorial_doc_dir = Path(os.environ["RNA_CLIQUE"]) / "docs" / "tutorials"
+tutorial_doc_dir = Path(os.environ["RNA_CLIQUE"]) / "docs/tutorials/reads2tree"
 rna_clique_out_dir = Path(os.environ["TUTORIAL_DIR"]) / "rna_clique_out"
 
 def main():
