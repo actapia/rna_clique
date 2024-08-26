@@ -250,6 +250,41 @@ midpoint. The tree is saved to `nj_tree.tree`, and a visualization is saved to
 `nj_tree.svg` in the `rna_clique_out` directory.
 
 <!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./make_tree.py) -->
+<!-- The below code snippet is automatically added from ./make_tree.py -->
+```py
+import os
+import Bio.Phylo
+
+from pathlib import Path
+from Bio.Phylo.TreeConstruction import DistanceTreeConstructor, DistanceMatrix
+from matplotlib import pyplot as plt
+from filtered_distance import SampleSimilarity
+from phylo_utils import tril_jagged, draw_tree
+from path_to_sample import path_to_sample
+
+rna_clique_out_dir = Path(os.environ["TUTORIAL_DIR"]) / "rna_clique_out"
+
+def main():
+    similarity_computer = SampleSimilarity.from_filenames(
+        rna_clique_out_dir / "graph.pkl",
+        (rna_clique_out_dir / "od2").glob("*.pkl")
+    )
+    nj_tree = DistanceTreeConstructor().nj(
+        DistanceMatrix(
+            [path_to_sample(p) for p in similarity_computer.samples],
+            tril_jagged(similarity_computer.get_dissimilarity_matrix())
+        )
+    )
+    nj_tree.root_at_midpoint()
+    for c in nj_tree.get_nonterminals():
+        c.name = None
+    Bio.Phylo.write(nj_tree, rna_clique_out_dir / "nj_tree.tree", "newick")
+    draw_tree(nj_tree)
+    plt.savefig(rna_clique_out_dir / "nj_tree.svg")
+    
+if __name__ == "__main__":
+    main()
+```
 <!-- MARKDOWN-AUTO-DOCS:END -->
 
 
@@ -272,6 +307,62 @@ respectively. The code can also be found at
 `docs/tutorials/reads2tree/make_pcoa.py`.
 
 <!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./make_pcoa.py) -->
+<!-- The below code snippet is automatically added from ./make_pcoa.py -->
+```py
+import os
+from pathlib import Path
+
+import skbio as skb
+import pandas as pd
+from matplotlib import pyplot as plt
+
+from IPython import embed
+from filtered_distance import SampleSimilarity
+from path_to_sample import path_to_sample
+
+tutorial_doc_dir = Path(os.environ["RNA_CLIQUE"]) / "docs/tutorials/reads2tree"
+rna_clique_out_dir = Path(os.environ["TUTORIAL_DIR"]) / "rna_clique_out"
+
+def main():
+    sample_metadata = pd.read_csv(tutorial_doc_dir / "tall_fescue_accs.csv")
+    similarity_computer = SampleSimilarity.from_filenames(
+        rna_clique_out_dir / "graph.pkl",
+        (rna_clique_out_dir / "od2").glob("*.pkl")
+    )
+    dis_df = similarity_computer.get_dissimilarity_df().rename(
+        index=path_to_sample,
+        columns=path_to_sample,
+    )
+    embed()
+    # 3D PCoA
+    pcoa_results = skb.stats.ordination.pcoa(
+        skb.DistanceMatrix(dis_df, ids=dis_df.columns)
+    )
+    pcoa_results.plot(
+        df=sample_metadata.set_index("accession"),
+        column="genotype",
+    )
+    plt.savefig(rna_clique_out_dir / "pcoa_3d.svg")
+    # 2D PCoA
+    pcoa_results_2d = skb.stats.ordination.pcoa(
+        skb.DistanceMatrix(dis_df, ids=dis_df.columns),
+        number_of_dimensions=2
+    )
+    plt.figure()
+    for g, df in sample_metadata.join(
+            pcoa_results_2d.samples[["PC1","PC2"]],
+            "accession"
+    ).groupby("genotype"):
+        plt.scatter(df["PC1"], df["PC2"], label=g)
+    plt.xlabel("PC1")
+    plt.ylabel("PC2")
+    plt.legend()
+    plt.savefig(rna_clique_out_dir / "pcoa_2d.svg")
+    
+
+if __name__ == "__main__":
+    main()
+```
 <!-- MARKDOWN-AUTO-DOCS:END -->
 
 
@@ -293,6 +384,46 @@ draws a heatmap and saves the resulting figure in the `rna_clique_out` directory
 as `distance_heatmap.svg`. 
 
 <!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./make_heatmap.py) -->
+<!-- The below code snippet is automatically added from ./make_heatmap.py -->
+```py
+import os
+from pathlib import Path
+
+import pandas as pd
+from matplotlib import pyplot as plt
+
+from filtered_distance import SampleSimilarity
+from path_to_sample import path_to_sample
+from heatmap import draw_heatmap
+
+tutorial_doc_dir = Path(os.environ["RNA_CLIQUE"]) / "docs/tutorials/reads2tree"
+rna_clique_out_dir = Path(os.environ["TUTORIAL_DIR"]) / "rna_clique_out"
+
+def main():
+    sample_metadata = pd.read_csv(tutorial_doc_dir / "tall_fescue_accs.csv")
+    similarity_computer = SampleSimilarity.from_filenames(
+        rna_clique_out_dir / "graph.pkl",
+        (rna_clique_out_dir / "od2").glob("*.pkl")
+    )
+    dis_df = similarity_computer.get_dissimilarity_df().rename(
+        index=path_to_sample,
+        columns=path_to_sample,
+    )
+    draw_heatmap(
+        dis_df,
+        sample_metadata=sample_metadata,
+        sample_name_column="accession",
+        order_by="genotype",
+        cmap="mako_r",
+        digit_annot=2, # Show two digits of the distance.
+        draw_group_labels=True # Label according to genotype.
+    )
+    plt.savefig(rna_clique_out_dir / "distance_heatmap.svg")
+    
+
+if __name__ == "__main__":
+    main()
+```
 <!-- MARKDOWN-AUTO-DOCS:END -->
 
 
