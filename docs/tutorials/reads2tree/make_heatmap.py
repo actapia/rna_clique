@@ -26,7 +26,9 @@ def main():
         sample_metadata=sample_metadata,
         sample_name_column="accession",
         order_by="genotype",
-        cmap="mako_r"
+        cmap="mako_r",
+        digit_annot=2, # Show two digits of the distance.
+        draw_group_labels=True # Label according to genotype.
     )
     plt.savefig(rna_clique_out_dir / "distance_heatmap.svg")
     
