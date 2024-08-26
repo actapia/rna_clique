@@ -234,3 +234,4 @@ def draw_heatmap(
     plt.xlabel(None)
     # noinspection PyTypeChecker
     plt.ylabel(None)
+    plt.tight_layout()
