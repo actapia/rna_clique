@@ -416,7 +416,9 @@ def main():
         order_by="genotype",
         cmap="mako_r",
         digit_annot=2, # Show two digits of the distance.
-        draw_group_labels=True # Label according to genotype.
+        draw_group_labels=True, # Label according to genotype.
+        label_padding_x = 0.05,
+        label_padding_y = 0.05
     )
     plt.savefig(rna_clique_out_dir / "distance_heatmap.svg")
     
