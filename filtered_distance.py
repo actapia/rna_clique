@@ -41,34 +41,45 @@ def handle_arguments():
     parser = argparse.ArgumentParser(
         description="compute pairwise similarities from graph and comparisons"
     )
-    parser.add_argument("-g", "--graph", type=Path, required=True)
+    parser.add_argument(
+        "-g",
+        "--graph",
+        type=Path,
+        required=True,
+        help="path to the gene matches graph pickle"
+    )
     parser.add_argument(
         "-c",
         "--comparisons",
         type=Path,
         nargs="+",
-        required=True
+        required=True,
+        help="paths to the gene matches table pickles"
     )
     parser.add_argument(
         "-s",
         "--samples",
-        type=int
+        type=int,
+        help="number of samples"
     )
     parser.add_argument(
         "-e",
         "--embed",
-        action="store_true"
+        action="store_true",
+        help="enter an IPython shell after computing the matrix"
     )
     parser.add_argument(
         "-o",
         "--out-type",
         choices=["sim", "dis"], # Similarity, dissimilarity
-        default="sim"
+        default="sim",
+        help="type of matrix to produce (similarity or dissimilarity)"
     )
     parser.add_argument(
         "-l",
         "--print-sample-list",
-        action="store_true"
+        action="store_true",
+        help="print the list of samples before the matrix"
     )
     return parser.parse_args()
 
