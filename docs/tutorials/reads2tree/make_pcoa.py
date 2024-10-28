@@ -5,7 +5,6 @@ import skbio as skb
 import pandas as pd
 from matplotlib import pyplot as plt
 
-from IPython import embed
 from filtered_distance import SampleSimilarity
 from path_to_sample import path_to_sample
 
@@ -22,7 +21,6 @@ def main():
         index=path_to_sample,
         columns=path_to_sample,
     )
-    embed()
     # 3D PCoA
     pcoa_results = skb.stats.ordination.pcoa(
         skb.DistanceMatrix(dis_df, ids=dis_df.columns)
