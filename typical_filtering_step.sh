@@ -65,6 +65,11 @@ case 0 in
     "$(have_command "sysctl")")
 	jobs="$(($(sysctl -n hw.ncpu) - 1))"
 	;;
+    *)
+	>&2 echo "Could not determine number of logical cores on system."
+	>&2 echo "Defaulting to 1 parallel job."
+	jobs=1
+	;;
 esac
 #if jobs="$(($(nproc) - 1))"; then
 intermed=false
