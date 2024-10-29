@@ -147,7 +147,7 @@ sample metadata is shown below.
 | [SRR8003736](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR8003736acc=SRR8003736) | NTE      |
 
 The list of accessions is in the file
-[`tall_fescue_accs.txt`](./tall_fescue_accs.txt). We can download these all
+[`tall_fescue_accs.csv`](./tall_fescue_accs.csv). We can download these all
 easily using the `download_sra` tool.
 
 First, change to your `TUTORIAL_DIR`.

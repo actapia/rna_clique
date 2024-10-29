@@ -51,7 +51,7 @@ are considered untested.
 
 ### Installation guides
 
-* [Ubuntu](docs/installation_guides/ubuntu.md)
+* [Ubuntu](https://actapia.github.io/rna_clique/installation_guides/ubuntu)
 
 ### Testing the installation
 
@@ -228,5 +228,5 @@ alphabetically by name. To get this ordered list of samples, you can use the
 
 ## Additional documentation
 
-* [Command-line usage guide](docs/usage.md)
-* [Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](docs/tutorials/reads2tree/README.md)
+* [Command-line usage guide](https://actapia.github.io/rna_clique/usage)
+* [Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](https://actapia.github.io/rna_clique/tutorials/reads2tree)
