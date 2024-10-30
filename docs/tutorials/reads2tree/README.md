@@ -43,7 +43,7 @@ Download the appropriate `sratoolkit` binaries for your system.
 Then, extract the downloaded tar file.
 
 ```bash
-tar xzvf sratoolkit.current-ubuntu64.tar.gz
+tar xzvf sratoolkit.current-*.tar.gz
 ```
 
 Add the `bin` directory of the extracted archive to your `PATH`.
@@ -248,8 +248,7 @@ Previous tests with this data revealed that $n = 50000$ is a good setting, so we
 will use that value.
 
 ```bash
-bash typical_filtering_step.sh -j $(nproc) \
-                               -o "$TUTORIAL_DIR"/rna_clique_out \
+bash typical_filtering_step.sh -o "$TUTORIAL_DIR"/rna_clique_out \
 							   -n 50000 \
 							   "$TUTORIAL_DIR"/out/*
 ```

@@ -22,8 +22,8 @@ xcode-select --install
 
 If the command line developer tools have not been installed already, you should
 see a graphical dialog prompting you to confirm installation. Click "Install" 
-and agree to the license agreement to begin installation, and wait for the
-install to complete before continuing.
+and agree to the license agreement to begin installation .Wait for the install
+to complete before continuing.
 
 ## Download RNA-clique
 
@@ -44,6 +44,20 @@ manager itself first.
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
+You will most likely need to enter your password to install Homebrew as root.
+The install script will also ask you to confirm that you want to install the
+needed software.
+
+## Installing Bash
+
+The version of Bash that comes installed on macOS is very out of date. Since
+RNA-clique uses some new features of Bash, we will install a new version using
+Homebrew.
+
+```zsh
+brew install bash
+```
+
 ## Installing BLAST
 
 You can install a recent version of NCBI BLAST+ using Homebrew.
@@ -60,6 +74,16 @@ We will install `cpanm` to help us install the Perl dependencies.
 brew install cpanminus
 ```
 
+## Installing GNU Parallel (optional)
+
+Some parts of RNA-clique can use GNU Parallel to run multiple jobs 
+simultaneously. Parallelization can speed up these parts on systems with more
+than one logical core ("thread"). GNU parallel be installed via `brew`.
+
+```zsh
+brew install parallel
+```
+
 ## Installing Bio::SeqIO
 
 We can use `cpan` to install the Bio::SeqIO Perl module.
@@ -68,7 +92,8 @@ We can use `cpan` to install the Bio::SeqIO Perl module.
 sudo cpanm install Bio::SeqIO
 ```
 
-You can use the default responses for each of the questions that `cpan` asks.
+macOS may ask you to permit Terminal to access certain files and settings
+on your computer. You can safely allow Terminal that access.
 
 ## Installing Array::Heap
 
@@ -96,8 +121,8 @@ Then, run the installer.
 bash Miniconda3-latest-MacOS-$(uname -m).sh
 ```
 
-Unless you have a reason to install somewhere else, you can install to the
-default location Miniconda suggests.
+Agree to the license terms. Unless you have a reason to install somewhere else,
+you can install to the default location Miniconda suggests.
 
 When asked about initializing Miniconda for the current shell, say yes.
 
