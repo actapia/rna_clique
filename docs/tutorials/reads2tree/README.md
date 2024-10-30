@@ -25,12 +25,20 @@ RNA-clique git repository. For example, you may wish to put the software in your
 
 ### sratoolkit
 
-Download the appropriate `sratoolkit` binaries for your system. If you are using
-Ubuntu, this command should work:
+Download the appropriate `sratoolkit` binaries for your system.
 
-```bash
-wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
-```
+=== "Ubuntu"
+	```bash
+	wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
+	```
+=== "macOS (Intel)"
+	```zsh
+	curl -L -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac64.tar.gz
+	```
+=== "macOS (Apple Silicon)"
+	```
+	curl -L -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac-arm64.tar.gz
+	```
 
 Then, extract the downloaded tar file.
 
@@ -73,12 +81,17 @@ export PATH="$PATH:$PWD/download_sra"
 
 ### SPAdes
 
-Download the SPAdes assembler. As of this writing, 3.15.5 is the newest
-version. To download for Linux:
+Download the SPAdes assembler. As of this writing, 4.0.0 is the newest
+version.
 
-```bash
-wget https://github.com/ablab/spades/releases/download/v3.15.5/SPAdes-3.15.5-Linux.tar.gz
-```
+=== "Ubuntu"
+	```bash
+	wget https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Linux.tar.gz
+	```
+=== "macOS"
+	```zsh
+	curl -L -O https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Darwin-$(uname -m).tar.gz
+	```
 
 Extract the archive:
 
@@ -162,7 +175,7 @@ files after downloading and extracting.
 
 ```bash
 cut -d, -f1 "$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv" | \
-	download_sra.sh -j $(nproc) -r 
+	download_sra.sh -j 0 -r 
 ```
 
 Verify that the FASTQ files have been extracted.
@@ -192,9 +205,18 @@ computer and retry if you run out of memory.
 On a computer with over 120 GB of memory, we can run 6 jobs with 3 threads
 safely.
 
-```bash
-parallel --jobs 6 spades.py --rna -o out/{/.} -s {} -t 3 -m 120 :: *.fastq
-```
+=== "With parallel"
+	```bash
+	parallel --jobs 6 spades.py --rna -o out/{/.} -s {} -t 3 -m 120 :: *.fastq
+	```
+=== "Without parallel"
+	```bash
+	for f in *.fastq; do
+		b="$(basename "$f")"; 
+		fn="${b%%.*}";
+		spades.py --rna -o "out/$fn" -s "$f" -t 3 -m 120;
+	done
+	```
 
 The assembled transcriptomes will be located at `transcripts.fasta` in
 directories corresponding to their samples names under the `out` directory.
