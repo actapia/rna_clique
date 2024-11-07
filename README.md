@@ -68,7 +68,7 @@ Then, if you are in the root the repository, you can run the following command
 to begin the test script.
 
 ```bash
-bash tests/test_install/test_install.sh && echo "Success!"
+bash tests/verify_install/test_install.sh && echo "Success!"
 ```
 
 The script generates a small test dataset and runs RNA-clique on the generated
