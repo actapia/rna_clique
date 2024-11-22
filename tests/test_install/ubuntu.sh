@@ -19,7 +19,7 @@ sudo NEEDRESTART_MODE=a apt install -y git wget ncbi-blast+ ncbi-blast+ ncbi-bla
      build-essential cpanminus
 sudo NEEDRESTART_MODE=a apt install -y bioperl --no-install-recommends
 sudo cpanm Array::Heap
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+wget --no-verbose https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash ./Miniconda3-latest-Linux-x86_64.sh -b -f
 "$HOME/miniconda3/bin/conda" init bash
 eval "$("$HOME/miniconda3/bin/conda" shell.bash hook)"

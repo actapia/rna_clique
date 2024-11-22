@@ -33,7 +33,7 @@ case "$(uname)" in
 	    sudo apt update
 	    sudo NEEDRESTART_MODE=a apt -y install parallel
 	fi
-	wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
+	wget --no-verbose https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
 	;;
     Darwin)
 	if [ "$parallel" = true ] && [ "$install" = true ]; then
@@ -66,7 +66,7 @@ git clone https://github.com/actapia/download_sra
 export PATH="$PATH:$PWD/download_sra"
 case "$(uname)" in
     Linux)
-	wget https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Linux.tar.gz
+	wget --no-verbose https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Linux.tar.gz
 	;;
     Darwin)
 	curl -L -O https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Darwin-$(uname -m).tar.gz
