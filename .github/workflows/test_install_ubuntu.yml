@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Test installation
-        run: bash tests/test_install/ubuntu.sh
+        run: bash tests/test_install/ubuntu.sh "$GITHUB_REF_NAME"
       - name: Test usage
         run: bash tests/test_tutorial/test_reads2tree.sh
       
