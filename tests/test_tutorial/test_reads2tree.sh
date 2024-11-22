@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+readonly SPADES_THREADS=3
+readonly SPADES_MEMORY=13
+readonly PARALLEL_JOBS=1
 parallel=true
 install=true
 while [ "$#" -gt 0 ]; do
@@ -86,20 +89,20 @@ mkdir tutorial
 cd tutorial
 export TUTORIAL_DIR="$PWD"
 cd "$TUTORIAL_DIR"
-cut -d, -f1 "$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv" | \
-    download_sra.sh -j 0 -r
-compgen -G "SRR*.fastq"
 if [[ -v assemblies_dir ]]; then
     ln -s "$assemblies_dir" "out"
 else
     if [ "$parallel" = true ]; then
-	parallel --jobs 1 spades.py --rna -o out/{/.} -s {} -t 3 -m 13 ::: *.fastq
+	tail -n+2 "$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv" | \
+	    cut -d, -f1 | \
+	    parallel --jobs "$PARALLEL_JOBS" \
+	    "download_sra.sh -j 0 -r {}; spades.py --rna -o out/{} -s {}.fastq -t $SPADES_THREADS -m $SPADES_MEMORY; rm {}.fastq"
     else
-	for f in *.fastq; do
-	    b="$(basename "$f")"; 
-	    fn="${b%%.*}";
-	    spades.py --rna -o "out/$fn" -s "$f" -t 3 -m 120;
-	done
+	while read -u 6 -r line; do
+	    download_sra.sh -j 0 -r "$line"
+	    spades.py --rna -o "out/$line" -s "$line.fastq" -t "$SPADES_THREADS" -m "$SPADES_MEMORY"
+	    rm "$line.fastq"
+	done 6< <(tail -n+2 "$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv" | cut -d, -f1)
     fi
 fi
 for f in out/*; do
