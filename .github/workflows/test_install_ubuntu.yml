@@ -1,0 +1,27 @@
+name: test_install_use_ubuntu
+
+on:
+  push:
+    branches: ["main", "macos"]
+    paths:
+      - '*'
+      - '!.gitignore'
+      - '!workflows/**'
+      - 'workflows/test_install_ubuntu.yml'
+      - '!test_install/**'
+      - 'tests/test_install/ubuntu.sh'
+      - '!parameter_testing/**'
+      - '!property_testing/**'
+      - '!*.md'
+
+jobs:
+  test-install-use-ubuntu-latest:
+    name: Test installation and usage on Ubuntu 24.04.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test installation
+        run: bash tests/test_install/ubuntu.sh
+      - name: Test usage
+        run: bash tests/test_tutorial/test_reads2tree.sh
+      
