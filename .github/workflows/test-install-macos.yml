@@ -15,7 +15,7 @@ on:
       - '!*.md'
 
 jobs:
-  test-install-ubuntu-latest:
+  test-install-macos-latest:
     name: Test installation on macOS.
     runs-on: macos-latest
     steps:
