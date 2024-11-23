@@ -24,6 +24,8 @@ stopsudo() {
     sudo -k
 }
 
+set -x
+
 branch="main"
 if [ "$#" -gt 2 ]; then
     >&2 echo "This script accepts at most one argument."
