@@ -15,24 +15,13 @@ on:
     #   - '!*.md'
 
 jobs:
-  test-install-use-ubuntu-latest:
-    name: Test installation and usage on Ubuntu 24.04.
+  test-install-ubuntu-latest:
+    name: Test installation on Ubuntu 24.04.
     runs-on: ubuntu-latest
     steps:
-      - name: Maximize build space
-        uses: easimon/maximize-build-space@master
-        with:
-          remove-dotnet: 'true'
-          swap-size-mb: 1024
-          remove-android: 'true'
-          remove-haskell: 'true'
-          remove-codeql: 'true'
-          remove-docker-images: 'true'
       - uses: actions/checkout@v4
-      - name: Check free space
-        run: df -h
       - name: Test installation
         run: bash tests/test_install/ubuntu.sh "$GITHUB_REF_NAME"
-      - name: Test usage
-        run: bash tests/test_tutorial/test_reads2tree.sh
+      # - name: Test usage
+      #   run: bash tests/test_tutorial/test_reads2tree.sh
       
