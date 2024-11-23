@@ -1,4 +1,4 @@
-name: test-install-ubuntu
+name: test-install-macos
 
 on:
   push:
@@ -7,21 +7,19 @@ on:
       - '*'
       - '!.gitignore'
       - '!workflows/**'
-      - 'workflows/test-install-ubuntu.yml'
+      - 'workflows/test-install-macaos.yml'
       - '!test_install/**'
-      - 'tests/test_install/ubuntu.sh'
+      - 'tests/test_install/macos.sh'
       - '!parameter_testing/**'
       - '!property_testing/**'
       - '!*.md'
 
 jobs:
   test-install-ubuntu-latest:
-    name: Test installation on Ubuntu 24.04.
-    runs-on: ubuntu-latest
+    name: Test installation on macOS.
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - name: Test installation
-        run: bash tests/test_install/ubuntu.sh "$GITHUB_REF_NAME"
-      # - name: Test usage
-      #   run: bash tests/test_tutorial/test_reads2tree.sh
+        run: zsh tests/test_install/macos.sh "$GITHUB_REF_NAME"
       
