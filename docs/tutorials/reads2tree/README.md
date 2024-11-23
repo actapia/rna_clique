@@ -28,17 +28,17 @@ RNA-clique git repository. For example, you may wish to put the software in your
 Download the appropriate `sratoolkit` binaries for your system.
 
 === "Ubuntu"
-	```bash
-	wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
-	```
+    ```bash
+    wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
+    ```
 === "macOS (Intel)"
-	```zsh
-	curl -L -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac64.tar.gz
-	```
+    ```zsh
+    curl -L -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac64.tar.gz
+    ```
 === "macOS (Apple Silicon)"
-	```
-	curl -L -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac-arm64.tar.gz
-	```
+    ```
+    curl -L -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac-arm64.tar.gz
+    ```
 
 Then, extract the downloaded tar file.
 
@@ -85,13 +85,13 @@ Download the SPAdes assembler. As of this writing, 4.0.0 is the newest
 version.
 
 === "Ubuntu"
-	```bash
-	wget https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Linux.tar.gz
-	```
+    ```bash
+    wget https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Linux.tar.gz
+    ```
 === "macOS"
-	```zsh
-	curl -L -O https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Darwin-$(uname -m).tar.gz
-	```
+    ```zsh
+    curl -L -O https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Darwin-$(uname -m).tar.gz
+    ```
 
 Extract the archive:
 
@@ -129,21 +129,20 @@ cd tutorial
 export TUTORIAL_DIR=$PWD
 ```
 
-### Check that environment variables are set
-
-Before proceeding, check that your environment variables are set to the correct
-values!
-
-```bash
-echo "$RNA_CLIQUE"
-echo "TUTORIAL_DIR"
-```
-
-If either of these does not print a path, you have forgotten to set the
-appropriate environment variables.
-
 
 ## Obtaining sequence data
+
+!!! note
+    Before proceeding, check that your environment variables are set to the 
+    correct values!
+
+    ```bash
+    echo "$RNA_CLIQUE"
+    echo "$TUTORIAL_DIR"
+    ```
+
+    If either of these does not print a path, you have forgotten to set the
+    appropriate environment variables.
 
 We will start out with RNA-seq reads for six samples of tall fescue (*Lolium
 arundinaceum*). These samples are a subset of the sixteen used in the paper
@@ -174,8 +173,8 @@ flag to run the download with multiple jobs and the `-r` flag to remove the SRA
 files after downloading and extracting.
 
 ```bash
-cut -d, -f1 "$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv" | \
-	download_sra.sh -j 0 -r 
+tail -n+2 "$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv" | \
+    cut -d, -f1 | download_sra.sh -j 0 -r 
 ```
 
 Verify that the FASTQ files have been extracted.
@@ -206,17 +205,17 @@ On a computer with over 120 GB of memory, we can run 6 jobs with 3 threads
 safely.
 
 === "With parallel"
-	```bash
-	parallel --jobs 6 spades.py --rna -o out/{/.} -s {} -t 3 -m 120 :: *.fastq
-	```
+    ```bash
+    parallel --jobs 6 spades.py --rna -o out/{/.} -s {} -t 3 -m 120 ::: *.fastq
+    ```
 === "Without parallel"
-	```bash
-	for f in *.fastq; do
-		b="$(basename "$f")"; 
-		fn="${b%%.*}";
-		spades.py --rna -o "out/$fn" -s "$f" -t 3 -m 120;
-	done
-	```
+    ```bash
+    for f in *.fastq; do
+        b="$(basename "$f")"; 
+        fn="${b%%.*}";
+        spades.py --rna -o "out/$fn" -s "$f" -t 3 -m 120;
+    done
+    ```
 
 The assembled transcriptomes will be located at `transcripts.fasta` in
 directories corresponding to their samples names under the `out` directory.
@@ -249,8 +248,8 @@ will use that value.
 
 ```bash
 bash typical_filtering_step.sh -o "$TUTORIAL_DIR"/rna_clique_out \
-							   -n 50000 \
-							   "$TUTORIAL_DIR"/out/*
+                               -n 50000 \
+                               "$TUTORIAL_DIR"/out/*
 ```
 
 Verify that the `graph.pkl` file was created in the output directory.

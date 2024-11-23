@@ -6,38 +6,58 @@ line. The guide is designed for Ubuntu 23.10 but should also work on other
 recent versions of Ubuntu, including the latest LTS release as of this writing,
 Ubuntu 22.04.
 
-## Download RNA-clique
+## Installing dependencies via APT
 
-For now, you can download RNA-clique by cloning its GitHub repository.
+We will install some dependencies using Ubuntu's default package manager, APT.
+
+First, update the package lists.
 
 ```bash
-git clone --recurse-submodules https://github.com/actapia/rna_clique
+sudo apt update
 ```
 
+Then, install the first set of packages. The table below describes what we will
+install.
 
-## Installing BLAST
+| Software          | Description                                                                            |
+| ----------------- | -------------------------------------------------------------------------------------- |
+| Git               | Version control system used by RNA-clique (usually installed by default)               |
+| wget              | Command-line utility for downloading files from the web (usually installed by default) |
+| NCBI BLAST+       | Popular implementation of the BLAST local sequence alignment algorithm                 |
+| `build-essential` | Metapackage containing tools useful for building software , including Perl modules     |
+| cpanminus         | Package manager for Perl                                                               |
 
-You can install a somewhat recent version of NCBI BLAST+ through APT.
 
 ```bash
-sudo apt install ncbi-blast+ ncbi-blast+ ncbi-blast+-legacy
+sudo apt install git wget ncbi-blast+ ncbi-blast+ ncbi-blast+-legacy \
+                 build-essential cpanminus
 ```
 
-## Installing CPAN/cpanm
-
-The BioPerl Bio::SeqIO module isn't present in Ubuntu default repositories, so
-we will install `cpanm` to help us install that library.
+BioPerl can also be installed via APT. The package and its dependencies include
+many recommendations that we don't need&mdash;you can specify
+`--no-install-recommends` to avoid installing those.
 
 ```bash
-sudo apt install cpanminus
+sudo apt install bioperl --no-install-recommends
 ```
 
-## Installing Bio::SeqIO
+## Installing GNU Parallel (optional)
 
-Now that `cpanm` is installed, we install Bio::SeqIO with the following command:
+Some parts of RNA-clique can use GNU Parallel to run multiple jobs
+simultaneously. Parallelization can speed up these parts on systems with more
+than one logical core ("thread"). GNU parallel be installed via APT.
 
 ```bash
-sudo cpanm install Bio::SeqIO
+sudo apt install parallel
+```
+
+## Installing Array::Heap
+
+We will use cpanmius to install the `Array::Heap` Perl  module, since it isn't
+available in Ubuntu's default software repositories.
+
+```bash
+sudo cpanm Array::Heap
 ```
 
 ## Installing Miniconda
@@ -64,6 +84,14 @@ default locaton Miniconda suggests.
 When asked about initializing Miniconda for the current shell, say yes.
 
 When the installation has finished, you will need to restart your shell.
+
+## Downloading RNA-clique
+
+For now, you can download RNA-clique by cloning its GitHub repository.
+
+```bash
+git clone --recurse-submodules https://github.com/actapia/rna_clique
+```
 
 ## Installing the rna-clique conda environment
 

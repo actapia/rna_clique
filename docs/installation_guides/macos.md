@@ -50,28 +50,20 @@ needed software.
 
 ## Installing Bash
 
-The version of Bash that comes installed on macOS is very out of date. Since
-RNA-clique uses some new features of Bash, we will install a new version using
-Homebrew.
+We will install a few packages using Homebrew.
+
+First, we will install **Bash**, which is a Unix shell. The version of Bash that
+comes installed on macOS is very out of date, but RNA-clique requires some new
+features of Bash.
+
+Second, we will install **NCBI BLAST+**, a popular implementation of the BLAST
+local sequence alignment software.
+
+Third, we will install **cpanminus**`, a Perl package manager that will help us
+install the Perl dependencies.
 
 ```zsh
-brew install bash
-```
-
-## Installing BLAST
-
-You can install a recent version of NCBI BLAST+ using Homebrew.
-
-```zsh
-brew install blast
-```
-
-## Installing CPAN/cpanm
-
-We will install `cpanm` to help us install the Perl dependencies.
-
-```zsh
-brew install cpanminus
+brew install bash blast cpanminus
 ```
 
 ## Installing GNU Parallel (optional)
@@ -89,7 +81,7 @@ brew install parallel
 We can use `cpan` to install the Bio::SeqIO Perl module.
 
 ```zsh
-sudo cpanm install Bio::SeqIO
+sudo cpanm Bio::SeqIO
 ```
 
 macOS may ask you to permit Terminal to access certain files and settings
@@ -100,7 +92,7 @@ on your computer. You can safely allow Terminal that access.
 Again, we can use `cpan`.
 
 ```zsh
-sudo cpanm install Array::Heap
+sudo cpanm Array::Heap
 ```
 
 ## Installing Miniconda
@@ -118,7 +110,7 @@ curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-$(uname -m)
 Then, run the installer.
 
 ```zsh
-bash Miniconda3-latest-MacOS-$(uname -m).sh
+bash Miniconda3-latest-MacOSX-$(uname -m).sh
 ```
 
 Agree to the license terms. Unless you have a reason to install somewhere else,
