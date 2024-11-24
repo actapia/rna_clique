@@ -34,11 +34,16 @@ fi
 if [ "$#" -eq 1 ]; then
     branch="$1"
 fi
-if which sudo && ! sudo -n -v; then
-    read -rs "password?Password: "
-    while ! echo "$password" | sudo -S -v 2>/dev/null; do
+if [ -z "$PASSWORDLESS" ]; then
+    PASSWORDLESS=0
+fi
+if which sudo; then
+    if [ "$PASSWORDLESS" -ne 1 ] && ! sudo -n -v; then
 	read -rs "password?Password: "
-    done
+	while ! echo "$password" | sudo -S -v 2>/dev/null; do
+	    read -rs "password?Password: "
+	done
+    fi
 else
     function sudo {
 	"$@"
@@ -78,7 +83,7 @@ if which sudo && ! sudo -n -v; then
 fi
 CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install bash blast cpanminus
-if which sudo; then
+if [ "$PASSWORDLESS" -ne 1 ] && which sudo; then
     echo "$password" | startsudo
 fi
 sudo cpanm Bio::SeqIO

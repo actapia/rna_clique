@@ -31,5 +31,5 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
       - name: Test installation
-        run: zsh tests/test_install/macos.sh "$GITHUB_REF_NAME"
+        run: PASSWORDLESS=1 zsh tests/test_install/macos.sh "$GITHUB_REF_NAME"
       
