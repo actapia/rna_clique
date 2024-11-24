@@ -78,7 +78,7 @@ rm /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
 
 set -e
 git clone -b "$branch" --recurse-submodules https://github.com/actapia/rna_clique
-if which sudo && ! sudo -n -v; then
+if [ "$PASSWORDLESS" -ne 1 ] && which sudo && ! sudo -n -v; then
     echo "$password" | sudo -S -v
 fi
 CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
