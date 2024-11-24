@@ -22,9 +22,12 @@ on:
         default: false
 
 jobs:
-  test-install-macos-latest:
-    name: Test installation on macOS.
-    runs-on: macos-latest
+  test-install-macos:
+    name: Test installation on macOS
+    strategy:
+      matrix:
+        os: [macos-14, macos-13, macos-12]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup tmate session
