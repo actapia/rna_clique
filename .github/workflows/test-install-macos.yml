@@ -6,8 +6,8 @@ on:
     paths:
       - '*'
       - '!.gitignore'
-      - '!workflows/**'
-      - 'workflows/test-install-macos.yml'
+      - '!.github/workflows/**'
+      - '.github/workflows/test-install-macos.yml'
       - '!test_install/**'
       - 'tests/test_install/macos.sh'
       - '!parameter_testing/**'
