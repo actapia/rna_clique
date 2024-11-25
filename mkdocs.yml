@@ -4,6 +4,7 @@ nav:
     - Command-line usage: usage.md
     - Installation guides:
         - Ubuntu: installation_guides/ubuntu.md
+        - macOS: installation_guides/macos.md
     - Tutorials:
         - tutorials/reads2tree/README.md
 markdown_extensions:
