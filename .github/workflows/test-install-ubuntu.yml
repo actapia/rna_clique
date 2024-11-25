@@ -6,8 +6,8 @@ on:
     paths:
       - '*'
       - '!.gitignore'
-      - '!workflows/**'
-      - 'workflows/test-install-ubuntu.yml'
+      - '!.github/workflows/**'
+      - '.github/workflows/test-install-ubuntu.yml'
       - '!test_install/**'
       - 'tests/test_install/ubuntu.sh'
       - '!parameter_testing/**'
