@@ -52,7 +52,7 @@ are considered untested.
 ### Installation guides
 
 * [Ubuntu](https://actapia.github.io/rna_clique/installation_guides/ubuntu)
-* [macOS](https://actapia.github.io/rna_clique/installation_guides/macOS)
+* [macOS](https://actapia.github.io/rna_clique/installation_guides/macos)
 
 ### Testing the installation
 
