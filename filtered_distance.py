@@ -16,6 +16,7 @@ from numbers import Real
 
 from build_graph import component_subgraphs
 from multiset_key_dict import MultisetKeyDict, FrozenMultiset
+from gene_matches_tables import read_table
 
 from tqdm import tqdm
 
