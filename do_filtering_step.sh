@@ -249,7 +249,8 @@ python find_all_pairs.py -i "$out_dir_1"/*.fasta -O "$out_dir_2" \
        -r "$gene_regex" -R "$sample_regex" -e "$evalue" -n "$top_N" $ka_flag \
        $cd_flag -j "$jobs"
 # Get gene matches graph.
-python build_graph.py -i "$out_dir_2"/*.pkl -o "$output_graph"
+shopt -s nullglob
+python build_graph.py -i "$out_dir_2"/*.{pkl,h5} -o "$output_graph"
 if [[ -v clean_level ]]; then
     if [ "$clean_level" -ge 1 ]; then
 	rm -r "$out_dir_1"/*.fasta
@@ -258,7 +259,7 @@ if [[ -v clean_level ]]; then
 	fi
     fi
     if [ "$clean_level" -ge 2 ]; then
-	rm -r "$out_dir_2"/*.pkl
+	rm -r "$out_dir_2"/*.{pkl,h5}
     fi
 fi
 echo "$output_graph"

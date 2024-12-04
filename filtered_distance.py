@@ -54,7 +54,7 @@ def handle_arguments():
         type=Path,
         nargs="+",
         required=True,
-        help="paths to the gene matches table pickles"
+        help="paths to the gene matches tables"
     )
     parser.add_argument(
         "-s",
@@ -123,6 +123,8 @@ def restrict_to(
 def print_mat(m : np.ndarray):
     np.savetxt(sys.stdout, m, fmt="%s", delimiter=' ')
 
+
+
     
 class SampleSimilarity:
     """Computes samples' similarities from gene matches graph and comparisons.
@@ -147,9 +149,9 @@ class SampleSimilarity:
     may be provided as the comparison_dfs, or the generator returned by the
     items method of an ordinary dict may be used instead.
 
-    If the graph and the comparison dataframes are stored in pickle files, the
-    from_filenames classmethod may provide a more convenient way of constructing
-    a SampleSimilarity object.
+    If the graph is saved in a pickle, and the comparison dataframes are stored
+    in pickles or HDF files, the from_filenames classmethod may provide a more
+    convenient way of constructing a SampleSimilarity object.
 
     Attributes:
         graph:         The gene matches graph representing gene orthologies.
@@ -175,11 +177,11 @@ class SampleSimilarity:
             
 
     @classmethod
-    def _load_pickles(
+    def _load_tables(
             cls,
-            pickles: Iterable[Path]
+            table_paths: Iterable[Path]
     ) -> Iterator[tuple[frozenset[str, str], pd.DataFrame]]:
-        return cls.mapping_from_dfs(map(pd.read_pickle, pickles))
+        return cls.mapping_from_dfs(map(read_table, table_paths))
             
 
     @property
@@ -373,11 +375,11 @@ class SampleSimilarity:
             *args,
             **kwargs
     ):
-        """Constructs a SampleSimilarity from paths to graph and table pickles.
+        """Constructs a SampleSimilarity from paths to graph and table files.
 
         Parameters:
             graph_fn:         Path to pickle for gene matches graph.
-            comparison_fns:   Paths to pickles for gene matches tables.
+            comparison_fns:   Paths to stored gene matches tables.
             store_dfs (bool): Whether to store the dataframes loaded.
 
         Returns:
@@ -390,7 +392,7 @@ class SampleSimilarity:
         else:
             f = id_
         #embed()
-        return cls(graph, f(cls._load_pickles(comparison_fns)), *args, **kwargs)
+        return cls(graph, f(cls._load_tables(comparison_fns)), *args, **kwargs)
     
         
 def main():

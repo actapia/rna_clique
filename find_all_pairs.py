@@ -12,6 +12,8 @@ from joblib import Parallel, delayed
 import os
 from tqdm import tqdm
 
+from gene_matches_tables import write_table
+
 default_sample_regex = re.compile(os.environ.get("SAMPLE_RE", "^(.*?)_.*$"))
 
 def handle_arguments():
@@ -109,7 +111,7 @@ def find_homologs_and_save(
     table = finder.get_match_table(transcripts1, transcripts2)
     table["ssample"] = str(transcripts1)
     table["qsample"] = str(transcripts2)
-    table.to_pickle(out_path)
+    write_table(table, out_path)
     return True
 
 def make_output_path(
@@ -117,7 +119,7 @@ def make_output_path(
         t1 : Path,
         t2 : Path,
         regex : Optional[re.Pattern] = None,
-        extension : str = "pkl"
+        extension : str = "h5"
 ) -> Path:
     """Return the output path for the comparison between the two files.
 
@@ -202,7 +204,7 @@ def main():
     mop = functools.partial(
         make_output_path,
         regex=args.sample_regex,
-        extension="pkl"
+        extension="h5"
     )
     combos = list(itertools.combinations(args.inputs, 2))
     res = list(
