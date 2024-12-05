@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 from filtered_distance import SampleSimilarity
 from path_to_sample import path_to_sample
 from heatmap import draw_heatmap
+from make_subset import get_table_files
 
 tutorial_doc_dir = Path(os.environ["RNA_CLIQUE"]) / "docs/tutorials/reads2tree"
 rna_clique_out_dir = Path(os.environ["TUTORIAL_DIR"]) / "rna_clique_out"
@@ -15,7 +16,7 @@ def main():
     sample_metadata = pd.read_csv(tutorial_doc_dir / "tall_fescue_accs.csv")
     similarity_computer = SampleSimilarity.from_filenames(
         rna_clique_out_dir / "graph.pkl",
-        (rna_clique_out_dir / "od2").glob("*.pkl")
+        list(get_table_files(rna_clique_out_dir / "od2"))
     )
     dis_df = similarity_computer.get_dissimilarity_df().rename(
         index=path_to_sample,

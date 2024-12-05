@@ -92,6 +92,9 @@ def handle_arguments():
 def multi_glob(path: Path, globs: Iterable[str]) -> Iterator[Path]:
     return itertools.chain(*map(path.glob, globs))
 
+def get_table_files(path: Path) -> Iterator[Path]:
+    return multi_glob(path, ["*.pkl", "*.h5"])
+
 def main():
     args = handle_arguments()
     include = handle_filters(args.include, args.include_file)
@@ -105,7 +108,7 @@ def main():
         exclude,
         args.include_regex
     )
-    inputs = list(multi_glob(args.input_dir / "od2", ["*.pkl", "*.h5"]))    
+    inputs = list(get_table_files(args.input_dir / "od2"))
     if args.show_included or args.show_parsed_paths:
         for df_path in inputs:
             df = read_table(df_path, head=1)

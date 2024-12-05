@@ -11,7 +11,7 @@ from dendropy.calculate.treecompare import symmetric_difference
 from tqdm import tqdm
 from filtered_distance import SampleSimilarity
 from phylo_utils import tril_jagged
-from make_subset import multi_glob
+from make_subset import get_table_files
 
 def phylo_to_dendropy(tree, ns=None):
     sio = StringIO()
@@ -39,9 +39,7 @@ def handle_arguments():
 def main():
     args = handle_arguments()
     graph_path = args.analysis_root / "graph.pkl"
-    comparisons = list(
-        multi_glob(args.analysis_root / "od2", ["*.pkl", "*.h5"])
-    )
+    comparisons = list(get_table_files(args.analysis_root / "od2"))
     sim = SampleSimilarity.from_filenames(graph_path, tqdm(comparisons))
     dis_matrix = sim.get_dissimilarity_matrix()
     sim_name_re = re.compile("(T.*)_top")
