@@ -264,10 +264,10 @@ ls "$TUTORIAL_DIR/rna_clique_out/graph.pkl"
 
 If you want a tree, you can create one using RNA-clique and Biopython. The code
 below, also found in `docs/tutorials/reads2tree/make_tree.py`, computes the
-distance matrix from the `graph.pkl` and `od2/*.pkl` files and constructs a tree
-using the neighbor-joining algorithm. The tree is also rooted at its
-midpoint. The tree is saved to `nj_tree.tree`, and a visualization is saved to
-`nj_tree.svg` in the `rna_clique_out` directory.
+distance matrix from the `graph.pkl` and `od2/*.h5` (or `od2/*.pkl`) files and
+constructs a tree using the neighbor-joining algorithm. The tree is also rooted
+at its midpoint. The tree is saved to `nj_tree.tree`, and a visualization is
+saved to `nj_tree.svg` in the `rna_clique_out` directory.
 
 ```python
 --8<-- "docs/tutorials/reads2tree/make_tree.py"

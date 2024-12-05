@@ -130,23 +130,24 @@ When the script finishes, it creates `graph.pkl` in the specified output
 directory. `graph.pkl` is a Python pickle file representing the constructed
 gene matches graph.
 
-The script also creates Python pickles for the pairwise BLAST results. The BLAST
-results can be found in the `od2` subdirectory of the output directory.
+The script also stores HDF5 files (formerly Python pickles) for the pairwise
+BLAST results. The BLAST results can be found in the `od2` subdirectory of the
+output directory.
 
 ### Phase 2: Calculating distances
 
 The `filtered_distance.py` Python script may be used to compute distances or
 similarities from a gene matches graph. Basic usage of the command requires
-only that we provide the pickles for the gene matches graph and the pairwise
-BLAST results.
+only that we provide the pickles for the gene matches graph and the HDF5 files
+for the pairwise BLAST results.
 
 ```bash
-python filtered_distance.py -g GRAPH -c COMPARISONS_DIR/*.pkl
+python filtered_distance.py -g GRAPH -c COMPARISONS_DIR/*.h5
 ```
 
 In the above command, GRAPH should be the path to the `graph.pkl` created in the
 first phase, and COMPARISONS_DIR should be the directory that contains the BLAST
-result pickles. (This will be the `od2` subdirectory of the output directory
+result HDF5 files. (This will be the `od2` subdirectory of the output directory
 from Phase 1 if you used the `typical_filtering_step.sh` script.)
 
 The script outputs a genetic similarity matrix to standard output by default. To
