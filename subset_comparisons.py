@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from typing import Optional, Callable
+from typing import Optional, Callable, Iterator
 from collections.abc import Container, Iterable
 
 from gene_matches_tables import read_table

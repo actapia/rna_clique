@@ -19,6 +19,7 @@ from build_graph import build_graph
 from gene_matches_tables import read_table
 
 from collections.abc import Iterable
+from typing import Iterator
 
 
 
@@ -89,8 +90,8 @@ def handle_arguments():
     )
     return parser.parse_args()
 
-def multi_glob(path: Path, globs: Iterable[str]):
-    return itertools.chain(map(path.glob, globs))
+def multi_glob(path: Path, globs: Iterable[str]) -> Iterator[Path]:
+    return itertools.chain(*map(path.glob, globs))
 
 def main():
     args = handle_arguments()
