@@ -11,11 +11,16 @@ from dendropy.calculate.treecompare import symmetric_difference
 from tqdm import tqdm
 from filtered_distance import SampleSimilarity
 from phylo_utils import tril_jagged
+from make_subset import get_table_files
 
 def phylo_to_dendropy(tree, ns=None):
     sio = StringIO()
     Bio.Phylo.write(tree, sio, format="newick")
-    return dendropy.Tree.get(data=sio.getvalue(), schema="newick", taxon_namespace=ns)
+    return dendropy.Tree.get(
+        data=sio.getvalue(),
+        schema="newick",
+        taxon_namespace=ns
+    )
 
 def multi_phylo_to_dendropy(*trees, ns=None):
     ns = None
@@ -34,7 +39,7 @@ def handle_arguments():
 def main():
     args = handle_arguments()
     graph_path = args.analysis_root / "graph.pkl"
-    comparisons = list((args.analysis_root / "od2").glob("*.pkl"))
+    comparisons = list(get_table_files(args.analysis_root / "od2"))
     sim = SampleSimilarity.from_filenames(graph_path, tqdm(comparisons))
     dis_matrix = sim.get_dissimilarity_matrix()
     sim_name_re = re.compile("(T.*)_top")

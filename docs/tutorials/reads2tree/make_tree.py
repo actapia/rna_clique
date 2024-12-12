@@ -7,13 +7,14 @@ from matplotlib import pyplot as plt
 from filtered_distance import SampleSimilarity
 from phylo_utils import tril_jagged, draw_tree
 from path_to_sample import path_to_sample
+from make_subset import get_table_files
 
 rna_clique_out_dir = Path(os.environ["TUTORIAL_DIR"]) / "rna_clique_out"
 
 def main():
     similarity_computer = SampleSimilarity.from_filenames(
         rna_clique_out_dir / "graph.pkl",
-        (rna_clique_out_dir / "od2").glob("*.pkl")
+        list(get_table_files(rna_clique_out_dir / "od2"))
     )
     nj_tree = DistanceTreeConstructor().nj(
         DistanceMatrix(

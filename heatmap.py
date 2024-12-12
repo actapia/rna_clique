@@ -6,35 +6,18 @@ import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
 
+from plots import (
+    default_group_label_maker,
+    _keyed_multi_sort,
+    BasicCompositeTransform,
+    _transform_ax
+)
+
 from typing import Union, Optional, Callable, Literal, Any
+from itertools import zip_longest
 from collections.abc import Iterable
 
 #from IPython import embed
-
-class BasicCompositeTransform:
-    """A composition of multiple matplotlib transforms."""
-    def __init__(self, *args):
-        self.transforms = args
-        
-    def transform_point(self, p):
-        """Transform the point by applying each transform in order."""
-        for t in self.transforms:
-            p = t.transform_point(p)
-        return p
-
-def _transform_ax(trans, coords, axis):
-    def get_point(coord):
-        p = [0, 0]
-        p[axis] = coord
-        return p
-    return [trans.transform_point(get_point(coord))[axis] for coord in coords]
-
-def default_group_label_maker(group_values: str | Iterable[str]) -> str:
-    """Return a single str or return multiple values joined by commas."""
-    if isinstance(group_values, str):
-        return group_values
-    else:
-        return ", ".join(map(str, group_values))
 
 # noinspection PyTypeChecker
 axis_to_pos = dict(map(reversed, enumerate(["x", "y"])))
@@ -48,14 +31,16 @@ def draw_heatmap(
         sample_name_column: str = "name",
         order_by: Optional[Union[str, Iterable[str]]] = None,
         square: bool = True,
+        group_by: Optional[Union[str, Iterable[str]]] = None,
         draw_group_labels: bool = False,
         make_group_label: Callable[[Iterable], str] = default_group_label_maker,
-        digit_annot: int = None,
+        digit_annot: Optional[int] = None,
         label_padding_x: float = 0.0275,
-        label_padding_y: float = 0.05,
-        label_kwargs: dict[str, Any] = None,
-        x_label_kwargs: dict[str, Any] = None,
-        y_label_kwargs: dict[str, Any] = None,
+        label_padding_y: float = 0.0275,
+        sort_key: Optional[Callable[[pd.Series], pd.Series]] = None,
+        label_kwargs: Optional[dict[str, Any]] = None,
+        x_label_kwargs: Optional[dict[str, Any]] = None,
+        y_label_kwargs: Optional[dict[str, Any]] = None,
         **heatmap_kwargs
 ):
     """Draw a heatmap representing a (dis)similarity matrix.
@@ -71,11 +56,13 @@ def draw_heatmap(
         sample_name_column (str): Column in sample_metadata for sample name.
         order_by:                 Columns by which to order samples.
         square (bool):            Whether to draw heatmap cells as squares.
+        group_by:                 Columns to use for grouping.
         draw_group_labels (bool): Whether to draw labels for order_by values.
         make_group_label:         Function to get group label from group values.
         digit_annot (int):        Annotate with the most significant digits.
         label_padding_x (float):  x padding to add to group labels on y axis.
         label_padding_y (float):  y padding to add to group labels on x axis.
+        sort_key:                 Function to transform sort column to sort key.
         label_kwargs (dict):      kwargs to give to plt.text for group labels
         x_label_kwargs (dict):    kwargs to give to plt.text for x group labels
         y_label_kwargs (dict):    kwargs to give to plt.text for y group labels
@@ -90,7 +77,7 @@ def draw_heatmap(
         def draw_labels(ppos=0):
             texts = []
             max_width = 0
-            for group, df in sample_metadata.groupby(order_by):
+            for group, df in sample_metadata.groupby(group_by):
                 avg_pos = sum(
                     pos_dict[sample] for sample in df["index"]
                 )/len(df)
@@ -131,8 +118,8 @@ def draw_heatmap(
         }
         sign = para*2-1
         # noinspection PyUnresolvedReferences
-        edge = min(
-            sign*min(
+        edge = sign*min(
+            min(
                 sign*t.get_window_extent(
                     plt.gcf().canvas.renderer
                 ).transformed(ax.transData.inverted()).get_points()[:, perp]
@@ -142,20 +129,29 @@ def draw_heatmap(
         text_elems, m_width = draw_labels()
         for text in text_elems:
             text.remove()
-        perp_pos = edge - sign*(
-            m_width + (ax_to_data([padding], perp)[0] % 1)
-        )
+        a2d = ax_to_data([padding], perp)[0] - ax_to_data([0], perp)[0]
+        perp_pos = edge - sign*m_width - a2d
         draw_labels(perp_pos)
         return perp_pos
     
     if order_by:
         if isinstance(order_by, str):
             order_by = [order_by]
-        sample_metadata = sample_metadata.set_index(
-            sample_name_column
-        ).loc[mat.columns].reset_index().sort_values(order_by)
+        sample_metadata = _keyed_multi_sort(
+            sample_metadata.set_index(
+                sample_name_column
+            ).loc[mat.columns].reset_index(),
+            order_by,
+            keys=sort_key
+        )
         #embed()
         mat = mat.iloc[sample_metadata.index].iloc[:, sample_metadata.index]
+    if group_by:
+        if isinstance(group_by, str):
+            group_by = [group_by]
+        assert order_by[:len(group_by)] == group_by
+    elif order_by:
+        group_by = order_by
     if digit_annot is not None:
         heatmap_kwargs["annot"] = (
             mat * 10**((-np.floor(np.log10(mat))).min(None) + digit_annot - 1)
@@ -222,12 +218,12 @@ def draw_heatmap(
     ypos = [0] + [group_label_dist_y]
     for pos in sample_metadata.reset_index(
             drop=True
-    ).groupby(order_by[0]).tail(1).head(-1).index:
+    ).groupby(group_by[0]).tail(1).head(-1).index:
         pos += 1
         ax.plot(xpos, [pos, pos], clip_on=False, **major_kwargs)
         ax.plot([pos, pos], ypos, clip_on=False, **major_kwargs)
 
-    if len(order_by) > 1:
+    if len(group_by) > 1:
         for pos in sample_metadata.reset_index(
                 drop=True
         ).groupby(order_by).tail(1).head(-1).index:
@@ -238,3 +234,4 @@ def draw_heatmap(
     plt.xlabel(None)
     # noinspection PyTypeChecker
     plt.ylabel(None)
+    plt.tight_layout()

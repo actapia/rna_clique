@@ -50,10 +50,28 @@ function modify_usage {
     echo
 }
 
+function have_command {
+    which "$1" > /dev/null
+    echo $?
+}
+
 
 declare -a rem
 # n=50000
-jobs="$(($(nproc) - 1))"
+case 0 in
+    "$(have_command "nproc")")
+	jobs="$(($(nproc) - 1))"
+	;;
+    "$(have_command "sysctl")")
+	jobs="$(($(sysctl -n hw.ncpu) - 1))"
+	;;
+    *)
+	>&2 echo "Could not determine number of logical cores on system."
+	>&2 echo "Defaulting to 1 parallel job."
+	jobs=1
+	;;
+esac
+#if jobs="$(($(nproc) - 1))"; then
 intermed=false
 raw=false
 do_help=false

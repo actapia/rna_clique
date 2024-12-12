@@ -5,6 +5,7 @@ import pickle
 import re
 from pathlib import Path
 from find_homologs import eprint
+from gene_matches_tables import read_table
 
 from collections.abc import Iterable
 from typing import Iterator
@@ -78,7 +79,7 @@ def build_graph(dfs : Iterable[pd.DataFrame]) -> nx.Graph:
 
 def main():
     args = handle_arguments()
-    graph = build_graph(pd.read_pickle(f) for f in tqdm(args.inputs))
+    graph = build_graph(read_table(f) for f in tqdm(args.inputs))
     with open(args.output_graph, "wb") as f:
         pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
 

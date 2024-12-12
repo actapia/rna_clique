@@ -1,0 +1,30 @@
+name: test-install-ubuntu
+
+on:
+  push:
+    branches: ["main", "macos"]
+    paths:
+      - '*'
+      - '!.gitignore'
+      - '!.github/workflows/**'
+      - '.github/workflows/test-install-ubuntu.yml'
+      - '!test_install/**'
+      - 'tests/test_install/ubuntu.sh'
+      - '!parameter_testing/**'
+      - '!property_testing/**'
+      - '!*.md'
+
+jobs:
+  test-install-ubuntu:
+    name: Test installation on Ubuntu
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, ubuntu-22.04, ubuntu-20.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test installation
+        run: bash tests/test_install/ubuntu.sh "$GITHUB_REF_NAME"
+      # - name: Test usage
+      #   run: bash tests/test_tutorial/test_reads2tree.sh
+      

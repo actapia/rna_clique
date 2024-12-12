@@ -16,6 +16,7 @@ from numbers import Real
 
 from build_graph import component_subgraphs
 from multiset_key_dict import MultisetKeyDict, FrozenMultiset
+from gene_matches_tables import read_table
 
 from tqdm import tqdm
 
@@ -41,34 +42,45 @@ def handle_arguments():
     parser = argparse.ArgumentParser(
         description="compute pairwise similarities from graph and comparisons"
     )
-    parser.add_argument("-g", "--graph", type=Path, required=True)
+    parser.add_argument(
+        "-g",
+        "--graph",
+        type=Path,
+        required=True,
+        help="path to the gene matches graph pickle"
+    )
     parser.add_argument(
         "-c",
         "--comparisons",
         type=Path,
         nargs="+",
-        required=True
+        required=True,
+        help="paths to the gene matches tables"
     )
     parser.add_argument(
         "-s",
         "--samples",
-        type=int
+        type=int,
+        help="number of samples"
     )
     parser.add_argument(
         "-e",
         "--embed",
-        action="store_true"
+        action="store_true",
+        help="enter an IPython shell after computing the matrix"
     )
     parser.add_argument(
         "-o",
         "--out-type",
         choices=["sim", "dis"], # Similarity, dissimilarity
-        default="sim"
+        default="sim",
+        help="type of matrix to produce (similarity or dissimilarity)"
     )
     parser.add_argument(
         "-l",
         "--print-sample-list",
-        action="store_true"
+        action="store_true",
+        help="print the list of samples before the matrix"
     )
     return parser.parse_args()
 
@@ -112,6 +124,8 @@ def restrict_to(
 def print_mat(m : np.ndarray):
     np.savetxt(sys.stdout, m, fmt="%s", delimiter=' ')
 
+
+
     
 class SampleSimilarity:
     """Computes samples' similarities from gene matches graph and comparisons.
@@ -136,9 +150,9 @@ class SampleSimilarity:
     may be provided as the comparison_dfs, or the generator returned by the
     items method of an ordinary dict may be used instead.
 
-    If the graph and the comparison dataframes are stored in pickle files, the
-    from_filenames classmethod may provide a more convenient way of constructing
-    a SampleSimilarity object.
+    If the graph is saved in a pickle, and the comparison dataframes are stored
+    in pickles or HDF files, the from_filenames classmethod may provide a more
+    convenient way of constructing a SampleSimilarity object.
 
     Attributes:
         graph:         The gene matches graph representing gene orthologies.
@@ -164,11 +178,11 @@ class SampleSimilarity:
             
 
     @classmethod
-    def _load_pickles(
+    def _load_tables(
             cls,
-            pickles: Iterable[Path]
+            table_paths: Iterable[Path]
     ) -> Iterator[tuple[frozenset[str, str], pd.DataFrame]]:
-        return cls.mapping_from_dfs(map(pd.read_pickle, pickles))
+        return cls.mapping_from_dfs(map(read_table, table_paths))
             
 
     @property
@@ -362,11 +376,11 @@ class SampleSimilarity:
             *args,
             **kwargs
     ):
-        """Constructs a SampleSimilarity from paths to graph and table pickles.
+        """Constructs a SampleSimilarity from paths to graph and table files.
 
         Parameters:
             graph_fn:         Path to pickle for gene matches graph.
-            comparison_fns:   Paths to pickles for gene matches tables.
+            comparison_fns:   Paths to stored gene matches tables.
             store_dfs (bool): Whether to store the dataframes loaded.
 
         Returns:
@@ -379,7 +393,7 @@ class SampleSimilarity:
         else:
             f = id_
         #embed()
-        return cls(graph, f(cls._load_pickles(comparison_fns)), *args, **kwargs)
+        return cls(graph, f(cls._load_tables(comparison_fns)), *args, **kwargs)
     
         
 def main():

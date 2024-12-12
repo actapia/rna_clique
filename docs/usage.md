@@ -10,11 +10,11 @@ This script builds the gene matches graph from gene matches tables.
 
 ### Options
 
-| Short name | Long name | Description                       | Default | Required |
-|------------|-----------|-----------------------------------|---------|----------|
-| `-h`       | `--help`  | Print a help message and exit.    |         | No       |
-| `-i`       |           | Gene matches table pickles.       |         | Yes      |
-| `-o`       |           | Output gene matches graph pickle. |         | Yes      |
+| Short name | Long name | Description                              | Default | Required |
+|------------|-----------|------------------------------------------|---------|----------|
+| `-h`       | `--help`  | Print a help message and exit.           |         | No       |
+| `-i`       |           | Gene matches table HDF5 or pickle files. |         | Yes      |
+| `-o`       |           | Output gene matches graph pickle.        |         | Yes      |
 
 
 ## do\_filtering\_step.sh

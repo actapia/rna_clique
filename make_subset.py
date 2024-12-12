@@ -1,6 +1,8 @@
 import argparse
 import re
 import pickle
+import pandas as pd
+import itertools
 
 from pathlib import Path
 
@@ -13,6 +15,12 @@ from subset_comparisons import (
 )
 from path_to_sample import sample_re
 from build_graph import build_graph
+from gene_matches_tables import read_table
+
+from collections.abc import Iterable
+from typing import Iterator
+
+
 
 def handle_arguments():
     parser = argparse.ArgumentParser(
@@ -31,6 +39,13 @@ def handle_arguments():
         type=Path,
         required=True,
         help="directory for full set of data"
+    )
+    parser.add_argument(
+        "--exclude",
+        "-x",
+        nargs="+",
+        default=[],
+        help="samples to exclude (default is none)"
     )
     parser.add_argument(
         "--include",
@@ -53,31 +68,84 @@ def handle_arguments():
         default=sample_re
     )
     parser.add_argument(
-        "--filter-file",
+        "--include-file",
         type=Path,
-        help="file containing sample to include"
+        help="file containing samples to include"
+    )
+    parser.add_argument(
+        "--exclude-file",
+        type=Path,
+        help="file containing samples to exclude"
+    )
+    parser.add_argument(
+        "--show-included",
+        action="store_true",
+        help="show which samples would be included and exit"
+    )
+    parser.add_argument(
+        "--show-parsed-paths",
+        action="store_true",
+        help="show parsed paths"
     )
     return parser.parse_args()
 
+def multi_glob(path: Path, globs: Iterable[str]) -> Iterator[Path]:
+    return itertools.chain(*map(path.glob, globs))
+
+def get_table_files(path: Path) -> Iterator[Path]:
+    return multi_glob(path, ["*.pkl", "*.h5"])
+
 def main():
     args = handle_arguments()
-    args.output_dir.mkdir(exist_ok=True)
-    od2 = args.output_dir / "od2"
-    od2.mkdir(exist_ok=True)
+    include = handle_filters(args.include, args.include_file)
+    if not include:
+        include = None
+    exclude = handle_filters(args.exclude, args.exclude_file)
+    if not exclude:
+        exclude = None
     matches = matcher(
-        handle_filters(args.filter, args.filter_file),
-        args.filter_regex
+        include,
+        exclude,
+        args.include_regex
     )
-    graph = build_graph(
-        make_subset_comparisons(
-            tqdm(list((args.input_dir / "od2").glob("*pkl"))),
-            od2,
-            matches,
-            args.sample_name_regex
+    inputs = list(get_table_files(args.input_dir / "od2"))
+    if args.show_included or args.show_parsed_paths:
+        for df_path in inputs:
+            df = read_table(df_path, head=1)
+            if args.show_parsed_paths:
+                print(
+                    *(
+                        args.sample_name_regex.search(
+                            Path(df[x + "sample"].iloc[0]).name
+                        ).group(1)
+                        for x in ["q", "s"]                
+                    )
+                )
+            if args.show_included and all(
+                matches(
+                    args.sample_name_regex.search(
+                        Path(df[x + "sample"].iloc[0]).name
+                    ).group(1)
+                )
+                for x in ["q", "s"]
+            ):
+                print(df_path)
+
+    else:
+        args.output_dir.mkdir(exist_ok=True)
+        od2 = args.output_dir / "od2"
+        od2.mkdir(exist_ok=True)
+
+        graph = build_graph(
+            make_subset_comparisons(
+                tqdm(inputs),
+                od2,
+                matches,
+                args.sample_name_regex
+            )
         )
-    )
-    with open(args.output_dir / "graph.pkl", "wb") as f:
-        pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
+        with open(args.output_dir / "graph.pkl", "wb") as f:
+            pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
 
 if __name__ == "__main__":
     main()

@@ -21,14 +21,15 @@ are considered untested.
 #### Main software
 
 * Python 3.12
-* Perl 5.36.0
-* Bash 5.2.15
+* Perl 5.38.0
+* Bash 5.2.32
 * ncbi-blast 2.12.0+
 * Python libraries
-  * tqdm 4.64.1
-  * pandas 2.2.0
-  * joblib 1.3.2
-  * networkx 3.0
+  * tqdm 4.66.5
+  * pandas 2.2.2
+  * pytables 3.10.1
+  * joblib 1.4.2
+  * networkx 3.3
   * [simple-blast](https://github.com/actapia/simple_blast) 0.0.5
 * Perl libraries
   * Bio::SeqIO 1.7.8
@@ -36,22 +37,23 @@ are considered untested.
 #### Phylogenetics and Visualization
 
 * Python libraries
-  * BioPython 1.83
-  * matplotlib 3.8.2
-  * seaborn 0.12.2
-  * scikit-bio 0.6 (in development)
+  * BioPython 1.84
+  * matplotlib 3.9.2
+  * seaborn 0.13.2
+  * scikit-bio 0.6.2
   
 #### Sequence simulation (needed for testing installation)
 
 * Python libraries
-  * more-itertools 10.2.0
-  * PyYAML 6.0.1
-  * SciPy 1.11.4
+  * more-itertools 10.4.0
+  * PyYAML 6.0.2
+  * SciPy 1.14.1
   
 
 ### Installation guides
 
-* [Ubuntu](docs/installation_guides/ubuntu.md)
+* [Ubuntu](https://actapia.github.io/rna_clique/installation_guides/ubuntu)
+* [macOS](https://actapia.github.io/rna_clique/installation_guides/macos)
 
 ### Testing the installation
 
@@ -68,7 +70,7 @@ Then, if you are in the root the repository, you can run the following command
 to begin the test script.
 
 ```bash
-bash tests/test_install/test_install.sh && echo "Success!"
+bash tests/verify_install/test_install.sh && echo "Success!"
 ```
 
 The script generates a small test dataset and runs RNA-clique on the generated
@@ -129,23 +131,24 @@ When the script finishes, it creates `graph.pkl` in the specified output
 directory. `graph.pkl` is a Python pickle file representing the constructed
 gene matches graph.
 
-The script also creates Python pickles for the pairwise BLAST results. The BLAST
-results can be found in the `od2` subdirectory of the output directory.
+The script also stores HDF5 files (formerly Python pickles) for the pairwise
+BLAST results. The BLAST results can be found in the `od2` subdirectory of the
+output directory.
 
 ### Phase 2: Calculating distances
 
 The `filtered_distance.py` Python script may be used to compute distances or
 similarities from a gene matches graph. Basic usage of the command requires
-only that we provide the pickles for the gene matches graph and the pairwise
-BLAST results.
+only that we provide the pickles for the gene matches graph and the HDF5 files
+for the pairwise BLAST results.
 
 ```bash
-python filtered_distance.py -g GRAPH -c COMPARISONS_DIR/*.pkl
+python filtered_distance.py -g GRAPH -c COMPARISONS_DIR/*.h5
 ```
 
 In the above command, GRAPH should be the path to the `graph.pkl` created in the
 first phase, and COMPARISONS_DIR should be the directory that contains the BLAST
-result pickles. (This will be the `od2` subdirectory of the output directory
+result HDF5 files. (This will be the `od2` subdirectory of the output directory
 from Phase 1 if you used the `typical_filtering_step.sh` script.)
 
 The script outputs a genetic similarity matrix to standard output by default. To
@@ -228,5 +231,5 @@ alphabetically by name. To get this ordered list of samples, you can use the
 
 ## Additional documentation
 
-* [Command-line usage guide](docs/usage.md)
-* [Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](docs/tutorials/reads2tree/README.md)
+* [Command-line usage guide](https://actapia.github.io/rna_clique/usage)
+* [Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](https://actapia.github.io/rna_clique/tutorials/reads2tree)
