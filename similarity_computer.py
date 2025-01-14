@@ -172,3 +172,37 @@ class ComparisonSimilarityComputer:
             A Pandas dataframe giving pairwise dissimilarities for all samples.
         """
         return self._matrix_to_df(self.get_dissimilarity_matrix())
+
+    @classmethod
+    def _constructor_args_from_filenames(
+            cls,
+            comparison_fns: Iterable[Path],
+            store_dfs: bool = True,
+            *args,
+            **kwargs
+    ):
+        if store_dfs:
+            f = MultisetKeyDict
+        else:
+            f = id_
+        args = [f(cls._load_tables(comparison_fns))] + [args]
+        return args, kwargs
+
+    @classmethod
+    def from_filenames(
+            cls,
+            *args,
+            **kwargs
+    ):
+        """Constructs a SimilarityComputer from paths to table files.
+
+        Parameters:
+            comparison_fns:   Paths to stored gene matches tables.
+            store_dfs (bool): Whether to store the dataframes loaded.
+
+        Returns:
+            A SampleSimilarity using the pickled gene matches graph and tables.
+        """
+        args, kwargs = cls._constructor_args_from_filenames(*args, **kwargs)
+        return cls(*args, **kwargs)
+

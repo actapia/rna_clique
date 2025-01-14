@@ -235,13 +235,31 @@ class SampleSimilarity(ComparisonSimilarityComputer):
             yield frozenset((qsample, ssample)), dist
 
     @classmethod
-    def from_filenames(
+    def _constructor_args_from_filenames(
             cls,
             graph_fn : Path,
             comparison_fns : Iterable[Path],
             store_dfs : bool = True,
             *args,
             **kwargs
+    ):
+        args, kwargs = super()._constructor_args_from_filenames(
+            comparison_fns,
+            store_dfs,
+            *args,
+            **kwargs
+        )
+        with open(graph_fn, "rb") as f:
+            graph = pickle.load(f)
+        args = [graph] + args
+        return args, kwargs
+
+
+    @classmethod
+    def from_filenames(
+            cls,
+            args,
+            kwargs
     ):
         """Constructs a SampleSimilarity from paths to graph and table files.
 
@@ -253,14 +271,8 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         Returns:
             A SampleSimilarity using the pickled gene matches graph and tables.
         """
-        with open(graph_fn, "rb") as f:
-            graph = pickle.load(f)
-        if store_dfs:
-            f = MultisetKeyDict
-        else:
-            f = id_
-        #embed()
-        return cls(graph, f(cls._load_tables(comparison_fns)), *args, **kwargs)
+        return super().from_filenames(*args, **kwargs)
+
     
         
 def main():
