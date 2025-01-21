@@ -258,8 +258,8 @@ class SampleSimilarity(ComparisonSimilarityComputer):
     @classmethod
     def from_filenames(
             cls,
-            args,
-            kwargs
+            *args,
+            **kwargs
     ):
         """Constructs a SampleSimilarity from paths to graph and table files.
 
