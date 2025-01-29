@@ -2,7 +2,8 @@ name: test-install-macos
 
 on:
   push:
-    branches: ["main", "macos"]
+    branches-ignore:
+      - gh-pages
     paths:
       - '*'
       - '!.gitignore'
