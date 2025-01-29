@@ -15,7 +15,7 @@ from collections.abc import Iterable, Iterator
 
 from build_graph import component_subgraphs
 from multiset_key_dict import MultisetKeyDict, FrozenMultiset
-from similarity_computer import ComparisonSimilarityComputer
+from similarity_computer import ComparisonSimilarityComputer, id_
 
 from tqdm import tqdm
 
@@ -32,10 +32,6 @@ def get_ideal_components(
     for s in component_subgraphs(g):
         if len(s) == samples and is_complete(s):
             yield s
-
-def id_(x):
-    """Identity function."""
-    return x
 
 def handle_arguments():
     parser = argparse.ArgumentParser(

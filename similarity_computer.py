@@ -10,6 +10,10 @@ from numbers import Real
 from gene_matches_tables import read_table
 from multiset_key_dict import MultisetKeyDict
 
+def id_(x):
+    """Identity function."""
+    return x
+
 class ComparisonSimilarityComputer:
     """Base class for computing similarities from BLAST comparsions.
 
@@ -33,6 +37,16 @@ class ComparisonSimilarityComputer:
         self.comparison_dfs = comparison_dfs
         self._sample_count =  sample_count
         self._samples = None
+
+    # @property
+    # def _sample_count(self):
+    #     return self._sc
+
+    # @_sample_count.setter
+    # def _sample_count(self, c):
+    #     self._sc = c
+    #     if c == ():
+    #         raise ValueError("_sample_count must be an integer")
 
     @classmethod
     def mapping_from_dfs(cls, dfs):
@@ -185,7 +199,7 @@ class ComparisonSimilarityComputer:
             f = MultisetKeyDict
         else:
             f = id_
-        args = [f(cls._load_tables(comparison_fns))] + [args]
+        args = [f(cls._load_tables(comparison_fns))] + list(args)
         return args, kwargs
 
     @classmethod
