@@ -2,7 +2,8 @@ name: test-install-ubuntu
 
 on:
   push:
-    branches: ["main", "macos"]
+    branches-ignore:
+      - gh-pages
     paths:
       - '*'
       - '!.gitignore'
