@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-# sudo start/stop from Mark Haferkamp on Stack Overflow.
+# Based on sudo start/stop from Mark Haferkamp on Stack Overflow.
 # https://stackoverflow.com/a/30547074
 startsudo() {
     if sudo -S -v 2>/dev/null; then

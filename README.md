@@ -229,6 +229,18 @@ RNA-clique. The rows and columns of the matrix correspond to the samples sorted
 alphabetically by name. To get this ordered list of samples, you can use the
 `samples` property of `SampleSimilarity`.
 
+## License
+
+All code except tests/test_install/macos.sh is licensed under the MIT license,
+which may be found at LICENSE.MIT at the root of this repository.
+
+[tests/test_install/macos.sh](https://github.com/actapia/rna_clique/blob/main/tests/test_install/macos.sh)
+is licensed under the Creative Commons Attribution-ShareAlike 4.0 License, which
+may be found at LICENSE.CC-BY-SA-4.0 at the root of this repository.
+
+A machine-readable copyright file in Debian format may also be found at
+[copyright](https://github.com/actapia/rna_clique/blob/main/copyright).
+
 ## Additional documentation
 
 * [Command-line usage guide](https://actapia.github.io/rna_clique/usage)
