@@ -2,9 +2,9 @@
 
 This guide will walk you through installing RNA-clique on Ubuntu. The guide
 assumes you have some basic familiarity working with Ubuntu using the command
-line. The guide is designed for Ubuntu 23.10 but should also work on other
-recent versions of Ubuntu, including the latest LTS release as of this writing,
-Ubuntu 22.04.
+line. The guide is designed for Ubuntu 23.10 and has also been tested on Ubuntu
+22.04 and 24.04. The guide likely works on other recent versions of Ubuntu as
+well, but such configurations are untested.
 
 ## Installing dependencies via APT
 

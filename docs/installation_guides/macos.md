@@ -4,11 +4,10 @@ This guide will walk you through installing RNA-clique on macOS. Since
 RNA-clique currently has no graphical interface, basic command-line skills are
 needed for both installation and use of the software.
 
-This guide is designed for macOS Sequoia 15.0.1 and has been tested so far on
-Intel Macs only. The guide may also work on Apple Silicon, but the developer of
-this software has not yet been able to test the guide on such a machine.
-Additionally, the guide should also work on other recent versions of macOS, but
-such configurations are untested.
+This guide is designed for macOS Sequoia 15 on Intel Mac, but the steps in this
+guide have also been tested on macOS Ventura 13 on Intel and macOS Sonoma 14 on
+Apple Silicon via GitHub Actions runners. The guide likely works on other recent
+versions of macOS, but such configurations are untested.
 
 ## Installing command line developer tools
 
