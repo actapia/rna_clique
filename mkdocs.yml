@@ -1,4 +1,5 @@
 site_name: RNA-clique user guide
+repo_url: https://github.com/actapia/rna_clique
 nav:
     - Home: index.md
     - Command-line usage: usage.md
