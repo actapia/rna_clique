@@ -87,7 +87,10 @@ When the installation has finished, you will need to restart your shell.
 
 ## Downloading RNA-clique
 
-For now, you can download RNA-clique by cloning its GitHub repository.
+For now, you can download RNA-clique by cloning its GitHub
+repository. (Alternatively, you can extract the release zip or tarball, but be
+mindful that the repository root will have a different name than the one
+presented here.)
 
 ```bash
 git clone --recurse-submodules https://github.com/actapia/rna_clique

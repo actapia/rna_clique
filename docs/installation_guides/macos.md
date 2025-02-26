@@ -26,7 +26,9 @@ to complete before continuing.
 
 ## Download RNA-clique
 
-For now, you can download RNA-clique by cloning its GitHub repository.
+You can download RNA-clique by cloning its GitHub repository. (Alternatively,
+you can extract the release zip or tarball, but be mindful that the repository
+root will have a different name than the one presented here.)
 
 ```zsh
 git clone --recurse-submodules https://github.com/actapia/rna_clique

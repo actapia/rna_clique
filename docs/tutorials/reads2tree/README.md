@@ -54,6 +54,11 @@ export PATH="$PATH:$(realpath sratoolkit*/bin)"
 
 ### download_sra
 
+!!! note
+    If you downloaded this software from Zenodo, the test data SRA files are
+    included in the software release zip. If you don't want to download them
+    yourself, you don't need `download_sra` and can skip this step.
+
 Make sure the `rna-clique` Conda environment created during the RNA-clique
 installation is activated.
 
@@ -80,6 +85,11 @@ export PATH="$PATH:$PWD/download_sra"
 ```
 
 ### SPAdes
+
+!!! note
+    If you downloaded this software from Zenodo, the assembled transcriptomes
+    are included in the release zip. If you don't want to assemble the
+    transcriptomes yourself, you can skip downloading SPAdes.
 
 Download the SPAdes assembler. As of this writing, 4.0.0 is the newest
 version.
@@ -133,6 +143,17 @@ export TUTORIAL_DIR=$PWD
 ## Obtaining sequence data
 
 !!! note
+    If you downloaded this software from Zenodo, you already have the SRA files
+    in the `test_data/sra` of the repository. Instead of completing this step,
+    you can extract the provided data by running
+	
+	```bash
+	for f in "$RNA_CLIQUE/test_data/sra/*; do
+	    fasterq-dump "$f"
+	done
+	```
+
+!!! note
     Before proceeding, check that your environment variables are set to the 
     correct values!
 
@@ -184,6 +205,26 @@ ls SRR*.fastq
 ```
 
 ## Assembling transcriptomes
+
+!!! note
+    If you downloaded this software from Zenodo, you already have the assembled
+    transcriptomes in the `test_data/assemblies/` directory in the root of the
+    repository and can simply move them instead of running SPAdes
+	
+	```bash
+	mv "$RNA_CLIQUE/test_data/assemblies" out
+	```
+	
+!!! note
+    Assembling the transcriptomes requires at least 16 GB of memory. If you have
+    insufficient memory or otherwise need to skip this step, you can download
+    the assemblies instead:
+	
+	```bash
+	wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.zip"
+	mkdir out
+	unzip transcripts.zip -d out
+	```
 
 Ordinarily, we would need a quality control step before proceeding to assembly,
 but we will skip that for this tutorial.
