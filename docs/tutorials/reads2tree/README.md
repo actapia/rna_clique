@@ -148,7 +148,7 @@ export TUTORIAL_DIR=$PWD
     you can extract the provided data by running
 	
 	```bash
-	for f in "$RNA_CLIQUE/test_data/sra/*; do
+	for f in "$RNA_CLIQUE/test_data/sra/*"; do
 	    fasterq-dump "$f"
 	done
 	```
