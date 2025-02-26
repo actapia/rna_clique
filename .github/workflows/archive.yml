@@ -1,0 +1,83 @@
+name: Archive for release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  add-source-with-submodules:
+    name: Add source with submodules to release
+    strategy:
+      matrix:
+        format: [zip, tar.gz]
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install git-archive-all
+        run: |
+          python -m pip install git-archive-all
+
+      - name: Make archive
+        run: "git-archive-all 
+          ${{ github.event.repository.name }}-
+          ${{github.event.release.tag_name}}.${{ matrix.format }}"
+
+      - name: Upload artifact
+        run: "gh release upload 
+          ${{github.event.release.tag_name}}
+          ${{ github.event.repository.name }}-
+          ${{github.event.release.tag_name}}.${{ matrix.format }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-to-zenodo:
+    name: Publish release to Zenodo
+    environment: Zenodo
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install git-archive-all jsonpath-ng requests lxml
+                
+      - name: Make archive
+        run: 'export RNA_CLIQUE="$PWD";
+        cd .github/workflows/ && bash build_zenodo_archive.sh 
+        ${{ github.event.repository.name }}-${{github.event.release.tag_name}}
+        _with_data'
+        
+      - name: Release on Zenodo
+        run: "python .github/workflows/zenodo_archive.py -c 
+          ${{ github.event.repository.name }}-
+          ${{github.event.release.tag_name}}_with_data.zip"
+        env:
+          GITHUB_TAG_URL: "https://github.com/${{ github.repository }}/tree/\
+            ${{ github.event.release.tag_name }}"
+          GITHUB_URL: https://github.com/${{ github.repository }}
+          PUBLISHED_AT: ${{ github.event.release.published_at }}
+          RELEASE_DESCRIPTION: ${{ github.event.release.body }}
+          REPO_NAME: ${{ github.repository }}
+          VERSION: ${{ github.event.release.tag_name }}
+          ZENODO_JSON: custom-zenodo.json
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
