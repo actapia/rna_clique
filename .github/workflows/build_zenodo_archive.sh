@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -x
 set -e
+set -o pipefail
 declare -a urls
 git clone https://github.com/actapia/download_sra/
 python git_archive_all_extra.py "$1.zip"

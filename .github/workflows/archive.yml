@@ -32,13 +32,13 @@ jobs:
 
       - name: Make archive
         run: "git-archive-all 
-          ${{ github.event.repository.name }}-
+          ${{ github.event.repository.name }}-\
           ${{github.event.release.tag_name}}.${{ matrix.format }}"
 
       - name: Upload artifact
         run: "gh release upload 
           ${{github.event.release.tag_name}}
-          ${{ github.event.repository.name }}-
+          ${{ github.event.repository.name }}-\
           ${{github.event.release.tag_name}}.${{ matrix.format }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,15 +62,15 @@ jobs:
           python -m pip install git-archive-all jsonpath-ng requests lxml
                 
       - name: Make archive
-        run: 'export RNA_CLIQUE="$PWD";
+        run: "export RNA_CLIQUE=\"$PWD\";
         cd .github/workflows/ && bash build_zenodo_archive.sh 
-        ${{ github.event.repository.name }}-${{github.event.release.tag_name}}
-        _with_data'
+        ${{ github.event.repository.name }}-${{github.event.release.tag_name}}\
+        _with_data"
         
       - name: Release on Zenodo
         run: "python .github/workflows/zenodo_archive.py -c 
-          ${{ github.event.repository.name }}-
-          ${{github.event.release.tag_name}}_with_data.zip"
+          ${{ github.event.repository.name }}-\
+          ${{ github.event.release.tag_name }}_with_data.zip"
         env:
           GITHUB_TAG_URL: "https://github.com/${{ github.repository }}/tree/\
             ${{ github.event.release.tag_name }}"
