@@ -11,14 +11,14 @@
 	    "imprint_publisher": "Zenodo",
 	    "upload_type": "software",
 	    "custom": {
-		'code:programmingLanguage': [
-		    {'id': 'python', 'title': {'en': 'Python'}},
-		    {'id': 'perl', 'title': {'en': 'Perl'}},
-		    {'id': 'shell', 'title': {'en': 'Shell'}}
+		"code:programmingLanguage": [
+		    {"id": "python", "title": {"en": "Python"}},
+		    {"id": "perl", "title": {"en": "Perl"}},
+		    {"id": "shell", "title": {"en": "Shell"}}
 		],
-		'code:developmentStatus': {
-		    'id': 'active',
-		    'title': {'en': 'Active'}
+		"code:developmentStatus": {
+		    "id": "active",
+		    "title": {"en": "Active"}
 		}
 	    }
 	}
