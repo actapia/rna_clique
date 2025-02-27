@@ -1,0 +1,2282 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../installation_guides/ubuntu/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>Command-line usage - RNA-clique user guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#command-line-script-usage" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="RNA-clique user guide" class="md-header__button md-logo" aria-label="RNA-clique user guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            RNA-clique user guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Command-line usage
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/actapia/rna_clique" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="RNA-clique user guide" class="md-nav__button md-logo" aria-label="RNA-clique user guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    RNA-clique user guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/actapia/rna_clique" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Command-line usage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Command-line usage
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#build_graphpy" class="md-nav__link">
+    build_graph.py
+  </a>
+  
+    <nav class="md-nav" aria-label="build_graph.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#do_filtering_stepsh" class="md-nav__link">
+    do_filtering_step.sh
+  </a>
+  
+    <nav class="md-nav" aria-label="do_filtering_step.sh">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positional-arguments" class="md-nav__link">
+    Positional arguments
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_1" class="md-nav__link">
+    Options
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gene-regex" class="md-nav__link">
+    gene-regex
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep-all" class="md-nav__link">
+    keep-all
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#n-big-n" class="md-nav__link">
+    N (big N)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern" class="md-nav__link">
+    pattern
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-regex" class="md-nav__link">
+    sample-regex
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    Environment variables
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filtered_distancepy" class="md-nav__link">
+    filtered_distance.py
+  </a>
+  
+    <nav class="md-nav" aria-label="filtered_distance.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options_2" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    Output format
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#find_all_pairspy" class="md-nav__link">
+    find_all_pairs.py
+  </a>
+  
+    <nav class="md-nav" aria-label="find_all_pairs.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options_3" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables_1" class="md-nav__link">
+    Environment variables
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#find_homologspy" class="md-nav__link">
+    find_homologs.py
+  </a>
+  
+    <nav class="md-nav" aria-label="find_homologs.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positional-arguments_1" class="md-nav__link">
+    Positional arguments
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_4" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-format_1" class="md-nav__link">
+    Output format
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#make_subsetspy" class="md-nav__link">
+    make_subsets.py
+  </a>
+  
+    <nav class="md-nav" aria-label="make_subsets.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options_5" class="md-nav__link">
+    Options
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sample-name-regex" class="md-nav__link">
+    sample-name-regex
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plot_component_sizespy" class="md-nav__link">
+    plot_component_sizes.py
+  </a>
+  
+    <nav class="md-nav" aria-label="plot_component_sizes.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positional-arguments_2" class="md-nav__link">
+    Positional arguments
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_6" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualizations" class="md-nav__link">
+    Visualizations
+  </a>
+  
+    <nav class="md-nav" aria-label="Visualizations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#component-size-histogram" class="md-nav__link">
+    Component size histogram
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#represented-sample-count-histogram" class="md-nav__link">
+    Represented sample count histogram
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-count-to-component-size-ratio-kde-plot" class="md-nav__link">
+    Sample count to component size ratio KDE plot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-density-kde-plot" class="md-nav__link">
+    Component density KDE plot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graphviz" class="md-nav__link">
+    Graphviz
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-exporters" class="md-nav__link">
+    Data exporters
+  </a>
+  
+    <nav class="md-nav" aria-label="Data exporters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cytoscape-json" class="md-nav__link">
+    Cytoscape JSON
+  </a>
+  
+    <nav class="md-nav" aria-label="Cytoscape JSON">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graphml" class="md-nav__link">
+    GraphML
+  </a>
+  
+    <nav class="md-nav" aria-label="GraphML">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typical_filtering_stepsh" class="md-nav__link">
+    typical_filtering_step.sh
+  </a>
+  
+    <nav class="md-nav" aria-label="typical_filtering_step.sh">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positional-arguments_3" class="md-nav__link">
+    Positional arguments
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_7" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables_2" class="md-nav__link">
+    Environment variables
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#select_top_setspl" class="md-nav__link">
+    select_top_sets.pl
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#select_top_sets_allsh" class="md-nav__link">
+    select_top_sets_all.sh
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="false">
+          Installation guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Installation guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Installation guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation_guides/ubuntu/" class="md-nav__link">
+        Ubuntu
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation_guides/macos/" class="md-nav__link">
+        macOS
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="false">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/reads2tree/" class="md-nav__link">
+        From RNA-seq reads to a phylogenetic tree with RNA-clique
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#build_graphpy" class="md-nav__link">
+    build_graph.py
+  </a>
+  
+    <nav class="md-nav" aria-label="build_graph.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#do_filtering_stepsh" class="md-nav__link">
+    do_filtering_step.sh
+  </a>
+  
+    <nav class="md-nav" aria-label="do_filtering_step.sh">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positional-arguments" class="md-nav__link">
+    Positional arguments
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_1" class="md-nav__link">
+    Options
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gene-regex" class="md-nav__link">
+    gene-regex
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep-all" class="md-nav__link">
+    keep-all
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#n-big-n" class="md-nav__link">
+    N (big N)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern" class="md-nav__link">
+    pattern
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-regex" class="md-nav__link">
+    sample-regex
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    Environment variables
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filtered_distancepy" class="md-nav__link">
+    filtered_distance.py
+  </a>
+  
+    <nav class="md-nav" aria-label="filtered_distance.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options_2" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    Output format
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#find_all_pairspy" class="md-nav__link">
+    find_all_pairs.py
+  </a>
+  
+    <nav class="md-nav" aria-label="find_all_pairs.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options_3" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables_1" class="md-nav__link">
+    Environment variables
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#find_homologspy" class="md-nav__link">
+    find_homologs.py
+  </a>
+  
+    <nav class="md-nav" aria-label="find_homologs.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positional-arguments_1" class="md-nav__link">
+    Positional arguments
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_4" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-format_1" class="md-nav__link">
+    Output format
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#make_subsetspy" class="md-nav__link">
+    make_subsets.py
+  </a>
+  
+    <nav class="md-nav" aria-label="make_subsets.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#options_5" class="md-nav__link">
+    Options
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sample-name-regex" class="md-nav__link">
+    sample-name-regex
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plot_component_sizespy" class="md-nav__link">
+    plot_component_sizes.py
+  </a>
+  
+    <nav class="md-nav" aria-label="plot_component_sizes.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positional-arguments_2" class="md-nav__link">
+    Positional arguments
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_6" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualizations" class="md-nav__link">
+    Visualizations
+  </a>
+  
+    <nav class="md-nav" aria-label="Visualizations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#component-size-histogram" class="md-nav__link">
+    Component size histogram
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#represented-sample-count-histogram" class="md-nav__link">
+    Represented sample count histogram
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-count-to-component-size-ratio-kde-plot" class="md-nav__link">
+    Sample count to component size ratio KDE plot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-density-kde-plot" class="md-nav__link">
+    Component density KDE plot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graphviz" class="md-nav__link">
+    Graphviz
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-exporters" class="md-nav__link">
+    Data exporters
+  </a>
+  
+    <nav class="md-nav" aria-label="Data exporters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cytoscape-json" class="md-nav__link">
+    Cytoscape JSON
+  </a>
+  
+    <nav class="md-nav" aria-label="Cytoscape JSON">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graphml" class="md-nav__link">
+    GraphML
+  </a>
+  
+    <nav class="md-nav" aria-label="GraphML">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typical_filtering_stepsh" class="md-nav__link">
+    typical_filtering_step.sh
+  </a>
+  
+    <nav class="md-nav" aria-label="typical_filtering_step.sh">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#positional-arguments_3" class="md-nav__link">
+    Positional arguments
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_7" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables_2" class="md-nav__link">
+    Environment variables
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#select_top_setspl" class="md-nav__link">
+    select_top_sets.pl
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#select_top_sets_allsh" class="md-nav__link">
+    select_top_sets_all.sh
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="command-line-script-usage">Command line script usage</h1>
+<p>This document explains how to use each of the scripts that are part of
+RNA-clique. Short help messages can also be printed for most of these scripts by
+providing the scripts with the <code>--help</code> option.</p>
+<h2 id="build_graphpy">build_graph.py</h2>
+<p>This script builds the gene matches graph from gene matches tables.</p>
+<h3 id="options">Options</h3>
+<table>
+<thead>
+<tr>
+<th>Short name</th>
+<th>Long name</th>
+<th>Description</th>
+<th>Default</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h</code></td>
+<td><code>--help</code></td>
+<td>Print a help message and exit.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-i</code></td>
+<td></td>
+<td>Gene matches table HDF5 or pickle files.</td>
+<td></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>-o</code></td>
+<td></td>
+<td>Output gene matches graph pickle.</td>
+<td></td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="do_filtering_stepsh">do_filtering_step.sh</h2>
+<p>This script automates "phase 1" of RNA-clique in which the following steps
+occur:</p>
+<ol>
+<li>The top <span class="arithmatex">\(n\)</span> genes for each sample are selected by <span class="arithmatex">\(k\)</span>-mer coverage.</li>
+<li>The gene matches tables are found by executing a BLAST search for each pair
+   of samples in both directions. (That is, for samples <span class="arithmatex">\(a\)</span> and <span class="arithmatex">\(b\)</span>, we BLAST
+   both <span class="arithmatex">\(a\)</span> vs. <span class="arithmatex">\(b\)</span> and <span class="arithmatex">\(b\)</span> vs. <span class="arithmatex">\(a\)</span>.)</li>
+<li>The gene matches graph is constructed from the gene matches tables.</li>
+</ol>
+<p>This script offers many command line options for controlling the behavior of
+RNA-clique. For most analyses, most of these options are probably
+unnecessary. Hence, <strong>it is recommended to use the
+<a href="#typical_filtering_stepsh"><code>typical_filtering_step.sh</code></a> script instead unless
+fine-grained control is needed.</strong></p>
+<h3 id="positional-arguments">Positional arguments</h3>
+<table>
+<thead>
+<tr>
+<th>Argument name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DIR ...</code></td>
+<td>Each argument is a directory containing a transcripts FASTA file to be analyzed (<code>transcripts.fasta</code>, by default).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="options_1">Options</h3>
+<table>
+<thead>
+<tr>
+<th>Option name</th>
+<th>Description</th>
+<th>Default</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--cache-dir</code></td>
+<td>Directory in which to store BLAST DBs for top <span class="arithmatex">\(n\)</span> genes.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>--evalue</code></td>
+<td>e-value cutoff to use for BLAST searches</td>
+<td><code>1e-99</code> (<span class="arithmatex">\(10^{-99}\)</span>)</td>
+<td>No</td>
+</tr>
+<tr>
+<td><a href="#gene-regex"><code>--gene-regex</code></a></td>
+<td>Python regex used to extract gene and isoform IDs from FASTA sequence headers.</td>
+<td><code>^.*g([0-9]+)_i([0-9]+)</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>Display a help message and quit.</td>
+<td>false</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>--jobs</code></td>
+<td>Number of parallel jobs to use.</td>
+<td>1</td>
+<td>No</td>
+</tr>
+<tr>
+<td><a href="#keep-all"><code>--keep-all</code></a></td>
+<td>Whether to keep all matches in the case of a tie in the last step of creating the gene matches table.</td>
+<td>false</td>
+<td>No</td>
+</tr>
+<tr>
+<td><a href="#n-big-n"><code>-N</code></a></td>
+<td>A match between genes is counted if it is among the top <span class="arithmatex">\(N\)</span> in both directions.</td>
+<td>1</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>Number of top genes to select by <span class="arithmatex">\(k\)</span>-mer coverage.</td>
+<td>10000</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>--out-dir-1</code></td>
+<td>Directory in which to store top <span class="arithmatex">\(n\)</span> genes for each sample.</td>
+<td></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>--out-dir-2</code></td>
+<td>Directory in which to store gene matches tables.</td>
+<td></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>--output-graph</code></td>
+<td>Path to output graph pickle.</td>
+<td></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><a href="#pattern"><code>--pattern</code></a></td>
+<td>Perl regex used to extract <span class="arithmatex">\(k\)</span>-mer coverage from FASTA sequence header lines.</td>
+<td><code>^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><a href="#sample-regex"><code>--sample-regex</code></a></td>
+<td>Python regex used to extract sample names from directory names.</td>
+<td><code>^(.*?)_.*$</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>--transcripts</code></td>
+<td>Name of the FASTA files containing transcirpts in the input directories.</td>
+<td><code>transcripts.fasta</code></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h4 id="gene-regex">gene-regex</h4>
+<p>The <code>gene-regex</code> option should be a Python regular expression that can be used
+to parse the FASTA sequence header lines of the transcript FASTA files. The
+following capture groups are expected:</p>
+<table>
+<thead>
+<tr>
+<th>Capture group</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Gene ID, a non-negative integer</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Isoform ID, a non-negative integer</td>
+</tr>
+</tbody>
+</table>
+<h4 id="keep-all">keep-all</h4>
+<p>The last step in creating a gene matches table is selecting the top gene pair
+for each sample 1 gene by bitscore. By default, this step produces a table such
+that every sample 1 gene in the table is implicitly mapped to a single best
+match in sample 2. If for some sample 1 gene there are multiple gene pairs with
+highest bitscore, ties are broken by keeping only the row that comes first in
+the table.</p>
+<p>When the <code>--keep-all</code> flag is provided, more than one gene pair may be kept for
+a sample 1 gene in the case of ties.</p>
+<h4 id="n-big-n">N (big N)</h4>
+<p>When comparing sample <span class="arithmatex">\(A\)</span> and sample <span class="arithmatex">\(V\)</span>, we BLAST <span class="arithmatex">\(A\)</span> against <span class="arithmatex">\(B\)</span> and <span class="arithmatex">\(B\)</span>
+against <span class="arithmatex">\(A\)</span>. Ordinarily, we keep a pair of genes <span class="arithmatex">\(g\)</span> (from <span class="arithmatex">\(a\)</span>) and <span class="arithmatex">\(h\)</span> (from
+<span class="arithmatex">\(b\)</span>) when merging the results from the two directions if and only if <span class="arithmatex">\(g\)</span> is
+among the best matches for <span class="arithmatex">\(h\)</span> in <span class="arithmatex">\(A\)</span>, <em>and</em> <span class="arithmatex">\(h\)</span> is among the best matches for
+<span class="arithmatex">\(g\)</span> in <span class="arithmatex">\(B\)</span>, according to bitscore. (We allow ties, so <span class="arithmatex">\(h\)</span> may not be the <em>only</em>
+best match for <span class="arithmatex">\(g\)</span> in <span class="arithmatex">\(B\)</span>, and, likewise, <span class="arithmatex">\(g\)</span> may not be the <em>only</em> best match
+for <span class="arithmatex">\(h\)</span> in <span class="arithmatex">\(A\)</span>.) This behavior corresponds to a parameter setting of <span class="arithmatex">\(N = 1\)</span>
+because we are consider only the matches with top <span class="arithmatex">\(N = 1\)</span> bitscore in both
+directions.</p>
+<p>We could alternatively set <span class="arithmatex">\(N\)</span> to some value greater than 1. In that case, when
+we merge the two directions, we could keep a pair of genes <span class="arithmatex">\(g\)</span> and <span class="arithmatex">\(h\)</span> if and
+only if <span class="arithmatex">\(g\)</span> is among the matches with top <span class="arithmatex">\(N\)</span> bitscore for <span class="arithmatex">\(h\)</span> in <span class="arithmatex">\(A\)</span>, and <span class="arithmatex">\(h\)</span>
+is among the matches with top <span class="arithmatex">\(N\)</span> bitscore for <span class="arithmatex">\(g\)</span> in <span class="arithmatex">\(B\)</span>.</p>
+<p>As of this writing, values of <span class="arithmatex">\(N\)</span> greater than <span class="arithmatex">\(1\)</span> are mostly untested, and it
+is recommended that this parameter simply be set to <span class="arithmatex">\(1\)</span> in practice.</p>
+<h4 id="pattern">pattern</h4>
+<p>The <code>pattern</code> option should be a Perl regular expression that can be used to
+parse the FASTA sequence header lines of the transcript FASTA files. The
+following capture groups are expected:</p>
+<table>
+<thead>
+<tr>
+<th>Capture group</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><span class="arithmatex">\(k\)</span>-mer coverage, expressed as a floating-point number</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Gene ID, a non-negative integer</td>
+</tr>
+</tbody>
+</table>
+<p>Additional capture groups will be ignored.</p>
+<h4 id="sample-regex">sample-regex</h4>
+<p>The <code>sample-regex</code> option should be a Python regular expression that can be used
+to select a string acting as a sample name from the filenames of the FASTA files
+created for the top <span class="arithmatex">\(n\)</span> genes.</p>
+<p>By default, the top <span class="arithmatex">\(n\)</span> genes for a transcriptome located at
+<code>SAMPLENAME/transcripts.fasta</code> is <code>SAMPLENAME_top.fasta</code>, so the regular
+expression <code>^(.*?)_.*$</code> works to select the sample name from this filename.</p>
+<table>
+<thead>
+<tr>
+<th>Capture group</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Sample name</td>
+</tr>
+</tbody>
+</table>
+<h3 id="environment-variables">Environment variables</h3>
+<table>
+<thead>
+<tr>
+<th>Variable name</th>
+<th>Description</th>
+<th>Corresponding argument</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SAMPLE_RE</code></td>
+<td>Python regex used to extract sample names from directory names.</td>
+<td><a href="#sample-regex"><code>--sample-regex</code></a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="filtered_distancepy">filtered_distance.py</h2>
+<p>This script executes the second phase of RNA-seq, in which pairwise similarities
+or dissimilarities (distances) are computed from the gene matches tables and
+gene matches graph.</p>
+<h3 id="options_2">Options</h3>
+<table>
+<thead>
+<tr>
+<th>Short name</th>
+<th>Long name</th>
+<th>Description</th>
+<th>Default</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-c</code></td>
+<td><code>--comparisons</code></td>
+<td>Paths to gene matches tables.</td>
+<td></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>-e</code></td>
+<td><code>--embed</code></td>
+<td>Start IPython shell after distances have been computed.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-g</code></td>
+<td><code>--graph</code></td>
+<td>Path to gene matches graph pickle.</td>
+<td></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>-h</code></td>
+<td><code>--help</code></td>
+<td>Print a help message and exit.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-l</code></td>
+<td><code>--print-sample-list</code></td>
+<td>Print the list of samples before printing the matrices</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-o</code></td>
+<td><code>--out-type</code></td>
+<td>Output type (<strong>sim</strong>ilarity or <strong>dis</strong>similarity).</td>
+<td><code>sim</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-s</code></td>
+<td><code>--samples</code></td>
+<td>Number of sample in the comparison. (Computed automatically if not specified.)</td>
+<td></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h3 id="output-format">Output format</h3>
+<p>The script writes the matrix to standard output in a human-readable format using
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.savetxt.html"><code>np.savetxt</code></a>
+with the <code>%s</code> format and spaces as delimiters.</p>
+<p>If the <code>--print-sample-list</code> option is provided, the list of samples will be
+printed <em>before</em> the matrix.</p>
+<h2 id="find_all_pairspy">find_all_pairs.py</h2>
+<p>This script calculates the gene matches tables for all pairs of samples by
+BLASTing each sample against every other.</p>
+<h3 id="options_3">Options</h3>
+<table>
+<thead>
+<tr>
+<th>Short name</th>
+<th>Long name</th>
+<th>Description</th>
+<th>Default</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-D</code></td>
+<td><code>--db-cache-dir</code></td>
+<td>Directory in which to store BLAST DBs for the input FASTA files</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-e</code></td>
+<td><code>--evalue</code></td>
+<td>e-value cutoff to use for BLAST searches</td>
+<td><code>1e-50</code> (<span class="arithmatex">\(10^(-50)\)</span>)</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td><a href="#gene-regex"><code>--gene-regex</code></a></td>
+<td>Python regex used to extract gene and isoform IDs from FASTA sequence headers.</td>
+<td><code>^.*g([0-9]+)_i([0-9]+)</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-h</code></td>
+<td><code>--help</code></td>
+<td>Print a help message and exit.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-i</code></td>
+<td><code>--inputs</code></td>
+<td>Input FASTA files, each containing a sample's top <span class="arithmatex">\(n\)</span> genes</td>
+<td></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>-j</code></td>
+<td><code>--jobs</code></td>
+<td>Number of parallel jobs to use.</td>
+<td><code>threads - 1</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-k</code></td>
+<td><a href="#keep-all"><code>--keep-all</code></a></td>
+<td>Whether to keep all matches in the case of a tie in the last step of creating the gene matches table.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td><a href="#n-big-n"><code>--top-n</code></a></td>
+<td>A match between genes is counted if it is among the top <span class="arithmatex">\(N\)</span> in both directions.</td>
+<td>1</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-O</code></td>
+<td><code>--output-dir</code></td>
+<td>Directory in which to store the output gene matches tables</td>
+<td></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>-R</code></td>
+<td><a href="#sample-regex"><code>--sample-regex</code></a></td>
+<td>Python regex used to extract sample names from directory names.</td>
+<td><code>^(.*?)_.*$</code></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h3 id="environment-variables_1">Environment variables</h3>
+<table>
+<thead>
+<tr>
+<th>Variable name</th>
+<th>Description</th>
+<th>Corresponding argument</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SAMPLE_RE</code></td>
+<td>Python regex used to extract sample names from directory names.</td>
+<td><a href="#sample-regex"><code>--sample-regex</code></a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="find_homologspy">find_homologs.py</h2>
+<p>This script computes a genetic distance for a single pair of samples. </p>
+<p><strong>Warning: This script should not be used if you are analyzing more than two
+samples total!</strong></p>
+<h3 id="positional-arguments_1">Positional arguments</h3>
+<table>
+<thead>
+<tr>
+<th>Argument name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>transcripts1</code></td>
+<td>Path to first (top n) transcripts FASTA file to be analyzed.</td>
+</tr>
+<tr>
+<td><code>transcripts2</code></td>
+<td>Path to second (top n) transcripts FASTA file to be analyzed.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="options_4">Options</h3>
+<table>
+<thead>
+<tr>
+<th>Short name</th>
+<th>Long name</th>
+<th>Description</th>
+<th>Default</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-e</code></td>
+<td><code>--evalue</code></td>
+<td>e-value cutoff to use for BLAST searches</td>
+<td><code>1e-50</code> (<span class="arithmatex">\(10^{-50}\)</span>)</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-h</code></td>
+<td><code>--help</code></td>
+<td>Print a help message and exit.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-k</code></td>
+<td><a href="#keep-all"><code>--keep-all</code></a></td>
+<td>Whether to keep all matches in the case of a tie in the last step of creating the gene matches table.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-q</code></td>
+<td><code>--quiet</code></td>
+<td>Don't show the matches found.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td><a href="#gene-regex"><code>--regex</code></a></td>
+<td>Python regex used to extract gene and isoform IDs from FASTA sequence headers.</td>
+<td><code>^.*g([0-9]+)_i([0-9]+)</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-f</code></td>
+<td><code>--report-float</code></td>
+<td>Report the distance as a floating point number instead of a fraction.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td><a href="#n-big-n"><code>--top-n</code></a></td>
+<td>A match between genes is counted if it is among the top <span class="arithmatex">\(N\)</span> in both directions.</td>
+<td></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h3 id="output-format_1">Output format</h3>
+<p>By default, <code>find_homologs.py</code> prints the gene matches table followed by the
+distance, expressed as a simplified fraction.</p>
+<p>The <code>--quiet</code> option may be used to suppress printing the gene matches table,
+and the <code>--report-float</code> option may be used to express the distance as a
+floating-point number instead of a fraction.</p>
+<h2 id="make_subsetspy">make_subsets.py</h2>
+<p>This script creates links to gene matches tables and a gene matches graph for a
+subset of samples from a previously completed run of RNA-clique (specifically,
+phase 1 of RNA-clique). <code>make_subsets.py</code> is useful when you want to compute
+distances for a subset of samples that you've already analyzed with
+RNA-clique. This script is typically much faster than re-running Phase 1 on a
+subset of the input FASTA files since this script does not need to repeat any of
+the BLAST searches from the prior analysis.</p>
+<p>The symbolic links to the gene matches tables belonging to the subset are placed
+in an <code>od2</code> subdirectory of the specified output directory. The new gene matches
+graph is saved in a file named <code>graph.pkl</code> directly under the output directory.</p>
+<h3 id="options_5">Options</h3>
+<table>
+<thead>
+<tr>
+<th>Short name</th>
+<th>Long name</th>
+<th>Description</th>
+<th>Default</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h</code></td>
+<td><code>--help</code></td>
+<td>Print a help message and exit.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-O</code></td>
+<td><code>--output-dir</code></td>
+<td>Directory in which to store links to subset gene matches tables and graph.</td>
+<td></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>-I</code></td>
+<td><code>--input-dir</code></td>
+<td>Directory containing gene matches tables in <code>od2</code> subdirectory.</td>
+<td></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>-y</code></td>
+<td><code>--include</code></td>
+<td>A list of samples to include. If none are provided, the list is not used for selecting a subset.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-Y</code></td>
+<td><code>--include-regex</code></td>
+<td>A regular expression that matches samples to include.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td><a href="#sample-name-regex"><code>--sample-name-regex</code></a></td>
+<td>A regular expression for parsing the samples found in gene matches tables into sample names.</td>
+<td><code>(.*)_top\.fasta</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--filter-file</code></td>
+<td>A file whose lines contain names of samples to include in the subset.</td>
+<td></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h4 id="sample-name-regex">sample-name-regex</h4>
+<p>Each gene matches table created in Phase 1 of RNA-clique keeps track of the
+paths to the files used in the comparison. These are stored in the <code>qsample</code> and
+<code>ssample</code> columns of each dataframe.</p>
+<p><code>sample-name-regex</code> is a regular expression used to transform these basenames of
+the file paths back into sample names. The capture groups of this regular
+expression are as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Capture group</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Sample name</td>
+</tr>
+</tbody>
+</table>
+<p>Since <code>select_top_sets_all.sh</code> saves the sequences for the top <span class="arithmatex">\(n\)</span> genes of a
+sample named <code>$sample_name</code> in a file named <code>${sample_name}_top.fasta</code>, the
+default setting for this parameter is <code>(.*)_top\.fasta</code>.</p>
+<h2 id="plot_component_sizespy">plot_component_sizes.py</h2>
+<p>Despite its name, <code>plot_component_sizes.py</code> offers a variety of features useful
+for working with gene matches graphs:</p>
+<ul>
+<li><a href="#visualizations">Visualizations</a></li>
+<li><a href="#component-size-histogram">Component size histogram</a></li>
+<li><a href="#represented-sample-count-histogram">Represented sample count histogram</a></li>
+<li><a href="#sample-count-to-component-size-ratio-kde-plot">Sample count to component size ratio KDE plot</a></li>
+<li><a href="#component-density-kde-plot">Component density KDE plot</a></li>
+<li><a href="#graphviz">Graphviz export</a></li>
+<li><a href="#data-exporters">Data export</a></li>
+<li><a href="#cytoscape-json">Cytoscape JSON</a></li>
+<li><a href="#graphml">GraphML</a></li>
+<li>Statistics</li>
+<li>Ideal components</li>
+<li>Large components</li>
+<li>Total components</li>
+</ul>
+<h3 id="positional-arguments_2">Positional arguments</h3>
+<table>
+<thead>
+<tr>
+<th>Argument name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>graph</code></td>
+<td>Path to the pickled gene matches graph.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="options_6">Options</h3>
+<table>
+<thead>
+<tr>
+<th>Short name</th>
+<th>Long name</th>
+<th>Description</th>
+<th>Default</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-d</code></td>
+<td><code>--density-plot</code></td>
+<td>Output path for KDE plot of component density.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-x</code></td>
+<td><code>--export</code></td>
+<td>Output path(s) for export to GraphML or Cytoscape JSON.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-g</code></td>
+<td><code>--graphviz</code></td>
+<td>Output path for Graphviz (dot) format export.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-h</code></td>
+<td><code>--help</code></td>
+<td>Print a help message and exit.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td><code>--ratio-plot</code></td>
+<td>Output path for KDE plot of represented samples divided by component size.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-s</code></td>
+<td><code>--size-plot</code></td>
+<td>Output path for histogram of component sizes.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-S</code></td>
+<td><code>--sample-plot</code></td>
+<td>Output path for histogram of represented samples.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--samples</code></td>
+<td>The number of samples in the analysis. If not specified, this is computed automatically.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--statistics</code></td>
+<td>Print statistics in the specified format (<strong>h</strong>uman or <strong>m</strong>achine-readable).</td>
+<td></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h3 id="visualizations">Visualizations</h3>
+<p><code>plot_component_sizes.py</code> can produce several different plots relating to
+components of the gene matches graph.</p>
+<h4 id="component-size-histogram">Component size histogram</h4>
+<p>This plot shows the distribution of sizes among connected components of the gene
+matches graph.</p>
+<p>For most sizes, the bar in the histogram is drawn in blue. For the case where
+the size is exactly the number of samples, the bar is drawn in orange. Since a
+gene must match some other gene to be included in the gene matches graph, no bar
+is shown for the case where the size is 1.</p>
+<p><img alt="A component size histogram for the set of 16 tall fescue samples used in the
+RNA-clique methods paper." src="../images/size_plot.svg" /></p>
+<h4 id="represented-sample-count-histogram">Represented sample count histogram</h4>
+<p>The number of samples <strong>represented</strong> in a connected component is the number of
+distinct samples to which genes in the component belong. For a given component,
+the number of represented samples is necessarily between 1 and the number of
+samples in the analysis.</p>
+<p>This plot shows the distribution of number of represented samples among
+connected components in the gene matches graph.</p>
+<p>For represented sample counts , the bar in the histogram is drawn in blue. For
+the case where the represented sample count is exactly the number of samples,
+the bar is drawn in orange. Since a gene must match some other gene in another
+sample to be included in the gene matches graph, no bar is shown for the case
+where the represented sample count is 1.</p>
+<p><img alt="A represented sample count histogram for the set of 16 tall fescue samples
+used in the RNA-clique methods paper." src="../images/sample_plot.svg" /></p>
+<h4 id="sample-count-to-component-size-ratio-kde-plot">Sample count to component size ratio KDE plot</h4>
+<p>This plot shows the distribution of represented samples divided by component
+size for the components in the gene matches graph. Since this ratio can take on
+many fractional values, kernel density estimation is used to plot the
+distribution.</p>
+<p><img alt="The distribution of represented sample counts over component size for
+components in the gene matches graph of the set of 16 tall fescue samples used
+in the RNA-clique methods paper." src="../images/ratio_plot.svg" /></p>
+<h4 id="component-density-kde-plot">Component density KDE plot</h4>
+<p>This plot shows the distribution of component <strong>density</strong> for the gene matches
+graph, where density is computed as the number of edges that exist in the
+component divided by the number of edges that would exist if the component were
+complete. Since the density can take on many fractional values, kernel density
+estimation is used to plot the distribution.</p>
+<p><img alt="A component density KDE for the set of 16 tall fescue samples used in the
+RNA-clique methods paper." src="../images/density_plot.svg" /></p>
+<h4 id="graphviz">Graphviz</h4>
+<p><code>plot_component_sizes.py</code> can optionally export the entire gene matches graph to
+a <a href="https://graphviz.org/">Graphviz</a> ("dot") file. In principle, this file could
+be used to draw the full gene matches graph via one of the Graphviz layout
+programs (e.g., <code>neato</code>, <code>circo</code>, etc.), but, in practice, gene matches graphs
+are often too large to draw with Graphviz, even for small analyses involving
+only four samples.</p>
+<p>The function is included in case plotting some subgraph might be useful. The
+Graphviz export may also be practical for analyses with only three samples, but
+this is untested.</p>
+<h3 id="data-exporters">Data exporters</h3>
+<h4 id="cytoscape-json">Cytoscape JSON</h4>
+<p>Export to the <code>cyjs</code> JSON format used by Cytoscape.</p>
+<p>Currently, this exporter does not appear to function properly, as Cytoscape
+complains upon importing the graph that "source node is not a member of the
+network." For now, we recommend using the <a href="#graphml">GraphML</a> export format,
+which is also understood by Cytoscape.</p>
+<h5 id="example">Example</h5>
+<div class="language-js highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="s2">&quot;directed&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="s2">&quot;multigraph&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="s2">&quot;elements&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="s2">&quot;nodes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">            </span><span class="p">{</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">                </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">                    </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;(&#39;SRR6847395_out_top.fasta&#39;, 6)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">                    </span><span class="s2">&quot;value&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">                        </span><span class="s2">&quot;SRR6847395_out_top.fasta&quot;</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">                        </span><span class="mf">6</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">                    </span><span class="p">],</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">                    </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;(&#39;SRR6847395_out_top.fasta&#39;, 6)&quot;</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">                </span><span class="p">}</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">            </span><span class="p">},</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">            </span><span class="p">{</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">                </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">                    </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;(&#39;SRR6847395_out_top.fasta&#39;, 5289)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">                    </span><span class="s2">&quot;value&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">                        </span><span class="s2">&quot;SRR6847395_out_top.fasta&quot;</span><span class="p">,</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">                        </span><span class="mf">5289</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">                    </span><span class="p">],</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">                    </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;(&#39;SRR6847395_out_top.fasta&#39;, 5289)&quot;</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">                </span><span class="p">}</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">            </span><span class="p">},</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">            </span><span class="c1">// ...</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">        </span><span class="p">],</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">        </span><span class="s2">&quot;edges&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">            </span><span class="p">{</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">                </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">                    </span><span class="s2">&quot;source&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">                        </span><span class="s2">&quot;SRR6847395_out_top.fasta&quot;</span><span class="p">,</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">                        </span><span class="mf">6</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">                    </span><span class="p">],</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">                    </span><span class="s2">&quot;target&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">                        </span><span class="s2">&quot;SRR6847396_out_top.fasta&quot;</span><span class="p">,</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">                        </span><span class="mf">0</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">                    </span><span class="p">]</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">                </span><span class="p">}</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">            </span><span class="p">},</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">            </span><span class="p">{</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="w">                </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="w">                    </span><span class="s2">&quot;source&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="w">                        </span><span class="s2">&quot;SRR6847395_out_top.fasta&quot;</span><span class="p">,</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="w">                        </span><span class="mf">5289</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="w">                    </span><span class="p">],</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="w">                    </span><span class="s2">&quot;target&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="w">                        </span><span class="s2">&quot;SRR6847396_out_top.fasta&quot;</span><span class="p">,</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a><span class="w">                        </span><span class="mf">48</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a><span class="w">                    </span><span class="p">]</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a><span class="w">                </span><span class="p">}</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a><span class="w">            </span><span class="p">},</span>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a><span class="w">            </span><span class="c1">// ...</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a><span class="w">        </span><span class="p">]</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a><span class="p">}</span>
+</span></code></pre></div>
+<h4 id="graphml">GraphML</h4>
+<p><code>plot_component_sizes.py</code> can export to GraphML, an XML-based format for
+describing graphs.</p>
+<h5 id="example_1">Example</h5>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;?&gt;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">&lt;graphml</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://graphml.graphdrawing.org/xmlns&quot;</span><span class="w"> </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="w"> </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&lt;graph</span><span class="w"> </span><span class="na">edgedefault=</span><span class="s">&quot;undirected&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">&lt;node</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;(&#39;SRR6847395_out_top.fasta&#39;, 6)&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&lt;node</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;(&#39;SRR6847395_out_top.fasta&#39;, 5289)&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">&lt;node</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;(&#39;SRR6847395_out_top.fasta&#39;, 1672)&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="cm">&lt;!-- More nodes here ... --&gt;</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">&lt;edge</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;(&#39;SRR6847395_out_top.fasta&#39;, 6)&quot;</span><span class="w"> </span><span class="na">target=</span><span class="s">&quot;(&#39;SRR6847396_out_top.fasta&#39;, 0)&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nt">&lt;edge</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;(&#39;SRR6847395_out_top.fasta&#39;, 5289)&quot;</span><span class="w"> </span><span class="na">target=</span><span class="s">&quot;(&#39;SRR6847396_out_top.fasta&#39;, 48)&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">&lt;edge</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;(&#39;SRR6847395_out_top.fasta&#39;, 5289)&quot;</span><span class="w"> </span><span class="na">target=</span><span class="s">&quot;(&#39;SRR6847398_out_top.fasta&#39;, 2189)&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="cm">&lt;!-- More edges here ... --&gt;</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="nt">&lt;/graph&gt;</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nt">&lt;/graphml&gt;</span>
+</span></code></pre></div>
+<p><img alt="Three components of the gene matches graph for the set of four tall fescue
+samples used in the RNA-clique methods paper, visualized in Cytoscape using
+GraphML import." src="../images/cytoscape_example.svg" /></p>
+<h2 id="typical_filtering_stepsh">typical_filtering_step.sh</h2>
+<p>This script wraps <a href="#do_filtering_stepsh"><code>do_filtering_step.sh</code></a> to provide a
+simpler user interface and better defaults. Like <code>do_filtering_step.sh</code>, the
+purpose of this script is to automate the first phase of RNA-clique.</p>
+<p>This script shares many arguments/options with <code>do_filtering_step.sh</code>, but some
+have been removed or replaced for simplicity.</p>
+<h3 id="positional-arguments_3">Positional arguments</h3>
+<table>
+<thead>
+<tr>
+<th>Argument name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DIR ...</code></td>
+<td>Each argument is a directory containing a transcripts FASTA file to be analyzed.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="options_7">Options</h3>
+<table>
+<thead>
+<tr>
+<th>Short name</th>
+<th>Long name</th>
+<th>Description</th>
+<th>Default</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td><code>--evalue</code></td>
+<td>e-value cutoff to use for BLAST searches</td>
+<td><code>1e-99</code> (<span class="arithmatex">\(10^{-99}\)</span>)</td>
+<td>No</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="#gene-regex"><code>--gene-regex</code></a></td>
+<td>Python regex used to extract gene and isoform IDs from FASTA sequence headers.</td>
+<td><code>^.*g([0-9]+)_i([0-9]+)</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-h</code></td>
+<td><code>--help</code></td>
+<td>Print a help message and exit.</td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-j</code></td>
+<td><code>--jobs</code></td>
+<td>Number of parallel jobs to use.</td>
+<td><code>threads - 1</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><a href="#n-big-n"><code>-N</code></a></td>
+<td></td>
+<td>A match between genes is counted if it is among the top <span class="arithmatex">\(N\)</span> in both directions.</td>
+<td>1</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-o</code></td>
+<td><code>--output-dir</code></td>
+<td>Directory in which to put intermediate and output files.</td>
+<td></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="#pattern"><code>--pattern</code></a></td>
+<td>Perl regex used to extract <span class="arithmatex">\(k\)</span>-mer coverage from FASTA sequence header lines.</td>
+<td><code>^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td></td>
+<td><a href="#sample-regex"><code>--sample-regex</code></a></td>
+<td>Python regex used to extract sample names from directory names.</td>
+<td><code>^(.*?)_.*$</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td><code>--top-genes</code></td>
+<td>Number of top genes to select by <span class="arithmatex">\(k\)</span>-mer coverage.</td>
+<td></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td></td>
+<td><code>--transcripts</code></td>
+<td>Name of the FASTA files containing transcirpts in the input directories.</td>
+<td><code>transcripts.fasta</code></td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h3 id="environment-variables_2">Environment variables</h3>
+<table>
+<thead>
+<tr>
+<th>Variable name</th>
+<th>Description</th>
+<th>Corresponding argument</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SAMPLE_RE</code></td>
+<td>Python regex used to extract sample names from directory names.</td>
+<td><a href="#sample-regex"><code>--sample-regex</code></a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="select_top_setspl">select_top_sets.pl</h2>
+<p>This Perl script selects the top genes ("isotig sets") from an assembled
+transcriptome by <span class="arithmatex">\(k\)</span>-mer coverage. </p>
+<p>See more details in the <a href="https://github.com/actapia/select_top_genes/blob/master/README.md#select_top_setspl">documentation for
+select_top_genes</a>.</p>
+<h2 id="select_top_sets_allsh">select_top_sets_all.sh</h2>
+<p>This Perl script selects the top genes from multiple assembled transcriptomes in
+parallel.</p>
+<p>See more details in the <a href="https://github.com/actapia/select_top_genes/blob/master/README.md#select_top_sets_allsh">documentation for
+select_top_genes</a>.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy"], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
