@@ -68,7 +68,7 @@ jobs:
         _with_data"
         
       - name: Release on Zenodo
-        run: "python .github/workflows/zenodo_archive.py -c 
+        run: "cd .github/workflows && python zenodo_archive.py -c 
           ${{ github.event.repository.name }}-\
           ${{ github.event.release.tag_name }}_with_data.zip"
         env:
