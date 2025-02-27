@@ -14,7 +14,7 @@ on:
       - '!parameter_testing/**'
       - '!property_testing/**'
       - '!*.md'
-
+      - '!custom-zenodo.json'
 jobs:
   test-install-ubuntu:
     name: Test installation on Ubuntu

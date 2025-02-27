@@ -9,7 +9,7 @@
 		}
 	    ],
 	    "imprint_publisher": "Zenodo",
-	    "upload_type": "software"
+	    "upload_type": "software",
 	    "custom": {
 		'code:programmingLanguage': [
 		    {'id': 'python', 'title': {'en': 'Python'}},
