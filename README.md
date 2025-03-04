@@ -1,6 +1,6 @@
 # RNA-clique
 
-[![DOI](https://zenodo.org/badge/747462438.svg)](https://zenodo.org/badge/latestdoi/747462438)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14890599.svg)](https://doi.org/10.5281/zenodo.14890599)
 
 This is the repository for RNA-clique, a tool for computing pairwise genetic
 distances from RNA-seq data. The software accepts as input assembled
