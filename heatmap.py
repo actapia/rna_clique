@@ -14,6 +14,7 @@ from plots import (
     _transform_ax
 )
 
+from collections.abc import Sequence
 from typing import Union, Optional, Callable, Literal, Any
 from itertools import zip_longest
 from collections.abc import Iterable
@@ -38,7 +39,12 @@ def draw_heatmap(
         digit_annot: Optional[int] = None,
         label_padding_x: float = 0.0275,
         label_padding_y: float = 0.0275,
-        sort_key: Optional[Callable[[pd.Series], pd.Series]] = None,
+        sort_key: Optional[
+            Union[
+                Callable[[pd.Series], pd.Series],
+                Sequence[Callable[[pd.Series], pd.Series]]
+            ]
+        ] = None,
         label_kwargs: Optional[dict[str, Any]] = None,
         x_label_kwargs: Optional[dict[str, Any]] = None,
         y_label_kwargs: Optional[dict[str, Any]] = None,

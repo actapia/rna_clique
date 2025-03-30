@@ -12,11 +12,15 @@ def default_group_label_maker(group_values: str | Iterable[str]) -> str:
 def _keyed_multi_sort(df, columns, keys=None):
     if keys is None:
         return df.sort_values(columns)
-    elif len(columns) == 1 and len(keys) == 1:
-        return df.sort_values(columns, key=keys[0])
-    for column, key in reversed(list(zip_longest(columns, keys))):
-        df = df.sort_values(column, key=key, kind="stable")
-    return df
+    else:
+        try:
+            if len(columns) == 1 and len(keys) == 1:
+                return df.sort_values(columns, key=keys[0])
+        except TypeError:
+            return df.sort_values(columns, key=keys)
+        for column, key in reversed(list(zip_longest(columns, keys))):
+            df = df.sort_values(column, key=key, kind="stable")
+        return df
 
 def _composite_transform(name):
     def inner(self, o):
