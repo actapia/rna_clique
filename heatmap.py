@@ -195,6 +195,7 @@ def draw_heatmap(
         square=square,
         **heatmap_kwargs
     )
+    ax.apply_aspect()
     fig = ax.get_figure()
     plt.sca(ax)
     yticks = plt.yticks(
@@ -214,6 +215,7 @@ def draw_heatmap(
     base_kwargs = {"color": divider_color, "alpha": 0.15}
     major_kwargs = base_kwargs | {"lw": major_weight}
     minor_kwargs = base_kwargs | {"lw": minor_weight}
+    fig.canvas.draw()
     ax_to_data = functools.partial(
         _transform_ax,
         BasicCompositeTransform(ax.transAxes, ax.transData.inverted())
@@ -291,7 +293,8 @@ def draw_heatmap(
             shift[i] = inches_to_figure([-new_mins[i]], i)[0]
             new_mins[i] = 0
     for x in fig.axes:
-        current_position = x.get_position()
+        fig.canvas.draw()
+        current_position = x.get_position(original=True)
         new_position = matplotlib.transforms.Bbox(
                 [
                     [
@@ -304,7 +307,7 @@ def draw_heatmap(
                     ]
                 ]
             )
-        x.set_position(new_position)
+        x._set_position(new_position)
     fig.bbox_inches = matplotlib.transforms.Bbox(
         [
             new_mins,
