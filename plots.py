@@ -18,16 +18,39 @@ def _keyed_multi_sort(df, columns, keys=None):
         df = df.sort_values(column, key=key, kind="stable")
     return df
 
+def _composite_transform(name):
+    def inner(self, o):
+        for t in self.transforms:
+            o = getattr(t, name)(o)
+        return o
+    return inner
+
 class BasicCompositeTransform:
     """A composition of multiple matplotlib transforms."""
     def __init__(self, *args):
         self.transforms = args
+
+    def inverted(self):
+        return BasicCompositeTransform(
+            *(
+                t.inverted()
+                for t in reversed(self.transforms)
+            )
+        )
+            
         
-    def transform_point(self, p):
-        """Transform the point by applying each transform in order."""
-        for t in self.transforms:
-            p = t.transform_point(p)
-        return p
+    # def transform_point(self, p):
+    #     """Transform the point by applying each transform in order."""
+    #     for t in self.transforms:
+    #         p = t.transform_point(p)
+    #     return p
+
+    # def transform_bbox(self, p):
+    #     """Transform the Bbox by applying each transform in order."""
+
+for n in ["point", "bbox"]:
+    n = f"transform_{n}"
+    setattr(BasicCompositeTransform, n, _composite_transform(n))
 
 def _transform_ax(trans, coords, axis):
     def get_point(coord):

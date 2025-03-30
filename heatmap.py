@@ -4,6 +4,7 @@ import typing
 import pandas as pd
 import numpy as np
 import seaborn as sns
+import matplotlib.transforms
 from matplotlib import pyplot as plt
 
 from plots import (
@@ -41,6 +42,7 @@ def draw_heatmap(
         label_kwargs: Optional[dict[str, Any]] = None,
         x_label_kwargs: Optional[dict[str, Any]] = None,
         y_label_kwargs: Optional[dict[str, Any]] = None,
+        draw_debug_points: bool = False,
         **heatmap_kwargs
 ):
     """Draw a heatmap representing a (dis)similarity matrix.
@@ -63,9 +65,10 @@ def draw_heatmap(
         label_padding_x (float):  x padding to add to group labels on y axis.
         label_padding_y (float):  y padding to add to group labels on x axis.
         sort_key:                 Function to transform sort column to sort key.
-        label_kwargs (dict):      kwargs to give to plt.text for group labels
-        x_label_kwargs (dict):    kwargs to give to plt.text for x group labels
-        y_label_kwargs (dict):    kwargs to give to plt.text for y group labels
+        label_kwargs (dict):      kwargs to give to plt.text for group labels.
+        x_label_kwargs (dict):    kwargs to give to plt.text for x group labels.
+        y_label_kwargs (dict):    kwargs to give to plt.text for y group labels.
+        draw_debug_points (bool): Whether to plot points useful for debugging.
     """
 
     def _draw_group_labels(
@@ -97,7 +100,7 @@ def draw_heatmap(
                         **kwargs
                     )
                 )
-                # canvas.renderer exists, but only when we're actually drawing
+                # canvas.renderer exists, but only when we're actually drawing.
                 # noinspection PyUnresolvedReferences
                 max_width = max(
                     max_width,
@@ -126,6 +129,18 @@ def draw_heatmap(
             )
             for t in tick_labels
         )
+        debug_point = [0, 0]
+        debug_point[perp] = edge
+        for t in pos_dict.values():
+            debug_point[para] = t
+            if draw_debug_points:
+                plt.scatter(*debug_point, clip_on=False, color="red")
+        if draw_debug_points:
+            for t in tick_labels:
+                for point in t.get_window_extent(
+                        plt.gcf().canvas.renderer
+                ).transformed(ax.transData.inverted()).get_points():
+                    plt.scatter(*point, clip_on=False, color="blue", s=10)
         text_elems, m_width = draw_labels()
         for text in text_elems:
             text.remove()
@@ -180,6 +195,7 @@ def draw_heatmap(
         square=square,
         **heatmap_kwargs
     )
+    fig = ax.get_figure()
     yticks = plt.yticks(
         ha="right",
         multialignment="center",
@@ -200,6 +216,26 @@ def draw_heatmap(
     ax_to_data = functools.partial(
         _transform_ax,
         BasicCompositeTransform(ax.transAxes, ax.transData.inverted())
+    )
+    data_to_inches_trans = BasicCompositeTransform(
+            ax.transData,
+            fig.dpi_scale_trans.inverted()
+    )
+    data_to_inches = functools.partial(
+        _transform_ax,
+        data_to_inches_trans,
+    )
+    inches_to_figure_trans = BasicCompositeTransform(
+        fig.dpi_scale_trans,
+        fig.transFigure.inverted()
+    )
+    inches_to_figure = functools.partial(
+        _transform_ax,
+        inches_to_figure_trans
+    )
+    figure_to_inches = functools.partial(
+        _transform_ax,
+        inches_to_figure_trans.inverted()
     )
     group_label_dist_x = 0
     group_label_dist_y = ax_to_data([1], 1)[0]
@@ -222,6 +258,10 @@ def draw_heatmap(
         pos += 1
         ax.plot(xpos, [pos, pos], clip_on=False, **major_kwargs)
         ax.plot([pos, pos], ypos, clip_on=False, **major_kwargs)
+        if draw_debug_points:
+            ax.scatter([pos], [ypos[0]], clip_on=False, color="yellow")
+            ax.scatter([pos], [ypos[1]], clip_on=False, color="purple")
+
 
     if len(group_by) > 1:
         for pos in sample_metadata.reset_index(
@@ -234,4 +274,43 @@ def draw_heatmap(
     plt.xlabel(None)
     # noinspection PyTypeChecker
     plt.ylabel(None)
-    plt.tight_layout()
+    new_mins = [
+        min(
+            data_to_inches([group_label_dist_x], 0)[0],
+            fig.bbox_inches.extents[0]
+        ),
+        min(
+            data_to_inches([group_label_dist_y], 1)[0],
+            fig.bbox_inches.extents[1]
+        )
+    ]
+    shift = [0, 0]
+    for i in range(len(new_mins)):
+        if new_mins[i] < 0:
+            shift[i] = inches_to_figure([-new_mins[i]], i)[0]
+            new_mins[i] = 0
+    for x in fig.axes:
+        current_position = x.get_position()
+        new_position = matplotlib.transforms.Bbox(
+                [
+                    [
+                        current_position.extents[0] + shift[0],
+                        current_position.extents[1] + shift[1]
+                    ],
+                    [
+                        current_position.extents[2] + shift[0],
+                        current_position.extents[3] + shift[1]
+                    ]
+                ]
+            )
+        x.set_position(new_position)
+    fig.bbox_inches = matplotlib.transforms.Bbox(
+        [
+            new_mins,
+            [
+                fig.bbox_inches.extents[2] + figure_to_inches([shift[0]], 0)[0],
+                fig.bbox_inches.extents[3] + figure_to_inches([shift[1]], 1)[0],
+            ]
+        ]
+    )
+    #fig.bbox = fig.bbox._transform.transform_bbox(fig.bbox_inches)
