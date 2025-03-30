@@ -261,66 +261,71 @@ def draw_heatmap(
         )
     xpos = [group_label_dist_x] + ax_to_data([1], 0)
     ypos = [0] + [group_label_dist_y]
-    for pos in sample_metadata.reset_index(
-            drop=True
-    ).groupby(group_by[0]).tail(1).head(-1).index:
-        pos += 1
-        ax.plot(xpos, [pos, pos], clip_on=False, **major_kwargs)
-        ax.plot([pos, pos], ypos, clip_on=False, **major_kwargs)
-        if draw_debug_points:
-            ax.scatter([pos], [ypos[0]], clip_on=False, color="yellow")
-            ax.scatter([pos], [ypos[1]], clip_on=False, color="purple")
-
-
-    if len(group_by) > 1:
+    if group_by:
         for pos in sample_metadata.reset_index(
                 drop=True
-        ).groupby(order_by).tail(1).head(-1).index:
+        ).groupby(group_by[0]).tail(1).head(-1).index:
             pos += 1
-            ax.plot(xpos, [pos, pos], clip_on=False, **minor_kwargs)
-            ax.plot([pos, pos], ypos, clip_on=False, **minor_kwargs)
-    # noinspection PyTypeChecker
-    plt.xlabel(None)
-    # noinspection PyTypeChecker
-    plt.ylabel(None)
-    new_mins = [
-        min(
-            data_to_inches([group_label_dist_x], 0)[0],
-            fig.bbox_inches.extents[0]
-        ),
-        min(
-            data_to_inches([group_label_dist_y], 1)[0],
-            fig.bbox_inches.extents[1]
-        )
-    ]
-    shift = [0, 0]
-    for i in range(len(new_mins)):
-        if new_mins[i] < 0:
-            shift[i] = inches_to_figure([-new_mins[i]], i)[0]
-            new_mins[i] = 0
-    for x in fig.axes:
-        fig.canvas.draw()
-        current_position = x.get_position(original=True)
-        new_position = matplotlib.transforms.Bbox(
-                [
-                    [
-                        current_position.extents[0] + shift[0],
-                        current_position.extents[1] + shift[1]
-                    ],
-                    [
-                        current_position.extents[2] + shift[0],
-                        current_position.extents[3] + shift[1]
-                    ]
-                ]
+            ax.plot(xpos, [pos, pos], clip_on=False, **major_kwargs)
+            ax.plot([pos, pos], ypos, clip_on=False, **major_kwargs)
+            if draw_debug_points:
+                ax.scatter([pos], [ypos[0]], clip_on=False, color="yellow")
+                ax.scatter([pos], [ypos[1]], clip_on=False, color="purple")
+
+
+        if len(group_by) > 1:
+            for pos in sample_metadata.reset_index(
+                    drop=True
+            ).groupby(order_by).tail(1).head(-1).index:
+                pos += 1
+                ax.plot(xpos, [pos, pos], clip_on=False, **minor_kwargs)
+                ax.plot([pos, pos], ypos, clip_on=False, **minor_kwargs)
+        # noinspection PyTypeChecker
+        plt.xlabel(None)
+        # noinspection PyTypeChecker
+        plt.ylabel(None)
+        new_mins = [
+            min(
+                data_to_inches([group_label_dist_x], 0)[0],
+                fig.bbox_inches.extents[0]
+            ),
+            min(
+                data_to_inches([group_label_dist_y], 1)[0],
+                fig.bbox_inches.extents[1]
             )
-        x._set_position(new_position)
-    fig.bbox_inches = matplotlib.transforms.Bbox(
-        [
-            new_mins,
-            [
-                fig.bbox_inches.extents[2] + figure_to_inches([shift[0]], 0)[0],
-                fig.bbox_inches.extents[3] + figure_to_inches([shift[1]], 1)[0],
-            ]
         ]
-    )
+        shift = [0, 0]
+        for i in range(len(new_mins)):
+            if new_mins[i] < 0:
+                shift[i] = inches_to_figure([-new_mins[i]], i)[0]
+                new_mins[i] = 0
+        for x in fig.axes:
+            fig.canvas.draw()
+            current_position = x.get_position(original=True)
+            new_position = matplotlib.transforms.Bbox(
+                    [
+                        [
+                            current_position.extents[0] + shift[0],
+                            current_position.extents[1] + shift[1]
+                        ],
+                        [
+                            current_position.extents[2] + shift[0],
+                            current_position.extents[3] + shift[1]
+                        ]
+                    ]
+                )
+            x._set_position(new_position)
+        fig.bbox_inches = matplotlib.transforms.Bbox(
+            [
+                new_mins,
+                [
+                    fig.bbox_inches.extents[2] + figure_to_inches(
+                        [shift[0]], 0
+                    )[0],
+                    fig.bbox_inches.extents[3] + figure_to_inches(
+                        [shift[1]], 1
+                    )[0],
+                ]
+            ]
+        )
     #fig.bbox = fig.bbox._transform.transform_bbox(fig.bbox_inches)
