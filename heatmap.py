@@ -196,6 +196,7 @@ def draw_heatmap(
         **heatmap_kwargs
     )
     fig = ax.get_figure()
+    plt.sca(ax)
     yticks = plt.yticks(
         ha="right",
         multialignment="center",
