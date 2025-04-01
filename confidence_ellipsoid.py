@@ -35,7 +35,7 @@ def get_multivariate_normal_density_ellipsoid(
     This assumes that the data are multivariate normal.
 
     Parameters:
-        data:            A p x n array, the data matrix.
+        data:            A n x p array, the data matrix.
         density (float): Probability density to be contained in the ellipsoid.
 
     Returns:
@@ -60,7 +60,7 @@ def get_multivariate_normal_confidence_ellipsoid(
     F-distribution should be used.
 
     Parameters:
-        data:            A p x n array, the data matrix.
+        data:            A n x p array, the data matrix.
         conf (float):    Confidence level for the ellipsoid.
         use_chi2 (bool): Whether to use chi-squared instead of F distribution.
 
