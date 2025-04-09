@@ -23,5 +23,6 @@ dependencies:
       # For simulator:
       - more_itertools
       - PyYAML
+      - multiset-key-dict
   # For simulator:
   - scipy
