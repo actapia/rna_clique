@@ -1,3 +1,5 @@
+import functools
+
 import numpy as np
 import scipy.stats, scipy.linalg
 import matplotlib as mpl
@@ -84,19 +86,19 @@ def get_multivariate_normal_confidence_ellipsoid(
 
 get_confidence_ellipsoid = get_multivariate_normal_confidence_ellipsoid
 
+def conf_ellipsoid(conf):
+    return functools.partial(get_confidence_ellipsoid, conf=conf)
+
 def draw_ellipse(
         ellipse: Ellipsoid,
-        facecolor,
         axes: bool= False,
-        alpha: Real = 0.25
+        **kwargs
 ):
     """Draw an ellipse (2D Ellipsoid).
 
     Parameters:
         ellipse:       The ellipse to draw.
-        facecolor:     The color of the ellipse.
         axes (bool):   Whether to draw the axes of the ellipse.
-        alpha (float): Transparency of the ellipse.
     """
     if axes:
         plt.quiver(
@@ -114,8 +116,7 @@ def draw_ellipse(
         tuple(ellipse.center),
         width=2*np.linalg.norm(ellipse.axes[:,0]),
         height=2*np.linalg.norm(ellipse.axes[:,1]),
-        angle=np.rad2deg(np.arctan2(*reversed(ellipse.axes[:,0])))
+        angle=np.rad2deg(np.arctan2(*reversed(ellipse.axes[:,0]))),
+        **kwargs
     )
     plt.gca().add_artist(ellipse_patch)
-    ellipse_patch.set_alpha(alpha)
-    ellipse_patch.set_facecolor(facecolor)
