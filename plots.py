@@ -62,3 +62,13 @@ def _transform_ax(trans, coords, axis):
         p[axis] = coord
         return p
     return [trans.transform_point(get_point(coord))[axis] for coord in coords]
+
+def as_tuple(x) -> tuple:
+    """Return x as a tuple, converting or creating a singleton."""
+    if isinstance(x, str):
+        return (x,)
+    else:
+        try:
+            return tuple(x)
+        except TypeError:
+            return (x,)
