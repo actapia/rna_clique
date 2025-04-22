@@ -171,7 +171,7 @@ def draw_pcoa_2d(
                 pass
             ellipse_group_to_color[key] = new_kwargs
         if annotate:
-            for ix, r in df.set_index("run_accession").iterrows():
+            for ix, r in df.set_index(sample_name_column).iterrows():
                 texts.append(
                     plt.gca().text(r["PC1"], r["PC2"], ix, size="xx-small")
                 )
