@@ -413,7 +413,7 @@ def parsimonious_markers(
             data[list(vars_)].value_counts().index.shape[0],
             len(available)
         )
-        print(dims)
+        #print(dims)
         for dim, enc in zip(dims, available):
             assigners[enc] = pars_assigners[enc](dim)
     return assign_markers(data, encodings, assigners)
