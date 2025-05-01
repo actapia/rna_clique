@@ -1,3 +1,4 @@
+import json
 import functools
 import skbio as skb
 import pandas as pd
@@ -17,6 +18,11 @@ from similarity_computer import id_
 
 def empty_dict(*args, **kwargs):
     return {}
+
+try:
+    from emperor import Emperor
+except ImportError:
+    pass
 
 default_marker_style = {"color": "black", "ls": "", "marker": "d"}
 scatter_to_line2d = {
@@ -230,3 +236,16 @@ def draw_pcoa_2d(
         else:
             plt.legend()
     return pcoa_results
+
+def dump_emperor_data(pcoa_results, sample_metadata, path):
+    emp = Emperor(pcoa_results, sample_metadata, remote=".")
+    with open(path, "w") as data_file:
+        json.dump(
+            emp._to_dict(
+                emp._process_data(
+                    emp.custom_axes,
+                    emp.jackknifing_method)
+            ),
+            data_file,
+            indent=2
+        )
