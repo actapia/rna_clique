@@ -167,7 +167,8 @@ def assign_markers(
             "color": default_color_assigner,
             "shape": default_shape_assigner,
             "fill": default_fill_assigner,
-        }
+        },
+        dropna: bool = True,
 ) -> dict[Any, dict[str, Any]]:
     """Automatically encode distinct values using the provided assigners.
 
@@ -221,6 +222,7 @@ def assign_markers(
         data:             Data to encode visually.
         encodings (dict): Map from columns to visual variables.
         assigners (dict): Map from visual variables to value assigners.
+        dropna (bool):    Drop rows with group keys having NA values.
 
     Returns:
         A dictionary mapping distinct data values to scatter kwargs.
@@ -231,14 +233,14 @@ def assign_markers(
     }
     styles = {
         c: {
-            k: assigners[k](data[list(c)].value_counts().index)
+            k: assigners[k](data[list(c)].value_counts(dropna=dropna).index)
             for k in e
         }
         for (c, e) in encodings.items()
     }
     column_index = dict(map(reversed, enumerate(data.columns)))
     res = {}
-    for key in data.value_counts().index:
+    for key in data.value_counts(dropna=dropna).index:
         r = {}
         for c, d in styles.items():
             k = tuple(key[column_index[z]] for z in c)
@@ -385,7 +387,8 @@ pars_assigners = {"color": ncolor_assigner, "shape": nshape_assigner}
 def parsimonious_markers(
         data: pd.DataFrame,
         encodings: dict[str | tuple[str], str | Iterable[str]],
-        assigners: dict[str, Callable] = {"fill": default_fill_assigner}
+        assigners: dict[str, Callable] = {"fill": default_fill_assigner},
+        dropna: bool = True
 ) -> dict[Any, dict[str, Any]]:
     """Automatically encode distinct values with few colors and shapes.
 
@@ -399,6 +402,7 @@ def parsimonious_markers(
         data:             Data to encode visually using few colors and shapes.
         encodings:        Map from columns to visual variables.
         assigners (dict): Map from visual variables to value assigners.
+        dropna (bool):    Drop rows with group keys having NA values.
 
     Returns:
         A dictionary efficiently mapping distinct data values to scatter kwargs.
@@ -410,7 +414,7 @@ def parsimonious_markers(
     for vars_, encs in encodings.items():
         available = [e for e in encs if e in pars_assigners]
         dims = pars(
-            data[list(vars_)].value_counts().index.shape[0],
+            data[list(vars_)].value_counts(dropna=dropna).index.shape[0],
             len(available)
         )
         #print(dims)
