@@ -31,7 +31,7 @@ scatter_to_line2d = {
     "s": "ms"
 }
 
-def draw_pcoa_2d(
+def draw_pcoa(
         dis_df: pd.DataFrame,
         sample_metadata: pd.DataFrame,
         group_by: str | Iterable[str],
@@ -71,6 +71,8 @@ def draw_pcoa_2d(
         legend_factors: Optional[list[tuple] | bool] = None,
         default_legend_marker: dict = default_marker_style,
         dropna: bool = True,
+        dimensions: int = 2,
+        ax: Optional[mpl.axes.Axes] = None,
         #coordinate_sort: bool = False,
         **scatter_kwargs
 ) -> skb.stats.ordination.OrdinationResults:
@@ -98,6 +100,7 @@ def draw_pcoa_2d(
         legend_factors:           Separate independent encodings in legend.
         default_legend_marker:    Default kwargs for marker to use in legend.
         dropna (bool):            Drop rows with group keys having NA values.
+        ax:                       The matplotlib Axes on which to draw.
     """
     def make_label(x, l):
         x = list(x)
@@ -117,6 +120,8 @@ def draw_pcoa_2d(
         labelers = [None]*len(group_by)
     if legend_factors is True:
         legend_factors = group_by
+    if ax is None:
+        ax = plt.gca()
     group_to_index = dict(map(reversed, enumerate(group_by)))
     dm = skb.DistanceMatrix(dis_df, ids=dis_df.columns)
     pcoa_results = skb.stats.ordination.pcoa(dm)
@@ -163,7 +168,7 @@ def draw_pcoa_2d(
             kwargs.setdefault("color", color)
         kwargs |= scatter_kwargs
         #print(df, kwargs)
-        plt.scatter(
+        ax.scatter(
             df["PC1"],
             df["PC2"],
             **kwargs
@@ -187,7 +192,7 @@ def draw_pcoa_2d(
         if annotate:
             for ix, r in df.set_index(sample_name_column).iterrows():
                 texts.append(
-                    plt.gca().text(r["PC1"], r["PC2"], ix, size="xx-small")
+                   ax.text(r["PC1"], r["PC2"], ix, size="xx-small")
                 )
         if legend_factors is not None:
             for t in map(as_tuple, legend_factors):
@@ -200,6 +205,7 @@ def draw_pcoa_2d(
         for i, (ge, df) in enumerate(joined.groupby(ellipses, dropna=dropna)):
             draw_ellipse(
                 make_ellipse(df[["PC1", "PC2"]]),
+                ax=ax,
                 **ellipse_group_to_color[ge]
             )
     labels = ["PC1", "PC2"]
@@ -210,8 +216,8 @@ def draw_pcoa_2d(
                 labels[i],
                 100 * pcoa_results.eigvals.iloc[i] / total_eig
             )
-    plt.xlabel(labels[0])
-    plt.ylabel(labels[1])
+    ax.set_xlabel(labels[0])
+    ax.set_ylabel(labels[1])
     if annotate:
         adjust_text(
             texts,
@@ -240,9 +246,9 @@ def draw_pcoa_2d(
                         )
                     )
                     names.append(labeler(entry))
-            plt.legend(handles, names)
+            ax.legend(handles, names)
         else:
-            plt.legend()
+            ax.legend()
     return pcoa_results
 
 def dump_emperor_data(pcoa_results, sample_metadata, path):
@@ -257,3 +263,6 @@ def dump_emperor_data(pcoa_results, sample_metadata, path):
             data_file,
             indent=2
         )
+
+draw_pcoa_2d = functools.partial(draw_pcoa, dimensions=2)
+draw_pcoa_3d = functools.partial(draw_pcoa, dimensions=3)

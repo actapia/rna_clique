@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt
 from numpy.typing import ArrayLike
 
 from collections import namedtuple
+from typing import Optional
 from numbers import Real
 
 # @dataclass
@@ -92,6 +93,7 @@ def conf_ellipsoid(conf):
 def draw_ellipse(
         ellipse: Ellipsoid,
         axes: bool= False,
+        ax: Optional[mpl.axes.Axes] = None,
         **kwargs
 ):
     """Draw an ellipse (2D Ellipsoid).
@@ -99,9 +101,12 @@ def draw_ellipse(
     Parameters:
         ellipse:       The ellipse to draw.
         axes (bool):   Whether to draw the axes of the ellipse.
+        ax:            Matplotlib Axes on which to draw the ellipse.
     """
+    if ax is None:
+        ax = plt.gca()
     if axes:
-        plt.quiver(
+        ax.quiver(
             *np.broadcast_to(
                 ellipse.center,
                 (ellipse.center.shape[0], ellipse.center.shape[0])
@@ -119,4 +124,4 @@ def draw_ellipse(
         angle=np.rad2deg(np.arctan2(*reversed(ellipse.axes[:,0]))),
         **kwargs
     )
-    plt.gca().add_artist(ellipse_patch)
+    ax.add_artist(ellipse_patch)
