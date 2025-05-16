@@ -70,6 +70,7 @@ def draw_pcoa_2d(
         annotate: bool = False,
         legend_factors: Optional[list[tuple] | bool] = None,
         default_legend_marker: dict = default_marker_style,
+        dropna: bool = True,
         #coordinate_sort: bool = False,
         **scatter_kwargs
 ) -> skb.stats.ordination.OrdinationResults:
@@ -96,6 +97,7 @@ def draw_pcoa_2d(
         annotate (bool):          Label individual points on the plot.
         legend_factors:           Separate independent encodings in legend.
         default_legend_marker:    Default kwargs for marker to use in legend.
+        dropna (bool):            Drop rows with group keys having NA values.
     """
     def make_label(x, l):
         x = list(x)
@@ -133,7 +135,13 @@ def draw_pcoa_2d(
         joined = _keyed_multi_sort(joined, order_by, sort_key)
     texts = []
     factored = defaultdict(dict)
-    for i, (ge, df) in enumerate(joined.groupby(group_by, sort=not order_by)):
+    for i, (ge, df) in enumerate(
+            joined.groupby(
+                group_by,
+                sort=not order_by,
+                dropna=dropna
+            )
+    ):
         kwargs = index_group_to_kwargs(i, ge)
         kwargs |= index_to_kwargs(i)
         try:
@@ -189,7 +197,7 @@ def draw_pcoa_2d(
                 else:
                     factored[t][key] &= set(kwargs.items())
     if ellipses:
-        for i, (ge, df) in enumerate(joined.groupby(ellipses)):
+        for i, (ge, df) in enumerate(joined.groupby(ellipses, dropna=dropna)):
             draw_ellipse(
                 make_ellipse(df[["PC1", "PC2"]]),
                 **ellipse_group_to_color[ge]

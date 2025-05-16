@@ -15,6 +15,7 @@ from tqdm import tqdm
 from gene_matches_tables import write_table
 
 default_sample_regex = re.compile(os.environ.get("SAMPLE_RE", "^(.*?)_.*$"))
+default_gene_regex = re.compile("^.*g([0-9]+)_i([0-9]+)")
 
 def handle_arguments():
     parser = argparse.ArgumentParser(
@@ -48,7 +49,7 @@ def handle_arguments():
         "--gene-regex",
         "-r",
         type=re.compile,
-        default=re.compile("^.*g([0-9]+)_i([0-9]+)"),
+        default=default_gene_regex,
         help="Python regex for parsing sequence IDs"
     )
     parser.add_argument(
