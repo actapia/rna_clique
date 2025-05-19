@@ -21,6 +21,29 @@ from numbers import Real
 
 Ellipsoid = namedtuple("Ellipsoid", ["center", "axes"])
 
+@functools.cache
+def uv_sphere(seg: int = 100) -> np.ndarray:
+    """Returns a grid of points for a unit UV sphere.
+
+    Neighboring points in the array are connected.
+
+    Parameters:
+        seg (int): Number of points in each UV dimension.
+
+    Returns:
+        A grid of seg**2 points forming a unit UV sphere.
+    """
+    # Based on https://matplotlib.org/stable/gallery/mplot3d/surface3d_2.html
+    u = np.linspace(0, 2 * np.pi, seg)
+    v = np.linspace(0, np.pi, seg)
+    return np.array(
+        [
+            np.outer(np.cos(u), np.sin(v)),
+            np.outer(np.sin(u), np.sin(v)),
+            np.outer(np.ones(np.size(u)), np.cos(v)),
+        ]
+    )
+
 def get_stat_distance_ellipsoid(data: ArrayLike, dist: Real) -> Ellipsoid:
     """Get the ellipsoid representing points at a given statistical distance."""
     eigs = np.linalg.eig(np.cov(data.T))
@@ -125,3 +148,56 @@ def draw_ellipse(
         **kwargs
     )
     ax.add_artist(ellipse_patch)
+
+def draw_3d_ellipsoid(
+        ellipsoid: Ellipsoid,
+        axes: bool = False,
+        ax: Optional[mpl.axes.Axes] = None,
+        seg: int = 100,
+        **kwargs
+):
+    """Draw a 3D ellipsoid.
+
+    Parameters:
+        ellipsoid:   The ellipsoid to draw.
+        axes (bool): Whether to draw the axes of the ellipsoid.
+        ax:          Matplotlib Axes on which to draw the ellipsoid.
+    """
+    if ax is None:
+        ax = plt.gca()
+    sph = uv_sphere(seg)
+    if axes:
+        ax.quiver(
+            *np.broadcast_to(
+                ellipsoid.center,
+                (ellipsoid.center.shape[0], ellipsoid.center.shape[0])
+            ).T,
+            ellipsoid.axes[0],
+            ellipsoid.axes[1],
+            ellipsoid.axes[2],
+            color="black"
+        )
+    ax.plot_surface(
+        *(
+            np.matmul(
+                ellipsoid.axes,
+                sph.transpose(1, 0, 2)
+            ).transpose(1, 0, 2) + ellipsoid.center.to_numpy().reshape(
+                (3, 1, 1)
+            )
+        ),
+        **kwargs
+    )
+
+def draw_ellipsoid(ellipsoid: Ellipsoid, *args, **kwargs):
+    """Draw an ellipsoid (2D or 3D)."""    
+    match ellipsoid.axes.shape[0]:
+        case 2:
+            draw_ellipse(ellipsoid, *args, **kwargs)
+        case 3:
+            draw_3d_ellipsoid(ellipsoid, *args, **kwargs)
+        case _:
+            raise ValueError("Cannot draw ellipsoid in > 3 dimensions.")
+
+
+        

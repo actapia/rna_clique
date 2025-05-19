@@ -12,7 +12,7 @@ from collections import defaultdict
 from typing import Callable, Union, Optional, Any
 from collections.abc import Iterable, Sequence, Mapping
 
-from confidence_ellipsoid import Ellipsoid, draw_ellipse, conf_ellipsoid
+from confidence_ellipsoid import Ellipsoid, draw_ellipsoid, conf_ellipsoid
 from plots import as_tuple
 from similarity_computer import id_
 
@@ -30,6 +30,9 @@ scatter_to_line2d = {
     "linewidth": "mew",
     "s": "ms"
 }
+
+dim_to_proj = {2: "rectilinear", 3: "3d"}
+dimension_default_kwargs = {2: {}, 3: {"depthshade": False}}
 
 def draw_pcoa(
         dis_df: pd.DataFrame,
@@ -60,12 +63,12 @@ def draw_pcoa(
                 Iterable[Callable[[pd.Series], pd.Series]]
             ]
         ] = None,
-        ellipses: bool | Iterable[str] = False,
-        make_ellipse: Callable[
+        ellipsoids: bool | Iterable[str] = False,
+        make_ellipsoid: Callable[
             [pd.DataFrame],
             Ellipsoid
         ] = conf_ellipsoid(0.95),
-        ellipse_kwargs: dict[str, Any] = None,
+        ellipsoid_kwargs: dict[str, Any] = None,
         contribution: bool = True,
         annotate: bool = False,
         legend_factors: Optional[list[tuple] | bool] = None,
@@ -74,6 +77,7 @@ def draw_pcoa(
         dimensions: int = 2,
         ax: Optional[mpl.axes.Axes] = None,
         #coordinate_sort: bool = False,
+        axis_label_kwargs: Optional[dict] = None,
         **scatter_kwargs
 ) -> skb.stats.ordination.OrdinationResults:
     """Draw a 2D PCoA plot and return the PCoA results.
@@ -92,14 +96,15 @@ def draw_pcoa(
         index_group_to_kwargs:    Mapping from name + index to scatter kwargs.
         order_by:                 Columns on which to order samples for legend.
         sort_key:                 Function to get keys for sorting samples.
-        ellipses:                 Draw ellipses on the plot.
-        make_ellipse:             Function to obtain stat ellipse from data.
-        ellipse_kwargs (dict):    kwargs to pass to draw_ellipse.
+        ellipsoids:               Draw ellipsoids on the plot.
+        make_ellipsoid:           Function to obtain stat ellipsoid from data.
+        ellipsoid_kwargs (dict):  kwargs to pass to draw_ellipsoid.
         contribution (bool):      Show relative contribition on axes.
         annotate (bool):          Label individual points on the plot.
         legend_factors:           Separate independent encodings in legend.
         default_legend_marker:    Default kwargs for marker to use in legend.
         dropna (bool):            Drop rows with group keys having NA values.
+        dimensions (int):         Number of dimensions (2 or 3) for the plot.
         ax:                       The matplotlib Axes on which to draw.
     """
     def make_label(x, l):
@@ -112,24 +117,32 @@ def draw_pcoa(
         return make_group_label(x)
     if isinstance(group_by, str):
         group_by = [group_by]
-    if ellipse_kwargs is None:
-        ellipse_kwargs = {}
-    if ellipses is True:
-        ellipses = list(group_by)
+    if ellipsoid_kwargs is None:
+        ellipsoid_kwargs = {}
+    if ellipsoids is True:
+        ellipsoids = list(group_by)
     if labelers is None:
         labelers = [None]*len(group_by)
     if legend_factors is True:
         legend_factors = group_by
+    if axis_label_kwargs is None:
+        axis_label_kwargs = {}
+    proj = dim_to_proj[dimensions]
     if ax is None:
         ax = plt.gca()
+        if ax.name != proj:
+            fig = ax.figure
+            ax.remove()
+            ax = fig.add_subplot(projection=proj)
     group_to_index = dict(map(reversed, enumerate(group_by)))
     dm = skb.DistanceMatrix(dis_df, ids=dis_df.columns)
     pcoa_results = skb.stats.ordination.pcoa(dm)
+    pcs = [f"PC{x}" for x in range(1, dimensions + 1)]
     joined = sample_metadata.join(
-        pcoa_results.samples[["PC1","PC2"]],
+        pcoa_results.samples[pcs],
         sample_name_column
     )
-    ellipse_group_to_color = {}
+    ellipsoid_group_to_color = {}
     if order_by:
         if not isinstance(order_by, list):
             order_by = [order_by]
@@ -147,7 +160,8 @@ def draw_pcoa(
                 dropna=dropna
             )
     ):
-        kwargs = index_group_to_kwargs(i, ge)
+        kwargs = dict(dimension_default_kwargs[dimensions])
+        kwargs |= index_group_to_kwargs(i, ge)
         kwargs |= index_to_kwargs(i)
         try:
             kwargs |= group_to_kwargs(ge)
@@ -169,30 +183,29 @@ def draw_pcoa(
         kwargs |= scatter_kwargs
         #print(df, kwargs)
         ax.scatter(
-            df["PC1"],
-            df["PC2"],
+            *(df[c] for c in pcs),
             **kwargs
         )
-        if ellipses:
-            new_kwargs = dict(ellipse_kwargs)
+        if ellipsoids:
+            new_kwargs = dict(ellipsoid_kwargs)
             try:
                 new_kwargs.setdefault("color", kwargs["color"])
             except KeyError:
                 pass
-            key = tuple(ge[group_to_index[g]] for g in ellipses)
+            key = tuple(ge[group_to_index[g]] for g in ellipsoids)
             try:
-                if ellipse_group_to_color[key] != new_kwargs:
+                if ellipsoid_group_to_color[key] != new_kwargs:
                     raise ValueError(
-                        "All markers for an ellipse group must have the same "
+                        "All markers for an ellipsoid group must have the same "
                         "color."
                     )
             except KeyError:
                 pass
-            ellipse_group_to_color[key] = new_kwargs
+            ellipsoid_group_to_color[key] = new_kwargs
         if annotate:
             for ix, r in df.set_index(sample_name_column).iterrows():
                 texts.append(
-                   ax.text(r["PC1"], r["PC2"], ix, size="xx-small")
+                   ax.text(*(r[c] for c in pcs), ix, size="xx-small")
                 )
         if legend_factors is not None:
             for t in map(as_tuple, legend_factors):
@@ -201,14 +214,14 @@ def draw_pcoa(
                     factored[t][key] = set(kwargs.items())
                 else:
                     factored[t][key] &= set(kwargs.items())
-    if ellipses:
-        for i, (ge, df) in enumerate(joined.groupby(ellipses, dropna=dropna)):
-            draw_ellipse(
-                make_ellipse(df[["PC1", "PC2"]]),
+    if ellipsoids:
+        for i, (ge, df) in enumerate(joined.groupby(ellipsoids, dropna=dropna)):
+            draw_ellipsoid(
+                make_ellipsoid(df[pcs]),
                 ax=ax,
-                **ellipse_group_to_color[ge]
+                **ellipsoid_group_to_color[ge]
             )
-    labels = ["PC1", "PC2"]
+    labels = list(pcs)
     if contribution:
         total_eig = sum(pcoa_results.eigvals)
         for i in range(len(labels)):
@@ -216,8 +229,8 @@ def draw_pcoa(
                 labels[i],
                 100 * pcoa_results.eigvals.iloc[i] / total_eig
             )
-    ax.set_xlabel(labels[0])
-    ax.set_ylabel(labels[1])
+    for letter, la in zip("xyz", labels):
+        getattr(ax, f"set_{letter}label")(la, **axis_label_kwargs)
     if annotate:
         adjust_text(
             texts,
