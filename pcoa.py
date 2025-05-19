@@ -30,6 +30,7 @@ scatter_to_line2d = {
     "linewidth": "mew",
     "s": "ms"
 }
+scatter_ignore = {"depthshade"}
 
 dim_to_proj = {2: "rectilinear", 3: "3d"}
 dimension_default_kwargs = {2: {}, 3: {"depthshade": False}}
@@ -250,6 +251,7 @@ def draw_pcoa(
                     kw = default_legend_marker | dict(kwargs)
                     kw = {
                         scatter_to_line2d.get(k, k): v for (k, v) in kw.items()
+                        if k not in scatter_ignore
                     }
                     handles.append(
                         mpl.lines.Line2D(
