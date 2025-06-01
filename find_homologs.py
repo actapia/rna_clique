@@ -2,7 +2,7 @@ import argparse
 import sys
 import re
 import functools
-from simple_blast.blasting import BlastnSearch
+from simple_blast.blasting import TabularBlastnSearch
 import numpy as np
 
 from fractions import Fraction
@@ -109,7 +109,7 @@ def gene_matches(
     """
     # TODO: Check whether we really want the top n subject isotigs or the top
     # n subject genes. (I suspect we really want the latter.)
-    search = BlastnSearch(path1, path2, evalue=evalue, **blast_kwargs)
+    search = TabularBlastnSearch(path2, path1, evalue=evalue, **blast_kwargs)
     for t in ["q", "s"]:
         search.hits[[t + "gene", t + "iso"]] = parse(search.hits[t + "seqid"])
     return highest_bitscores(search.hits, n, keep="all")
