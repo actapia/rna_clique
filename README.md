@@ -23,16 +23,16 @@ are considered untested.
 #### Main software
 
 * Python 3.12
-* Perl 5.38.0
-* Bash 5.2.32
-* ncbi-blast 2.12.0+
+* Perl 5.40.1
+* Bash 5.2.37
+* ncbi-blast 2.16.0+
 * Python libraries
   * tqdm 4.66.5
   * pandas 2.2.2
   * pytables 3.10.1
   * joblib 1.4.2
   * networkx 3.3
-  * [simple-blast](https://github.com/actapia/simple_blast) 0.0.5
+  * [simple-blast](https://github.com/actapia/simple_blast) 0.7.0
 * Perl libraries
   * Bio::SeqIO 1.7.8
     
