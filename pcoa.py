@@ -217,11 +217,12 @@ def draw_pcoa(
                     factored[t][key] &= set(kwargs.items())
     if ellipsoids:
         for i, (ge, df) in enumerate(joined.groupby(ellipsoids, dropna=dropna)):
-            draw_ellipsoid(
-                make_ellipsoid(df[pcs]),
-                ax=ax,
-                **ellipsoid_group_to_color[ge]
-            )
+            if df.shape[0] > dimensions:
+                draw_ellipsoid(
+                    make_ellipsoid(df[pcs]),
+                    ax=ax,
+                    **ellipsoid_group_to_color[ge]
+                )
     labels = list(pcs)
     if contribution:
         total_eig = sum(pcoa_results.eigvals)
