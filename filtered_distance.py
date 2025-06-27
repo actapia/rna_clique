@@ -121,11 +121,11 @@ def restrict_to(
         )["index_x"]
     ]
 
+def restrict_multi(df2, df1, columns):
+    return functools.reduce(functools.partial(restrict_to, df2), columns, df1)
+
 def print_mat(m : np.ndarray):
     np.savetxt(sys.stdout, m, fmt="%s", delimiter=' ')
-
-
-
     
 class SampleSimilarity:
     """Computes samples' similarities from gene matches graph and comparisons.
@@ -158,6 +158,14 @@ class SampleSimilarity:
         graph:         The gene matches graph representing gene orthologies.
         comparison_dfs: An iterable mapping sample pairs to comparisons.
     """
+
+    sample_gene_columns = [
+        [a + b for b in ["sample", "gene"]]
+        for a in ["s", "q"]
+    ]
+
+    categorical_columns = ["qsample", "ssample", "sstrand"]
+    
     def __init__(
             self,
             graph: nx.Graph,
@@ -175,16 +183,45 @@ class SampleSimilarity:
             qsample = df["qsample"][0]
             ssample = df["ssample"][0]
             yield frozenset((qsample, ssample)), df
-            
+
+    @classmethod
+    def _read_table(
+            cls,
+            table_path: Path,
+            remove_seqids: bool = True,
+            convert_to_categorical: bool = True,
+    ):
+        table = read_table(table_path)
+        if remove_seqids:
+            for col in ["q", "s"]:
+                try:
+                    table = table.drop(col + "seqid", axis=1)
+                except KeyError:
+                    pass
+        if convert_to_categorical:
+            cols = [c for c in cls.categorical_columns if c in table.index]
+            table[
+                cols
+            ] = table[
+                cols
+            ].astype("category")
+        return table
+
 
     @classmethod
     def _load_tables(
             cls,
-            table_paths: Iterable[Path]
+            table_paths: Iterable[Path],
+            remove_seqids: bool = True,
+            convert_to_categorical: bool = True,
     ) -> Iterator[tuple[frozenset[str, str], pd.DataFrame]]:
-        return cls.mapping_from_dfs(map(read_table, table_paths))
+        rt = functools.partial(
+            cls._read_table,
+            remove_seqids=remove_seqids,
+            convert_to_categorical=convert_to_categorical
+        )
+        return cls.mapping_from_dfs(map(rt, table_paths))
             
-
     @property
     def sample_count(self):
         """The number of samples in the similarity matrix."""
@@ -222,17 +259,7 @@ class SampleSimilarity:
         Returns:
             comp_df, restricted to genes appearing in ideal components.
         """
-        return functools.reduce(
-            functools.partial(
-                restrict_to,
-                self.valid
-            ),
-            [
-                [a + b for b in ["sample", "gene"]]
-                for a in ["s", "q"]
-            ],
-            comp_df
-        )
+        return restrict_multi(self.valid, comp_df, self.sample_gene_columns)
 
     def restricted_comparison_dfs(
             self
@@ -373,6 +400,8 @@ class SampleSimilarity:
             graph_fn : Path,
             comparison_fns : Iterable[Path],
             store_dfs : bool = True,
+            remove_seqids: bool = True,
+            convert_to_categorical: bool = True,
             *args,
             **kwargs
     ):
@@ -388,12 +417,26 @@ class SampleSimilarity:
         """
         with open(graph_fn, "rb") as f:
             graph = pickle.load(f)
+        # from IPython import embed
+        # embed()
         if store_dfs:
             f = MultisetKeyDict
         else:
             f = id_
+            
         #embed()
-        return cls(graph, f(cls._load_tables(comparison_fns)), *args, **kwargs)
+        return cls(
+            graph,
+            f(
+                cls._load_tables(
+                    comparison_fns,
+                    remove_seqids=remove_seqids,
+                    convert_to_categorical=convert_to_categorical,
+                )
+            ),
+            *args,
+            **kwargs
+        )
     
         
 def main():

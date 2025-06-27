@@ -16,7 +16,7 @@ from numbers import Number
 from matplotlib import pyplot as plt
 from Bio.Phylo import BaseTree
 
-from typing import Callable, Union, Optional
+from typing import Callable, Union, Optional, Any
 from collections.abc import Iterable, Sequence, Mapping
 
 def tril_jagged(mat: np.ndarray) -> list[list[Number]]:
@@ -85,7 +85,8 @@ def draw_clade_labels(
         ] = None,
         line_padding: float = 0.036,
         cap_width: float = 0.02,
-        text_padding: float = 0.023
+        text_padding: float = 0.023,
+        make_label: Callable[[Any],str] = lambda x: x
 ):
     def ax_to_data_x(x):
         return ax_to_data([x],0)[0] - ax_to_data([0],0)[0]
@@ -135,7 +136,7 @@ def draw_clade_labels(
         ax.plot(cap_x, [max_y, max_y], clip_on=False, color=line_color)
         ax.text(
             max_x + text_padding, mid_y,
-            label,
+            make_label(label),
             horizontalalignment="left",
             verticalalignment="center",
             color=text_color

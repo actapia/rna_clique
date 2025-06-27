@@ -77,6 +77,7 @@ def gene_matches(
         path2: str,
         evalue: float,
         n: int = 1,
+        keep_seqids: bool = False,
         **blast_kwargs
 ) -> pd.DataFrame:
     """Find the isotigs in file 2 that best match each gene in file 1.
@@ -98,11 +99,12 @@ def gene_matches(
     arguments to this function.
 
     Parameters:
-        parse:          Function to parse sequence IDs into gene and isotig IDs.
-        path1 (str):    Path to the FASTA file used as the BLAST search query.
-        path2 (str):    Path to the FASTA file used as the BLAST search subject.
-        evalue (float): Expect value cutoff for BLAST search.
-        n (int):        Number of top matches to select for each query gene.
+        parse:              Function to parse seq IDs into gene and isotig IDs.
+        path1 (str):        Path to the BLAST search query FASTA file.
+        path2 (str):        Path to the BLAST search subject FASTA file.
+        evalue (float):     Expect value cutoff for BLAST search.
+        n (int):            Number of top matches to select for each query gene.
+        keep_seqids (bool): Whether to keep the raw seqid columns.
 
     Returns:
         A dataframe of BLAST hits for subject isotigs best matching query genes.
@@ -112,6 +114,8 @@ def gene_matches(
     search = BlastnSearch(path1, path2, evalue=evalue, **blast_kwargs)
     for t in ["q", "s"]:
         search.hits[[t + "gene", t + "iso"]] = parse(search.hits[t + "seqid"])
+    if not keep_seqids:
+        search.hits = search.hits.drop(["qseqid", "sseqid"], axis=1)
     return highest_bitscores(search.hits, n, keep="all")
 
 eprint = functools.partial(print, file=sys.stderr)
@@ -184,7 +188,7 @@ class HomologFinder:
             parse=parse,
             evalue=evalue,
             n=top_n,
-            additional_columns=["gaps", "nident"],
+            additional_columns=["gaps", "nident", "sstrand"],
             **blast_kwargs
         )
         self.keep_all = keep_all
@@ -214,12 +218,14 @@ class HomologFinder:
             path1=transcripts1,
             path2=transcripts2
         )
+        forward_matches["reverse"] = False
         if self.debug:
             eprint("Getting reverse matches.")
         backward_matches = self.gm(
             path1=transcripts2,
             path2=transcripts1
         )
+        backward_matches["reverse"] = True
         # We rename the columns in the reverse matches to enable merging.
         backward_matches.rename(
             columns={
@@ -240,7 +246,7 @@ class HomologFinder:
         # 
         # (Keep in mind that we swapped the order of query and subject in the
         # reverse dataframe, so "query" is always something in sample 1, and
-        # "subject" is always something in sample 2 from now on.)
+        # "subject" is always something in sample 2 from now on.)        
         if forward_matches.empty or backward_matches.empty:
             intersection = pd.DataFrame(
                 columns=self.merge_columns + ["index_x", "index_y"]
