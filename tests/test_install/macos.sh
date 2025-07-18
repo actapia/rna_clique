@@ -94,6 +94,8 @@ bash Miniconda3-latest-MacOSX-$(uname -m).sh -b -f
 "$HOME/miniconda3/bin/conda" init bash
 cd rna_clique
 eval "$("$HOME/miniconda3/bin/conda" shell.zsh hook)"
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
 conda env create -y -f environment.yml --name rna-clique
 conda activate rna-clique
 bash tests/verify_install/test_install.sh
