@@ -35,6 +35,13 @@ except ImportError:
 
 default_gene_re = re.compile("^.*g([0-9]+)_i([0-9]+)")
 
+def named_reverse_complement(t):
+    rc = t.reverse_complement()
+    rc.id = f"-{t.id}"
+    rc.name = t.name
+    rc.description = t.description
+    return rc
+
 def handle_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("-g", "--graph", type=Path)
@@ -150,14 +157,14 @@ def seq_tuples(sample, gene_regex):
         isoform = int(match_.group(2))
         yield (sample, gene, isoform, seq)
 
-def concat_names(rename, order="after"):
+def concat_names(rename, order="after", sep=":"):
     def inner(sample_id, gene_id, isoform_id, old):
         new_component = rename(sample_id, gene_id, isoform_id)
         if order == "before":
             t = (new_component, old)
         else:
             t = (old, new_component)
-        return "{} {}".format(*t)
+        return sep.join(t)
     return inner
 
 def get_strand(aligner, a, b):
@@ -202,6 +209,86 @@ def parallel_get_strands(gene_to_isoforms, index, jobs=1):
         if len(isoforms) > 1
     )
 
+def build_strand_graph(sim, component_sample_genes, gene_regex, jobs=1):
+    strand_graph = nx.Graph()
+    # Add edges for isoform-isoform strands.
+    for sample in sim.samples:
+        index = Bio.SeqIO.index(sample, "fasta")
+        gene_to_isoforms = defaultdict(list)
+        for s in index:
+            parsed = gene_regex.search(s)
+            gene, isoform = map(int, parsed.groups())
+            if (sample, gene) in component_sample_genes:
+                gene_to_isoforms[gene].append((isoform, s))
+        strand_graph.add_nodes_from(
+            [
+                (sample, gene, isoform)
+                for (gene, isoforms) in gene_to_isoforms.items()
+                for (isoform, _) in isoforms
+            ]
+        )
+        strand_graph.add_weighted_edges_from(
+            (
+                (
+                    sample,
+                    gene,
+                    ia,
+                ),
+                (
+                    sample,
+                    gene,
+                    ib
+                ),
+                #get_strand(aligner, index[sa], index[sb]),
+                strand
+            )
+            for it in parallel_get_strands(
+                    gene_to_isoforms,
+                    index,
+                    jobs
+            )
+            for (ia, sa) , (ib, sb), strand in it
+        )
+    # Add edges for gene-gene strands.
+    plus_minus = {"plus": 1, "minus": -1}
+    strand_graph.add_weighted_edges_from(
+        tuple(
+            tuple(row[x + col] for col in ["sample", "gene", "iso"])
+            for x in ["q", "s"]
+        ) + (plus_minus[row["sstrand"]],)
+        for _, df in sim.restricted_comparison_dfs()
+        for _, row in df.iterrows()
+    )
+    components = component_subgraphs(strand_graph)
+    gene_to_components = defaultdict(set)
+    for component in components:
+        for sample, gene, _  in component.nodes:
+            gene_to_components[(sample, gene)].add(component)
+    component_graph = nx.Graph()
+    for gene_components in gene_to_components.values():
+        component_graph.add_nodes_from(gene_components)
+        component_graph.add_edges_from(
+            itertools.pairwise(gene_components)
+        )
+    component_components = list(component_subgraphs(component_graph))
+    node_to_component_component = {}
+    for component_component in component_components:
+        for subgraph in component_component.nodes:
+            for node in subgraph.nodes:
+                node_to_component_component[node] = component_component
+            n1 = next(iter(subgraph.nodes))
+            subgraph.nodes[n1]["strand"] = 1
+            for a, b in nx.dfs_edges(subgraph, n1):
+                subgraph.nodes[b]["strand"] = \
+                    subgraph.nodes[a]["strand"] \
+                    * subgraph.edges[(a, b)]["weight"]
+    return strand_graph, node_to_component_component
+
+def get_sample_gene_to_component(ideal):
+    return {
+        v: i for (i, c) in enumerate(ideal) for v in c.nodes
+    }
+
 class OrthologExporter:
     def __init__(
             self,
@@ -216,9 +303,7 @@ class OrthologExporter:
     ):
         self.samples = sim.samples
         self.ideal = list(get_ideal_components(sim.graph, sim.sample_count))
-        self.sample_gene_to_component = {
-            v: i for (i, c) in enumerate(self.ideal) for v in c.nodes
-        }
+        self.sample_gene_to_component = get_sample_gene_to_component(self.ideal)
         #print(self.sample_gene_to_component)
         self.gene_regex = gene_regex
         self.ideal_ids = set(range(len(self.ideal)))
@@ -255,78 +340,12 @@ class OrthologExporter:
             # )
             # aligner.open_gap_score = -10
             # aligner.extend_gap_score = -0.5
-            self.strand_graph = nx.Graph()
-            # Add edges for isoform-isoform strands.
-            for sample in sim.samples:
-                index = Bio.SeqIO.index(sample, "fasta")
-                gene_to_isoforms = defaultdict(list)
-                for s in index:
-                    parsed = self.gene_regex.search(s)
-                    gene, isoform = map(int, parsed.groups())
-                    if (sample, gene) in self.sample_gene_to_component:
-                        gene_to_isoforms[gene].append((isoform, s))
-                self.strand_graph.add_nodes_from(
-                    [
-                        (sample, gene, isoform)
-                        for (gene, isoforms) in gene_to_isoforms.items()
-                        for (isoform, _) in isoforms
-                    ]
-                )
-                self.strand_graph.add_weighted_edges_from(
-                    (
-                        (
-                            sample,
-                            gene,
-                            ia,
-                        ),
-                        (
-                            sample,
-                            gene,
-                            ib
-                        ),
-                        #get_strand(aligner, index[sa], index[sb]),
-                        strand
-                    )
-                    for it in parallel_get_strands(
-                            gene_to_isoforms,
-                            index,
-                            jobs
-                    )
-                    for (ia, sa) , (ib, sb), strand in it
-                )
-            # Add edges for gene-gene strands.
-            plus_minus = {"plus": 1, "minus": -1}
-            self.strand_graph.add_weighted_edges_from(
-                tuple(
-                    tuple(row[x + col] for col in ["sample", "gene", "iso"])
-                    for x in ["q", "s"]
-                ) + (plus_minus[row["sstrand"]],)
-                for _, df in sim.restricted_comparison_dfs()
-                for _, row in df.iterrows()
+            self.strand_graph, node_to_component_component = build_strand_graph(
+                sim,
+                self.sample_gene_to_component,
+                self.gene_regex,
+                jobs=jobs
             )
-            components = component_subgraphs(self.strand_graph)
-            gene_to_components = defaultdict(set)
-            for component in components:
-                for sample, gene, _  in component.nodes:
-                    gene_to_components[(sample, gene)].add(component)
-            component_graph = nx.Graph()
-            for gene_components in gene_to_components.values():
-                component_graph.add_nodes_from(gene_components)
-                component_graph.add_edges_from(
-                    itertools.pairwise(gene_components)
-                )
-            component_components = list(component_subgraphs(component_graph))
-            node_to_component_component = {}
-            for component_component in component_components:
-                for subgraph in component_component.nodes:
-                    for node in subgraph.nodes:
-                        node_to_component_component[node] = component_component
-                    n1 = next(iter(subgraph.nodes))
-                    subgraph.nodes[n1]["strand"] = 1
-                    for a, b in nx.dfs_edges(subgraph, n1):
-                        subgraph.nodes[b]["strand"] = \
-                            subgraph.nodes[a]["strand"] \
-                            * subgraph.edges[(a, b)]["weight"]
             valid_genes = {tuple(x) for x in sim.valid.itertuples(index=False)}
             mismatches = {
                     e
@@ -402,7 +421,11 @@ class OrthologExporter:
     def _orient(self, t):
         try:
             if self.strand_graph.nodes[t[:-1]]["strand"] == -1:
-                return t[:-1] + (t[-1].reverse_complement(),)
+                return t[:-1] + (
+                    named_reverse_complement(
+                        t[-1]
+                    ),
+                )                    
         except AttributeError:
             pass
         return t
