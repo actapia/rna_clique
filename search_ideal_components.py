@@ -1,11 +1,12 @@
 import argparse
-import pickle
 import re
 import pysam
 import shutil
 import functools
 import Bio.Align
 import networkx as nx
+from collections.abc import Iterable
+from typing import Optional
 from pathlib import Path
 from collections import defaultdict, deque
 from make_subset import multi_glob
@@ -110,51 +111,65 @@ def handle_arguments():
         args.db_cache = export_dir / "db_cache"
     return args
 
-def main():
-    args = handle_arguments()
-    if args.db_cache.exists() and args.clean:
-        shutil.rmtree(args.db_cache)
-    args.db_cache.mkdir(exist_ok=True)
-    args.out_dir.mkdir(exist_ok=True)
-    cache = BlastDBCache(args.db_cache)
-    exports = [args.exported]
+def search(
+        graph_loc: Path,
+        comparisons_loc: Iterable[Path],
+        exported: Path,
+        db_cache_loc: Path,
+        out_dir: Path,
+        query: Path,
+        debug: bool = False,
+        sample_count: Optional[int] = None,
+        gene_regex: re.Pattern = default_gene_re,
+        clean: bool = False,
+        merge_sams: bool = False,
+        jobs: int = 1,
+        sim: SampleSimilarity = None,
+):
+    if db_cache_loc.exists() and clean:
+        shutil.rmtree(db_cache_loc)
+    db_cache_loc.mkdir(exist_ok=True)
+    out_dir.mkdir(exist_ok=True)
+    cache = BlastDBCache(db_cache_loc)
+    exports = [exported]
     cache.makedb(exports)
-    search = MultiformatBlastnSearch(args.query, exports, db_cache=cache)
+    search = MultiformatBlastnSearch(query, exports, db_cache=cache)
     tab_search = search.to_search(6)
     if not tab_search.hits.empty:
         print("Found {} hits.".format(tab_search.hits.shape[0]))
-        sim = SampleSimilarity.from_filenames(
-            args.graph,
-            tqdm(args.comparisons),
-            sample_count=args.samples,
-            store_dfs=True
-        )
+        if sim is None:
+            sim = SampleSimilarity.from_filenames(
+                graph_loc,
+                tqdm(comparisons_loc),
+                sample_count=sample_count,
+                store_dfs=True
+            )
         sample_to_path = {path_to_sample(v): v for v in sim.samples}
         Bio.Align.write(
             search.to_sam(subject_as_reference=True).hits,
-            args.out_dir / "queries.sam",
+            out_dir / "queries.sam",
             "sam"
         )
-        export_index = Bio.SeqIO.index(args.exported, "fasta")
+        export_index = Bio.SeqIO.index(exported, "fasta")
         node_to_seq_id = {}
         for full_seq_id in export_index:
             seq_id, sample = full_seq_id.split(":")
             node = (sample_to_path[sample],) + \
-                tuple(map(int, args.gene_regex.search(seq_id).groups()))
+                tuple(map(int, gene_regex.search(seq_id).groups()))
             node_to_seq_id[node] = full_seq_id
         ideal = list(get_ideal_components(sim.graph, sim.sample_count))
         sample_gene_to_component = get_sample_gene_to_component(ideal)
         strand_graph, node_to_ccc = build_strand_graph(
             sim,
             sample_gene_to_component,
-            args.gene_regex,
-            jobs=args.jobs
+            gene_regex,
+            jobs=jobs
         )
         cccs = defaultdict(list)
         for seq_id in tab_search.hits["sseqid"].drop_duplicates():
             seq_id, sample = seq_id.split(":")
             node = (sample_to_path[sample],) + \
-                tuple(map(int, args.gene_regex.search(seq_id).groups()))
+                tuple(map(int, gene_regex.search(seq_id).groups()))
             cccs[node_to_ccc[node]].append(node)
         print("Going over component connected components.")
         subjects = set()
@@ -163,7 +178,7 @@ def main():
             ideal_index = sample_gene_to_component[next(iter(nodes))[:-1]]
             nx.write_graphml(
                 functools.reduce(nx.union, ccc.nodes),
-                args.out_dir / "ideal_component_{}.graphml".format(ideal_index)
+                out_dir / "ideal_component_{}.graphml".format(ideal_index)
             )
             for node in nodes:
                 cc = next(x for x in ccc.nodes if node in x.nodes)
@@ -192,7 +207,7 @@ def main():
                                 queries,
                                 evalue=1e-5,
                         ) as new_search:
-                            out_path = args.out_dir / "{}_g{}_i{}.sam".format(
+                            out_path = out_dir / "{}_g{}_i{}.sam".format(
                                 path_to_sample(n[0]),
                                 *n[1:]
                             )
@@ -204,10 +219,10 @@ def main():
                                 "sam"
                             )
                             sam_paths.append(out_path)
-        if args.merge_sams:
+        if merge_sams:
             pysam.samtools.merge(
                 "-o",
-                str(args.out_dir / "graph.sam"),
+                str(out_dir / "graph.sam"),
                 *map(str, sam_paths)
             )
         Bio.SeqIO.write(
@@ -215,12 +230,26 @@ def main():
                 export_index[x]
                 for x in subjects
             ),
-            args.out_dir / "subjects.fasta",
+            out_dir / "subjects.fasta",
             "fasta"
         )
 
+def main():
+    args = handle_arguments()
+    search(
+        graph_loc=args.graph,
+        comparisons_loc=args.comparisons,
+        exported=args.exported,
+        db_cache_loc=args.db_cache,
+        out_dir=args.out_dir,
+        query=args.query,
+        debug=args.debug,
+        sample_count=args.samples,
+        gene_regex=args.gene_regex,
+        clean=args.clean,
+        merge_sams=args.merge_sams,
+        jobs=args.jobs
+    )
         
-    
-
 if __name__ == "__main__":
     main()
