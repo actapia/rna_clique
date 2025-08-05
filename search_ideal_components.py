@@ -8,7 +8,7 @@ import networkx as nx
 from collections.abc import Iterable
 from typing import Optional
 from pathlib import Path
-from collections import defaultdict, deque
+from collections import defaultdict, deque, namedtuple
 from make_subset import multi_glob
 
 from simple_blast import BlastDBCache, MultiformatBlastnSearch
@@ -111,6 +111,8 @@ def handle_arguments():
         args.db_cache = export_dir / "db_cache"
     return args
 
+SearchResult = namedtuple("SearchResult", ["hits", "seqs", "components"])
+
 def search(
         graph_loc: Path,
         comparisons_loc: Iterable[Path],
@@ -125,6 +127,7 @@ def search(
         merge_sams: bool = False,
         jobs: int = 1,
         sim: SampleSimilarity = None,
+        strand_graph_out: tuple[nx.Graph, dict] = None
 ):
     if db_cache_loc.exists() and clean:
         shutil.rmtree(db_cache_loc)
@@ -159,12 +162,15 @@ def search(
             node_to_seq_id[node] = full_seq_id
         ideal = list(get_ideal_components(sim.graph, sim.sample_count))
         sample_gene_to_component = get_sample_gene_to_component(ideal)
-        strand_graph, node_to_ccc = build_strand_graph(
-            sim,
-            sample_gene_to_component,
-            gene_regex,
-            jobs=jobs
-        )
+        if strand_graph_out is None:
+            strand_graph, node_to_ccc = build_strand_graph(
+                sim,
+                sample_gene_to_component,
+                gene_regex,
+                jobs=jobs
+            )
+        else:
+            strand_graph, node_to_ccc = strand_graph_out
         cccs = defaultdict(list)
         for seq_id in tab_search.hits["sseqid"].drop_duplicates():
             seq_id, sample = seq_id.split(":")
@@ -233,6 +239,16 @@ def search(
             out_dir / "subjects.fasta",
             "fasta"
         )
+        
+        return_result = SearchResult(
+            tab_search.hits.shape[0],
+            len(tab_search.hits["sseqid"].drop_duplicates()),
+            len(cccs)
+        )
+        print("Returning", return_result)
+        return return_result
+    else:
+        return SearchResult(0, 0, 0)
 
 def main():
     args = handle_arguments()

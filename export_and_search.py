@@ -1,4 +1,5 @@
 import argparse
+import json
 import search_ideal_components
 import export_orthologs
 from make_subset import multi_glob
@@ -54,11 +55,11 @@ def main():
 
     out_dir_names = select_out_dir_names(args.analyses)
     for analysis in tqdm(args.analyses):
-        out_dir = args.out_dir / out_dir_names[analysis]
+        out_dir = args.out_root / out_dir_names[analysis]
         out_dir.mkdir(exist_ok=True)
         export_dir = out_dir / "export"
         export_dir.mkdir(exist_ok=True)
-        graph_path = args.analysis_root / "graph.pkl"
+        graph_path =  analysis / "graph.pkl"
         comparison_paths = list(
             multi_glob(analysis / "od2", ["*.pkl", "*.h5"])
         )
@@ -76,16 +77,23 @@ def main():
             allow_inconsistent=True,
             jobs=args.jobs,
         )
-        exporter.by_component(export_dir, order="before")
+        component_paths = exporter.by_component(export_dir, order="after")
         if not args.export_only:
+            all_ideal_path = export_dir / "all_ideal.fasta"
+            with open(all_ideal_path, "w") as all_ideal:
+                for path in component_paths.values():
+                    with open(path, "r") as component_fasta:
+                        all_ideal.write(component_fasta.read())
+            db_cache = export_dir / "db_cache"
+            db_cache.mkdir(exist_ok=True)
             for query in args.queries:
                 search_dir = out_dir / ("search_" + query.stem)
                 search_dir.mkdir(exist_ok=True)
-                search_ideal_components.search(
+                stats = search_ideal_components.search(
                     graph_loc=graph_path,
                     comparisons_loc=comparison_paths,
-                    exported=export_dir,
-                    db_cache_loc=export_dir / "db_cache",
+                    exported=all_ideal_path,
+                    db_cache_loc=db_cache,
                     out_dir=search_dir,
                     query=query,
                     debug=True,
@@ -93,8 +101,16 @@ def main():
                     clean=True,
                     merge_sams=True,
                     jobs=args.jobs,
-                    sim=sim
+                    sim=sim,
+                    strand_graph_out=(
+                        exporter.strand_graph,
+                        exporter.node_to_component_component
+                    )
                 )
+                if stats is None:
+                    from IPython import embed; embed()
+                with open(search_dir / "stats", "w") as stats_file:
+                    json.dump(stats._asdict(), stats_file)
                     
                     
 

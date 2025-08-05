@@ -17,6 +17,7 @@ from build_graph import component_subgraphs
 from strand_sat import sat_assign_strands
 
 import networkx as nx
+import numpy as np
 
 from pathlib import Path
 
@@ -251,12 +252,19 @@ def build_strand_graph(sim, component_sample_genes, gene_regex, jobs=1):
         )
     # Add edges for gene-gene strands.
     plus_minus = {"plus": 1, "minus": -1}
+    plus_minus_inv = {v: k for (k, v) in plus_minus.items()}
+    restricted_comparison_dfs = list(sim.restricted_comparison_dfs())
+    for _, df in restricted_comparison_dfs:
+        if "sstrand" not in df.columns:
+            df["sstrand"] = np.sign(
+                df["send"] - df["sstart"]
+            ).apply(plus_minus_inv.__getitem__)
     strand_graph.add_weighted_edges_from(
         tuple(
             tuple(row[x + col] for col in ["sample", "gene", "iso"])
             for x in ["q", "s"]
         ) + (plus_minus[row["sstrand"]],)
-        for _, df in sim.restricted_comparison_dfs()
+        for _, df in restricted_comparison_dfs
         for _, row in df.iterrows()
     )
     components = component_subgraphs(strand_graph)
@@ -340,12 +348,13 @@ class OrthologExporter:
             # )
             # aligner.open_gap_score = -10
             # aligner.extend_gap_score = -0.5
-            self.strand_graph, node_to_component_component = build_strand_graph(
-                sim,
-                self.sample_gene_to_component,
-                self.gene_regex,
-                jobs=jobs
-            )
+            self.strand_graph, self.node_to_component_component = \
+                build_strand_graph(
+                    sim,
+                    self.sample_gene_to_component,
+                    self.gene_regex,
+                    jobs=jobs
+                )
             valid_genes = {tuple(x) for x in sim.valid.itertuples(index=False)}
             mismatches = {
                     e
@@ -353,7 +362,7 @@ class OrthologExporter:
                     if is_mismatch(self.strand_graph, valid_genes, e)
             }
             mismatch_component_components= {
-                node_to_component_component[m[0]]
+                self.node_to_component_component[m[0]]
                 for m in mismatches
             }
             # mismatch_components = list(
@@ -526,6 +535,7 @@ class OrthologExporter:
                         ],
                         "fasta"
                     )
+        return component_paths
         # if self.collapse:
         #     for f in component_paths.values():
         #         duplicates = defaultdict(list)
