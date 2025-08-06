@@ -112,11 +112,12 @@ def gene_matches(
     # TODO: Check whether we really want the top n subject isotigs or the top
     # n subject genes. (I suspect we really want the latter.)
     search = TabularBlastnSearch(path2, path1, evalue=evalue, **blast_kwargs)
+    hits = search.hits
     for t in ["q", "s"]:
-        search.hits[[t + "gene", t + "iso"]] = parse(search.hits[t + "seqid"])
+        hits[[t + "gene", t + "iso"]] = parse(search.hits[t + "seqid"])
     if not keep_seqids:
-        search.hits = search.hits.drop(["qseqid", "sseqid"], axis=1)
-    return highest_bitscores(search.hits, n, keep="all")
+        hits = search.hits.drop(["qseqid", "sseqid"], axis=1)
+    return highest_bitscores(hits, n, keep="all")
 
 eprint = functools.partial(print, file=sys.stderr)
 
