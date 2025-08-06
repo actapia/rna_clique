@@ -1,0 +1,1101 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../installation_guides/macos/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>From RNA-seq reads to a phylogenetic tree with RNA-clique - RNA-clique user guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#from-rna-seq-reads-to-a-phylogenetic-tree-with-rna-clique" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="RNA-clique user guide" class="md-header__button md-logo" aria-label="RNA-clique user guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            RNA-clique user guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              From RNA-seq reads to a phylogenetic tree with RNA-clique
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/actapia/rna_clique" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="RNA-clique user guide" class="md-nav__button md-logo" aria-label="RNA-clique user guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    RNA-clique user guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/actapia/rna_clique" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/" class="md-nav__link">
+        Command-line usage
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="false">
+          Installation guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Installation guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Installation guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation_guides/ubuntu/" class="md-nav__link">
+        Ubuntu
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation_guides/macos/" class="md-nav__link">
+        macOS
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="true">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          From RNA-seq reads to a phylogenetic tree with RNA-clique
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        From RNA-seq reads to a phylogenetic tree with RNA-clique
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    Setup
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sratoolkit" class="md-nav__link">
+    sratoolkit
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download_sra" class="md-nav__link">
+    download_sra
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spades" class="md-nav__link">
+    SPAdes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-directory-for-our-work" class="md-nav__link">
+    Creating a directory for our work
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#obtaining-sequence-data" class="md-nav__link">
+    Obtaining sequence data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assembling-transcriptomes" class="md-nav__link">
+    Assembling transcriptomes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-phase-1-of-rna-clique" class="md-nav__link">
+    Running phase 1 of RNA-clique
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    Results
+  </a>
+  
+    <nav class="md-nav" aria-label="Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#getting-a-tree" class="md-nav__link">
+    Getting a tree
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-a-pcoa-plot" class="md-nav__link">
+    Getting a PCoA plot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-a-heatmap" class="md-nav__link">
+    Getting a heatmap
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    Setup
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sratoolkit" class="md-nav__link">
+    sratoolkit
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download_sra" class="md-nav__link">
+    download_sra
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spades" class="md-nav__link">
+    SPAdes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-directory-for-our-work" class="md-nav__link">
+    Creating a directory for our work
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#obtaining-sequence-data" class="md-nav__link">
+    Obtaining sequence data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assembling-transcriptomes" class="md-nav__link">
+    Assembling transcriptomes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-phase-1-of-rna-clique" class="md-nav__link">
+    Running phase 1 of RNA-clique
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    Results
+  </a>
+  
+    <nav class="md-nav" aria-label="Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#getting-a-tree" class="md-nav__link">
+    Getting a tree
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-a-pcoa-plot" class="md-nav__link">
+    Getting a PCoA plot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-a-heatmap" class="md-nav__link">
+    Getting a heatmap
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="from-rna-seq-reads-to-a-phylogenetic-tree-with-rna-clique">From RNA-seq reads to a phylogenetic tree with RNA-clique</h1>
+<p>This tutorial explains how to obtain a distance matrix and phylogenetic tree for
+a set of samples for which we have RNA-seq reads. The purpose of this guide is
+to show a typical workflow using RNA-clique.</p>
+<p>The tutorial assumes that RNA-clique has already been downloaded and that its
+dependencies and conda environment have already been installed.</p>
+<h2 id="setup">Setup</h2>
+<p>In addition to RNA-clique, this tutorial requires the following software:</p>
+<ul>
+<li><a href="https://github.com/ncbi/sra-tools">sratoolkit</a></li>
+<li><a href="https://github.com/actapia/download_sra">download_sra</a></li>
+<li><a href="https://github.com/ablab/spades">SPAdes</a></li>
+</ul>
+<p>This section provides brief installation instructions for each piece of
+software. More detailed instructions may be found at each program's GitHub
+repository.</p>
+<p>It is recommended that the software be downloaded somewhere outside the
+RNA-clique git repository. For example, you may wish to put the software in your
+<code>~/Documents</code> directory.</p>
+<h3 id="sratoolkit">sratoolkit</h3>
+<p>Download the appropriate <code>sratoolkit</code> binaries for your system.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Ubuntu</label><label for="__tabbed_1_2">macOS (Intel)</label><label for="__tabbed_1_3">macOS (Apple Silicon)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>wget<span class="w"> </span>https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-zsh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-L<span class="w"> </span>-O<span class="w"> </span>https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac64.tar.gz
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl -L -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac-arm64.tar.gz
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<p>Then, extract the downloaded tar file.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>tar<span class="w"> </span>xzvf<span class="w"> </span>sratoolkit.current-*.tar.gz
+</span></code></pre></div>
+<p>Add the <code>bin</code> directory of the extracted archive to your <code>PATH</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PATH</span><span class="s2">:</span><span class="k">$(</span>realpath<span class="w"> </span>sratoolkit*/bin<span class="k">)</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<h3 id="download_sra">download_sra</h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you downloaded this software from Zenodo, the test data SRA files are
+included in the software release zip. If you don't want to download them
+yourself, you don't need <code>download_sra</code> and can skip this step.</p>
+</div>
+<p>Make sure the <code>rna-clique</code> Conda environment created during the RNA-clique
+installation is activated.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>rna-clique
+</span></code></pre></div>
+<p>Install dependencies for <code>download_sra</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>conda<span class="w"> </span>install<span class="w"> </span>lxml<span class="w"> </span>requests
+</span></code></pre></div>
+<p>Clone the <code>download_sra</code> Git repository.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/actapia/download_sra
+</span></code></pre></div>
+<p>Add the repository root to your <code>PATH</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PATH</span><span class="s2">:</span><span class="nv">$PWD</span><span class="s2">/download_sra&quot;</span>
+</span></code></pre></div>
+<h3 id="spades">SPAdes</h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you downloaded this software from Zenodo, the assembled transcriptomes
+are included in the release zip. If you don't want to assemble the
+transcriptomes yourself, you can skip downloading SPAdes.</p>
+</div>
+<p>Download the SPAdes assembler. As of this writing, 4.0.0 is the newest
+version.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Ubuntu</label><label for="__tabbed_2_2">macOS</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>wget<span class="w"> </span>https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Linux.tar.gz
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-zsh highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-L<span class="w"> </span>-O<span class="w"> </span>https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Darwin-<span class="k">$(</span>uname<span class="w"> </span>-m<span class="k">)</span>.tar.gz
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<p>Extract the archive:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>tar<span class="w"> </span>xzvf<span class="w"> </span>SPAdes-*.tar.gz
+</span></code></pre></div>
+<p>Add the SPAdes <code>bin</code> directory to your <code>PATH</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PATH</span><span class="s2">:</span><span class="k">$(</span>realpath<span class="w"> </span>SPAdes-*/bin<span class="k">)</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<h2 id="creating-a-directory-for-our-work">Creating a directory for our work</h2>
+<p>We will organize our files for this tutorial nicely into a single directory, but
+first, we want to keep track of the location of RNA-clique. For this tutorial,
+we will assume that RNA-clique is located at the path specified in the
+<code>RNA_CLIQUE</code> environment variable. To set this variable easily, you can <code>cd</code>
+into the Git repository and run</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RNA_CLIQUE</span><span class="o">=</span><span class="nv">$PWD</span>
+</span></code></pre></div>
+<p>We recommend putting the directory for this tutorial <em>outside</em> of the RNA-clique
+Git repository. For the rest of this tutorial, we will assume that the tutorial
+directory is at the path in the <code>TUTORIAL_DIR</code> environment variable. If you are
+in the root of the Git repository, you could run </p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">cd</span><span class="w"> </span>..
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>mkdir<span class="w"> </span>tutorial
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nb">cd</span><span class="w"> </span>tutorial
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TUTORIAL_DIR</span><span class="o">=</span><span class="nv">$PWD</span>
+</span></code></pre></div>
+<h2 id="obtaining-sequence-data">Obtaining sequence data</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you downloaded this software from Zenodo, you already have the SRA files
+in the <code>test_data/sra</code> of the repository. Instead of completing this step,
+you can extract the provided data by running</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">/test_data/sra/*&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span>fasterq-dump<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">done</span>
+</span></code></pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Before proceeding, check that your environment variables are set to the 
+correct values!</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">&quot;</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<p>If either of these does not print a path, you have forgotten to set the
+appropriate environment variables.</p>
+</div>
+<p>We will start out with RNA-seq reads for six samples of tall fescue (<em>Lolium
+arundinaceum</em>). These samples are a subset of the sixteen used in the paper
+<em>RNA-clique: A method for computing genetic distances from RNA-seq data</em>. The
+sample metadata is shown below.</p>
+<table>
+<thead>
+<tr>
+<th>SRA Accession</th>
+<th>Genotype</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR2321388acc=SRR2321388">SRR2321388</a></td>
+<td>CTE46</td>
+</tr>
+<tr>
+<td><a href="https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR2321385acc=SRR2321385">SRR2321385</a></td>
+<td>CTE46</td>
+</tr>
+<tr>
+<td><a href="https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR8003761acc=SRR8003761">SRR8003761</a></td>
+<td>CTE27</td>
+</tr>
+<tr>
+<td><a href="https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR8003762acc=SRR8003762">SRR8003762</a></td>
+<td>CTE27</td>
+</tr>
+<tr>
+<td><a href="https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR7990321acc=SRR7990321">SRR7990321</a></td>
+<td>FATG4</td>
+</tr>
+<tr>
+<td><a href="https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR8003736acc=SRR8003736">SRR8003736</a></td>
+<td>NTE</td>
+</tr>
+</tbody>
+</table>
+<p>The list of accessions is in the file
+<a href="tall_fescue_accs.csv"><code>tall_fescue_accs.csv</code></a>. We can download these all
+easily using the <code>download_sra</code> tool.</p>
+<p>First, change to your <code>TUTORIAL_DIR</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<p>Then, run <code>download_sra.sh</code> on the tall fescue accessions. We will use the <code>-j</code>
+flag to run the download with multiple jobs and the <code>-r</code> flag to remove the SRA
+files after downloading and extracting.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>tail<span class="w"> </span>-n+2<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">/docs/tutorials/reads2tree/tall_fescue_accs.csv&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">    </span>cut<span class="w"> </span>-d,<span class="w"> </span>-f1<span class="w"> </span><span class="p">|</span><span class="w"> </span>download_sra.sh<span class="w"> </span>-j<span class="w"> </span><span class="m">0</span><span class="w"> </span>-r<span class="w"> </span>
+</span></code></pre></div>
+<p>Verify that the FASTQ files have been extracted.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ls<span class="w"> </span>SRR*.fastq
+</span></code></pre></div>
+<h2 id="assembling-transcriptomes">Assembling transcriptomes</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you downloaded this software from Zenodo, you already have the assembled
+transcriptomes in the <code>test_data/assemblies/</code> directory in the root of the
+repository and can simply move them instead of running SPAdes</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>mv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">/test_data/assemblies&quot;</span><span class="w"> </span>out
+</span></code></pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Assembling the transcriptomes requires at least 16 GB of memory. If you have
+insufficient memory or otherwise need to skip this step, you can download
+the assemblies instead:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>wget<span class="w"> </span><span class="s2">&quot;http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.zip&quot;</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>mkdir<span class="w"> </span>out
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>unzip<span class="w"> </span>transcripts.zip<span class="w"> </span>-d<span class="w"> </span>out
+</span></code></pre></div>
+</div>
+<p>Ordinarily, we would need a quality control step before proceeding to assembly,
+but we will skip that for this tutorial.</p>
+<p>We will use the rnaSPAdes mode of the SPAdes assembler to assemble the reads we
+just downloaded into transcriptomes for each of the six samples. </p>
+<p>If your computer has sufficient resources, we will perform these assemblies in
+parallel to save time. We estimate we need 16 GB of memory to assemble one
+of these transcriptomes with three threads, so we want to run with no more than
+<span class="arithmatex">\(&lfloor; m / 16 &rfloor;\)</span> jobs, where <span class="arithmatex">\(m\)</span> is the memory your computer has, in
+GB. </p>
+<p>Determining exactly how many jobs and how many threads are optimal requires
+trial and error; you may need to simply guess how many are appropriate for your
+computer and retry if you run out of memory.</p>
+<p>On a computer with over 120 GB of memory, we can run 6 jobs with 3 threads
+safely.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">With parallel</label><label for="__tabbed_3_2">Without parallel</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>parallel<span class="w"> </span>--jobs<span class="w"> </span><span class="m">6</span><span class="w"> </span>spades.py<span class="w"> </span>--rna<span class="w"> </span>-o<span class="w"> </span>out/<span class="o">{</span>/.<span class="o">}</span><span class="w"> </span>-s<span class="w"> </span><span class="o">{}</span><span class="w"> </span>-t<span class="w"> </span><span class="m">3</span><span class="w"> </span>-m<span class="w"> </span><span class="m">120</span><span class="w"> </span>:::<span class="w"> </span>*.fastq
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>*.fastq<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">    </span><span class="nv">b</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>basename<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">    </span><span class="nv">fn</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">b</span><span class="p">%%.*</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">    </span>spades.py<span class="w"> </span>--rna<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;out/</span><span class="nv">$fn</span><span class="s2">&quot;</span><span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="w"> </span>-t<span class="w"> </span><span class="m">3</span><span class="w"> </span>-m<span class="w"> </span><span class="m">120</span><span class="p">;</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="k">done</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<p>The assembled transcriptomes will be located at <code>transcripts.fasta</code> in
+directories corresponding to their samples names under the <code>out</code> directory.</p>
+<h2 id="running-phase-1-of-rna-clique">Running phase 1 of RNA-clique</h2>
+<p>First, return to the RNA-clique repository root.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+<p>Then, run <code>typical_filtering_step.sh</code> on the transcriptomes we just
+assembled. This script will perform "phase 1" of RNA-clique, which involves:</p>
+<ol>
+<li>Selecting the top <span class="arithmatex">\(n\)</span> genes for each transcriptome</li>
+<li>BLASTing each sample's top genes against every other's to get gene matches
+   tables</li>
+<li>Building the gene matches graph from the gene matches tables</li>
+</ol>
+<!-- We need to create a directory in which RNA-clique can write its output. We'll -->
+<!-- create a directory named `rna_clique_out` in the `$TUTORIAL_DIR`. -->
+
+<!-- ```bash -->
+<!-- mkdir "$TUTORIAL_DIR/rna_clique_out" -->
+<!-- ``` -->
+
+<p>Previous tests with this data revealed that <span class="arithmatex">\(n = 50000\)</span> is a good setting, so we
+will use that value.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>bash<span class="w"> </span>typical_filtering_step.sh<span class="w"> </span>-o<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/rna_clique_out<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">                               </span>-n<span class="w"> </span><span class="m">50000</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">                               </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/out/*
+</span></code></pre></div>
+<p>Verify that the <code>graph.pkl</code> file was created in the output directory.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ls<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">/rna_clique_out/graph.pkl&quot;</span>
+</span></code></pre></div>
+<h2 id="results">Results</h2>
+<h3 id="getting-a-tree">Getting a tree</h3>
+<p>If you want a tree, you can create one using RNA-clique and Biopython. The code
+below, also found in <code>docs/tutorials/reads2tree/make_tree.py</code>, computes the
+distance matrix from the <code>graph.pkl</code> and <code>od2/*.h5</code> (or <code>od2/*.pkl</code>) files and
+constructs a tree using the neighbor-joining algorithm. The tree is also rooted
+at its midpoint. The tree is saved to <code>nj_tree.tree</code>, and a visualization is
+saved to <code>nj_tree.svg</code> in the <code>rna_clique_out</code> directory.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="kn">import</span> <span class="nn">os</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="kn">import</span> <span class="nn">Bio.Phylo</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="kn">from</span> <span class="nn">Bio.Phylo.TreeConstruction</span> <span class="kn">import</span> <span class="n">DistanceTreeConstructor</span><span class="p">,</span> <span class="n">DistanceMatrix</span>
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a><span class="kn">from</span> <span class="nn">filtered_distance</span> <span class="kn">import</span> <span class="n">SampleSimilarity</span>
+</span><span id="__span-27-10"><a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="kn">from</span> <span class="nn">phylo_utils</span> <span class="kn">import</span> <span class="n">tril_jagged</span><span class="p">,</span> <span class="n">draw_tree</span><span class="p">,</span> <span class="n">get_clades</span><span class="p">,</span> <span class="n">draw_clade_labels</span>
+</span><span id="__span-27-11"><a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a><span class="kn">from</span> <span class="nn">path_to_sample</span> <span class="kn">import</span> <span class="n">path_to_sample</span>
+</span><span id="__span-27-12"><a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a><span class="kn">from</span> <span class="nn">make_subset</span> <span class="kn">import</span> <span class="n">get_table_files</span>
+</span><span id="__span-27-13"><a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a><span class="kn">from</span> <span class="nn">nice_colorsys</span> <span class="kn">import</span> <span class="o">*</span>
+</span><span id="__span-27-14"><a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a><span class="kn">from</span> <span class="nn">nice_colorsys.rgb255</span> <span class="kn">import</span> <span class="n">rgb255</span>
+</span><span id="__span-27-15"><a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>
+</span><span id="__span-27-16"><a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a><span class="n">tutorial_doc_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;RNA_CLIQUE&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="s2">&quot;docs/tutorials/reads2tree&quot;</span>
+</span><span id="__span-27-17"><a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a><span class="n">rna_clique_out_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TUTORIAL_DIR&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="s2">&quot;rna_clique_out&quot;</span>
+</span><span id="__span-27-18"><a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>
+</span><span id="__span-27-19"><a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span><span id="__span-27-20"><a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a>    <span class="n">sample_metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">tutorial_doc_dir</span> <span class="o">/</span> <span class="s2">&quot;tall_fescue_accs.csv&quot;</span><span class="p">)</span>
+</span><span id="__span-27-21"><a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a>    <span class="n">similarity_computer</span> <span class="o">=</span> <span class="n">SampleSimilarity</span><span class="o">.</span><span class="n">from_filenames</span><span class="p">(</span>
+</span><span id="__span-27-22"><a id="__codelineno-27-22" name="__codelineno-27-22" href="#__codelineno-27-22"></a>        <span class="n">rna_clique_out_dir</span> <span class="o">/</span> <span class="s2">&quot;graph.pkl&quot;</span><span class="p">,</span>
+</span><span id="__span-27-23"><a id="__codelineno-27-23" name="__codelineno-27-23" href="#__codelineno-27-23"></a>        <span class="nb">list</span><span class="p">(</span><span class="n">get_table_files</span><span class="p">(</span><span class="n">rna_clique_out_dir</span> <span class="o">/</span> <span class="s2">&quot;od2&quot;</span><span class="p">))</span>
+</span><span id="__span-27-24"><a id="__codelineno-27-24" name="__codelineno-27-24" href="#__codelineno-27-24"></a>    <span class="p">)</span>
+</span><span id="__span-27-25"><a id="__codelineno-27-25" name="__codelineno-27-25" href="#__codelineno-27-25"></a>    <span class="n">nj_tree</span> <span class="o">=</span> <span class="n">DistanceTreeConstructor</span><span class="p">()</span><span class="o">.</span><span class="n">nj</span><span class="p">(</span>
+</span><span id="__span-27-26"><a id="__codelineno-27-26" name="__codelineno-27-26" href="#__codelineno-27-26"></a>        <span class="n">DistanceMatrix</span><span class="p">(</span>
+</span><span id="__span-27-27"><a id="__codelineno-27-27" name="__codelineno-27-27" href="#__codelineno-27-27"></a>            <span class="p">[</span><span class="n">path_to_sample</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">similarity_computer</span><span class="o">.</span><span class="n">samples</span><span class="p">],</span>
+</span><span id="__span-27-28"><a id="__codelineno-27-28" name="__codelineno-27-28" href="#__codelineno-27-28"></a>            <span class="n">tril_jagged</span><span class="p">(</span><span class="n">similarity_computer</span><span class="o">.</span><span class="n">get_dissimilarity_matrix</span><span class="p">())</span>
+</span><span id="__span-27-29"><a id="__codelineno-27-29" name="__codelineno-27-29" href="#__codelineno-27-29"></a>        <span class="p">)</span>
+</span><span id="__span-27-30"><a id="__codelineno-27-30" name="__codelineno-27-30" href="#__codelineno-27-30"></a>    <span class="p">)</span>
+</span><span id="__span-27-31"><a id="__codelineno-27-31" name="__codelineno-27-31" href="#__codelineno-27-31"></a>    <span class="n">nj_tree</span><span class="o">.</span><span class="n">root_at_midpoint</span><span class="p">()</span>
+</span><span id="__span-27-32"><a id="__codelineno-27-32" name="__codelineno-27-32" href="#__codelineno-27-32"></a>    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">nj_tree</span><span class="o">.</span><span class="n">get_nonterminals</span><span class="p">():</span>
+</span><span id="__span-27-33"><a id="__codelineno-27-33" name="__codelineno-27-33" href="#__codelineno-27-33"></a>        <span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-27-34"><a id="__codelineno-27-34" name="__codelineno-27-34" href="#__codelineno-27-34"></a>    <span class="n">Bio</span><span class="o">.</span><span class="n">Phylo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nj_tree</span><span class="p">,</span> <span class="n">rna_clique_out_dir</span> <span class="o">/</span> <span class="s2">&quot;nj_tree.tree&quot;</span><span class="p">,</span> <span class="s2">&quot;newick&quot;</span><span class="p">)</span>
+</span><span id="__span-27-35"><a id="__codelineno-27-35" name="__codelineno-27-35" href="#__codelineno-27-35"></a>    <span class="n">clades</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">get_clades</span><span class="p">(</span><span class="n">nj_tree</span><span class="p">,</span> <span class="n">sample_metadata</span><span class="p">,</span> <span class="s2">&quot;accession&quot;</span><span class="p">,</span> <span class="s2">&quot;genotype&quot;</span><span class="p">))</span>
+</span><span id="__span-27-36"><a id="__codelineno-27-36" name="__codelineno-27-36" href="#__codelineno-27-36"></a>    <span class="n">clade_colors</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-27-37"><a id="__codelineno-27-37" name="__codelineno-27-37" href="#__codelineno-27-37"></a>        <span class="n">l</span><span class="p">:</span> <span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="n">rgb</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">to_rgb255</span><span class="p">()</span><span class="o">.</span><span class="n">as_hex</span><span class="p">()</span>
+</span><span id="__span-27-38"><a id="__codelineno-27-38" name="__codelineno-27-38" href="#__codelineno-27-38"></a>        <span class="k">for</span> <span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">clades</span><span class="p">,</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colormaps</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;tab10&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">colors</span><span class="p">)</span>
+</span><span id="__span-27-39"><a id="__codelineno-27-39" name="__codelineno-27-39" href="#__codelineno-27-39"></a>    <span class="p">}</span>
+</span><span id="__span-27-40"><a id="__codelineno-27-40" name="__codelineno-27-40" href="#__codelineno-27-40"></a>    <span class="n">draw_tree</span><span class="p">(</span><span class="n">nj_tree</span><span class="p">,</span> <span class="n">clades</span><span class="o">=</span><span class="n">clades</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">clade_colors</span><span class="p">)</span>
+</span><span id="__span-27-41"><a id="__codelineno-27-41" name="__codelineno-27-41" href="#__codelineno-27-41"></a>    <span class="n">draw_clade_labels</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span> <span class="n">clades</span><span class="p">,</span> <span class="n">clade_colors</span><span class="p">)</span>
+</span><span id="__span-27-42"><a id="__codelineno-27-42" name="__codelineno-27-42" href="#__codelineno-27-42"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">rna_clique_out_dir</span> <span class="o">/</span> <span class="s2">&quot;nj_tree.svg&quot;</span><span class="p">)</span>
+</span><span id="__span-27-43"><a id="__codelineno-27-43" name="__codelineno-27-43" href="#__codelineno-27-43"></a>
+</span><span id="__span-27-44"><a id="__codelineno-27-44" name="__codelineno-27-44" href="#__codelineno-27-44"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-27-45"><a id="__codelineno-27-45" name="__codelineno-27-45" href="#__codelineno-27-45"></a>    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></div>
+<p>The script requires some modules found in the root of the RNA-clique repository,
+so you can run it as follows:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="w"> </span>python<span class="w"> </span>docs/tutorials/reads2tree/make_tree.py
+</span></code></pre></div>
+<h3 id="getting-a-pcoa-plot">Getting a PCoA plot</h3>
+<p>We can use <code>scikit-bio</code> to create a PCoA plot from our distance matrix. To
+distinguish points by genotype, we will need to use the metadata for the samples
+stored at <code>$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv</code>.</p>
+<p>The code below draws a 3D and 2D PCoA plot and stores the results as SVG files
+in the <code>rna_clique_out</code> directory as <code>pcoa_3d.svg</code> and <code>pcoa_2d.svg</code>,
+respectively. The code can also be found at
+<code>docs/tutorials/reads2tree/make_pcoa.py</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="kn">import</span> <span class="nn">os</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="kn">import</span> <span class="nn">skbio</span> <span class="k">as</span> <span class="nn">skb</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="kn">from</span> <span class="nn">filtered_distance</span> <span class="kn">import</span> <span class="n">SampleSimilarity</span>
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="kn">from</span> <span class="nn">path_to_sample</span> <span class="kn">import</span> <span class="n">path_to_sample</span>
+</span><span id="__span-29-10"><a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a><span class="kn">from</span> <span class="nn">make_subset</span> <span class="kn">import</span> <span class="n">get_table_files</span>
+</span><span id="__span-29-11"><a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>
+</span><span id="__span-29-12"><a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a><span class="n">tutorial_doc_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;RNA_CLIQUE&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="s2">&quot;docs/tutorials/reads2tree&quot;</span>
+</span><span id="__span-29-13"><a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a><span class="n">rna_clique_out_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TUTORIAL_DIR&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="s2">&quot;rna_clique_out&quot;</span>
+</span><span id="__span-29-14"><a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>
+</span><span id="__span-29-15"><a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span><span id="__span-29-16"><a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>    <span class="n">sample_metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">tutorial_doc_dir</span> <span class="o">/</span> <span class="s2">&quot;tall_fescue_accs.csv&quot;</span><span class="p">)</span>
+</span><span id="__span-29-17"><a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>    <span class="n">similarity_computer</span> <span class="o">=</span> <span class="n">SampleSimilarity</span><span class="o">.</span><span class="n">from_filenames</span><span class="p">(</span>
+</span><span id="__span-29-18"><a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>        <span class="n">rna_clique_out_dir</span> <span class="o">/</span> <span class="s2">&quot;graph.pkl&quot;</span><span class="p">,</span>
+</span><span id="__span-29-19"><a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>        <span class="nb">list</span><span class="p">(</span><span class="n">get_table_files</span><span class="p">(</span><span class="n">rna_clique_out_dir</span> <span class="o">/</span> <span class="s2">&quot;od2&quot;</span><span class="p">))</span>
+</span><span id="__span-29-20"><a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a>    <span class="p">)</span>
+</span><span id="__span-29-21"><a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a>    <span class="n">dis_df</span> <span class="o">=</span> <span class="n">similarity_computer</span><span class="o">.</span><span class="n">get_dissimilarity_df</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+</span><span id="__span-29-22"><a id="__codelineno-29-22" name="__codelineno-29-22" href="#__codelineno-29-22"></a>        <span class="n">index</span><span class="o">=</span><span class="n">path_to_sample</span><span class="p">,</span>
+</span><span id="__span-29-23"><a id="__codelineno-29-23" name="__codelineno-29-23" href="#__codelineno-29-23"></a>        <span class="n">columns</span><span class="o">=</span><span class="n">path_to_sample</span><span class="p">,</span>
+</span><span id="__span-29-24"><a id="__codelineno-29-24" name="__codelineno-29-24" href="#__codelineno-29-24"></a>    <span class="p">)</span>
+</span><span id="__span-29-25"><a id="__codelineno-29-25" name="__codelineno-29-25" href="#__codelineno-29-25"></a>    <span class="c1"># 3D PCoA</span>
+</span><span id="__span-29-26"><a id="__codelineno-29-26" name="__codelineno-29-26" href="#__codelineno-29-26"></a>    <span class="n">pcoa_results</span> <span class="o">=</span> <span class="n">skb</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ordination</span><span class="o">.</span><span class="n">pcoa</span><span class="p">(</span>
+</span><span id="__span-29-27"><a id="__codelineno-29-27" name="__codelineno-29-27" href="#__codelineno-29-27"></a>        <span class="n">skb</span><span class="o">.</span><span class="n">DistanceMatrix</span><span class="p">(</span><span class="n">dis_df</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">dis_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+</span><span id="__span-29-28"><a id="__codelineno-29-28" name="__codelineno-29-28" href="#__codelineno-29-28"></a>    <span class="p">)</span>
+</span><span id="__span-29-29"><a id="__codelineno-29-29" name="__codelineno-29-29" href="#__codelineno-29-29"></a>    <span class="n">pcoa_results</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+</span><span id="__span-29-30"><a id="__codelineno-29-30" name="__codelineno-29-30" href="#__codelineno-29-30"></a>        <span class="n">df</span><span class="o">=</span><span class="n">sample_metadata</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;accession&quot;</span><span class="p">),</span>
+</span><span id="__span-29-31"><a id="__codelineno-29-31" name="__codelineno-29-31" href="#__codelineno-29-31"></a>        <span class="n">column</span><span class="o">=</span><span class="s2">&quot;genotype&quot;</span><span class="p">,</span>
+</span><span id="__span-29-32"><a id="__codelineno-29-32" name="__codelineno-29-32" href="#__codelineno-29-32"></a>    <span class="p">)</span>
+</span><span id="__span-29-33"><a id="__codelineno-29-33" name="__codelineno-29-33" href="#__codelineno-29-33"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">rna_clique_out_dir</span> <span class="o">/</span> <span class="s2">&quot;pcoa_3d.svg&quot;</span><span class="p">)</span>
+</span><span id="__span-29-34"><a id="__codelineno-29-34" name="__codelineno-29-34" href="#__codelineno-29-34"></a>    <span class="c1"># 2D PCoA</span>
+</span><span id="__span-29-35"><a id="__codelineno-29-35" name="__codelineno-29-35" href="#__codelineno-29-35"></a>    <span class="n">pcoa_results_2d</span> <span class="o">=</span> <span class="n">skb</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ordination</span><span class="o">.</span><span class="n">pcoa</span><span class="p">(</span>
+</span><span id="__span-29-36"><a id="__codelineno-29-36" name="__codelineno-29-36" href="#__codelineno-29-36"></a>        <span class="n">skb</span><span class="o">.</span><span class="n">DistanceMatrix</span><span class="p">(</span><span class="n">dis_df</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">dis_df</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span>
+</span><span id="__span-29-37"><a id="__codelineno-29-37" name="__codelineno-29-37" href="#__codelineno-29-37"></a>        <span class="n">number_of_dimensions</span><span class="o">=</span><span class="mi">2</span>
+</span><span id="__span-29-38"><a id="__codelineno-29-38" name="__codelineno-29-38" href="#__codelineno-29-38"></a>    <span class="p">)</span>
+</span><span id="__span-29-39"><a id="__codelineno-29-39" name="__codelineno-29-39" href="#__codelineno-29-39"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+</span><span id="__span-29-40"><a id="__codelineno-29-40" name="__codelineno-29-40" href="#__codelineno-29-40"></a>    <span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">sample_metadata</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+</span><span id="__span-29-41"><a id="__codelineno-29-41" name="__codelineno-29-41" href="#__codelineno-29-41"></a>            <span class="n">pcoa_results_2d</span><span class="o">.</span><span class="n">samples</span><span class="p">[[</span><span class="s2">&quot;PC1&quot;</span><span class="p">,</span><span class="s2">&quot;PC2&quot;</span><span class="p">]],</span>
+</span><span id="__span-29-42"><a id="__codelineno-29-42" name="__codelineno-29-42" href="#__codelineno-29-42"></a>            <span class="s2">&quot;accession&quot;</span>
+</span><span id="__span-29-43"><a id="__codelineno-29-43" name="__codelineno-29-43" href="#__codelineno-29-43"></a>    <span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;genotype&quot;</span><span class="p">):</span>
+</span><span id="__span-29-44"><a id="__codelineno-29-44" name="__codelineno-29-44" href="#__codelineno-29-44"></a>        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;PC2&quot;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">g</span><span class="p">)</span>
+</span><span id="__span-29-45"><a id="__codelineno-29-45" name="__codelineno-29-45" href="#__codelineno-29-45"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;PC1&quot;</span><span class="p">)</span>
+</span><span id="__span-29-46"><a id="__codelineno-29-46" name="__codelineno-29-46" href="#__codelineno-29-46"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;PC2&quot;</span><span class="p">)</span>
+</span><span id="__span-29-47"><a id="__codelineno-29-47" name="__codelineno-29-47" href="#__codelineno-29-47"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</span><span id="__span-29-48"><a id="__codelineno-29-48" name="__codelineno-29-48" href="#__codelineno-29-48"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">rna_clique_out_dir</span> <span class="o">/</span> <span class="s2">&quot;pcoa_2d.svg&quot;</span><span class="p">)</span>
+</span><span id="__span-29-49"><a id="__codelineno-29-49" name="__codelineno-29-49" href="#__codelineno-29-49"></a>
+</span><span id="__span-29-50"><a id="__codelineno-29-50" name="__codelineno-29-50" href="#__codelineno-29-50"></a>
+</span><span id="__span-29-51"><a id="__codelineno-29-51" name="__codelineno-29-51" href="#__codelineno-29-51"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-29-52"><a id="__codelineno-29-52" name="__codelineno-29-52" href="#__codelineno-29-52"></a>    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></div>
+<p>The example can be run as follows from the root of the RNA-clique repository.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="w"> </span>python<span class="w"> </span>docs/tutorials/reads2tree/make_pcoa.py
+</span></code></pre></div>
+<h3 id="getting-a-heatmap">Getting a heatmap</h3>
+<p>We can use the <code>draw_heatmap</code> function of RNA-clique to display a similarity or
+distance matrix as a heatmap. The function uses the Seaborn <code>heatmap</code> function
+behind the scenes, and arbitrary arguments given to <code>draw_heatmap</code> will be
+passed to Seaborn.</p>
+<p>The code below is also found in <code>docs/tutorials/reads2tree/make_heatmap.py</code>. It
+draws a heatmap and saves the resulting figure in the <code>rna_clique_out</code> directory
+as <code>distance_heatmap.svg</code>. </p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="kn">import</span> <span class="nn">os</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="kn">from</span> <span class="nn">filtered_distance</span> <span class="kn">import</span> <span class="n">SampleSimilarity</span>
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="kn">from</span> <span class="nn">path_to_sample</span> <span class="kn">import</span> <span class="n">path_to_sample</span>
+</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="kn">from</span> <span class="nn">heatmap</span> <span class="kn">import</span> <span class="n">draw_heatmap</span>
+</span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a><span class="kn">from</span> <span class="nn">make_subset</span> <span class="kn">import</span> <span class="n">get_table_files</span>
+</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>
+</span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a><span class="n">tutorial_doc_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;RNA_CLIQUE&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="s2">&quot;docs/tutorials/reads2tree&quot;</span>
+</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a><span class="n">rna_clique_out_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TUTORIAL_DIR&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="s2">&quot;rna_clique_out&quot;</span>
+</span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>
+</span><span id="__span-31-15"><a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span><span id="__span-31-16"><a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a>    <span class="n">sample_metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">tutorial_doc_dir</span> <span class="o">/</span> <span class="s2">&quot;tall_fescue_accs.csv&quot;</span><span class="p">)</span>
+</span><span id="__span-31-17"><a id="__codelineno-31-17" name="__codelineno-31-17" href="#__codelineno-31-17"></a>    <span class="n">similarity_computer</span> <span class="o">=</span> <span class="n">SampleSimilarity</span><span class="o">.</span><span class="n">from_filenames</span><span class="p">(</span>
+</span><span id="__span-31-18"><a id="__codelineno-31-18" name="__codelineno-31-18" href="#__codelineno-31-18"></a>        <span class="n">rna_clique_out_dir</span> <span class="o">/</span> <span class="s2">&quot;graph.pkl&quot;</span><span class="p">,</span>
+</span><span id="__span-31-19"><a id="__codelineno-31-19" name="__codelineno-31-19" href="#__codelineno-31-19"></a>        <span class="nb">list</span><span class="p">(</span><span class="n">get_table_files</span><span class="p">(</span><span class="n">rna_clique_out_dir</span> <span class="o">/</span> <span class="s2">&quot;od2&quot;</span><span class="p">))</span>
+</span><span id="__span-31-20"><a id="__codelineno-31-20" name="__codelineno-31-20" href="#__codelineno-31-20"></a>    <span class="p">)</span>
+</span><span id="__span-31-21"><a id="__codelineno-31-21" name="__codelineno-31-21" href="#__codelineno-31-21"></a>    <span class="n">dis_df</span> <span class="o">=</span> <span class="n">similarity_computer</span><span class="o">.</span><span class="n">get_dissimilarity_df</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+</span><span id="__span-31-22"><a id="__codelineno-31-22" name="__codelineno-31-22" href="#__codelineno-31-22"></a>        <span class="n">index</span><span class="o">=</span><span class="n">path_to_sample</span><span class="p">,</span>
+</span><span id="__span-31-23"><a id="__codelineno-31-23" name="__codelineno-31-23" href="#__codelineno-31-23"></a>        <span class="n">columns</span><span class="o">=</span><span class="n">path_to_sample</span><span class="p">,</span>
+</span><span id="__span-31-24"><a id="__codelineno-31-24" name="__codelineno-31-24" href="#__codelineno-31-24"></a>    <span class="p">)</span>
+</span><span id="__span-31-25"><a id="__codelineno-31-25" name="__codelineno-31-25" href="#__codelineno-31-25"></a>    <span class="n">draw_heatmap</span><span class="p">(</span>
+</span><span id="__span-31-26"><a id="__codelineno-31-26" name="__codelineno-31-26" href="#__codelineno-31-26"></a>        <span class="n">dis_df</span><span class="p">,</span>
+</span><span id="__span-31-27"><a id="__codelineno-31-27" name="__codelineno-31-27" href="#__codelineno-31-27"></a>        <span class="n">sample_metadata</span><span class="o">=</span><span class="n">sample_metadata</span><span class="p">,</span>
+</span><span id="__span-31-28"><a id="__codelineno-31-28" name="__codelineno-31-28" href="#__codelineno-31-28"></a>        <span class="n">sample_name_column</span><span class="o">=</span><span class="s2">&quot;accession&quot;</span><span class="p">,</span>
+</span><span id="__span-31-29"><a id="__codelineno-31-29" name="__codelineno-31-29" href="#__codelineno-31-29"></a>        <span class="n">order_by</span><span class="o">=</span><span class="s2">&quot;genotype&quot;</span><span class="p">,</span>
+</span><span id="__span-31-30"><a id="__codelineno-31-30" name="__codelineno-31-30" href="#__codelineno-31-30"></a>        <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;mako_r&quot;</span><span class="p">,</span>
+</span><span id="__span-31-31"><a id="__codelineno-31-31" name="__codelineno-31-31" href="#__codelineno-31-31"></a>        <span class="n">digit_annot</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="c1"># Show two digits of the distance.</span>
+</span><span id="__span-31-32"><a id="__codelineno-31-32" name="__codelineno-31-32" href="#__codelineno-31-32"></a>        <span class="n">draw_group_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># Label according to genotype.</span>
+</span><span id="__span-31-33"><a id="__codelineno-31-33" name="__codelineno-31-33" href="#__codelineno-31-33"></a>        <span class="n">label_padding_x</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+</span><span id="__span-31-34"><a id="__codelineno-31-34" name="__codelineno-31-34" href="#__codelineno-31-34"></a>        <span class="n">label_padding_y</span> <span class="o">=</span> <span class="mf">0.05</span>
+</span><span id="__span-31-35"><a id="__codelineno-31-35" name="__codelineno-31-35" href="#__codelineno-31-35"></a>    <span class="p">)</span>
+</span><span id="__span-31-36"><a id="__codelineno-31-36" name="__codelineno-31-36" href="#__codelineno-31-36"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">rna_clique_out_dir</span> <span class="o">/</span> <span class="s2">&quot;distance_heatmap.svg&quot;</span><span class="p">)</span>
+</span><span id="__span-31-37"><a id="__codelineno-31-37" name="__codelineno-31-37" href="#__codelineno-31-37"></a>
+</span><span id="__span-31-38"><a id="__codelineno-31-38" name="__codelineno-31-38" href="#__codelineno-31-38"></a>
+</span><span id="__span-31-39"><a id="__codelineno-31-39" name="__codelineno-31-39" href="#__codelineno-31-39"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-31-40"><a id="__codelineno-31-40" name="__codelineno-31-40" href="#__codelineno-31-40"></a>    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></div>
+<p>To generate a heatmap using this code, you can run the Python script as follows
+from the RNA-clique repository root.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="w"> </span>python<span class="w"> </span>docs/tutorials/reads2tree/make_heatmap.py
+</span></code></pre></div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
