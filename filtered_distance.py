@@ -14,8 +14,8 @@ from typing import Optional
 from collections.abc import Iterable, Iterator
 
 from build_graph import component_subgraphs
-from multiset_key_dict import MultisetKeyDict, FrozenMultiset
-from similarity_computer import ComparisonSimilarityComputer, id_
+from multiset_key_dict import FrozenMultiset
+from similarity_computer import ComparisonSimilarityComputer
 
 from tqdm import tqdm
 
@@ -116,6 +116,9 @@ def restrict_to(
         )["index_x"]
     ]
 
+def restrict_multi(df2, df1, columns):
+    return functools.reduce(functools.partial(restrict_to, df2), columns, df1)
+
 def print_mat(m : np.ndarray):
     np.savetxt(sys.stdout, m, fmt="%s", delimiter=' ')
     
@@ -141,6 +144,14 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         graph:          The gene matches graph representing gene orthologies.
         comparison_dfs: An iterable mapping sample pairs to comparisons.
     """
+
+    sample_gene_columns = [
+        [a + b for b in ["sample", "gene"]]
+        for a in ["s", "q"]
+    ]
+
+    categorical_columns = ["qsample", "ssample", "sstrand"]
+    
     def __init__(
             self,
             graph: nx.Graph,
@@ -149,7 +160,7 @@ class SampleSimilarity(ComparisonSimilarityComputer):
     ):
         super().__init__(comparison_dfs, sample_count)
         self.graph = graph
-
+            
     @property
     def sample_count(self):
         """The number of samples in the similarity matrix."""
@@ -167,6 +178,7 @@ class SampleSimilarity(ComparisonSimilarityComputer):
     def valid(self):
         """A dataframe containing all genes found in ideal components."""
         return pd.DataFrame(
+
             (
                 n for comp in get_ideal_components(
                     self.graph,
@@ -187,17 +199,7 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         Returns:
             comp_df, restricted to genes appearing in ideal components.
         """
-        return functools.reduce(
-            functools.partial(
-                restrict_to,
-                self.valid
-            ),
-            [
-                [a + b for b in ["sample", "gene"]]
-                for a in ["s", "q"]
-            ],
-            comp_df
-        )
+        return restrict_multi(self.valid, comp_df, self.sample_gene_columns)
 
     def restricted_comparison_dfs(
             self
@@ -236,6 +238,8 @@ class SampleSimilarity(ComparisonSimilarityComputer):
             graph_fn : Path,
             comparison_fns : Iterable[Path],
             store_dfs : bool = True,
+            remove_seqids: bool = True,
+            convert_to_categorical: bool = True,
             *args,
             **kwargs
     ):
@@ -267,9 +271,7 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         Returns:
             A SampleSimilarity using the pickled gene matches graph and tables.
         """
-        return super().from_filenames(*args, **kwargs)
-
-    
+        return super().from_filenames(*args, **kwargs)    
         
 def main():
     args = handle_arguments()

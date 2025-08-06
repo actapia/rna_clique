@@ -111,6 +111,9 @@ def find_homologs_and_save(
     table = finder.get_match_table(transcripts1, transcripts2)
     table["ssample"] = str(transcripts1)
     table["qsample"] = str(transcripts2)
+    table[["ssample", "qsample"]] = table[["ssample", "qsample"]].astype(
+        "category"
+    )
     write_table(table, out_path)
     return True
 

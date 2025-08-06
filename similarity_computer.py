@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import functools
 
 from functools import cached_property
 from collections.abc import Iterable, Iterator
@@ -29,6 +30,7 @@ class ComparisonSimilarityComputer:
     Attributes:
         comparison_dfs: An iterable mapping sample pairs to comparisons.
     """
+    categorical_columns = []
     def __init__(
             self,
             comparison_dfs: Iterable[tuple[frozenset[str, str], pd.DataFrame]],
@@ -54,13 +56,43 @@ class ComparisonSimilarityComputer:
             qsample = df["qsample"][0]
             ssample = df["ssample"][0]
             yield frozenset((qsample, ssample)), df
+
+    @classmethod
+    def _read_table(
+            cls,
+            table_path: Path,
+            remove_seqids: bool = True,
+            convert_to_categorical: bool = True,
+    ):
+        table = read_table(table_path)
+        if remove_seqids:
+            for col in ["q", "s"]:
+                try:
+                    table = table.drop(col + "seqid", axis=1)
+                except KeyError:
+                    pass
+        if convert_to_categorical:
+            cols = [c for c in cls.categorical_columns if c in table.index]
+            table[
+                cols
+            ] = table[
+                cols
+            ].astype("category")
+        return table
             
     @classmethod
     def _load_tables(
             cls,
-            table_paths: Iterable[Path]
+            table_paths: Iterable[Path],
+            *args,
+            **kwargs
     ) -> Iterator[tuple[frozenset[str, str], pd.DataFrame]]:
-        return cls.mapping_from_dfs(map(read_table, table_paths))
+        return cls.mapping_from_dfs(
+            map(
+                functools.partial(cls._read_table, *args, **kwargs),
+                table_paths
+            )
+        )
 
     @property
     def sample_count(self):
