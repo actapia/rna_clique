@@ -45,7 +45,7 @@ def write_table(df: pd.DataFrame, path: Path):
     if path.suffix == ".pkl":
         df.to_pickle(path)
     elif path.suffix == ".h5":
-        df.to_hdf(path, key="gene_matches")
+        df.to_hdf(path, key="gene_matches", format="table")
     else:
         raise ValueError(
             f"Could not determine file type for extension {path.suffix}."
