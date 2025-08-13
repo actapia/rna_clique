@@ -227,8 +227,8 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         for (qsample, ssample), comp_df in self.comparison_dfs:
             restricted = self.restricted(comp_df)
             dist = Fraction(
-                restricted["nident"].sum(),
-                restricted["length"].sum() - restricted["gaps"].sum()
+                int(restricted["nident"].sum()),
+                int(restricted["length"].sum() - restricted["gaps"].sum())
             )
             yield frozenset((qsample, ssample)), dist
 

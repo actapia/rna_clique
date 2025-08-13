@@ -1,9 +1,11 @@
 import argparse
 import re
+import math
 import multiprocessing
 import functools
 import itertools
-from typing import Optional, Any
+from more_itertools import consume
+from typing import Optional, Any, Callable
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 from find_homologs import HomologFinder, eprint
@@ -13,6 +15,7 @@ import os
 from tqdm import tqdm
 
 from gene_matches_tables import write_table
+from transcripts import TranscriptID
 
 default_sample_regex = re.compile(os.environ.get("SAMPLE_RE", "^(.*?)_.*$"))
 
@@ -115,13 +118,13 @@ def find_homologs_and_save(
         "category"
     )
     write_table(table, out_path)
-    return True
+    return table
 
 def make_output_path(
         dir_ : Path,
         t1 : Path,
         t2 : Path,
-        regex : Optional[re.Pattern] = None,
+        path_to_sample: Optional[Callable] = None,
         extension : str = "h5"
 ) -> Path:
     """Return the output path for the comparison between the two files.
@@ -130,17 +133,17 @@ def make_output_path(
         dir_:            Path to output directory.
         t1:              Path to (top n) transcripts for first sample.
         t2:              Path to (top n) transcripts for second sample.
-        regex:           Regular expression to use to parse t1 and t2 filenames.
+        path_to_sample:  Function mapping paths to sample names.
         extension (str): File extension to use for output file.
 
     Returns:
         The constructed path for the comparison between t1 and t2.
     """
-    t1 = t1.stem
-    t2 = t2.stem
-    if regex:
-        t1 = regex.match(t1).group(1)
-        t2 = regex.match(t2).group(1)
+    # t1 = t1.stem
+    # t2 = t2.stem
+    if path_to_sample:
+        t1 = path_to_sample(t1)
+        t2 = path_to_sample(t2)
     return dir_ / ("{}--{}.{}".format(t1, t2, extension))
 
 def make_one_db(db_loc : Path, seq_file_path : Path) -> BlastDBCache:
@@ -184,41 +187,54 @@ def make_all_dbs(
     cache._cache = cdict
     return cache
 
-def main():
-    args = handle_arguments()
-    args.output_dir.mkdir(exist_ok=True)
+def find_all_pairs(
+        inputs,
+        output_dir,
+        cache_dir,
+        path_to_sample,
+        hf_args=[],
+        jobs=multiprocessing.cpu_count()-1,
+):
+    output_dir.mkdir(exist_ok=True)
     cache = None
-    if args.db_cache_dir:
-        args.db_cache_dir.mkdir(exist_ok=True)
+    if cache_dir:
+        cache_dir.mkdir(exist_ok=True)
         eprint("Building BLAST DBs.")
-        cache = make_all_dbs(args.db_cache_dir, args.inputs, jobs=args.jobs)
+        cache = make_all_dbs(cache_dir, inputs, jobs=jobs)
     fh = functools.partial(
         find_homologs_and_save,
-        hf_args=[
-            args.gene_regex,
-            args.top_n,
-            args.evalue,
-            args.keep_all
-        ],
-        hf_kwargs={
+        hf_args=hf_args,
+        hf_kwargs = {
             "db_cache": cache
         }
     )
     mop = functools.partial(
         make_output_path,
-        regex=args.sample_regex,
+        path_to_sample=path_to_sample,
         extension="h5"
     )
-    combos = list(itertools.combinations(args.inputs, 2))
-    res = list(
-        Parallel(n_jobs=args.jobs)(
-            delayed(
-                fh
-            )(*p, mop(args.output_dir, *p))
-            for p in tqdm(combos)
-        )
-    )
-    assert all(res)
+    return Parallel(n_jobs=jobs, return_as="generator_unordered")(
+        delayed(
+            fh
+        )(*p, mop(output_dir, *p))
+        for p in itertools.combinations(inputs, 2)
+    ), math.comb(len(inputs), 2)
 
+def main():
+    args = handle_arguments()
+    gen, gen_len = find_all_pairs(
+        args.inputs,
+        args.output_dir,
+        args.db_cache_dir,
+        lambda x: args.sample_regex.match(x.stem).group(1),
+        hf_args=[
+            TranscriptID.parser_from_re(args.gene_regex),
+            args.top_n,
+            args.evalue,
+            args.keep_all
+        ]
+    )
+    consume(tqdm(gen, total=gen_len))
+    
 if __name__ == "__main__":
     main()

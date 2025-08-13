@@ -6,7 +6,7 @@ import functools
 import Bio.Align
 import networkx as nx
 from collections.abc import Iterable
-from typing import Optional
+from typing import Optional, Callable
 from pathlib import Path
 from collections import defaultdict, deque, namedtuple
 from make_subset import multi_glob
@@ -19,10 +19,11 @@ from filtered_distance import (
 )
 from export_orthologs import build_strand_graph, get_sample_gene_to_component
 from path_to_sample import path_to_sample
+from transcripts import default_gene_re, TranscriptID
 
 from tqdm import tqdm
 
-default_gene_re = re.compile("^.*g([0-9]+)_i([0-9]+)")
+#default_gene_re = re.compile("^.*g([0-9]+)_i([0-9]+)")
 
 def handle_arguments():
     parser = argparse.ArgumentParser()
@@ -122,7 +123,10 @@ def search(
         query: Path,
         debug: bool = False,
         sample_count: Optional[int] = None,
-        gene_regex: re.Pattern = default_gene_re,
+        #gene_regex: re.Pattern = default_gene_re,
+        parse_transcript_id: Callable[
+            [str], TranscriptID
+        ] = TranscriptID.parser_from_re(default_gene_re),
         clean: bool = False,
         merge_sams: bool = False,
         jobs: int = 1,
@@ -158,7 +162,7 @@ def search(
         for full_seq_id in export_index:
             seq_id, sample = full_seq_id.split(":")
             node = (sample_to_path[sample],) + \
-                tuple(map(int, gene_regex.search(seq_id).groups()))
+                parse_transcript_id(full_seq_id)[1:]
             node_to_seq_id[node] = full_seq_id
         ideal = list(get_ideal_components(sim.graph, sim.sample_count))
         sample_gene_to_component = get_sample_gene_to_component(ideal)
@@ -166,7 +170,7 @@ def search(
             strand_graph, node_to_ccc = build_strand_graph(
                 sim,
                 sample_gene_to_component,
-                gene_regex,
+                parse_transcript_id,
                 jobs=jobs
             )
         else:
@@ -175,7 +179,7 @@ def search(
         for seq_id in tab_search.hits["sseqid"].drop_duplicates():
             seq_id, sample = seq_id.split(":")
             node = (sample_to_path[sample],) + \
-                tuple(map(int, gene_regex.search(seq_id).groups()))
+                parse_transcript_id(seq_id)[1:]
             cccs[node_to_ccc[node]].append(node)
         print("Going over component connected components.")
         subjects = set()
@@ -261,7 +265,7 @@ def main():
         query=args.query,
         debug=args.debug,
         sample_count=args.samples,
-        gene_regex=args.gene_regex,
+        gene_regex=TranscriptID.parse_from_re(args.gene_regex),
         clean=args.clean,
         merge_sams=args.merge_sams,
         jobs=args.jobs

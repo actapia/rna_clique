@@ -1,6 +1,7 @@
 import argparse
 import sys
 import re
+import numbers
 import functools
 from simple_blast.blasting import TabularBlastnSearch
 import numpy as np
@@ -11,6 +12,8 @@ from pathlib import Path
 import pandas as pd
 
 from typing import Callable, Optional
+
+from transcripts import TranscriptID
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -71,6 +74,19 @@ def parse_seq_id(regex: re.compile, s: pd.Series) -> pd.DataFrame:
     """Parse a seq_id column to extract the gene and isoform IDs."""
     return s.str.extract(regex).astype(np.int32)
 
+def shrink_df(df: pd.DataFrame):
+    df = df.copy()
+    for col in df.columns:
+        if issubclass(df[col].dtype.type, numbers.Integral):
+            df[col] = pd.to_numeric(
+                pd.to_numeric(
+                    df[col],
+                    downcast="integer"
+                ),
+                downcast="unsigned"
+            )
+    return df
+
 def gene_matches(
         parse: Callable[[pd.Series], pd.DataFrame],
         path1: str,
@@ -78,6 +94,7 @@ def gene_matches(
         evalue: float,
         n: int = 1,
         keep_seqids: bool = False,
+        shrink: bool = True,
         **blast_kwargs
 ) -> pd.DataFrame:
     """Find the isotigs in file 2 that best match each gene in file 1.
@@ -105,6 +122,7 @@ def gene_matches(
         evalue (float):     Expect value cutoff for BLAST search.
         n (int):            Number of top matches to select for each query gene.
         keep_seqids (bool): Whether to keep the raw seqid columns.
+        shrink (bool):      Attempt to reduce memory usage.
 
     Returns:
         A dataframe of BLAST hits for subject isotigs best matching query genes.
@@ -117,7 +135,10 @@ def gene_matches(
         hits[[t + "gene", t + "iso"]] = parse(search.hits[t + "seqid"])
     if not keep_seqids:
         hits = search.hits.drop(["qseqid", "sseqid"], axis=1)
-    return highest_bitscores(hits, n, keep="all")
+    res = highest_bitscores(hits, n, keep="all")
+    if shrink:
+        res = shrink_df(res)
+    return res
 
 eprint = functools.partial(print, file=sys.stderr)
 
@@ -161,7 +182,7 @@ class HomologFinder:
     
     def __init__(
             self,
-            regex: str,
+            parse_transcript_id: Callable[[str], TranscriptID],
             top_n: int,
             evalue: float,
             keep_all: bool,
@@ -171,17 +192,19 @@ class HomologFinder:
         """Constructs a HomomlogFinder that uses the provided parameters.
 
         Parameters:
-            regex (str):     A string representing a regex for parsing seq IDs.
-            top_n (int):     Top hits to select for each query gene (big N).
-            evalue (float):  e-value cutoff to use for BLAST searches
-            keep_all (bool): Whether to keep all matches in the case of ties.
-            debug (bool):    Whether debug behavior is enabled.
+            parse_transcript_id: Function to parse transcript IDs.
+            top_n (int):         Top hits to select for each query gene (big N).
+            evalue (float):      e-value cutoff to use for BLAST searches
+            keep_all (bool):     Keep all matches in the case of ties.
+            debug (bool):        Whether debug behavior is enabled.
         """            
         # self.regex = regex
         # self.top_n = top_n
         # self.evalue = evalue
         # Partially apply some functions to make the code below less repetitive.
-        parse = functools.partial(parse_seq_id, regex)
+        parse = lambda x: pd.DataFrame(
+            x.apply(lambda y: parse_transcript_id(y)[1:]).tolist()
+        )
         # gm is a function that obtains unidirectional best matches for a pair
         # of samples using the given parameters.
         self.gm = functools.partial(
@@ -303,7 +326,7 @@ class HomologFinder:
 def main():
     args = parse_arguments()
     match_finder = HomologFinder(
-        args.regex,
+        TranscriptID.parse_from_re(args.regex),
         args.top_n,
         args.evalue,
         args.keep_all

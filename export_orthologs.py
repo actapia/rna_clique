@@ -15,6 +15,7 @@ from contextlib import ExitStack
 from simple_blast import TabularBlastnSearch
 from build_graph import component_subgraphs
 from strand_sat import sat_assign_strands
+from transcripts import TranscriptID
 
 import networkx as nx
 import numpy as np
@@ -151,11 +152,9 @@ def renamed_seqs(
         # )
         yield t
 
-def seq_tuples(sample, gene_regex):
+def seq_tuples(sample, parse_transcript_id):
     for seq in Bio.SeqIO.parse(sample, "fasta"):
-        match_ = gene_regex.search(seq.id)
-        gene = int(match_.group(1))
-        isoform = int(match_.group(2))
+        _, gene, isoform = parse_transcript_id(seq.id)
         yield (sample, gene, isoform, seq)
 
 def concat_names(rename, order="after", sep=":"):
@@ -210,15 +209,14 @@ def parallel_get_strands(gene_to_isoforms, index, jobs=1):
         if len(isoforms) > 1
     )
 
-def build_strand_graph(sim, component_sample_genes, gene_regex, jobs=1):
+def build_strand_graph(sim, component_sample_genes, parse_transcript_id, jobs=1):
     strand_graph = nx.Graph()
     # Add edges for isoform-isoform strands.
     for sample in sim.samples:
         index = Bio.SeqIO.index(sample, "fasta")
         gene_to_isoforms = defaultdict(list)
         for s in index:
-            parsed = gene_regex.search(s)
-            gene, isoform = map(int, parsed.groups())
+            gene, isoform = parse_transcript_id(s)
             if (sample, gene) in component_sample_genes:
                 gene_to_isoforms[gene].append((isoform, s))
         strand_graph.add_nodes_from(
@@ -301,7 +299,7 @@ class OrthologExporter:
     def __init__(
             self,
             sim,
-            gene_regex=default_gene_re,
+            parse_transcript_id,
             non_contributing=True,
             collapse=False,
             consistent_strands=True,
@@ -313,7 +311,7 @@ class OrthologExporter:
         self.ideal = list(get_ideal_components(sim.graph, sim.sample_count))
         self.sample_gene_to_component = get_sample_gene_to_component(self.ideal)
         #print(self.sample_gene_to_component)
-        self.gene_regex = gene_regex
+        self.parse_transcript_id = parse_transcript_id
         self.ideal_ids = set(range(len(self.ideal)))
         if not non_contributing:
             print("Filtering non-contributing.")
@@ -352,7 +350,7 @@ class OrthologExporter:
                 build_strand_graph(
                     sim,
                     self.sample_gene_to_component,
-                    self.gene_regex,
+                    self.parse_transcript_id,
                     jobs=jobs
                 )
             valid_genes = {tuple(x) for x in sim.valid.itertuples(index=False)}
@@ -454,7 +452,10 @@ class OrthologExporter:
                         sorted(
                             (
                                 self._orient(t)
-                                for t in seq_tuples(sample, self.gene_regex)
+                                for t in seq_tuples(
+                                    sample,
+                                    self.parse_transcript_id
+                                )
                                 if self.sample_gene_to_component.get(t[:-1])
                                 in self.ideal_ids
                             ),
@@ -517,7 +518,10 @@ class OrthologExporter:
                 for _, gene, isoform, seq in renamed_seqs(
                         rename,
                         (
-                            t for t in seq_tuples(sample, self.gene_regex)
+                            t for t in seq_tuples(
+                                sample,
+                                self.parse_transcript_id
+                            )
                             if t[:-2] in self.sample_gene_to_component
                         )
                 ):
@@ -527,9 +531,7 @@ class OrthologExporter:
                             self.sample_gene_to_component[
                                 (
                                     sample,
-                                    int(
-                                        self.gene_regex.search(seq.id).group(1)
-                                    )
+                                    self.parse_transcript_id(seq.id).gene
                                 )
                             ]
                         ],
@@ -553,7 +555,7 @@ def main():
     )
     exporter = OrthologExporter(
         sim,
-        args.gene_regex,
+        TranscriptID.parser_from_re(args.gene_regex),
         not args.remove_non_contributing,
         debug=args.debug,
         consistent_strands=not args.no_fix_strand,

@@ -1,5 +1,6 @@
 import argparse
 import json
+import re
 import search_ideal_components
 import export_orthologs
 from make_subset import multi_glob
@@ -7,6 +8,8 @@ from filtered_distance import SampleSimilarity
 
 from collections import defaultdict
 from tqdm import tqdm
+
+from transcripts import default_gene_re, TranscriptID
 
 from pathlib import Path
 
@@ -17,6 +20,13 @@ def handle_arguments():
     parser.add_argument("-j", "--jobs", type=int, default=1)
     parser.add_argument("-X", "--export-only", action="store_true")
     parser.add_argument("-Q", "--queries", nargs="+", type=Path, required=True)
+    parser.add_argument(
+        "--gene-regex",
+        "-r",
+        type=re.compile,
+        help="Python regex for parsing sequence IDs",
+        default=default_gene_re
+    )
     return parser.parse_args()
 
 def select_out_dir_names(analyses):
@@ -52,7 +62,6 @@ def select_out_dir_names(analyses):
 
 def main():
     args = handle_arguments()
-
     out_dir_names = select_out_dir_names(args.analyses)
     for analysis in tqdm(args.analyses):
         out_dir = args.out_root / out_dir_names[analysis]
@@ -100,6 +109,9 @@ def main():
                     sample_count=None,
                     clean=True,
                     merge_sams=True,
+                    parse_transcript_ids=TranscriptID.parse_from_re(
+                        args.gene_regex
+                    ),
                     jobs=args.jobs,
                     sim=sim,
                     strand_graph_out=(
@@ -111,10 +123,6 @@ def main():
                     from IPython import embed; embed()
                 with open(search_dir / "stats", "w") as stats_file:
                     json.dump(stats._asdict(), stats_file)
-                    
-                    
-
-
 
 if __name__ == "__main__":
     main()

@@ -31,7 +31,7 @@ transcripts_fn="transcripts.fasta"
 top_n=10000
 top_N=1
 pattern="^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)"
-gene_regex="^.*g([0-9]+)_i([0-9]+)"
+gene_regex="$pattern"
 # SAMPLE_RE may also be provided as an environment variable.
 if [[ -v SAMPLE_RE ]]; then
     sample_regex="$SAMPLE_RE"

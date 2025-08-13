@@ -12,7 +12,7 @@ from collections.abc import Collection
 
 from typing import Iterator, Callable
 
-default_gene_re = re.compile(r"^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)")
+from transcripts import default_gene_re, TranscriptID
 
 def handle_arguments():
     parser = argparse.ArgumentParser()
@@ -31,16 +31,16 @@ class TopGeneSelector:
             self,
             transcripts: Callable[[], Iterator[Bio.SeqRecord]],
             top: int,
-            gene_re: re.Pattern
+            parse_transcript_id: Callable[[str], TranscriptID]
     ):
         self.transcripts = transcripts
         self.top = top
-        self.gene_re = gene_re
+        self.parse_transcript_id = parse_transcript_id
 
     def get_top_genes(self):
         highest_coverage = defaultdict(float)
         for t in self.transcripts():
-            cov, gene, iso = self.gene_re.match(t.id).groups()
+            cov, gene, iso = self.parse_transcript_id(t.id)
             gene = int(gene)
             highest_coverage[gene] = max(highest_coverage[gene], float(cov))
         for _, k in heapq.nlargest(
@@ -52,7 +52,7 @@ class TopGeneSelector:
     def get_top_gene_seqs(self):
         top_genes = set(self.get_top_genes())
         for t in self.transcripts():
-            cov, gene, iso = self.gene_re.match(t.id).groups()
+            cov, gene, iso = self.parse_transcript_id(t.id)
             if int(gene) in top_genes:
                 yield t
 
@@ -66,17 +66,18 @@ class TopGeneSelector:
         
 def main():
     args = handle_arguments()
+    parse_transcript_id = TranscriptID.parser_from_re(args.pattern)
     if args.transcripts:
         top = TopGeneSelector.from_path(
             args.transcripts,
             args.top,
-            args.pattern
+            parse_transcript_id
         )
     else:
         top = TopGeneSelector.from_sequences(
             list(Bio.SeqIO.parse(sys.stdin, "fasta")),
             args.top,
-            args.pattern
+            parse_transcript_id,
         )
     Bio.SeqIO.write(top.get_top_gene_seqs(), sys.stdout, "fasta")
 
