@@ -25,6 +25,8 @@ jobs:
           python-version: 3.x
       - name: Install mkdocs and friends
         run: pip install mkdocs-material mike
+      - name: Set default version
+        run: mike set-default --allow-undefined latest
       - name: Deploy development
         run: mike deploy --push dev
         if: ${{ github.event_name == 'push' }}

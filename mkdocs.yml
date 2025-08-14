@@ -10,14 +10,8 @@ nav:
         - tutorials/reads2tree/README.md
 plugins:
   - mike:
-      # These fields are all optional; the defaults are as below...
-      alias_type: symlink
-      redirect_template: null
-      deploy_prefix: ''
       canonical_version: 'latest'
-      version_selector: true
-      css_dir: css
-      javascript_dir: js
+  - search
 markdown_extensions:
   - admonition
   - pymdownx.highlight:
