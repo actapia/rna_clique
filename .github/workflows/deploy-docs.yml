@@ -5,7 +5,7 @@ on:
     branches: ["main", "mkdocs"]
   release:
     types: [published]
-
+    
 jobs:
   deploy-mkdocs:
     name: Deploy mkdocs
@@ -24,7 +24,7 @@ jobs:
       - name: Install mkdocs and friends
         run: pip install mkdocs-material mike
       - name: Deploy development
-        run: mike deploy dev
+        run: mike deploy --push dev
         if: ${{ github.event_name == 'push' }}
       - name: Deploy release
         run: mike deploy --push -u ${{github.event.release.tag_name}} latest
