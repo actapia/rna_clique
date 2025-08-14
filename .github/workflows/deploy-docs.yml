@@ -28,4 +28,4 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - name: Deploy release
         run: mike deploy -u ${{github.event.release.tag_name}} latest
-        if: ${{ github.event_name == "release" }}
+        if: ${{ github.event_name == 'release' }}
