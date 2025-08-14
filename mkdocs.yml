@@ -11,6 +11,7 @@ nav:
 plugins:
   - mike:
       canonical_version: 'latest'
+      version_selector: true
   - search
 markdown_extensions:
   - admonition
