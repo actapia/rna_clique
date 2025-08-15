@@ -87,14 +87,15 @@ When the installation has finished, you will need to restart your shell.
 
 ## Downloading RNA-clique
 
-For now, you can download RNA-clique by cloning its GitHub
-repository. (Alternatively, you can extract the release zip or tarball, but be
-mindful that the repository root will have a different name than the one
-presented here.)
+You can download RNA-clique by cloning its GitHub repository. (Alternatively,
+you can extract the release zip or tarball, but be mindful that the repository
+root will have a different name than the one presented here.)
 
+<!--{{clone_command(git_branch()) | code_fence("bash") | comment_surround}}{{empty("-->
 ```bash
 git clone --recurse-submodules https://github.com/actapia/rna_clique
 ```
+<!--")}}-->
 
 ## Installing the rna-clique conda environment
 

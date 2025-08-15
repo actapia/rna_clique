@@ -30,9 +30,11 @@ You can download RNA-clique by cloning its GitHub repository. (Alternatively,
 you can extract the release zip or tarball, but be mindful that the repository
 root will have a different name than the one presented here.)
 
-```zsh
+<!--{{clone_command(git_branch()) | code_fence("zsh") | comment_surround}}{{empty("-->
+```bash
 git clone --recurse-submodules https://github.com/actapia/rna_clique
 ```
+<!--")}}-->
 
 ## Installing Homebrew
 

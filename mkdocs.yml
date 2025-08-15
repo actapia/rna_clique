@@ -13,6 +13,8 @@ plugins:
       canonical_version: 'latest'
       version_selector: true
   - search
+  - macros:
+     module_name: mkdocs_functions
 markdown_extensions:
   - admonition
   - pymdownx.highlight:
