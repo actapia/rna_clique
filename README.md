@@ -54,8 +54,12 @@ are considered untested.
 
 ### Installation guides
 
-* [Ubuntu](https://actapia.github.io/rna_clique/installation_guides/ubuntu)
-* [macOS](https://actapia.github.io/rna_clique/installation_guides/macos)
+<!--{{doc_link("installation_guides/ubuntu", "Ubuntu", False) | comment_surround}}{{empty("-->
+* [Ubuntu](https://actapia.github.io/rna_clique/dev/installation_guides/ubuntu)
+<!--")}}-->
+<!--{{doc_link("installation_guides/macos", "macOS", False) | comment_surround}}{{empty("-->
+* [macOS](https://actapia.github.io/rna_clique/dev/installation_guides/macos)
+<!--")}}-->
 
 ### Testing the installation
 
@@ -245,5 +249,9 @@ A machine-readable copyright file in Debian format may also be found at
 
 ## Additional documentation
 
-* [Command-line usage guide](https://actapia.github.io/rna_clique/usage)
-* [Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](https://actapia.github.io/rna_clique/tutorials/reads2tree)
+<!--{{doc_link("usage", "Command-line usage guide", False) | comment_surround}}{{empty("-->
+* [Command-line usage guide](https://actapia.github.io/rna_clique/dev/usage)
+<!--")}}-->
+<!--{{doc_link("tutorials/reads2tree", "Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique", False) | comment_surround}}{{empty("-->
+* [Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](https://actapia.github.io/rna_clique/dev/tutorials/reads2tree)
+<!--")}}-->
