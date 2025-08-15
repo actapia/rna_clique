@@ -3,10 +3,11 @@ from mkdocs_macros import fix_url
 
 def define_env(env):
     @env.macro
-    def doc_link(link, name=None):
+    def doc_link(link, name=None, fix=True):
         if not name:
             name = link
-        link = fix_url(link)
+        if fix:
+            link = fix_url(link)
         return f"[{name}]({link})"
 
     @env.filter
