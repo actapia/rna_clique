@@ -1,31 +1,5 @@
 #!/usr/bin/env zsh
-# Based on sudo start/stop from Mark Haferkamp on Stack Overflow.
-# https://stackoverflow.com/a/30547074
-startsudo() {
-    if sudo -S -v 2>/dev/null; then
-	( while true; do sudo -v; sleep 50; done; ) &
-	SUDO_PID="$!"
-	echo "SUDO maintained at $SUDO_PID"
-    else
-	error_echo "Could not obtain sudo privileges.
-
-Aborting installation."
-		exit 1
-    fi
-    trap stopsudo SIGINT SIGTERM
-    zshexit() { stopsudo }
-}
-
-stopsudo() {
-    # We may not always need to kill the sudo process, but I do that here
-    # just in case.
-    kill "$SUDO_PID" > /dev/null 2>&1
-    trap - SIGINT SIGTERM
-    sudo -k
-}
-
 set -x
-
 branch="main"
 if [ "$#" -gt 2 ]; then
     >&2 echo "This script accepts at most one argument."
@@ -33,21 +7,6 @@ if [ "$#" -gt 2 ]; then
 fi
 if [ "$#" -eq 1 ]; then
     branch="$1"
-fi
-if [ -z "$PASSWORDLESS" ]; then
-    PASSWORDLESS=0
-fi
-if which sudo; then
-    if [ "$PASSWORDLESS" -ne 1 ] && ! sudo -n -v; then
-	read -rs "password?Password: "
-	while ! echo "$password" | sudo -S -v 2>/dev/null; do
-	    read -rs "password?Password: "
-	done
-    fi
-else
-    function sudo {
-	"$@"
-    }
 fi
 
 # Install Command Line Tools.
@@ -82,12 +41,7 @@ if [ "$PASSWORDLESS" -ne 1 ] && which sudo && ! sudo -n -v; then
     echo "$password" | sudo -S -v
 fi
 CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install bash blast cpanminus
-if [ "$PASSWORDLESS" -ne 1 ] && which sudo; then
-    echo "$password" | startsudo
-fi
-sudo cpanm Bio::SeqIO
-sudo cpanm Array::Heap
+brew install bash blast
 curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-$(uname -m).sh
 bash Miniconda3-latest-MacOSX-$(uname -m).sh -b -f
 "$HOME/miniconda3/bin/conda" init zsh

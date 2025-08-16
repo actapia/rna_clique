@@ -9,10 +9,10 @@ containing pairwise distances ranging from 0 to 1.
 
 ## Installation
 
-This software is written in Python, Perl, and Bash. The software additionally
-requires NCBI BLAST+ and several Python and Perl libraries. The section below
-lists the software requirements, and [guides](#installation-guides) are provided
-for installation of specific systems.
+This software is written in Python. The software additionally requires NCBI
+BLAST+ and several Python libraries. The section below lists the software
+requirements, and [guides](#installation-guides) are provided for installation
+of specific systems.
 
 ### Requirements
 
@@ -23,8 +23,6 @@ are considered untested.
 #### Main software
 
 * Python 3.12
-* Perl 5.40.1
-* Bash 5.2.37
 * ncbi-blast 2.16.0+
 * Python libraries
   * tqdm 4.66.5
@@ -33,8 +31,6 @@ are considered untested.
   * joblib 1.4.2
   * networkx 3.3
   * [simple-blast](https://github.com/actapia/simple_blast) 0.7.0
-* Perl libraries
-  * Bio::SeqIO 1.7.8
     
 #### Phylogenetics and Visualization
 
@@ -51,6 +47,9 @@ are considered untested.
   * PyYAML 6.0.2
   * SciPy 1.14.1
   
+#### Testing installation
+
+* Bash 5.2.32
 
 ### Installation guides
 
@@ -93,23 +92,27 @@ submit a bug report on GitHub at https://github.com/actapia/rna_clique/issues .
 
 ## Command-line usage
 
-Running RNA-clique broadly involves two phases. In the first phase, the
-transcriptomes are aligned, and the gene matches graph is built. In the second
-phase, the gene matches graph is used to filter the BLAST alignments, and the
-pairwise distances are calculated using the filtered alignment statistics.
+Running RNA-clique broadly involves two phases. In the first phase, performed by
+`filtering_step.py`, the transcriptomes are aligned, and the gene matches graph
+is built. In the second phase, performed by `filtered_distances.py`, the gene
+matches graph is used to filter the BLAST alignments, and the pairwise distances
+are calculated using the filtered alignment statistics.
 
-Although there are only two phases, each phase may be performed by multiple
-scripts. To simplify usage of this program, we have provided a script,
-`typical_filtering_step.sh` that may be used to easily perform the first phase
-with typical parameter settings.
+For finer-grained control, you can use individual scripts described in the
+<!--{{doc_link("usage", "Command line usage") | comment_surround}}{{empty("-->
+[Command line usage](https://actapia.github.io/rna_clique/dev/usage)
+<!--")}}-->
+guide, or you can [use RNA-clique in your own
+code](#using-rna-clique-in-python-code).
+
 
 ### Phase 1: Building the gene matches graph
 
-The simplest usage of `typical_filtering_step.sh` provides only an output
-directory, a value for the number of top genes to select (`n`), and the
-directories containing the transcriptomes to be analyzed.
+The simplest usage of `filtering_step.py` provides only an output directory, a
+value for the number of top genes to select (`n`), and the directories
+containing the transcriptomes to be analyzed.
 
-The script assumes that the transcriptomes are stored in FASTA files with the
+The script assumes that the transcriptomes are stored in FASTA files with 
 *identical names* in different directories. By default, RNA-clique assumes the
 files are all named `transcripts.fasta`, since this is the default output name
 for the SPAdes assembler, but this behavior may be overridden by a command-line
@@ -124,7 +127,7 @@ directories in which they are contained, so every transcriptome must be located
 in a directory with a unique name!**
 
 ```bash
-bash typical_filtering_step.sh -n TOP_GENES -o OUTPUT_DIR DIR1 DIR2 ...
+python filtering_step.py -n TOP_GENES -O OUTPUT_DIR DIR1 DIR2 ...
 ```
 
 In the command above, `TOP_GENES` must be replaced by the number of top genes to
@@ -155,7 +158,7 @@ python filtered_distance.py -g GRAPH -c COMPARISONS_DIR/*.h5
 In the above command, GRAPH should be the path to the `graph.pkl` created in the
 first phase, and COMPARISONS_DIR should be the directory that contains the BLAST
 result HDF5 files. (This will be the `od2` subdirectory of the output directory
-from Phase 1 if you used the `typical_filtering_step.sh` script.)
+from Phase 1 if you used the `filtering_step.py` script.)
 
 The script outputs a genetic similarity matrix to standard output by default. To
 get a distance matrix, you can provide the `-o dis` option to
@@ -185,12 +188,64 @@ directly in your code instead](#using-rna-clique-in-python-code).
 
 ## Using RNA-clique in Python code
 
-Since parts of Phase 1 are implemented in Bash and Perl, there is currently no
-official way to perform Phase 1 from custom Python code, but since Phase 2 is
-written exclusively in Python, we describe an official way of performing that
-phase in custom code here.
+RNA-clique now provides a Python API for both phases.
 
-The `filtered_distance.py` is a straightforward command-line interface to
+### Phase 1
+
+The `filtering_step.py` script uses three main Python functions&mdash;one for
+each of the steps of the first phase. First, the sequences for the top genes for
+each sample are selected and saved using `select_top_and_save`, which, in turn,
+uses the `TopGeneSelector` class's `get_top_gene_seqs` function to get the top
+$n$ genes by $k$-mer coverage and saves them using
+`Bio.SeqIO`. `select_top_and_save` accepts an output directory, the name of the
+`transcripts` file, the path to the directory containing the `transcripts` file,
+and any additional arguments to use in the construction of `TopGeneSelector`
+objects. It returns the path of the output file containing the top $n$ genes and
+the name of the directory containing the `transcripts` file.
+
+A `TopnGeneSelector` object is ordinarily constructed with a function to get an
+iterator of transcript IDs (as `Bio.SeqRecord` objects), the number of top genes
+to select, and a function to parse transcript IDs (as strings) into
+`TranscriptID` objects. The first argument must be a function (or any any other
+`Callable`) because the `TopnGeneSelector` may need to iterate over the sequence
+IDs twice&mdash;once to determine the IDs of the top $n$ genes, and once to get
+their sequences. Since providing such a function is somewhat inconvenient, a
+`TopnGeneSelector` can be instead constructed using one of two
+`classmethod`s. The `TopGeneSelector.from_path` `classmethod` constructs a
+`TopGeneSelector` that gets its sequences from a FASTA file; the caller
+specifies the path to that file. The `TopGeneSelector.from_sequences`
+`classmethod` constructs a `TopGeneSelector` from a Python `Collection` (e.g., a
+`list`) of `Bio.SeqRecord` objects.
+
+Regardless of how the `TopnGeneSelector` is constructed, a generator of the
+`Bio.SeqRecord` objects for the top $n$ genes is returned by the
+`get_top_gene_seqs` method.
+
+After selecting the top $n$ genes and saving them to files, `filtering_step.py`
+gets the gene matches tables for the top $n$ genes of the input files using the
+`find_all_pairs` function of `find_all_pairs.py`. `find_all_pairs` accepts a
+collection of paths to the FASTA files containing the top $n$ transcripts for
+each sample, a path to the output directory in which to save the gene matches
+tables, a path to the directory in which to store the [BLAST database
+caches](https://github.com/actapia/simple_blast/blob/8c2e86a833695e0676888ffd36dc31c853038adc/README.md#db-caches),
+a function mapping file paths to samples (which could be created using the
+output of `select_top_and_save`, for example), an optional list of arguments to
+be passed to the `HomologFinder` class, and, optionally, the number of parallel
+jobs to use. (If no value is provided for the last argument, it defaults to one
+less than the number of threads available on the system.) In turn,
+`find_all_pairs` makes BLAST databases for every input FASTA file (using the
+`make_all_dbs` function) and calls `find_homologs_and_save` to get and save the
+gene matches tables for every pair of input files. `find_homologs_and_save`
+ultimately relies on the `HomologFinder` class to produce the gene matches
+table. The `find_all_pairs` function returns a generator of gene matches tables.
+
+Finally, `filtering_step.py` uses the `build_graph` function to build the gene
+matches graph from the gene matches tables. `build_graph` takes just one
+argument&mdash;an iterator over the gene matches tables.
+
+### Phase 2
+
+The `filtered_distance.py` script is a straightforward command-line interface to
 RNA-clique's `SampleSimilarity` class. If you are planning to use the distance
 matrix computed by RNA-clique in a downstream analysis implemented in Python, it
 may be easier to simply use `SampleSimilarity` directly instead of running

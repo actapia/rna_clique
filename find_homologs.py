@@ -13,7 +13,7 @@ import pandas as pd
 
 from typing import Callable, Optional
 
-from transcripts import TranscriptID
+from transcripts import TranscriptID, default_gene_re
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -30,10 +30,10 @@ def parse_arguments():
         help="path to the (top n) transcripts for the second sample"
     )
     parser.add_argument(
-        "--regex",
-        "-r",
+        "--pattern",
+        "-p",
         type=re.compile,
-        default=re.compile("^.*g([0-9]+)_i([0-9]+)"),
+        default=default_gene_re,
         help="Python regex for parsing sequence IDs"
     )
     parser.add_argument(

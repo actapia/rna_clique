@@ -24,40 +24,10 @@ install.
 | Git               | Version control system used by RNA-clique (usually installed by default)               |
 | wget              | Command-line utility for downloading files from the web (usually installed by default) |
 | NCBI BLAST+       | Popular implementation of the BLAST local sequence alignment algorithm                 |
-| `build-essential` | Metapackage containing tools useful for building software , including Perl modules     |
-| cpanminus         | Package manager for Perl                                                               |
 
 
 ```bash
-sudo apt install git wget ncbi-blast+ ncbi-blast+ ncbi-blast+-legacy \
-                 build-essential cpanminus
-```
-
-BioPerl can also be installed via APT. The package and its dependencies include
-many recommendations that we don't need&mdash;you can specify
-`--no-install-recommends` to avoid installing those.
-
-```bash
-sudo apt install bioperl --no-install-recommends
-```
-
-## Installing GNU Parallel (optional)
-
-Some parts of RNA-clique can use GNU Parallel to run multiple jobs
-simultaneously. Parallelization can speed up these parts on systems with more
-than one logical core ("thread"). GNU parallel be installed via APT.
-
-```bash
-sudo apt install parallel
-```
-
-## Installing Array::Heap
-
-We will use cpanmius to install the `Array::Heap` Perl  module, since it isn't
-available in Ubuntu's default software repositories.
-
-```bash
-sudo cpanm Array::Heap
+sudo apt install git wget ncbi-blast+ ncbi-blast+ ncbi-blast+-legacy
 ```
 
 ## Installing Miniconda

@@ -17,7 +17,7 @@ This script builds the gene matches graph from gene matches tables.
 | `-o`       |           | Output gene matches graph pickle.        |         | Yes      |
 
 
-## do\_filtering\_step.sh
+## filtering\_step.py
 
 This script automates "phase 1" of RNA-clique in which the following steps
 occur:
@@ -29,47 +29,34 @@ occur:
 3. The gene matches graph is constructed from the gene matches tables.
 
 This script offers many command line options for controlling the behavior of
-RNA-clique. For most analyses, most of these options are probably
-unnecessary. Hence, **it is recommended to use the
-[`typical_filtering_step.sh`](#typical_filtering_stepsh) script instead unless
-fine-grained control is needed.**
+RNA-clique.
 
 ### Positional arguments
 
-| Argument name | Description                                                                                                      |
-|---------------|------------------------------------------------------------------------------------------------------------------|
-| `DIR ...`     | Each argument is a directory containing a transcripts FASTA file to be analyzed (`transcripts.fasta`, by default). |
+| Argument name | Description                                                                      |
+|---------------|----------------------------------------------------------------------------------|
+| `DIR ...`     | Each argument is a directory containing a transcripts FASTA file to be analyzed. |
 
 ### Options
 
-| Option name                       | Description                                                                                           | Default                                           | Required |
-|-----------------------------------|-------------------------------------------------------------------------------------------------------|---------------------------------------------------|----------|
-| `--cache-dir`                     | Directory in which to store BLAST DBs for top $n$ genes.                                              |                                                   | No       |
-| `--evalue`                        | e-value cutoff to use for BLAST searches                                                              | `1e-99` ($10^{-99}$)                              | No       |
-| [`--gene-regex`](#gene-regex)     | Python regex used to extract gene and isoform IDs from FASTA sequence headers.                        | `^.*g([0-9]+)_i([0-9]+)`                          | No       |
-| `--help`                          | Display a help message and quit.                                                                      | false                                             | No       |
-| `--jobs`                          | Number of parallel jobs to use.                                                                       | 1                                                 | No       |
-| [`--keep-all`](#keep-all)         | Whether to keep all matches in the case of a tie in the last step of creating the gene matches table. | false                                             | No       |
-| [`-N`](#n-big-n)                  | A match between genes is counted if it is among the top $N$ in both directions.                       | 1                                                 | No       |
-| `-n`                              | Number of top genes to select by $k$-mer coverage.                                                    | 10000                                             | No       |
-| `--out-dir-1`                     | Directory in which to store top $n$ genes for each sample.                                            |                                                   | Yes      |
-| `--out-dir-2`                     | Directory in which to store gene matches tables.                                                      |                                                   | Yes      |
-| `--output-graph`                  | Path to output graph pickle.                                                                          |                                                   | Yes      |
-| [`--pattern`](#pattern)           | Perl regex used to extract $k$-mer coverage from FASTA sequence header lines.                         | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` | No       |
-| [`--sample-regex`](#sample-regex) | Python regex used to extract sample names from directory names.                                       | `^(.*?)_.*$`                                      | No       |
-| `--transcripts`                   | Name of the FASTA files containing transcirpts in the input directories.                              | `transcripts.fasta`                               | No       |
+| Short name       | Long name                       | Description                                                                     | Default                                           | Required |
+|------------------|---------------------------------|---------------------------------------------------------------------------------|---------------------------------------------------|----------|
+| `-e`             | `--evalue`                      | e-value cutoff to use for BLAST searches                                        | `1e-99` ($10^{-99}$)                              | No       |
+| `-h`             | `--help`                        | Print a help message and exit.                                                  |                                                   | No       |
+| `-j`             | `--jobs`                        | Number of parallel jobs to use.                                                 | `threads - 1`                                     | No       |
+|                  | [`--no-keep-all`](#keep-all) | Don't keep all matches in the case of a tie.                                    |                                                   | No       |
+| `-O`             | `--output-dir`                  | Directory in which to put intermediate and output files.                        |                                                   | No       |
+| `-O1`            | `--out-dir-1`                   | Directory in which to put top genes.                                            |                                                   | No       |
+| `-O2`            | `--out-dir-2`                   | Directory in which to put gene matches tables.                                  |                                                   | No       |
+| `-g`             | `--output-graph`                | Path to output graph.                                                           |                                                   | No       |
+| `-p`             | [`--pattern`](#pattern)         | Python regex to parse transcript FASTA headers.                                 | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` | No       |
+| `-n`             | `--top-genes`                   | Number of top genes to select by $k$-mer coverage.                              |                                                   | Yes      |
+| [`-N`](#n-big-n) | `--top-matches`                 | A match between genes is counted if it is among the top $N$ in both directions. | 1                                                 | No       |
+| `-t`             | `--transcripts`                 | Name of the FASTA files containing transcirpts in the input directories.        | `transcripts.fasta`                               | No       |
 
-
-#### gene-regex
-
-The `gene-regex` option should be a Python regular expression that can be used
-to parse the FASTA sequence header lines of the transcript FASTA files. The
-following capture groups are expected:
-
-| Capture group | Description                        |
-|---------------|------------------------------------|
-| 1             | Gene ID, a non-negative integer    |
-| 2             | Isoform ID, a non-negative integer |
+If any of `-O1`, `-O2`, or `-g` are unspecified, `-O` *must* be specified. When
+`-O` is specified, `-O1`, `-O2`, and `-g` default to `od1`, `od2`, and
+`graph.pkl` under the `-O` directory, respectively.
 
 #### keep-all
 
@@ -80,8 +67,10 @@ match in sample 2. If for some sample 1 gene there are multiple gene pairs with
 highest bitscore, ties are broken by keeping only the row that comes first in
 the table.
 
-When the `--keep-all` flag is provided, more than one gene pair may be kept for
-a sample 1 gene in the case of ties.
+For scripts that accept it, the `--keep-all` flag is provided allows more than
+one gene pair to be kept for a sample 1 gene in the case of ties. Likewise, for
+scripts that accept the `--no-keep-all` flag, the flage allows only one gene
+pair is kept per sample 1 gene in the case of ties.
 
 #### N (big N)
 
@@ -105,37 +94,19 @@ is recommended that this parameter simply be set to $1$ in practice.
  
 #### pattern
 
-The `pattern` option should be a Perl regular expression that can be used to
+The `pattern` option should be a Python regular expression that can be used to
 parse the FASTA sequence header lines of the transcript FASTA files. The
-following capture groups are expected:
+following capture groups are expected and can be identified by position or by
+[name](https://docs.python.org/3/library/re.html#regular-expression-syntax).
 
-| Capture group | Description                                            |
-|---------------|--------------------------------------------------------|
-| 1             | $k$-mer coverage, expressed as a floating-point number |
-| 2             | Gene ID, a non-negative integer                        |
+| Position | Name     | Description                                            |
+|----------|----------|--------------------------------------------------------|
+| 1        | coverage | $k$-mer coverage, expressed as a floating-point number |
+| 2        | gene     | Gene ID, a non-negative integer                        |
+| 3        | isoform  | Transcript isoform ID within the gene.                 |
+
 
 Additional capture groups will be ignored.
-
-#### sample-regex
-
-The `sample-regex` option should be a Python regular expression that can be used
-to select a string acting as a sample name from the filenames of the FASTA files
-created for the top $n$ genes.
-
-By default, the top $n$ genes for a transcriptome located at
-`SAMPLENAME/transcripts.fasta` is `SAMPLENAME_top.fasta`, so the regular
-expression `^(.*?)_.*$` works to select the sample name from this filename.
-
-| Capture group | Description |
-|---------------|-------------|
-| 1             | Sample name |
-
-### Environment variables
-
-| Variable name | Description                                                     | Corresponding argument            |
-|---------------|-----------------------------------------------------------------|-----------------------------------|
-| `SAMPLE_RE`   | Python regex used to extract sample names from directory names. | [`--sample-regex`](#sample-regex) |
-
 
 ## filtered_distance.py
 
@@ -172,18 +143,32 @@ BLASTing each sample against every other.
 
 ### Options
 
-| Short name | Long name                         | Description                                                                                           | Default                  | Required |
-|------------|-----------------------------------|-------------------------------------------------------------------------------------------------------|--------------------------|----------|
-| `-D`       | `--db-cache-dir`                  | Directory in which to store BLAST DBs for the input FASTA files                                       |                          | No       |
-| `-e`       | `--evalue`                        | e-value cutoff to use for BLAST searches                                                              | `1e-50` ($10^(-50)$)     | No       |
-| `-r`       | [`--gene-regex`](#gene-regex)     | Python regex used to extract gene and isoform IDs from FASTA sequence headers.                        | `^.*g([0-9]+)_i([0-9]+)` | No       |
-| `-h`       | `--help`                          | Print a help message and exit.                                                                        |                          | No       |
-| `-i`       | `--inputs`                        | Input FASTA files, each containing a sample's top $n$ genes                                           |                          | Yes      |
-| `-j`       | `--jobs`                          | Number of parallel jobs to use.                                                                       | `threads - 1`            | No       |
-| `-k`       | [`--keep-all`](#keep-all)         | Whether to keep all matches in the case of a tie in the last step of creating the gene matches table. |                          | No       |
-| `-n`       | [`--top-n`](#n-big-n)             | A match between genes is counted if it is among the top $N$ in both directions.                       | 1                        | No       |
-| `-O`       | `--output-dir`                    | Directory in which to store the output gene matches tables                                            |                          | Yes      |
-| `-R`       | [`--sample-regex`](#sample-regex) | Python regex used to extract sample names from directory names.                                       | `^(.*?)_.*$`             | No       |
+| Short name | Long name                         | Description                                                                     | Default                                           | Required |
+|------------|-----------------------------------|---------------------------------------------------------------------------------|---------------------------------------------------|----------|
+| `-D`       | `--db-cache-dir`                  | Directory in which to store BLAST DBs for the input FASTA files                 |                                                   | No       |
+| `-e`       | `--evalue`                        | e-value cutoff to use for BLAST searches                                        | `1e-50` ($10^(-50)$)                              | No       |
+| `-h`       | `--help`                          | Print a help message and exit.                                                  |                                                   | No       |
+| `-i`       | `--inputs`                        | Input FASTA files, each containing a sample's top $n$ genes                     |                                                   | Yes      |
+| `-j`       | `--jobs`                          | Number of parallel jobs to use.                                                 | `threads - 1`                                     | No       |
+| `-k`       | [`--keep-all`](#keep-all)         | Whether to keep all matches in the case of a tie.                               |                                                   | No       |
+| `-n`       | [`--top-n`](#n-big-n)             | A match between genes is counted if it is among the top $N$ in both directions. | 1                                                 | No       |
+| `-O`       | `--output-dir`                    | Directory in which to store the output gene matches tables                      |                                                   | Yes      |
+| `-p`       | [`--pattern`](#pattern)           | Python regex used to extract gene and isoform IDs from FASTA sequence headers.  | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` | No       |
+| `-R`       | [`--sample-regex`](#sample-regex) | Python regex used to extract sample names from directory names.                 | `^(.*?)_.*$`                                      | No       |
+
+#### sample-regex
+
+The `sample-regex` option should be a Python regular expression that can be used
+to select a string acting as a sample name from the filenames of the FASTA files
+created for the top $n$ genes.
+
+By default, the top $n$ genes for a transcriptome located at
+`SAMPLENAME/transcripts.fasta` is `SAMPLENAME_top.fasta`, so the regular
+expression `^(.*?)_.*$` works to select the sample name from this filename.
+
+| Capture group | Description |
+|---------------|-------------|
+| 1             | Sample name |
 
 ### Environment variables
 
@@ -207,15 +192,15 @@ samples total!**
 
 ### Options
 
-| Short name | Long name                 | Description                                                                                           | Default                  | Required |
-|------------|---------------------------|-------------------------------------------------------------------------------------------------------|--------------------------|----------|
-| `-e`       | `--evalue`                | e-value cutoff to use for BLAST searches                                                              | `1e-50` ($10^{-50}$)     | No       |
-| `-h`       | `--help`                  | Print a help message and exit.                                                                        |                          | No       |
-| `-k`       | [`--keep-all`](#keep-all) | Whether to keep all matches in the case of a tie in the last step of creating the gene matches table. |                          | No       |
-| `-q`       | `--quiet`                 | Don't show the matches found.                                                                         |                          | No       |
-| `-r`       | [`--regex`](#gene-regex)  | Python regex used to extract gene and isoform IDs from FASTA sequence headers.                        | `^.*g([0-9]+)_i([0-9]+)` | No       |
-| `-f`       | `--report-float`          | Report the distance as a floating point number instead of a fraction.                                 |                          | No       |
-| `-n`       | [`--top-n`](#n-big-n)     | A match between genes is counted if it is among the top $N$ in both directions.                       |                          | No       |
+| Short name | Long name                 | Description                                                                                           | Default                                           | Required |
+|------------|---------------------------|-------------------------------------------------------------------------------------------------------|---------------------------------------------------|----------|
+| `-e`       | `--evalue`                | e-value cutoff to use for BLAST searches                                                              | `1e-50` ($10^{-50}$)                              | No       |
+| `-h`       | `--help`                  | Print a help message and exit.                                                                        |                                                   | No       |
+| `-k`       | [`--keep-all`](#keep-all) | Whether to keep all matches in the case of a tie in the last step of creating the gene matches table. |                                                   | No       |
+| `-p`       | [`--pattern`](#pattern)   | Python regex used to extract gene and isoform IDs from FASTA sequence headers.                        | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` | No       |
+| `-q`       | `--quiet`                 | Don't show the matches found.                                                                         |                                                   | No       |
+| `-f`       | `--report-float`          | Report the distance as a floating point number instead of a fraction.                                 |                                                   | No       |
+| `-n`       | [`--top-n`](#n-big-n)     | A match between genes is counted if it is among the top $N$ in both directions.                       |                                                   | No       |
 
 ### Output format
 
@@ -483,12 +468,8 @@ GraphML import.](./images/cytoscape_example.svg)
 
 ## typical\_filtering\_step.sh
 
-This script wraps [`do_filtering_step.sh`](#do_filtering_stepsh) to provide a
-simpler user interface and better defaults. Like `do_filtering_step.sh`, the
-purpose of this script is to automate the first phase of RNA-clique.
-
-This script shares many arguments/options with `do_filtering_step.sh`, but some
-have been removed or replaced for simplicity.
+This script is now deprecated in favor of `filtering_step.py`. It now forwards
+its arguments mostly unchanged to `filtering_step.py`.
 
 ### Positional arguments
 
@@ -516,19 +497,3 @@ have been removed or replaced for simplicity.
 | Variable name | Description                                                     | Corresponding argument            |
 |---------------|-----------------------------------------------------------------|-----------------------------------|
 | `SAMPLE_RE`   | Python regex used to extract sample names from directory names. | [`--sample-regex`](#sample-regex) |
-
-## select\_top\_sets.pl
-
-This Perl script selects the top genes ("isotig sets") from an assembled
-transcriptome by $k$-mer coverage. 
-
-See more details in the [documentation for
-select\_top\_genes](https://github.com/actapia/select_top_genes/blob/master/README.md#select_top_setspl).
-
-## select\_top\_sets_all.sh
-
-This Perl script selects the top genes from multiple assembled transcriptomes in
-parallel.
-
-See more details in the [documentation for
-select\_top\_genes](https://github.com/actapia/select_top_genes/blob/master/README.md#select_top_sets_allsh).

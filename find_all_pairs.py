@@ -15,7 +15,7 @@ import os
 from tqdm import tqdm
 
 from gene_matches_tables import write_table
-from transcripts import TranscriptID
+from transcripts import TranscriptID, default_gene_re
 
 default_sample_regex = re.compile(os.environ.get("SAMPLE_RE", "^(.*?)_.*$"))
 
@@ -48,10 +48,10 @@ def handle_arguments():
         help="directory in which to store BLAST DBs for input FASTA files"
     )
     parser.add_argument(
-        "--gene-regex",
-        "-r",
+        "--pattern",
+        "-p",
         type=re.compile,
-        default=re.compile("^.*g([0-9]+)_i([0-9]+)"),
+        default=default_gene_re,
         help="Python regex for parsing sequence IDs"
     )
     parser.add_argument(
