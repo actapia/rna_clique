@@ -192,16 +192,30 @@ RNA-clique now provides a Python API for both phases.
 
 ### Phase 1
 
-The `filtering_step.py` script uses three main Python functions&mdash;one for
-each of the steps of the first phase. First, the sequences for the top genes for
-each sample are selected and saved using `select_top_and_save`, which, in turn,
-uses the `TopGeneSelector` class's `get_top_gene_seqs` function to get the top
-$n$ genes by $k$-mer coverage and saves them using
-`Bio.SeqIO`. `select_top_and_save` accepts an output directory, the name of the
-`transcripts` file, the path to the directory containing the `transcripts` file,
-and any additional arguments to use in the construction of `TopGeneSelector`
-objects. It returns the path of the output file containing the top $n$ genes and
-the name of the directory containing the `transcripts` file.
+The `filtering_step.py` script is a wrapper for the `filtering_step`
+function. `filtering_step` requires at least six arguments: paths to the
+directories containing the input transcript files, a path to the output
+directory in which to put the top $n$ genes by $k$-mer coverage for each input
+transcriptome, a path to the output directory in which to put the gene matches
+tables, a path to the directory in which to store the [BLAST database
+caches](https://github.com/actapia/simple_blast/blob/8c2e86a833695e0676888ffd36dc31c853038adc/README.md#db-caches),
+a path to the output graph pickle, and the number $n$ of top genes to
+use. Optionally, one may also provide `filtering_step` with $N$, the number of
+top matches per gene to use when deciding if there is a match in both
+directions; a function that parses transcript IDs into `TranscriptID` objects;
+the $e$-value threshold; whether to keep all matches in the case of a tie for
+best match; and the number of parallel jobs to use. 
+
+`filtering_step` uses three main Python functions&mdash;one for each of the
+steps of the first phase. First, the sequences for the top genes for each sample
+are selected and saved using `select_top_and_save`, which, in turn, uses the
+`TopGeneSelector` class's `get_top_gene_seqs` function to get the top $n$ genes
+by $k$-mer coverage and saves them using `Bio.SeqIO`. `select_top_and_save`
+accepts an output directory, the name of the `transcripts` file, the path to the
+directory containing the `transcripts` file, and any additional arguments to use
+in the construction of `TopGeneSelector` objects. It returns the path of the
+output file containing the top $n$ genes and the name of the directory
+containing the `transcripts` file.
 
 A `TopnGeneSelector` object is ordinarily constructed with a function to get an
 iterator of transcript IDs (as `Bio.SeqRecord` objects), the number of top genes
@@ -221,13 +235,12 @@ Regardless of how the `TopnGeneSelector` is constructed, a generator of the
 `Bio.SeqRecord` objects for the top $n$ genes is returned by the
 `get_top_gene_seqs` method.
 
-After selecting the top $n$ genes and saving them to files, `filtering_step.py`
+After selecting the top $n$ genes and saving them to files, `filtering_step`
 gets the gene matches tables for the top $n$ genes of the input files using the
 `find_all_pairs` function of `find_all_pairs.py`. `find_all_pairs` accepts a
 collection of paths to the FASTA files containing the top $n$ transcripts for
 each sample, a path to the output directory in which to save the gene matches
-tables, a path to the directory in which to store the [BLAST database
-caches](https://github.com/actapia/simple_blast/blob/8c2e86a833695e0676888ffd36dc31c853038adc/README.md#db-caches),
+tables, a path to the directory in which to store the BLAST DB caches,
 a function mapping file paths to samples (which could be created using the
 output of `select_top_and_save`, for example), an optional list of arguments to
 be passed to the `HomologFinder` class, and, optionally, the number of parallel
@@ -239,7 +252,7 @@ gene matches tables for every pair of input files. `find_homologs_and_save`
 ultimately relies on the `HomologFinder` class to produce the gene matches
 table. The `find_all_pairs` function returns a generator of gene matches tables.
 
-Finally, `filtering_step.py` uses the `build_graph` function to build the gene
+Finally, `filtering_step` uses the `build_graph` function to build the gene
 matches graph from the gene matches tables. `build_graph` takes just one
 argument&mdash;an iterator over the gene matches tables.
 

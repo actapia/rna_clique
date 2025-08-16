@@ -1,15 +1,12 @@
 import argparse
-import sys
 import multiprocessing
 import re
-import functools
 import pickle
 
 import Bio.SeqIO
 
 from pathlib import Path
 from joblib import Parallel, delayed
-from more_itertools import consume
 from tqdm import tqdm
 
 from transcripts import default_gene_re, TranscriptID
@@ -137,6 +134,53 @@ def select_top_and_save(out_dir, transcripts, x: Path, *args):
     )
     return (out, x.stem)
 
+def filtering_step(
+        dirs,
+        out_dir_1,
+        out_dir_2,
+        cache_dir,
+        output_graph,
+        top_genes,
+        transcripts="transcripts.fasta",
+        top_matches=1,
+        id_parser=TranscriptID.parser_from_re(default_gene_re),
+        evalue=1e-99,
+        keep_all=True,
+        jobs=multiprocessing.cpu_count() - 1
+):
+    path_to_sample = dict(
+        Parallel(n_jobs=jobs)(
+            map(
+                delayed(
+                    lambda x: select_top_and_save(
+                        out_dir_1,
+                        transcripts,
+                        x,
+                        top_genes,
+                        id_parser
+                    )
+                ),
+                dirs
+            )
+        )
+    )
+    tables, num_tables = find_all_pairs(
+        path_to_sample,
+        out_dir_2,
+        cache_dir,
+        path_to_sample.__getitem__,
+        hf_args=[
+            id_parser,
+            top_matches,
+            evalue,
+            keep_all
+        ],
+        jobs=jobs,
+    )
+    graph = build_graph(tqdm(tables, total=num_tables))
+    with open(output_graph, "wb") as f:
+        pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
+
 def main():
     args = handle_arguments()
     try:
@@ -146,38 +190,21 @@ def main():
     for d in out_dirs:
         getattr(args, d).mkdir(exist_ok=True)
     id_parser = TranscriptID.parser_from_re(args.pattern)
-    path_to_sample = dict(
-        Parallel(n_jobs=args.jobs)(
-            map(
-                delayed(
-                    lambda x: select_top_and_save(
-                        args.out_dir_1,
-                        args.transcripts,
-                        x,
-                        args.n,
-                        id_parser
-                    )
-                ),
-                args.dirs
-            )
-        )
-    )
-    tables, num_tables = find_all_pairs(
-        path_to_sample,
+    filtering_step(
+        args.dirs,
+        args.out_dir_1,
         args.out_dir_2,
         args.cache_dir,
-        path_to_sample.__getitem__,
-        hf_args=[
-            id_parser,
-            args.N,
-            args.evalue,
-            not args.no_keep_all
-        ],
-        jobs=args.jobs,
+        args.output_graph,
+        args.n,
+        args.transcripts,        
+        args.N,
+        id_parser,
+        args.evalue,
+        not args.no_keep_all,
+        args.jobs
     )
-    graph = build_graph(tqdm(tables, total=num_tables))
-    with open(args.output_graph, "wb") as f:
-        pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)   
+
 
 if __name__ == "__main__":
     main()
