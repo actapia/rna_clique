@@ -2,8 +2,8 @@ import argparse
 import pickle
 import sys
 import functools
+import tempfile
 
-import numpy as np
 import pandas as pd
 import networkx as nx
 
@@ -32,6 +32,40 @@ def get_ideal_components(
     for s in component_subgraphs(g):
         if len(s) == samples and is_complete(s):
             yield s
+
+def write_hdf(df, f):
+    with pd.HDFStore(
+            tempfile.mktemp(),
+            driver="H5FD_CORE",
+            driver_core_backing_store=0
+    ) as store:
+        store.put("matrix", df, errors="string", encoding="UTF-8")
+        f.write(store._handle.get_file_image())
+
+
+def ignore_kwargs(f, ignore):
+    ignore = set(ignore)
+    def inner(*args, **kwargs):
+        kwargs = {k: v for (k, v) in kwargs.items() if k not in ignore}
+        return f(*args, **kwargs)
+    return inner
+
+ignore_header = functools.partial(ignore_kwargs, ignore={"header"})
+
+writers = {
+    "matrix": ignore_header(
+        functools.partial(
+            pd.DataFrame.to_csv,
+            sep=" ",
+            header=False,
+            index=False
+        ),
+    ),
+    "table": functools.partial(pd.DataFrame.to_csv, sep=" "),
+    "csv": pd.DataFrame.to_csv,
+    "hdf": ignore_header(write_hdf),
+    "pickle": ignore_header(pd.DataFrame.to_pickle),
+}
 
 def handle_arguments():
     parser = argparse.ArgumentParser(
@@ -72,10 +106,16 @@ def handle_arguments():
         help="type of matrix to produce (similarity or dissimilarity)"
     )
     parser.add_argument(
-        "-l",
-        "--print-sample-list",
+        "-f",
+        "--format",
+        choices=writers,
+        default="matrix",
+        help="Format for writing distance matrix to stdout."
+    )
+    parser.add_argument(
+        "--header",
         action="store_true",
-        help="print the list of samples before the matrix"
+        help="Include header in distance matrix written to stdout."
     )
     return parser.parse_args()
 
@@ -119,8 +159,6 @@ def restrict_to(
 def restrict_multi(df2, df1, columns):
     return functools.reduce(functools.partial(restrict_to, df2), columns, df1)
 
-def print_mat(m : np.ndarray):
-    np.savetxt(sys.stdout, m, fmt="%s", delimiter=' ')
     
 class SampleSimilarity(ComparisonSimilarityComputer):
     """Computes samples' similarities from gene matches graph and comparisons.
@@ -280,12 +318,11 @@ def main():
         tqdm(args.comparisons),
         sample_count=args.samples
     )
-    if args.print_sample_list:
-        print("\n".join(sim.samples))
     if args.out_type == "sim":
-        print_mat(sim.get_similarity_matrix())
-    elif args.out_type == "dis":
-        print_mat(sim.get_dissimilarity_matrix())
+        mat = sim.get_similarity_df()
+    else:
+        mat = sim.get_dissimilarity_df()
+    writers[args.format](mat, sys.stdout.buffer, header=args.header)
     if args.embed:
         from IPython import embed
         embed()

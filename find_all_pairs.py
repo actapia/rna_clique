@@ -213,16 +213,21 @@ def find_all_pairs(
         path_to_sample=path_to_sample,
         extension="h5"
     )
-    return Parallel(n_jobs=jobs, return_as="generator_unordered")(
-        delayed(
-            fh
-        )(*p, mop(output_dir, *p))
-        for p in itertools.combinations(inputs, 2)
-    ), math.comb(len(inputs), 2)
+    return (
+        Parallel(n_jobs=jobs, return_as="generator_unordered")(
+            delayed(
+                fh
+            )(*p, mop(output_dir, *p))
+            for p in itertools.combinations(inputs, 2)
+        ), map(
+            lambda x: mop(output_dir, *x),
+            itertools.combinations(inputs,2)
+        ), math.comb(len(inputs), 2)
+    )
 
 def main():
     args = handle_arguments()
-    gen, gen_len = find_all_pairs(
+    gen, _, gen_len = find_all_pairs(
         args.inputs,
         args.output_dir,
         args.db_cache_dir,

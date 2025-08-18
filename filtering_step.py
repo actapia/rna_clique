@@ -1,8 +1,13 @@
 import argparse
 import multiprocessing
 import re
+import itertools
 import pickle
 
+from typing import Iterable
+
+import networkx as nx
+import pandas as pd
 import Bio.SeqIO
 
 from pathlib import Path
@@ -13,6 +18,7 @@ from transcripts import default_gene_re, TranscriptID
 from select_top_genes import TopGeneSelector
 from find_all_pairs import find_all_pairs
 from build_graph import build_graph
+from similarity_computer import ComparisonSimilarityComputer
 
 out_dirs = {
     "out_dir_1": "od1",
@@ -24,7 +30,7 @@ out_files = {
 }
 outputs = out_dirs | out_files
 
-def handle_arguments():
+def build_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--top-genes",
@@ -109,18 +115,26 @@ def handle_arguments():
         type=Path,
         nargs="+"
     )
+    return parser
+
+def handle_arguments():
+    parser = build_parser()
     args = parser.parse_args()
-    for arg, f in outputs.items():
+    process_out_dir_args(parser, args, outputs)
+    return args
+
+def process_out_dir_args(parser, args, outs):
+    for arg, f in outs.items():
         if getattr(args, arg, None) is None:
             setattr(args, arg, args.output_dir / f)
     try:
-        missing = next(x for x in outputs if getattr(args, x) is None)
+        missing = next(x for x in outs if getattr(args, x) is None)
         parser.error(
             "Must provide --output-dir or --{}".format(missing.replace("_","-"))
         )
     except StopIteration:
         pass
-    return args
+
 
 def select_top_and_save(out_dir, transcripts, x: Path, *args):
     out = out_dir / (x.stem + "_top.fasta")
@@ -146,8 +160,8 @@ def filtering_step(
         id_parser=TranscriptID.parser_from_re(default_gene_re),
         evalue=1e-99,
         keep_all=True,
-        jobs=multiprocessing.cpu_count() - 1
-):
+        jobs=multiprocessing.cpu_count() - 1,
+) -> tuple[Iterable[pd.DataFrame], Iterable[Path], nx.Graph]:
     path_to_sample = dict(
         Parallel(n_jobs=jobs)(
             map(
@@ -164,7 +178,7 @@ def filtering_step(
             )
         )
     )
-    tables, num_tables = find_all_pairs(
+    tables, table_paths, num_tables = find_all_pairs(
         path_to_sample,
         out_dir_2,
         cache_dir,
@@ -180,6 +194,12 @@ def filtering_step(
     graph = build_graph(tqdm(tables, total=num_tables))
     with open(output_graph, "wb") as f:
         pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
+    table_paths1, table_paths2 = itertools.tee(table_paths)
+    return map(
+        ComparisonSimilarityComputer._read_table,
+        table_paths1
+    ), table_paths2, graph, num_tables
+    
 
 def main():
     args = handle_arguments()
