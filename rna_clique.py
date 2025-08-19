@@ -1,11 +1,15 @@
 import sys
 import filtering_step
+import multiprocessing
 import filtered_distance
+import itertools
 from pathlib import Path
 
 from transcripts import TranscriptID
 from filtered_distance import SampleSimilarity
 from similarity_computer import ComparisonSimilarityComputer
+from transcripts import default_gene_re
+from multiset_key_dict import MultisetKeyDict
 
 out_dirs = filtering_step.out_dirs
 out_files = filtering_step.out_files | {"output_matrix": "distance_matrix.h5"}
@@ -38,6 +42,49 @@ def handle_arguments():
     args = parser.parse_args()
     filtering_step.process_out_dir_args(parser, args, outputs)
     return args
+
+def rna_clique(
+        dirs,
+        out_dir_1,
+        out_dir_2,
+        cache_dir,
+        output_graph,
+        output_matrix,
+        top_genes,
+        transcripts="transcripts.fasta",
+        top_matches=1,
+        id_parser=TranscriptID.parser_from_re(default_gene_re),
+        evalue=1e-99,
+        keep_all=True,
+        store_dfs=False,
+        jobs=multiprocessing.cpu_count() - 1,
+):
+    tables, table_paths, graph, num_tables = filtering_step.filtering_step(
+        dirs,
+        out_dir_1,
+        out_dir_2,
+        cache_dir,
+        output_graph,
+        top_genes,
+        transcripts,
+        top_matches,
+        id_parser,
+        evalue,
+        keep_all,
+        jobs,
+    )
+    tables = ComparisonSimilarityComputer.mapping_from_dfs(tables)
+    if store_dfs:
+        tables = MultisetKeyDict(tables)
+    sim = SampleSimilarity(
+        graph,
+        tables,
+    )
+    mat = sim.get_dissimilarity_df()
+    mat.to_hdf(output_matrix, "matrix")
+    return sim
+
+
     
 def main():
     args = handle_arguments()
@@ -48,30 +95,26 @@ def main():
     for d in out_dirs:
         getattr(args, d).mkdir(exist_ok=True)
     id_parser = TranscriptID.parser_from_re(args.pattern)
-    tables, table_paths, graph, num_tables = filtering_step.filtering_step(
+    sim = rna_clique(
         args.dirs,
         args.out_dir_1,
         args.out_dir_2,
         args.cache_dir,
         args.output_graph,
+        args.output_matrix,
         args.n,
         args.transcripts,
         args.N,
         id_parser,
         args.evalue,
         not args.no_keep_all,
-        args.jobs
+        False,
+        jobs=args.jobs
     )
-    sim = SampleSimilarity(
-        graph,
-        ComparisonSimilarityComputer.mapping_from_dfs(tables)
-    )
-    mat = sim.get_dissimilarity_df()
-    mat.to_hdf(args.output_matrix, "matrix")
     filtered_distance.writers[
         args.format
     ](
-        mat,
+        sim.get_dissimilarity_df(),
         sys.stdout.buffer,
         header=args.header
     )
