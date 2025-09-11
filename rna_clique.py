@@ -1,9 +1,13 @@
-import sys
-import filtering_step
+import argparse
 import multiprocessing
+import sys
+import config as config_module
+
 import filtered_distance
-import itertools
+import filtering_step
+
 from pathlib import Path
+from typing import Callable, Iterable
 
 from transcripts import TranscriptID
 from filtered_distance import SampleSimilarity
@@ -11,18 +15,9 @@ from similarity_computer import ComparisonSimilarityComputer
 from transcripts import default_gene_re
 from multiset_key_dict import MultisetKeyDict
 
-out_dirs = filtering_step.out_dirs
-out_files = filtering_step.out_files | {"output_matrix": "distance_matrix.h5"}
-outputs = out_dirs | out_files
-
 def build_parser():
     parser = filtering_step.build_parser()
-    parser.add_argument(
-        "--output-matrix",
-        "-m",
-        type=Path,
-        help="Path to output distance matrix (overrides -O)."
-    )
+    parser.expose_fields_with_default_aliases("matrix")
     parser.add_argument(
         "-f",
         "--format",
@@ -37,28 +32,25 @@ def build_parser():
     )
     return parser
 
-def handle_arguments():
-    parser = build_parser()
-    args = parser.parse_args()
-    filtering_step.process_out_dir_args(parser, args, outputs)
-    return args
-
 def rna_clique(
-        dirs,
-        out_dir_1,
-        out_dir_2,
-        cache_dir,
-        output_graph,
-        output_matrix,
-        top_genes,
-        transcripts="transcripts.fasta",
-        top_matches=1,
-        id_parser=TranscriptID.parser_from_re(default_gene_re),
-        evalue=1e-99,
-        keep_all=True,
-        store_dfs=False,
-        jobs=multiprocessing.cpu_count() - 1,
-):
+        dirs: Iterable[Path],
+        out_dir_1: Path,
+        out_dir_2: Path,
+        cache_dir: Path,
+        output_graph: Path,
+        output_matrix: Path,
+        top_genes: int,
+        transcripts: str = "transcripts.fasta",
+        top_matches: int = 1,
+        id_parser: Callable[
+            [str],
+            TranscriptID
+        ] = TranscriptID.parser_from_re(default_gene_re),
+        evalue: float = 1e-99,
+        keep_all: bool = True,
+        store_dfs: bool = False,
+        jobs: int = multiprocessing.cpu_count() - 1,
+) -> SampleSimilarity:
     tables, table_paths, graph, num_tables = filtering_step.filtering_step(
         dirs,
         out_dir_1,
@@ -83,33 +75,26 @@ def rna_clique(
     mat = sim.get_dissimilarity_df()
     mat.to_hdf(output_matrix, "matrix")
     return sim
-
-
     
 def main():
-    args = handle_arguments()
-    try:
-        args.output_dir.mkdir(exist_ok=True)
-    except AttributeError:
-        pass
-    for d in out_dirs:
-        getattr(args, d).mkdir(exist_ok=True)
-    id_parser = TranscriptID.parser_from_re(args.pattern)
+    _, args, config = build_parser().get_arguments_and_config()
+    config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
+    id_parser = TranscriptID.parser_from_re(config.transcript_id_regex)
     sim = rna_clique(
-        args.dirs,
-        args.out_dir_1,
-        args.out_dir_2,
-        args.cache_dir,
-        args.output_graph,
-        args.output_matrix,
-        args.n,
-        args.transcripts,
-        args.N,
+        config.input_dirs,
+        config.top_genes_dir,
+        config.tables_dir,
+        config.cache_dir,
+        config.graph,
+        config.matrix,
+        config.top_genes,
+        config.transcripts_name,
+        config.top_matches,
         id_parser,
-        args.evalue,
-        not args.no_keep_all,
+        config.evalue,
+        config.keep_all,
         False,
-        jobs=args.jobs
+        jobs=config.jobs
     )
     filtered_distance.writers[
         args.format
@@ -118,6 +103,9 @@ def main():
         sys.stdout.buffer,
         header=args.header
     )
+    config.mark_finish()
+    config.yaml_save(args.output_config)
+
     
 if __name__ == "__main__":
     main()

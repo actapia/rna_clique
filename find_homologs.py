@@ -5,6 +5,7 @@ import numbers
 import functools
 from simple_blast.blasting import TabularBlastnSearch
 import numpy as np
+import config as config_module
 
 from fractions import Fraction
 from pathlib import Path
@@ -15,60 +16,38 @@ from typing import Callable, Optional
 
 from transcripts import TranscriptID, default_gene_re
 
-def parse_arguments():
-    parser = argparse.ArgumentParser(
-        description="get the genetic distance for a pair of samples"
+def build_parser():
+    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config.expose_fields_with_default_aliases(
+        "transcript_id_regex",
+        "evalue",
+        "top_matches",
+        "keep_all",
+        required=True
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "transcripts1",
         type=Path,
         help="path to the (top n) transcripts for the first sample"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "transcripts2",
         type=Path,
         help="path to the (top n) transcripts for the second sample"
     )
-    parser.add_argument(
-        "--pattern",
-        "-p",
-        type=re.compile,
-        default=default_gene_re,
-        help="Python regex for parsing sequence IDs"
-    )
-    parser.add_argument(
-        "-e",
-        "--evalue",
-        type=float,
-        default=1e-50,
-        help="e-value threshold to use for BLAST alignments"
-    )
-    parser.add_argument(
-        "-n",
-        "--top-n",
-        type=int,
-        default=1,
-        help="use top n matches (parameter big N)"
-    )
-    parser.add_argument(
-        "--keep-all",
-        "-k",
-        action="store_true",
-        help="keep all pairs in case of a tie"
-    )
-    parser.add_argument(
+    arg_config.add_argument(
         "-q",
         "--quiet",
         action="store_true",
         help="hide the matches found"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "-f",
         "--report-float",
         action="store_true",
         help="report float instead of fraction"
     )
-    return parser.parse_args()
+    return arg_config
 
 def parse_seq_id(regex: re.compile, s: pd.Series) -> pd.DataFrame:
     """Parse a seq_id column to extract the gene and isoform IDs."""
@@ -324,12 +303,12 @@ class HomologFinder:
         return df[columns].drop_duplicates()
 
 def main():
-    args = parse_arguments()
+    _, args, config = build_parser().get_arguments_and_config()    
     match_finder = HomologFinder(
-        TranscriptID.parse_from_re(args.regex),
-        args.top_n,
-        args.evalue,
-        args.keep_all
+        TranscriptID.parse_from_re(config.transcript_id_regex),
+        config.top_matches,
+        config.evalue,
+        config.keep_all
     )
     best_matches = match_finder.get_match_table(
         args.transcripts1,

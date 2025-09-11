@@ -3,6 +3,7 @@ import functools
 import operator
 import pickle
 import re
+import config as config_module
 from pathlib import Path
 from find_homologs import eprint
 from gene_matches_tables import read_table
@@ -18,31 +19,15 @@ from tqdm import tqdm
 # Since sum doesn't work on all objects.
 sum_ = functools.partial(functools.reduce, operator.add)
 
-def handle_arguments():
-    parser = argparse.ArgumentParser(
-        description="build a gene matches graph from gene matches tables"
+def build_parser():
+    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config.expose_fields_with_default_aliases(
+        "tables_dir",
+        "output_dir",
+        "output_graph",
     )
-    parser.add_argument(
-        "-i",
-        "--inputs",
-        nargs="+",
-        type=Path,
-        required=True,
-        help="pickles containing the gene matches tables"
-    )
-    parser.add_argument(
-        "-o",
-        "--output-graph",
-        type=Path,
-        required=True,
-        help="the output pickle of the gene matches graph"
-    )
-    return parser.parse_args()
-
-def component_subgraphs(g : nx.Graph) -> Iterator[nx.Graph]:
-    """Yields the connected components of the given graph as subgraphs."""
-    for c in nx.connected_components(g):
-        yield g.subgraph(c)
+    arg_config.add_output_config_arguments()
+    return arg_config
 
 def make_edge(r):
     return (r[0], r[1]), (r[2], r[3])
@@ -78,10 +63,12 @@ def build_graph(dfs : Iterable[pd.DataFrame]) -> nx.Graph:
     return graph
 
 def main():
-    args = handle_arguments()
-    graph = build_graph(read_table(f) for f in tqdm(args.inputs))
-    with open(args.output_graph, "wb") as f:
+    _, args, config = build_parser().get_arguments_and_config()
+    graph = build_graph(read_table(f) for f in tqdm(config.inputs))
+    with open(config.output_graph, "wb") as f:
         pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
+    config.mark_finish()
+    config.yaml_save(args.output_config)
 
 if __name__ == "__main__":
     main()

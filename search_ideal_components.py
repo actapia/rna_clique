@@ -5,11 +5,12 @@ import shutil
 import functools
 import Bio.Align
 import networkx as nx
+import config as config_module
 from collections.abc import Iterable
 from typing import Optional, Callable
 from pathlib import Path
 from collections import defaultdict, deque, namedtuple
-from make_subset import multi_glob
+from gene_matches_tables import get_table_files
 
 from simple_blast import BlastDBCache, MultiformatBlastnSearch
 
@@ -25,92 +26,60 @@ from tqdm import tqdm
 
 #default_gene_re = re.compile("^.*g([0-9]+)_i([0-9]+)")
 
-def handle_arguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-g", "--graph", type=Path)
-    parser.add_argument(
-        "-c",
-        "--comparisons",
-        type=Path,
-        nargs="+",
+def build_parser():
+    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config.expose_fields_with_default_aliases(
+        "graph",
+        "tables_dir",
+        "jobs",
+        "transcript_id_regex",
+        required=True
     )
-    parser.add_argument(
-        "-A",
-        "--analysis-root",
-        type=Path
+    arg_config.expose_config_field(
+        "output_dir",
+        aliases=["--analysis-root", "--rna-clique-output-dir", "-A"]        
     )
-    parser.add_argument(
-        "-x",
-        "--exported",
-        type=Path
-    )
-    parser.add_argument(
-        "-d",
-        "--db-cache",
-        type=Path
-    )
-    parser.add_argument(
-        "-s",
-        "--samples",
-        type=int
-    )
-    parser.add_argument(
-        "--gene-regex",
-        "-r",
-        type=re.compile,
-        help="Python regex for parsing sequence IDs",
-        default=default_gene_re
-    )
-    parser.add_argument(
-        "--out-dir",
-        "-O",
+    arg_config.add_argument(
+        "--export-output-dir",
+        "-X",
         type=Path,
         required=True
     )
-    parser.add_argument(
+    arg_config.add_argument(
+        "--ortholog-db-cache",        
+        "-D",
+        type=Path,
+        default={
+            ("export_output_dir",): lambda export_output_dir:
+            export_output_dir / "db_cache"
+        }
+    )
+    arg_config.add_argument(
+        "--search-output-dir",
+        "-S",
+        type=Path,
+        required=True
+    )
+    arg_config.add_argument(
         "--query",
         "-q",
         type=Path,
         required=True
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "--debug",
         action="store_true"
     )
-    parser.add_argument(
-        "-j",
-        "--jobs",
-        type=int,
-        default=1
-    )
-    parser.add_argument(
+    arg_config.add_argument(
         "--clean",
         action="store_true"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "--merge-sams",
         "-m",
         action="store_true"
     )
-    args = parser.parse_args()
-    if not args.graph:
-        if args.analysis_root:
-            args.graph = args.analysis_root / "graph.pkl"
-        else:
-            parser.error("Must provide either --graph or --analysis-root.")
-    if not args.comparisons:
-        if args.analysis_root:
-            args.comparisons = list(
-                multi_glob(args.analysis_root / "od2", ["*.pkl", "*.h5"])
-            )
-        else:
-            parser.error(
-                "Must provide either --comparisons or --analysis-root."
-            )
-    if not args.db_cache:
-        export_dir = args.exported.parent
-        args.db_cache = export_dir / "db_cache"
-    return args
+    return arg_config
 
 SearchResult = namedtuple("SearchResult", ["hits", "seqs", "components"])
 
@@ -255,20 +224,21 @@ def search(
         return SearchResult(0, 0, 0)
 
 def main():
-    args = handle_arguments()
+    _, args, config = build_parser().get_arguments_and_config()
+    args.ortholog_db_cache.mkdir(exist_ok=True)
+    args.search_output_dir.mkdir(exist_ok=True)    
     search(
-        graph_loc=args.graph,
-        comparisons_loc=args.comparisons,
-        exported=args.exported,
-        db_cache_loc=args.db_cache,
-        out_dir=args.out_dir,
+        graph_loc=config.graph,
+        comparisons_loc=get_table_files(config.tables_dir),
+        exported=args.export_output_dir,
+        db_cache_loc=args.ortholog_db_cache,
+        out_dir=args.search_output_dir,
         query=args.query,
         debug=args.debug,
-        sample_count=args.samples,
-        gene_regex=TranscriptID.parse_from_re(args.gene_regex),
+        gene_regex=TranscriptID.parse_from_re(config.transcript_id_regex),
         clean=args.clean,
         merge_sams=args.merge_sams,
-        jobs=args.jobs
+        jobs=config.jobs
     )
         
 if __name__ == "__main__":

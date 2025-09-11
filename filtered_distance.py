@@ -1,8 +1,10 @@
 import argparse
 import pickle
+import contextlib
 import sys
 import functools
 import tempfile
+import config as config_module
 
 import pandas as pd
 import networkx as nx
@@ -13,8 +15,9 @@ from pathlib import Path
 from typing import Optional
 from collections.abc import Iterable, Iterator
 
-from build_graph import component_subgraphs
+from graph import component_subgraphs
 from multiset_key_dict import FrozenMultiset
+from gene_matches_tables import get_table_files
 from similarity_computer import ComparisonSimilarityComputer
 
 from tqdm import tqdm
@@ -42,7 +45,6 @@ def write_hdf(df, f):
         store.put("matrix", df, errors="string", encoding="UTF-8")
         f.write(store._handle.get_file_image())
 
-
 def ignore_kwargs(f, ignore):
     ignore = set(ignore)
     def inner(*args, **kwargs):
@@ -67,57 +69,37 @@ writers = {
     "pickle": ignore_header(pd.DataFrame.to_pickle),
 }
 
-def handle_arguments():
-    parser = argparse.ArgumentParser(
-        description="compute pairwise similarities from graph and comparisons"
+def build_parser():
+    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config.expose_fields_with_default_aliases(
+        "output_graph",
+        "tables_dir",
+        required=True
     )
-    parser.add_argument(
-        "-g",
-        "--graph",
-        type=Path,
-        required=True,
-        help="path to the gene matches graph pickle"
+    arg_config.expose_fields_with_default_aliases(
+        "output_dir",
+        "matrix",
     )
-    parser.add_argument(
-        "-c",
-        "--comparisons",
-        type=Path,
-        nargs="+",
-        required=True,
-        help="paths to the gene matches tables"
-    )
-    parser.add_argument(
-        "-s",
-        "--samples",
-        type=int,
-        help="number of samples"
-    )
-    parser.add_argument(
+    arg_config.add_argument(
         "-e",
         "--embed",
         action="store_true",
         help="enter an IPython shell after computing the matrix"
     )
-    parser.add_argument(
-        "-o",
-        "--out-type",
-        choices=["sim", "dis"], # Similarity, dissimilarity
-        default="sim",
-        help="type of matrix to produce (similarity or dissimilarity)"
-    )
-    parser.add_argument(
+    arg_config.add_argument(
         "-f",
         "--format",
         choices=writers,
         default="matrix",
         help="Format for writing distance matrix to stdout."
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "--header",
         action="store_true",
         help="Include header in distance matrix written to stdout."
     )
-    return parser.parse_args()
+    arg_config.add_output_config_argument()
+    return arg_config
 
 def restrict_to(
         df2 : pd.DataFrame,
@@ -312,21 +294,25 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         return super().from_filenames(*args, **kwargs)    
         
 def main():
-    args = handle_arguments()
+    _, args, config = build_parser().get_arguments_and_config()    
     sim = SampleSimilarity.from_filenames(
-        args.graph,
-        tqdm(args.comparisons),
-        sample_count=args.samples
+        config.graph,
+        get_table_files(config.tables_dir)
     )
     if args.out_type == "sim":
         mat = sim.get_similarity_df()
     else:
         mat = sim.get_dissimilarity_df()
-    writers[args.format](mat, sys.stdout.buffer, header=args.header)
     if args.embed:
         from IPython import embed
         embed()
+    else:
+        writers[args.format](mat, sys.stdout_buffer, header=args.header)
+        if config.matrix:
+            with open(config.matrix, "wb") as out:
+                writers[args.format](mat, out, header=args.header)
+        config.mark_finish()
+        config.yaml_save(args.output_config)
 
-        
 if __name__ == "__main__":
     main()

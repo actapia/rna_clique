@@ -3,6 +3,7 @@ import itertools
 import sys
 import re
 import psutil
+import config as config_module
 from find_homologs import highest_bitscores, eprint
 from filtered_distance import (
     SampleSimilarity,
@@ -10,12 +11,12 @@ from filtered_distance import (
 )
 from path_to_sample import path_to_sample
 from collections import defaultdict
-from make_subset import multi_glob
 from contextlib import ExitStack
 from simple_blast import TabularBlastnSearch
-from build_graph import component_subgraphs
+from graph import component_subgraphs
 from strand_sat import sat_assign_strands
 from transcripts import TranscriptID
+from gene_matches_tables import get_table_files
 
 import networkx as nx
 import numpy as np
@@ -44,97 +45,57 @@ def named_reverse_complement(t):
     rc.description = t.description
     return rc
 
-def handle_arguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-g", "--graph", type=Path)
-    parser.add_argument(
-        "-c",
-        "--comparisons",
-        type=Path,
-        nargs="+",
+def build_parser():
+    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config.expose_fields_with_default_aliases(
+        "graph",
+        "tables_dir",
+        "jobs",
+        "transcript_id_regex",
+        required=True
     )
-    parser.add_argument(
-        "-A",
-        "--analysis-root",
-        type=Path
+    arg_config.expose_config_field(
+        "output_dir",
+        aliases=["--analysis-root", "--rna-clique-output-dir", "-A"]        
     )
-    parser.add_argument(
-        "-s",
-        "--samples",
-        type=int
-    )
-    parser.add_argument(
-        "--gene-regex",
-        "-r",
-        type=re.compile,
-        help="Python regex for parsing sequence IDs",
-        default=default_gene_re
-    )
-    parser.add_argument(
-        "--out-dir",
-        "-O",
+    arg_config.add_argument(
+        "--export-output-dir",
+        "-X",
         type=Path,
         required=True
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "--by",
         "-b",
         choices=["sample", "component"],
         default="sample"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "--remove-non-contributing",
         "-N",
         action="store_true",
         help="Remove ideal components that do not contribute to the distance"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "--debug",
         action="store_true"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "-o",
         "--concat-id-order",
         choices=["before", "after"],
         default="after",
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "--no-fix-strand",
         action="store_true"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "-i",
         "--allow-inconsistent",
         action="store_true"
     )
-    parser.add_argument(
-        "-j",
-        "--jobs",
-        type=int,
-        default=1
-    )
-    # parser.add_argument(
-    #     "--collapse-duplicates",
-    #     "-R",
-    #     action="store_true",
-    #     help="Collapse exact duplicate transcripts"
-    # )
-    args = parser.parse_args()
-    if not args.graph:
-        if args.analysis_root:
-            args.graph = args.analysis_root / "graph.pkl"
-        else:
-            parser.error("Must provide either --graph or --analysis-root.")
-    if not args.comparisons:
-        if args.analysis_root:
-            args.comparisons = list(
-                multi_glob(args.analysis_root / "od2", ["*.pkl", "*.h5"])
-            )
-        else:
-            parser.error(
-                "Must provide either --comparisons or --analysis-root."
-            )
-    return args
+    return arg_config
 
 def renamed_seqs(
         rename,
@@ -545,28 +506,27 @@ class OrthologExporter:
         #             duplicates[seq.seq].append(seq.description)
 
 def main():
-    args = handle_arguments()
-    args.out_dir.mkdir(exist_ok=True)
+    _, args, config = build_parser().get_arguments_and_config()
+    config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
+    args.export_output_dir.mkdir(exist_ok=True)
     sim = SampleSimilarity.from_filenames(
-        args.graph,
-        tqdm(args.comparisons),
-        sample_count=args.samples,
+        config.graph,
+        get_table_files(config.tables_dir),
         store_dfs=True
     )
     exporter = OrthologExporter(
         sim,
-        TranscriptID.parser_from_re(args.gene_regex),
+        TranscriptID.parser_from_re(config.transcript_id_regex),
         not args.remove_non_contributing,
         debug=args.debug,
         consistent_strands=not args.no_fix_strand,
         allow_inconsistent=args.allow_inconsistent,
-        jobs=args.jobs,
+        jobs=config.jobs,
     )
     getattr(exporter, "by_{}".format(args.by))(
-        args.out_dir,
+        args.export_output_dir,
         order=args.concat_id_order
     )
-
 
 if __name__ == "__main__":
     main()

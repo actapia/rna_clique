@@ -1,5 +1,8 @@
+import itertools
 import pandas as pd
 from pathlib import Path
+from collections.abc import Iterable
+from typing import Iterator
 
 def read_table(
         path: Path,
@@ -50,3 +53,9 @@ def write_table(df: pd.DataFrame, path: Path):
         raise ValueError(
             f"Could not determine file type for extension {path.suffix}."
         )
+
+def multi_glob(path: Path, globs: Iterable[str]) -> Iterator[Path]:
+    return itertools.chain(*map(path.glob, globs))
+
+def get_table_files(path: Path) -> Iterator[Path]:
+    return multi_glob(path, ["*.pkl", "*.h5"])

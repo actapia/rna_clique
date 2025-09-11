@@ -1,6 +1,7 @@
 import argparse
 import pickle
 import json
+import config as config_module
 
 from pathlib import Path
 
@@ -11,50 +12,49 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from find_homologs import eprint
-from build_graph import component_subgraphs
+from graph import component_subgraphs
 
-def handle_arguments():
-    parser = argparse.ArgumentParser(
-        description=("generate exports, visualizations, or statistics for a "
-                     "gene matches graph")
-    )
-    #parser.add_argument("-i", "--inputs", nargs="+", type=Path, required=True)
-    parser.add_argument(
+def build_parser():
+    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config.expose_fields_with_default_aliases(
         "graph",
-        type=Path,
-        help="path to the gene matches graph pickle"
+        required=True
     )
-    parser.add_argument(
+    arg_config.expose_config_field(
+        "output_dir",
+        aliases=["--analysis-root", "--rna-clique-output-dir", "-A"]        
+    )
+    arg_config.add_argument(
         "-s",
         "--size-plot",
         type=Path,
         help="output path for component size histogram"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "-S",
         "--sample-plot",
         type=Path,
         help="output path for represented sample count plot"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "-r",
         "--ratio-plot",
         type=Path,
         help="output path for KDE of represented sample count / component size"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "-d",
         "--density-plot",
         type=Path,
         help="output path for KDE of component density"
     )
-    parser.add_argument(
-        "-g",
+    arg_config.add_argument(
+        "-G",
         "--graphviz",
         type=Path,
         help="output path for graphviz (dot) representation"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "-x",
         "--export",
         nargs="+",
@@ -63,12 +63,7 @@ def handle_arguments():
             " or ".join(type_name.values())
         )
     )
-    parser.add_argument(
-        "--samples",
-        type=int,
-        help="number of samples in the analysis"
-    )
-    parser.add_argument(
+    arg_config.add_argument(
         "--statistics",
         nargs="?",
         choices=["h", "m"],
@@ -76,7 +71,7 @@ def handle_arguments():
         help=("print statistics in the desired format (human or "
               "machine-readable)")
     )
-    return parser.parse_args()
+    return arg_config
 
 def export_cytoscape(graph : nx.Graph, out_file : Path):
     """Export the given graph as a Cytoscape JSON file."""
@@ -121,8 +116,8 @@ def component_hist(data: list[int], samples: int):
     )
 
 def main():
-    args = handle_arguments()
-    with open(args.graph, "rb") as f:
+    _, args, config = build_parser().get_arguments_and_config()
+    with open(config.graph, "rb") as f:
         graph = pickle.load(f)
     components = list(component_subgraphs(graph))
     # embed()

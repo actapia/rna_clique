@@ -45,16 +45,14 @@ def relative_to(p1: Path, p2: Path) -> Path:
 def make_subset_comparisons(
         inputs: Iterable[Path],
         output_dir: Path,
-        matches: Callable[[str], bool],
-        sample_name_regex: re.Pattern
+        matches: Callable[[Path], bool],
 ) -> Iterator[pd.DataFrame]:
     """Creates symlinks to stored dataframes whose samples satisfy a predicate.
 
     Parameters:
         inputs:            The Paths to the input dataframe pickles.
         output_dir:        The directory in which to create the symlinks.
-        matches:           A function indicating whether a sample is included.
-        sample_name_regex: A regular expression for parsing sample names.
+        matches:           Function giving whether a sample's Path is included.
 
     Returns:
         A generator yielding the dataframes whose samples satisfy the predicate.
@@ -62,11 +60,7 @@ def make_subset_comparisons(
     for df_path in inputs:
         df = read_table(df_path, head=1, head_unsupported=False)
         if all(
-                matches(
-                    sample_name_regex.search(
-                        Path(df[x + "sample"].iloc[0]).name
-                    ).group(1)
-                )
+                matches(Path(df[x + "sample"].iloc[0]))
                 for x in ["q", "s"]
         ):
             # We only need to re-read if it looks like we headed the table the

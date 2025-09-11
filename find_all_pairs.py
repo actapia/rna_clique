@@ -4,6 +4,7 @@ import math
 import multiprocessing
 import functools
 import itertools
+import config as config_module
 from more_itertools import consume
 from typing import Optional, Any, Callable
 from collections.abc import Iterable, Mapping
@@ -15,80 +16,32 @@ import os
 from tqdm import tqdm
 
 from gene_matches_tables import write_table
-from transcripts import TranscriptID, default_gene_re
+from transcripts import TranscriptID
 
 default_sample_regex = re.compile(os.environ.get("SAMPLE_RE", "^(.*?)_.*$"))
 
-def handle_arguments():
-    parser = argparse.ArgumentParser(
-        description=(
-            "get comparisons (gene matches tables) for all pairs of "
-            "FASTA files"
-        )
+def build_parser():
+    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config.expose_fields_with_default_aliases(
+        "top_genes_dir",
+        "output_dir",
+        "transcript_id_regex",
+        required=False
     )
-    parser.add_argument(
-        "-i",
-        "--inputs",
-        nargs="+",
-        type=Path,
-        required=True,
-        help="input FASTA files (containing top n genes)"
+    arg_config.expose_fields_with_default_aliases(
+        "cache_dir",
+        "evalue",
+        "title",
     )
-    parser.add_argument(
-        "-O",
-        "--output-dir",
-        type=Path,
-        required=True,
-        help="directory in which to write results"
-    )
-    parser.add_argument(
-        "-D",
-        "--db-cache-dir",
-        type=Path,
-        help="directory in which to store BLAST DBs for input FASTA files"
-    )
-    parser.add_argument(
-        "--pattern",
-        "-p",
-        type=re.compile,
-        default=default_gene_re,
-        help="Python regex for parsing sequence IDs"
-    )
-    parser.add_argument(
+    arg_config.add_argument(
         "--sample-regex",
         "-R",
         type=re.compile,
         default=default_sample_regex,
         help="Python regex for parsing sample names"
     )
-    parser.add_argument(
-        "-e",
-        "--evalue",
-        type=float,
-        default=1e-50,
-        help="e-value threshold to use for BLAST alignemnts"
-    )
-    parser.add_argument(
-        "-n",
-        "--top-n",
-        type=int,
-        default=1,
-        help="use top n matches (parameter big N)"
-    )
-    parser.add_argument(
-        "--keep-all",
-        "-k",
-        action="store_true",
-        help="keep all pairs in case of a tie"
-    )
-    parser.add_argument(
-        "--jobs",
-        "-j",
-        type=int,
-        default=multiprocessing.cpu_count()-1,
-        help="number of parallel jobs to use"
-    )
-    return parser.parse_args()
+    arg_config.add_output_config_argument()
+    return arg_config
 
 def find_homologs_and_save(
         transcripts1 : Path,
@@ -195,10 +148,8 @@ def find_all_pairs(
         hf_args=[],
         jobs=multiprocessing.cpu_count()-1,
 ):
-    output_dir.mkdir(exist_ok=True)
     cache = None
     if cache_dir:
-        cache_dir.mkdir(exist_ok=True)
         eprint("Building BLAST DBs.")
         cache = make_all_dbs(cache_dir, inputs, jobs=jobs)
     fh = functools.partial(
@@ -226,20 +177,28 @@ def find_all_pairs(
     )
 
 def main():
-    args = handle_arguments()
+    original_args, args, config = build_parser().get_arguments_and_config()
+    config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
+    id_parser = TranscriptID.parser_from_re(config.transcript_id_regex)
+    if original_args.sample_regex or not config.path_to_sample:
+        path_to_sample = lambda x: args.sample_regex.match(x.stem).group(1)
+    else:
+        path_to_sample = config.path_to_sample            
     gen, _, gen_len = find_all_pairs(
         args.inputs,
         args.output_dir,
         args.db_cache_dir,
-        lambda x: args.sample_regex.match(x.stem).group(1),
+        path_to_sample,
         hf_args=[
-            TranscriptID.parser_from_re(args.gene_regex),
+            id_parser,
             args.top_n,
             args.evalue,
             args.keep_all
         ]
     )
     consume(tqdm(gen, total=gen_len))
+    config.mark_finish()
+    config.yaml_save(args.output_config)
     
 if __name__ == "__main__":
     main()

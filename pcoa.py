@@ -13,7 +13,7 @@ from collections.abc import Iterable, Sequence, Mapping
 
 from confidence_ellipsoid import Ellipsoid, draw_ellipse, conf_ellipsoid
 from plots import as_tuple
-from similarity_computer import id_
+from identity import id_
 
 def empty_dict(*args, **kwargs):
     return {}

@@ -10,10 +10,7 @@ from numbers import Real
 
 from gene_matches_tables import read_table
 from multiset_key_dict import MultisetKeyDict
-
-def id_(x):
-    """Identity function."""
-    return x
+from identity import id_
 
 class ComparisonSimilarityComputer:
     """Base class for computing similarities from BLAST comparsions.
