@@ -72,7 +72,7 @@ writers = {
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager()
     arg_config.expose_fields_with_default_aliases(
-        "output_graph",
+        "graph",
         "tables_dir",
         required=True
     )
@@ -299,15 +299,12 @@ def main():
         config.graph,
         get_table_files(config.tables_dir)
     )
-    if args.out_type == "sim":
-        mat = sim.get_similarity_df()
-    else:
-        mat = sim.get_dissimilarity_df()
+    mat = sim.get_dissimilarity_df()
     if args.embed:
         from IPython import embed
         embed()
     else:
-        writers[args.format](mat, sys.stdout_buffer, header=args.header)
+        writers[args.format](mat, sys.stdout.buffer, header=args.header)
         if config.matrix:
             with open(config.matrix, "wb") as out:
                 writers[args.format](mat, out, header=args.header)

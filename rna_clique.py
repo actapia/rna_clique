@@ -50,8 +50,8 @@ def rna_clique(
         keep_all: bool = True,
         store_dfs: bool = False,
         jobs: int = multiprocessing.cpu_count() - 1,
-) -> SampleSimilarity:
-    tables, table_paths, graph, num_tables = filtering_step.filtering_step(
+) -> tuple[SampleSimilarity, dict[Path, str]]:
+    tables, table_paths, graph, num_tables, pts = filtering_step.filtering_step(
         dirs,
         out_dir_1,
         out_dir_2,
@@ -74,13 +74,13 @@ def rna_clique(
     )
     mat = sim.get_dissimilarity_df()
     mat.to_hdf(output_matrix, "matrix")
-    return sim
+    return sim, pts
     
 def main():
     _, args, config = build_parser().get_arguments_and_config()
     config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
     id_parser = TranscriptID.parser_from_re(config.transcript_id_regex)
-    sim = rna_clique(
+    sim, pts = rna_clique(
         config.input_dirs,
         config.top_genes_dir,
         config.tables_dir,
@@ -103,6 +103,7 @@ def main():
         sys.stdout.buffer,
         header=args.header
     )
+    config.path_to_sample = pts
     config.mark_finish()
     config.yaml_save(args.output_config)
 

@@ -37,13 +37,13 @@ def handle_arguments():
     return parser.parse_args()
 
 def get_analysis_name(config):
-    name = config.name
+    name = config.title
     if not name:
         try:
             out_dir = config.output_dir
         except AttributeError:
             raise ValueError("Could not determine analysis name.")
-        name = out_dir.name
+        name = out_dir.title
     return name
 
 # def select_out_dir_names(analyses, resolve=True):
@@ -81,6 +81,7 @@ def get_analysis_name(config):
 def main():
     args = handle_arguments()
     configs = [config_module.RNACliqueConfig.yaml_load(c) for c in args.configs]
+    args.export_output_dir.mkdir(exist_ok=True)
     out_names = [args.export_output_dir / get_analysis_name(c) for c in configs]
     counts = Counter(out_names)
     try:
@@ -112,9 +113,12 @@ def main():
             tqdm(comparison_paths),
             store_dfs=True
         )
+        parse_transcript_id = TranscriptID.parser_from_re(
+            config.transcript_id_regex,
+        )
         exporter = export_orthologs.OrthologExporter(
             sim,
-            config.transcript_id_regex,
+            parse_transcript_id,
             False,
             debug=True,
             consistent_strands=True,
@@ -144,9 +148,7 @@ def main():
                     sample_count=None,
                     clean=True,
                     merge_sams=True,
-                    parse_transcript_ids=TranscriptID.parse_from_re(
-                        config.transcript_id_regex,
-                    ),
+                    parse_transcript_id=parse_transcript_id,
                     jobs=config.jobs,
                     sim=sim,
                     strand_graph_out=(

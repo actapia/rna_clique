@@ -13,6 +13,7 @@ import seaborn as sns
 
 from find_homologs import eprint
 from graph import component_subgraphs
+from gene_matches_tables import read_table, get_table_files
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager()
@@ -20,9 +21,18 @@ def build_parser():
         "graph",
         required=True
     )
+    arg_config.expose_fields_with_default_aliases(
+        "top_genes_dir",
+        "tables_dir"
+    )
     arg_config.expose_config_field(
         "output_dir",
         aliases=["--analysis-root", "--rna-clique-output-dir", "-A"]        
+    )
+    arg_config.add_argument(
+        "--samples",
+        type=int,
+        help="number of samples"
     )
     arg_config.add_argument(
         "-s",
@@ -115,8 +125,36 @@ def component_hist(data: list[int], samples: int):
         align="center"
     )
 
+def count_samples(args, config):
+    if args.samples is not None:
+        return args.samples
+    if config.path_to_sample is not None:
+        return len(config.path_to_sample)
+    if config.input_dirs is not None:
+        return len(config.input_dirs)
+    if config.top_genes_dir is not None:
+        return sum(1 for _ in config.top_genes_dir.glob("*.fasta"))
+    if config.tables_dir is not None:
+        return len(
+            set.union(
+                *(
+                    {df.iloc[0][f"{s}sample"] for s in "sq"} for df in
+                    map(
+                        read_table,
+                        get_table_files(config.tables_dir)
+                    )
+                )
+            )
+        )
+    raise ValueError(
+        ("Could not determine number of samples from arguments "
+         "and configuration.")
+    )
+                        
+
 def main():
     _, args, config = build_parser().get_arguments_and_config()
+    samples = count_samples(args, config)
     with open(config.graph, "rb") as f:
         graph = pickle.load(f)
     components = list(component_subgraphs(graph))
@@ -131,7 +169,7 @@ def main():
         # cs_counter = Counter(component_sizes)
         # max_size = max(cs_counter)
         # size_counts = [cs_counter[k] for k in range(1, max_size)]
-        component_hist(component_sizes, args.samples)
+        component_hist(component_sizes, samples)
         #plt.hist(component_sizes, bins=range(1, max_size))
         plt.xlabel("Component size")
         plt.ylabel("Frequency")
@@ -142,7 +180,7 @@ def main():
         # sc_counter = Counter(sample_counts)
         # max_size = max(sc_counter)
         # size_counts = [sc_counter[k] for k in range(1, max_size)]
-        component_hist(sample_counts, args.samples)
+        component_hist(sample_counts, samples)
         plt.xlabel("Sample count")
         plt.ylabel("Frequency")
         plt.savefig(args.sample_plot)
@@ -171,19 +209,17 @@ def main():
             exporters[type_](graph, exp)
     if args.statistics:
         eprint("Computing statistics.")
-        if args.samples is None:
-            args.samples = len(set(t[0] for t in graph.nodes))
         ideal = sum(
             1 for (c, s, g) in zip(
                 components,
                 component_sizes,
                 sample_counts
             )
-            if len(c) == args.samples and g == args.samples and
+            if len(c) == samples and g == samples and
             2*len(c.edges) == s*(s-1)
         )
-        gt_samples = sum(1 for c in components if len(c) >= args.samples)
-        stats = [args.samples, len(components), gt_samples, ideal]
+        gt_samples = sum(1 for c in components if len(c) >= samples)
+        stats = [samples, len(components), gt_samples, ideal]
         if args.statistics == "h":
             for label, stat in zip(stat_labels, stats):
                 print(label + ":", stat)

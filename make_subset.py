@@ -34,8 +34,9 @@ def build_parser():
         required=True
     )
     arg_config.expose_fields_with_default_aliases("output_dir", "title")
-    arg_config.expose_config_field("subset_of", aliases=["-I"])
-    arg_config.set_required("path_to_sample")
+    arg_config.expose_config_field("subset_of", aliases=["-I"], required=True)
+    arg_config.set_defaults("top_genes_dir", None)
+    #arg_config.set_required("path_to_sample")
     arg_config.add_argument(
         "--exclude",
         "-x",
@@ -101,7 +102,10 @@ def main():
         args.include_regex
     )
     super_config = config_module.RNACliqueConfig.yaml_load(args.subset_of)
-    inputs = list(get_table_files(super_config.tables_dir))    
+    if super_config.path_to_sample is None:
+        eprint("Parent config must contain path_to_sample attribute.")
+        sys.exit(1)
+    inputs = list(get_table_files(super_config.tables_dir))
     if args.show_included:
         for sample in super_config.path_to_sample.values():
             if matches(sample):
@@ -119,19 +123,33 @@ def main():
         #         print(df_path)
     else:
         #config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
-        if config.tables_dir is not None and \
-           config.tables_dir != super_config.tables_dir:
+        if config.top_genes_dir is not None and \
+           config.top_genes_dir != super_config.top_genes_dir:
             eprint(
-                ("tables_dir is {} but should not be set for this "
-                 "program.").format(repr(config.tables_dir))
+                ("top_genes_dir is {} but should not be set for this "
+                 "program.").format(repr(config.top_genes__dir))
             )
             eprint("Failing.")
             sys.exit(1)
-        config.tables_dir = super_config.tables_dir
-        #config.output_dir.mkdir(exist_ok=True)
+        config.top_genes_dir = super_config.top_genes_dir
+        if config.output_dir is not None:
+            config.output_dir.mkdir(exist_ok=True)
+        config.tables_dir.mkdir(exist_ok=True)
+        # if not config.title and super_config.title:
+        #     config.title = f"Subset of {config.title}"
         config.path_to_sample = {
-            p: s for (p, s) in super_config.path_to_sample.items() if matches(p)
+            p: s for (p, s) in super_config.path_to_sample.items() if matches(s)
         }
+        config.input_dirs = [
+            p for p in super_config.input_dirs if matches(p.name)
+        ]
+        config.top_genes = super_config.top_genes
+        config.transcripts_name = super_config.transcripts_name
+        config.top_matches = super_config.top_matches
+        config.evalue = super_config.evalue
+        config.keep_all = super_config.keep_all
+        config.jobs = super_config.jobs
+        config.transcript_id_regex = super_config.transcript_id_regex
         graph = build_graph(
             make_subset_comparisons(
                 tqdm(inputs),
@@ -141,7 +159,7 @@ def main():
                 # config.path_to_sample.__getitem__,
             )
         )
-        with open(config.graph / "graph.pkl", "wb") as f:
+        with open(config.graph, "wb") as f:
             pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
         config.mark_finish()
         config.yaml_save(args.output_config)

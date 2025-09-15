@@ -43,8 +43,18 @@ def build_parser():
         "--export-output-dir",
         "-X",
         type=Path,
-        required=True
     )
+    arg_config.add_argument(
+        "--all-ideal",
+        "-a",
+        type=Path,
+        required=True,
+        default={
+            ("export_output_dir",): lambda export_output_dir:
+            export_output_dir / "all_ideal.fasta"
+        }
+    )
+
     arg_config.add_argument(
         "--ortholog-db-cache",        
         "-D",
@@ -226,16 +236,16 @@ def search(
 def main():
     _, args, config = build_parser().get_arguments_and_config()
     args.ortholog_db_cache.mkdir(exist_ok=True)
-    args.search_output_dir.mkdir(exist_ok=True)    
+    args.search_output_dir.mkdir(exist_ok=True)
     search(
         graph_loc=config.graph,
         comparisons_loc=get_table_files(config.tables_dir),
-        exported=args.export_output_dir,
+        exported=args.all_ideal,
         db_cache_loc=args.ortholog_db_cache,
         out_dir=args.search_output_dir,
         query=args.query,
         debug=args.debug,
-        gene_regex=TranscriptID.parse_from_re(config.transcript_id_regex),
+        #gene_regex=TranscriptID.parser_from_re(config.transcript_id_regex),
         clean=args.clean,
         merge_sams=args.merge_sams,
         jobs=config.jobs

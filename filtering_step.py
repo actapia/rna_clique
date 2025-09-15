@@ -16,7 +16,7 @@ from joblib import Parallel, delayed
 from tqdm import tqdm
 
 from transcripts import default_gene_re, TranscriptID
-from select_top_genes import TopGeneSelector
+from select_top_genes_all import select_top_and_save
 from find_all_pairs import find_all_pairs
 from build_graph import build_graph
 from similarity_computer import ComparisonSimilarityComputer
@@ -52,17 +52,6 @@ def build_parser():
     )
     return arg_config
 
-def select_top_and_save(out_dir, transcripts, x: Path, *args):
-    out = out_dir / (x.stem + "_top.fasta")
-    Bio.SeqIO.write(
-        TopGeneSelector.from_path(
-            x / transcripts,
-            *args
-        ).get_top_gene_seqs(),
-        out,
-        "fasta"
-    )
-    return (out, x.stem)
 
 def filtering_step(
         dirs,
@@ -114,14 +103,14 @@ def filtering_step(
     return map(
         ComparisonSimilarityComputer._read_table,
         table_paths1
-    ), table_paths2, graph, num_tables
+    ), table_paths2, graph, num_tables, path_to_sample
     
 
 def main():
     _, args, config = build_parser().get_arguments_and_config()
     config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
     id_parser = TranscriptID.parser_from_re(config.transcript_id_regex)
-    filtering_step(
+    pts = filtering_step(
         config.input_dirs,
         config.top_genes_dir,
         config.tables_dir,
@@ -134,7 +123,8 @@ def main():
         config.evalue,
         config.keep_all,
         config.jobs
-    )
+    )[-1]
+    config.path_to_sample = pts
     config.mark_finish()
     config.yaml_save(args.output_config)
 

@@ -68,7 +68,8 @@ def make_subset_comparisons(
             if df.shape[0] == 1:
                 df = read_table(df_path)
             dest = output_dir / df_path.name
-            dest.symlink_to(relative_to(df_path, dest.parent))
+            rt = relative_to(df_path, dest.parent)
+            dest.symlink_to(rt)
             yield df
 
 def handle_filters(include: Iterable[str], include_file: Path) -> set[str]:

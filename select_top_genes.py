@@ -2,6 +2,7 @@ import heapq
 import argparse
 import re
 import sys
+import config as config_module
 
 import Bio
 import Bio.SeqIO
@@ -14,17 +15,15 @@ from typing import Iterator, Callable
 
 from transcripts import default_gene_re, TranscriptID
 
-def handle_arguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--transcripts", "-i", type=Path)
-    parser.add_argument("--top", "-n", type=int, required=True)
-    parser.add_argument(
-        "--pattern",
-        "-e",
-        type=re.compile,
-        default=default_gene_re
+def build_parser():
+    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config.expose_fields_with_default_aliases(
+        "top_genes",
+        "transcript_id_regex",
+        required=True
     )
-    return parser.parse_args()
+    arg_config.add_argument("--transcripts", "-i", type=Path)
+    return arg_config
 
 class TopGeneSelector:
     def __init__(
@@ -65,18 +64,20 @@ class TopGeneSelector:
         return cls(lambda: seqs, *args, **kwargs)
         
 def main():
-    args = handle_arguments()
-    parse_transcript_id = TranscriptID.parser_from_re(args.pattern)
+    _, args, config = build_parser().get_arguments_and_config()
+    parse_transcript_id = TranscriptID.parser_from_re(
+        config.transcript_id_regex
+    )
     if args.transcripts:
         top = TopGeneSelector.from_path(
             args.transcripts,
-            args.top,
+            config.top_genes,
             parse_transcript_id
         )
     else:
         top = TopGeneSelector.from_sequences(
             list(Bio.SeqIO.parse(sys.stdin, "fasta")),
-            args.top,
+            config.top_genes,
             parse_transcript_id,
         )
     Bio.SeqIO.write(top.get_top_gene_seqs(), sys.stdout, "fasta")

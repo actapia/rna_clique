@@ -24,14 +24,15 @@ def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager()
     arg_config.expose_fields_with_default_aliases(
         "top_genes_dir",
-        "output_dir",
         "transcript_id_regex",
-        required=False
+        "tables_dir",
+        required=True
     )
     arg_config.expose_fields_with_default_aliases(
         "cache_dir",
         "evalue",
         "title",
+        "output_dir",        
     )
     arg_config.add_argument(
         "--sample-regex",
@@ -183,17 +184,17 @@ def main():
     if original_args.sample_regex or not config.path_to_sample:
         path_to_sample = lambda x: args.sample_regex.match(x.stem).group(1)
     else:
-        path_to_sample = config.path_to_sample            
+        path_to_sample = config.path_to_sample.__getitem__
     gen, _, gen_len = find_all_pairs(
-        args.inputs,
-        args.output_dir,
-        args.db_cache_dir,
+        list(config.top_genes_dir.glob("*.fasta")),
+        config.tables_dir,
+        config.cache_dir,
         path_to_sample,
         hf_args=[
             id_parser,
-            args.top_n,
-            args.evalue,
-            args.keep_all
+            config.top_genes,
+            config.evalue,
+            config.keep_all
         ]
     )
     consume(tqdm(gen, total=gen_len))

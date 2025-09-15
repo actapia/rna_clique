@@ -44,8 +44,8 @@ def typing_to_cast(t):
                         return lambda x: type_(
                             tuple(
                                 typing_to_cast(f)(v)
-                                for (f, v) in zip(fields, x)
-                            )
+                                for (f, v) in zip(fields, y)
+                            ) for y in x.items()
                         )
                 elif len(fields) == 1:
                     return lambda x: type_(map(typing_to_cast(fields[0]), x))

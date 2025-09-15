@@ -6,7 +6,7 @@ import re
 import config as config_module
 from pathlib import Path
 from find_homologs import eprint
-from gene_matches_tables import read_table
+from gene_matches_tables import get_table_files, read_table
 
 from collections.abc import Iterable
 from typing import Iterator
@@ -23,10 +23,13 @@ def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager()
     arg_config.expose_fields_with_default_aliases(
         "tables_dir",
-        "output_dir",
-        "output_graph",
+        "graph",
+        required=True,
     )
-    arg_config.add_output_config_arguments()
+    arg_config.expose_fields_with_default_aliases(
+        "output_dir",
+    )
+    arg_config.add_output_config_argument()
     return arg_config
 
 def make_edge(r):
@@ -64,8 +67,10 @@ def build_graph(dfs : Iterable[pd.DataFrame]) -> nx.Graph:
 
 def main():
     _, args, config = build_parser().get_arguments_and_config()
-    graph = build_graph(read_table(f) for f in tqdm(config.inputs))
-    with open(config.output_graph, "wb") as f:
+    graph = build_graph(
+        read_table(f) for f in tqdm(list(get_table_files(config.tables_dir)))
+    )
+    with open(config.graph, "wb") as f:
         pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
     config.mark_finish()
     config.yaml_save(args.output_config)

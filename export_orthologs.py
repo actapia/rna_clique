@@ -95,6 +95,12 @@ def build_parser():
         "--allow-inconsistent",
         action="store_true"
     )
+    arg_config.add_argument(
+        "--all",
+        "-a",
+        action="store_true",
+        help="Create concatenated all_ideal.fasta file"
+    )
     return arg_config
 
 def renamed_seqs(
@@ -177,7 +183,7 @@ def build_strand_graph(sim, component_sample_genes, parse_transcript_id, jobs=1)
         index = Bio.SeqIO.index(sample, "fasta")
         gene_to_isoforms = defaultdict(list)
         for s in index:
-            gene, isoform = parse_transcript_id(s)
+            _, gene, isoform = parse_transcript_id(s)
             if (sample, gene) in component_sample_genes:
                 gene_to_isoforms[gene].append((isoform, s))
         strand_graph.add_nodes_from(
@@ -396,6 +402,8 @@ class OrthologExporter:
                 )                    
         except AttributeError:
             pass
+        except KeyError:
+            from IPython import embed; embed()
         return t
 
     def by_sample(self, out_dir, rename=None, order="after"):
@@ -523,10 +531,16 @@ def main():
         allow_inconsistent=args.allow_inconsistent,
         jobs=config.jobs,
     )
-    getattr(exporter, "by_{}".format(args.by))(
+    component_paths = getattr(exporter, "by_{}".format(args.by))(
         args.export_output_dir,
         order=args.concat_id_order
     )
+    all_ideal_path = args.export_output_dir / "all_ideal.fasta"
+    if args.all:
+        with open(all_ideal_path, "w") as all_ideal:
+            for path in component_paths.values():
+                with open(path, "r") as component_fasta:
+                    all_ideal.write(component_fasta.read())    
 
 if __name__ == "__main__":
     main()
