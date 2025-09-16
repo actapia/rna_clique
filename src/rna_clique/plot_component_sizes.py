@@ -1,19 +1,18 @@
-import argparse
 import pickle
 import json
-import config as config_module
-
-from pathlib import Path
 
 import numpy as np
 import networkx as nx
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from find_homologs import eprint
-from graph import component_subgraphs
-from gene_matches_tables import read_table, get_table_files
+from .find_homologs import eprint
+from .graph import component_subgraphs
+from .gene_matches_tables import read_table, get_table_files
+from . import config as config_module
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager()

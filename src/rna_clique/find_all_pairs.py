@@ -1,22 +1,23 @@
-import argparse
+import os
 import re
 import math
 import multiprocessing
 import functools
 import itertools
-import config as config_module
-from more_itertools import consume
+
 from typing import Optional, Any, Callable
 from collections.abc import Iterable, Mapping
 from pathlib import Path
-from find_homologs import HomologFinder, eprint
-from simple_blast import BlastDBCache
+
+from more_itertools import consume
 from joblib import Parallel, delayed
-import os
 from tqdm import tqdm
 
-from gene_matches_tables import write_table
-from transcripts import TranscriptID
+from .find_homologs import HomologFinder, eprint
+from .simple_blast import BlastDBCache
+from .gene_matches_tables import write_table
+from .transcripts import TranscriptID
+from . import config as config_module
 
 default_sample_regex = re.compile(os.environ.get("SAMPLE_RE", "^(.*?)_.*$"))
 

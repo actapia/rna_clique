@@ -2,24 +2,22 @@ import argparse
 import json
 import sys
 import re
-import search_ideal_components
-import export_orthologs
-import config as config_module
-from filtered_distance import SampleSimilarity
-from name_conflict_resolver import NameConflictResolver
-from find_homologs import eprint
-from gene_matches_tables import get_table_files
 
-from collections import defaultdict, Counter
+from collections import Counter
+from pathlib import Path
+
 from tqdm import tqdm
 
-from transcripts import default_gene_re, TranscriptID
-
-from pathlib import Path
+from .transcripts import default_gene_re, TranscriptID
+from .filtered_distance import SampleSimilarity
+from .name_conflict_resolver import NameConflictResolver
+from .find_homologs import eprint
+from .gene_matches_tables import get_table_files
+from . import config as config_module
+from . import export_orthologs, search_ideal_components
 
 def handle_arguments():
     parser = argparse.ArgumentParser()
-    #parser.add_argument("-A", "--analyses", type=Path, nargs="+", required=True)
     parser.add_argument("-C", "--configs", type=Path, nargs="+", required=True)
     parser.add_argument("-r", "--resolve-name-conflicts", action="store_true")
     parser.add_argument("-X", "--export-output-dir", type=Path, required=True)
@@ -45,38 +43,6 @@ def get_analysis_name(config):
             raise ValueError("Could not determine analysis name.")
         name = out_dir.title
     return name
-
-# def select_out_dir_names(analyses, resolve=True):
-#     out_to_analysis = {}
-#     to_fix = defaultdict(set)
-#     for a in analyses:
-#         try:
-#             new = {(a,)*2, out_to_analysis[get_analysis_name(a)]}
-#             to_fix[a.name] |= new
-#         except KeyError:
-#             out_to_analysis[a.name] = (a, a)
-#     if to_fix and not resolve:
-#         raise ValueError("Could not resolve output name conflicts.")
-#     while to_fix:
-#         new_to_fix = {}
-#         for k, s in to_fix.items():
-#             del out_to_analysis[k]
-#             for analysis, ancestor in s:
-#                 if not ancestor.parent.name:
-#                     raise ValueError("Could not resolve output name conflicts.")
-#                 try:
-#                     new = {
-#                         (analysis, ancestor.parent),
-#                         out_to_analysis[ancestor.parent.name]
-#                     }
-#                     new_to_fix[ancestor.parent.name] |= new
-#                 except KeyError:
-#                     out_to_analysis[ancestor.parent.name] = (
-#                         analysis,
-#                         ancestor.parent
-#                     )
-#         to_fix = new_to_fix
-#     return {v[0]: k for (k, v) in out_to_analysis.items()}
 
 def main():
     args = handle_arguments()

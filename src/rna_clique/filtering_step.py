@@ -1,25 +1,22 @@
-import argparse
 import multiprocessing
-import re
 import itertools
 import pickle
-import config as config_module
-
-from typing import Iterable
 
 import networkx as nx
 import pandas as pd
-import Bio.SeqIO
 
 from pathlib import Path
+from typing import Iterable
+
 from joblib import Parallel, delayed
 from tqdm import tqdm
 
-from transcripts import default_gene_re, TranscriptID
-from select_top_genes_all import select_top_and_save
-from find_all_pairs import find_all_pairs
-from build_graph import build_graph
-from similarity_computer import ComparisonSimilarityComputer
+from .transcripts import default_gene_re, TranscriptID
+from .select_top_genes_all import select_top_and_save
+from .find_all_pairs import find_all_pairs
+from .build_graph import build_graph
+from .similarity_computer import ComparisonSimilarityComputer
+from . import config as config_module
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager()

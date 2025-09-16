@@ -1,10 +1,12 @@
 import Bio.SeqIO
-import config as config_module
-from select_top_genes import TopGeneSelector
-from transcripts import TranscriptID
 
 from pathlib import Path
+
 from joblib import Parallel, delayed
+
+from .select_top_genes import TopGeneSelector
+from .transcripts import TranscriptID
+from . import config as config_module
 
 def select_top_and_save(out_dir, transcripts, x: Path, *args):
     out = out_dir / (x.stem + "_top.fasta")

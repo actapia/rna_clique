@@ -1,26 +1,26 @@
-import argparse
-import re
-import pysam
 import shutil
 import functools
+
+import pysam
 import Bio.Align
 import networkx as nx
-import config as config_module
+
 from collections.abc import Iterable
 from typing import Optional, Callable
 from pathlib import Path
 from collections import defaultdict, deque, namedtuple
-from gene_matches_tables import get_table_files
 
 from simple_blast import BlastDBCache, MultiformatBlastnSearch
 
-from filtered_distance import (
+from .gene_matches_tables import get_table_files
+from .filtered_distance import (
     SampleSimilarity,
     get_ideal_components,
 )
-from export_orthologs import build_strand_graph, get_sample_gene_to_component
-from path_to_sample import path_to_sample
-from transcripts import default_gene_re, TranscriptID
+from .export_orthologs import build_strand_graph, get_sample_gene_to_component
+from .path_to_sample import path_to_sample
+from .transcripts import default_gene_re, TranscriptID
+from . import config as config_module
 
 from tqdm import tqdm
 

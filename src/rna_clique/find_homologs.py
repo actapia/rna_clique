@@ -1,20 +1,19 @@
-import argparse
 import sys
 import re
 import numbers
 import functools
-from simple_blast.blasting import TabularBlastnSearch
+
 import numpy as np
-import config as config_module
+import pandas as pd
 
 from fractions import Fraction
 from pathlib import Path
-
-import pandas as pd
-
 from typing import Callable, Optional
 
-from transcripts import TranscriptID, default_gene_re
+from simple_blast.blasting import TabularBlastnSearch
+
+from .transcripts import TranscriptID
+from . import config as config_module
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager()

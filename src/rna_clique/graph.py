@@ -1,5 +1,7 @@
 import functools
+
 import networkx as nx
+
 from typing import Iterator
 
 def connected_component_subgraphs(

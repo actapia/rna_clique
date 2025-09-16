@@ -1,12 +1,13 @@
 import itertools
-from pysat.examples.rc2 import RC2
-from collections import defaultdict
 
 import networkx as nx
+
+from collections import defaultdict
+
+from pysat.examples.rc2 import RC2
+from pysat.formula import WCNF
 from sympy.logic.boolalg import to_cnf, to_int_repr
 from sympy.abc import A, B, C
-
-from pysat.formula import WCNF
 
 eq = ~(A ^ B)
 neq = A ^ B

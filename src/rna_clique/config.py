@@ -18,16 +18,16 @@ from datetime import datetime
 from typing import Optional
 from collections import deque, ChainMap
 from collections.abc import Collection
-from transcripts import default_gene_re
-from marshalling_dataclass import marshalling_dataclass, marshalling_field
 
+from .transcripts import default_gene_re
+from .marshalling_dataclass import marshalling_dataclass, marshalling_field
+
+from pathlib import Path
 from yaml import load, dump
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
     from yaml import Loader, Dumper
-
-from pathlib import Path
 
 def get_version():
     version = None

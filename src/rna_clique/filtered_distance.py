@@ -1,10 +1,7 @@
-import argparse
 import pickle
-import contextlib
 import sys
 import functools
 import tempfile
-import config as config_module
 
 import pandas as pd
 import networkx as nx
@@ -15,12 +12,12 @@ from pathlib import Path
 from typing import Optional
 from collections.abc import Iterable, Iterator
 
-from graph import component_subgraphs
 from multiset_key_dict import FrozenMultiset
-from gene_matches_tables import get_table_files
-from similarity_computer import ComparisonSimilarityComputer
 
-from tqdm import tqdm
+from .graph import component_subgraphs
+from .gene_matches_tables import get_table_files
+from .similarity_computer import ComparisonSimilarityComputer
+from . import config as config_module
 
 def is_complete(g : nx.Graph) -> bool:
     """Returns whether g is a complete (sub)graph."""

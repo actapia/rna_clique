@@ -1,5 +1,4 @@
 from itertools import zip_longest
-
 from collections.abc import Iterable
 
 def default_group_label_maker(group_values: str | Iterable[str]) -> str:

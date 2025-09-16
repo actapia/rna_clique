@@ -1,8 +1,5 @@
 import heapq
-import argparse
-import re
 import sys
-import config as config_module
 
 import Bio
 import Bio.SeqIO
@@ -10,10 +7,10 @@ import Bio.SeqIO
 from pathlib import Path
 from collections import defaultdict
 from collections.abc import Collection
-
 from typing import Iterator, Callable
 
-from transcripts import default_gene_re, TranscriptID
+from .transcripts import TranscriptID
+from . import config as config_module
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager()

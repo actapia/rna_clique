@@ -1,14 +1,13 @@
 import os
 import re
 
-from pathlib import Path
-
 import pandas as pd
 
+from pathlib import Path
 from typing import Optional, Callable, Iterator
 from collections.abc import Container, Iterable
 
-from gene_matches_tables import read_table
+from .gene_matches_tables import read_table
 
 default_filter_regex = re.compile("(.*)")
 

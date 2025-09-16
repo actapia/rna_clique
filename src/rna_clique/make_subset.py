@@ -1,30 +1,20 @@
-import argparse
 import re
 import pickle
-import pandas as pd
 import sys
-import itertools
-import config as config_module
 
 from pathlib import Path
 
 from tqdm import tqdm
 
-from subset_comparisons import (
+from .subset_comparisons import (
     handle_filters,
     matcher,
     make_subset_comparisons,
-    relative_to
 )
-from path_to_sample import sample_re
-from build_graph import build_graph
-from gene_matches_tables import read_table
-from find_homologs import eprint
-
-from collections.abc import Iterable
-from typing import Iterator
-
-from gene_matches_tables import get_table_files
+from .build_graph import build_graph
+from .find_homologs import eprint
+from .gene_matches_tables import get_table_files
+from . import config as config_module
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager()

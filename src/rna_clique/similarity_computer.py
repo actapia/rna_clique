@@ -1,6 +1,7 @@
+import functools
+
 import numpy as np
 import pandas as pd
-import functools
 
 from functools import cached_property
 from collections.abc import Iterable, Iterator
@@ -8,9 +9,9 @@ from pathlib import Path
 from typing import Optional, Any
 from numbers import Real
 
-from gene_matches_tables import read_table
-from multiset_key_dict import MultisetKeyDict
-from identity import id_
+from .gene_matches_tables import read_table
+from .multiset_key_dict import MultisetKeyDict
+from .identity import id_
 
 class ComparisonSimilarityComputer:
     """Base class for computing similarities from BLAST comparsions.

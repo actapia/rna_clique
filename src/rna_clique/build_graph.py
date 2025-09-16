@@ -1,18 +1,15 @@
-import argparse
 import functools
 import operator
 import pickle
-import re
-import config as config_module
-from pathlib import Path
-from find_homologs import eprint
-from gene_matches_tables import get_table_files, read_table
-
-from collections.abc import Iterable
-from typing import Iterator
 
 import pandas as pd
 import networkx as nx
+
+from collections.abc import Iterable
+
+from find_homologs import eprint
+from gene_matches_tables import get_table_files, read_table
+from . import config as config_module
 
 from tqdm import tqdm
 

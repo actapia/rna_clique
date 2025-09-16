@@ -1,5 +1,5 @@
 from fractions import Fraction
-from similarity_computer import ComparisonSimilarityComputer
+from .similarity_computer import ComparisonSimilarityComputer
 
 class UnfilteredSimilarity(ComparisonSimilarityComputer):
     def _similarity_helper(self):

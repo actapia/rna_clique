@@ -1,40 +1,36 @@
-import argparse
 import itertools
 import sys
 import re
-import psutil
-import config as config_module
-from find_homologs import highest_bitscores, eprint
-from filtered_distance import (
-    SampleSimilarity,
-    get_ideal_components,
-)
-from path_to_sample import path_to_sample
-from collections import defaultdict
-from contextlib import ExitStack
-from simple_blast import TabularBlastnSearch
-from graph import component_subgraphs
-from strand_sat import sat_assign_strands
-from transcripts import TranscriptID
-from gene_matches_tables import get_table_files
-
-import networkx as nx
-import numpy as np
-
-from pathlib import Path
-
-import Bio.SeqIO
-import Bio.Align
-
-from tqdm import tqdm
-
-from joblib import Parallel, delayed
-
 try:
     import resource
 except ImportError:
     resource = None
-#from IPython import embed
+
+import psutil
+import networkx as nx
+import numpy as np
+import Bio.SeqIO
+import Bio.Align
+
+from pathlib import Path
+
+from tqdm import tqdm
+from joblib import Parallel, delayed
+
+from .find_homologs import highest_bitscores, eprint
+from .filtered_distance import (
+    SampleSimilarity,
+    get_ideal_components,
+)
+from .path_to_sample import path_to_sample
+from .collections import defaultdict
+from .contextlib import ExitStack
+from .simple_blast import TabularBlastnSearch
+from .graph import component_subgraphs
+from .strand_sat import sat_assign_strands
+from .transcripts import TranscriptID
+from .gene_matches_tables import get_table_files
+from . import config as config_module
 
 default_gene_re = re.compile("^.*g([0-9]+)_i([0-9]+)")
 

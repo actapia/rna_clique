@@ -1,23 +1,20 @@
+import functools
+
 import Bio.Phylo
 import numpy as np
-import functools
 import matplotlib as mpl
-
 import dendropy
 
 from io import StringIO
-
-from plots import _transform_ax, BasicCompositeTransform
-
-from nice_colorsys import *
-from nice_colorsys.rgb255 import rgb255
-
 from numbers import Number
+from typing import Callable, Union, Optional, Any
+from collections.abc import Sequence, Mapping
+
 from matplotlib import pyplot as plt
 from Bio.Phylo import BaseTree
 
-from typing import Callable, Union, Optional, Any
-from collections.abc import Iterable, Sequence, Mapping
+from .plots import _transform_ax, BasicCompositeTransform
+
 
 def tril_jagged(mat: np.ndarray) -> list[list[Number]]:
     """Get lower triangle of a matrix as a jagged 2-dimensional list."""

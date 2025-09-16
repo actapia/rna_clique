@@ -1,5 +1,6 @@
-from pathlib import Path
 import pandas as pd
+
+from pathlib import Path
 
 def get_sample_metadata(metadata_path: Path) -> pd.DataFrame:
     sample_info = pd.read_csv(

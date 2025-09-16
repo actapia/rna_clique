@@ -1,5 +1,7 @@
 import itertools
+
 import pandas as pd
+
 from pathlib import Path
 from collections.abc import Iterable
 from typing import Iterator
