@@ -4,11 +4,12 @@ import sys
 from pathlib import Path
 from typing import Callable, Iterable
 
+from multiset_key_dict import MultisetKeyDict
+
 from .transcripts import TranscriptID
 from .filtered_distance import SampleSimilarity
 from .similarity_computer import ComparisonSimilarityComputer
 from .transcripts import default_gene_re
-from .multiset_key_dict import MultisetKeyDict
 from . import filtered_distance, filtering_step
 from . import config as config_module
 

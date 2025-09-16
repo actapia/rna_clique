@@ -7,8 +7,8 @@ import networkx as nx
 
 from collections.abc import Iterable
 
-from find_homologs import eprint
-from gene_matches_tables import get_table_files, read_table
+from .find_homologs import eprint
+from .gene_matches_tables import get_table_files, read_table
 from . import config as config_module
 
 from tqdm import tqdm
@@ -16,7 +16,7 @@ from tqdm import tqdm
 # Since sum doesn't work on all objects.
 sum_ = functools.partial(functools.reduce, operator.add)
 
-def build_parser():
+def build_parser() -> config_module.RNACliqueConfigArgumentManager:
     arg_config = config_module.RNACliqueConfigArgumentManager()
     arg_config.expose_fields_with_default_aliases(
         "tables_dir",

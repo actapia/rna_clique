@@ -54,7 +54,6 @@ def build_parser():
             export_output_dir / "all_ideal.fasta"
         }
     )
-
     arg_config.add_argument(
         "--ortholog-db-cache",        
         "-D",

@@ -9,8 +9,9 @@ from pathlib import Path
 from typing import Optional, Any
 from numbers import Real
 
+from multiset_key_dict import MultisetKeyDict
+
 from .gene_matches_tables import read_table
-from .multiset_key_dict import MultisetKeyDict
 from .identity import id_
 
 class ComparisonSimilarityComputer:

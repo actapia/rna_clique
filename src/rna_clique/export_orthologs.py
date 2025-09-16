@@ -13,9 +13,12 @@ import Bio.SeqIO
 import Bio.Align
 
 from pathlib import Path
+from collections import defaultdict
+from contextlib import ExitStack
 
 from tqdm import tqdm
 from joblib import Parallel, delayed
+from simple_blast import TabularBlastnSearch
 
 from .find_homologs import highest_bitscores, eprint
 from .filtered_distance import (
@@ -23,9 +26,6 @@ from .filtered_distance import (
     get_ideal_components,
 )
 from .path_to_sample import path_to_sample
-from .collections import defaultdict
-from .contextlib import ExitStack
-from .simple_blast import TabularBlastnSearch
 from .graph import component_subgraphs
 from .strand_sat import sat_assign_strands
 from .transcripts import TranscriptID
@@ -405,10 +405,12 @@ class OrthologExporter:
     def by_sample(self, out_dir, rename=None, order="after"):
         if rename is None:
             rename = concat_names(self._name_ideal, order=order)
+        sample_paths = {}
         for sample in self.samples:
             out_fn = out_dir / "{}_orthologs.fasta".format(
                 path_to_sample(sample)
             )
+            sample_paths[sample] = out_fn
             Bio.SeqIO.write(
                 (
                     t[-1] for t in
@@ -431,6 +433,7 @@ class OrthologExporter:
                 out_fn,
                 "fasta"
             )
+        return sample_paths
 
     def by_component(
             self,
@@ -527,14 +530,14 @@ def main():
         allow_inconsistent=args.allow_inconsistent,
         jobs=config.jobs,
     )
-    component_paths = getattr(exporter, "by_{}".format(args.by))(
+    paths = getattr(exporter, "by_{}".format(args.by))(
         args.export_output_dir,
         order=args.concat_id_order
     )
     all_ideal_path = args.export_output_dir / "all_ideal.fasta"
     if args.all:
         with open(all_ideal_path, "w") as all_ideal:
-            for path in component_paths.values():
+            for path in paths.values():
                 with open(path, "r") as component_fasta:
                     all_ideal.write(component_fasta.read())    
 

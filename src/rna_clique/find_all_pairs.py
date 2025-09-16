@@ -12,9 +12,9 @@ from pathlib import Path
 from more_itertools import consume
 from joblib import Parallel, delayed
 from tqdm import tqdm
+from simple_blast import BlastDBCache
 
 from .find_homologs import HomologFinder, eprint
-from .simple_blast import BlastDBCache
 from .gene_matches_tables import write_table
 from .transcripts import TranscriptID
 from . import config as config_module

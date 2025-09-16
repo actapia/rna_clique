@@ -7,10 +7,10 @@ from collections import Counter
 from pathlib import Path
 
 from tqdm import tqdm
+from name_conflict_resolver import NameConflictResolver
 
 from .transcripts import default_gene_re, TranscriptID
 from .filtered_distance import SampleSimilarity
-from .name_conflict_resolver import NameConflictResolver
 from .find_homologs import eprint
 from .gene_matches_tables import get_table_files
 from . import config as config_module

@@ -29,7 +29,8 @@ try:
 except ImportError:
     from yaml import Loader, Dumper
 
-def get_version():
+def get_version() -> str:
+    """Return a string represnting the running version of the software."""
     version = None
     try:
         import git
