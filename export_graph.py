@@ -1,0 +1,85 @@
+import json
+import io
+import sys
+import pickle
+
+import networkx as nx
+
+import config as config_module
+
+from pathlib import Path
+from contextlib import ExitStack
+
+def write_cytoscape(graph: nx.Graph, out_file: io.TextIOBase):
+    """Export the given graph as a Cytoscape.js JSON file.
+
+    Parameters:
+        graph:    The graph to export.
+        out_file: Output file-like object.
+    """
+    json.dump(nx.cytoscape_data(graph), out_file)
+
+def build_parser():
+    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config.expose_fields_with_default_aliases(
+        "graph",
+        required=True
+    )
+    arg_config.expose_config_field(
+        "output_dir",
+        aliases=["--analysis-root", "--rna-clique-output-dir", "-A"]        
+    )
+    arg_config.add_argument(
+        "--export-out",
+        "-x",
+        type=Path,
+        help="Path to which to export the graph."
+    )
+    arg_config.add_argument(
+        "-f",
+        "--format",
+        choices=writers,
+        default={
+            ("export_out",): lambda export_out: extension_to_format.get(
+                export_out.suffix[:1],
+                "graph"
+            ),
+        },
+        help="Format for writing graph.",
+        required=True
+    )    
+    return arg_config
+
+extension_to_format = {
+    "cyjs": "cytoscape",
+    "graphml": "graphml",
+    "dot": "graphviz",
+    "gv": "graphviz"
+}
+
+# type_name = {
+#     "cytoscape": "Cytoscape.js JSON",
+#     "graphml": "GraphML",
+#     "graphviz": "Graphviz"
+# }
+
+writers = {
+    "cytoscape": write_cytoscape,
+    "graphml": nx.write_graphml,
+    "graphviz": nx.drawing.nx_pydot.write_dot
+}
+
+def main():
+    _, args, config = build_parser().get_arguments_and_config()
+    with open(config.graph, "rb") as graph_pickle:
+        graph = pickle.load(graph_pickle)
+    with ExitStack() as stack:
+        if args.export_out:
+            f = open(args.export_out, "w")
+            stack.push(f)
+        else:
+            f = sys.stdout
+        writers[args.format](graph, f)        
+
+if __name__ == "__main__":
+    main()

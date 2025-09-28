@@ -1,12 +1,38 @@
 import Bio.SeqIO
+
 import config as config_module
-from select_top_genes import TopGeneSelector
-from transcripts import TranscriptID
 
 from pathlib import Path
 from joblib import Parallel, delayed
 
-def select_top_and_save(out_dir, transcripts, x: Path, *args):
+from select_top_genes import TopGeneSelector
+from transcripts import TranscriptID
+
+def select_top_and_save(
+        out_dir: Path,
+        transcripts: str,
+        x: Path,
+        *args
+) -> tuple[Path, str]:
+    """Select the top n genes by k-mer coverage from transcripts and save them.
+
+    This function wraps TopGeneSelector, saving the selected top transcripts by
+    k-mer coverage in a specified directory. The name given to the output file
+    is "{sample}_top.fasta", where the sample is assumed to be the name of the
+    directory in which the transcripts FASTA file is located.
+
+    Additional arguments provided will be passed to the
+    TopGeneSelector.from_path classmethod used to construct a TopGeneSelector
+    object.
+
+    Parameters:
+        out_dir:           Location in which to save top n genes.
+        transcripts (str): Name of the FASTA file containing transcripts.
+        x:                 Directory containing the transcripts FASTA file.
+
+    Returns:
+        Path to the output file and the inferred sample name.
+    """
     out = out_dir / (x.stem + "_top.fasta")
     Bio.SeqIO.write(
         TopGeneSelector.from_path(

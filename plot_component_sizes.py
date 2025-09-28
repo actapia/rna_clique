@@ -1,15 +1,13 @@
-import argparse
 import pickle
-import json
+
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 import config as config_module
 
 from pathlib import Path
-
-import numpy as np
-import networkx as nx
-
-import matplotlib.pyplot as plt
-import seaborn as sns
+from typing import Optional
 
 from find_homologs import eprint
 from graph import component_subgraphs
@@ -28,11 +26,6 @@ def build_parser():
     arg_config.expose_config_field(
         "output_dir",
         aliases=["--analysis-root", "--rna-clique-output-dir", "-A"]        
-    )
-    arg_config.add_argument(
-        "--samples",
-        type=int,
-        help="number of samples"
     )
     arg_config.add_argument(
         "-s",
@@ -58,21 +51,21 @@ def build_parser():
         type=Path,
         help="output path for KDE of component density"
     )
-    arg_config.add_argument(
-        "-G",
-        "--graphviz",
-        type=Path,
-        help="output path for graphviz (dot) representation"
-    )
-    arg_config.add_argument(
-        "-x",
-        "--export",
-        nargs="+",
-        type=Path,
-        help="output paths for export to {}.".format(
-            " or ".join(type_name.values())
-        )
-    )
+    # arg_config.add_argument(
+    #     "-G",
+    #     "--graphviz",
+    #     type=Path,
+    #     help="output path for graphviz (dot) representation"
+    # )
+    # arg_config.add_argument(
+    #     "-x",
+    #     "--export",
+    #     nargs="+",
+    #     type=Path,
+    #     help="output paths for export to {}.".format(
+    #         " or ".join(type_name.values())
+    #     )
+    # )
     arg_config.add_argument(
         "--statistics",
         nargs="?",
@@ -83,26 +76,6 @@ def build_parser():
     )
     return arg_config
 
-def export_cytoscape(graph : nx.Graph, out_file : Path):
-    """Export the given graph as a Cytoscape JSON file."""
-    with open(out_file, "w") as jf:
-        json.dump(nx.cytoscape_data(graph), jf)
-
-extension_to_type = {
-    ".cyjs": "cytoscape",
-    ".graphml": "graphml"
-}
-
-type_name = {
-    "cytoscape": "Cytoscape JSON",
-    "graphml": "GraphML"
-}
-
-exporters = {
-    "cytoscape": export_cytoscape,
-    "graphml": nx.write_graphml
-}
-
 stat_labels = [
     "Samples",
     "Total components",
@@ -110,7 +83,20 @@ stat_labels = [
     "Ideal components"
 ]
 
-def component_hist(data: list[int], samples: int):
+def component_hist(data: list[int], highlight: Optional[int] = None):
+    """Draw a histogram for the given data.
+
+    This function is made for drawing histograms for data in small integer
+    ranges, so the bin size is always 1.
+
+    One bar of the histogram can be highlighted in a different color. This could
+    represent, for example, the bar corresponding to the number of samples
+    present in the analysis.
+
+    Parameters:
+        data (list):     Data from which to compute frequency distribution.
+        highlight (int): Value frequency to highlight in a different color.
+    """
     hist, bins = np.histogram(
         data,
         bins=range(1, max(data) + 2)
@@ -118,16 +104,27 @@ def component_hist(data: list[int], samples: int):
     # embed()
     plt.bar(bins[:-1], hist, width=np.diff(bins), color="C0", align="center")
     plt.bar(
-        bins[samples - 1],
-        hist[samples - 1],
+        bins[highlight - 1],
+        hist[highlight - 1],
         width=np.diff(bins),
         color="C1",
         align="center"
     )
 
-def count_samples(args, config):
-    if args.samples is not None:
-        return args.samples
+def count_samples(config: config_module.RNACliqueConfig) -> int:
+    """Determine the number of samples used in an analysis.
+
+    This function prefers faster ways of determining the number of samples if
+    they are available. If the number of samples could not be determined from
+    the command-line arguments and configuration, then a ValueError will be
+    raised.
+
+    Parameters:
+        config: RNACliqueConfig for the analysis.
+
+    Returns:
+        The number of samples used in the analysis.
+    """
     if config.path_to_sample is not None:
         return len(config.path_to_sample)
     if config.input_dirs is not None:
@@ -150,20 +147,16 @@ def count_samples(args, config):
         ("Could not determine number of samples from arguments "
          "and configuration.")
     )
-                        
 
 def main():
     _, args, config = build_parser().get_arguments_and_config()
-    samples = count_samples(args, config)
+    samples = count_samples(config)
     with open(config.graph, "rb") as f:
         graph = pickle.load(f)
     components = list(component_subgraphs(graph))
     # embed()
     component_sizes = [len(c) for c in components]
     sample_counts = [len(set(t[0] for t in c)) for c in components]
-    density = [
-        2*len(c.edges)/(l*(l-1)) for (c, l) in zip(components, component_sizes)
-    ]
     if args.size_plot:
         eprint("Making size plot.")
         # cs_counter = Counter(component_sizes)
@@ -194,19 +187,23 @@ def main():
         fig.savefig(args.ratio_plot)
     plt.clf()
     if args.density_plot:
+        density = [
+            2*len(c.edges)/(l*(l-1))
+            for (c, l) in zip(components, component_sizes)
+        ]        
         eprint("Making density plot.")
         sns.set_style("whitegrid")
         kde = sns.kdeplot(np.array(sorted(density)))
         fig = kde.get_figure()
         fig.savefig(args.density_plot)
-    if args.graphviz:
-        eprint("Making graphviz file.")
-        nx.drawing.nx_pydot.write_dot(graph, args.graphviz)
-    if args.export is not None:
-        for exp in args.export:
-            type_ = extension_to_type[exp.suffix]
-            eprint("Exporting to {}.".format(type_name[type_]))
-            exporters[type_](graph, exp)
+    # if args.graphviz:
+    #     eprint("Making graphviz file.")
+    #     nx.drawing.nx_pydot.write_dot(graph, args.graphviz)
+    # if args.export is not None:
+    #     for exp in args.export:
+    #         type_ = extension_to_type[exp.suffix]
+    #         eprint("Exporting to {}.".format(type_name[type_]))
+    #         exporters[type_](graph, exp)
     if args.statistics:
         eprint("Computing statistics.")
         ideal = sum(

@@ -1,14 +1,22 @@
 import functools
+
 import networkx as nx
-from typing import Iterator
+
+from typing import Iterator, TypeVar, Callable
+
+T = TypeVar("T")
 
 def connected_component_subgraphs(
-        g,
-        connected_components
-) -> Iterator:
-    """Yields the connected components of the given graph as subgraphs."""
-    for c in connected_components(g):
-        yield g.subgraph(c)
+        g: T,
+        connected_components: Callable[[T], set]
+) -> Iterator[T]:
+    """Returns iterator of connected components of the given graph as subgraphs.
+
+    Parameters:
+        g:                    The NetworkX Graph-like object.
+        connected_components: Function to get connected components from g.
+    """
+    return map(g.subgraph, connected_components(g))
 
 component_subgraphs = functools.partial(
     connected_component_subgraphs,

@@ -1,20 +1,24 @@
-import argparse
 import re
 import math
 import multiprocessing
 import functools
 import itertools
+import os
+
+import pandas as pd
+
 import config as config_module
-from more_itertools import consume
-from typing import Optional, Any, Callable
+
+from typing import Optional, Any, Callable, Iterator
 from collections.abc import Iterable, Mapping
 from pathlib import Path
-from find_homologs import HomologFinder, eprint
+
+from more_itertools import consume
 from simple_blast import BlastDBCache
 from joblib import Parallel, delayed
-import os
 from tqdm import tqdm
 
+from find_homologs import HomologFinder, eprint
 from gene_matches_tables import write_table
 from transcripts import TranscriptID
 
@@ -50,7 +54,7 @@ def find_homologs_and_save(
         out_path : Path,
         hf_args : Optional[Iterable] = None,
         hf_kwargs : Optional[Mapping[str, Any]] = None
-):
+) -> pd.DataFrame:
     """Get the gene matches tables for the given FASTA files and save results.
 
     Parameters:
@@ -59,6 +63,9 @@ def find_homologs_and_save(
         out_path:     Output file in which to store the gene matches table.
         hf_args:      Arguments to pass to HomologFinder constructor.
         hf_kwargs:    Keyword arguments to pass to HomologFinder constructor.
+
+    Returns:
+        The gene matches tables computed for the two sets of transcripts.
     """
     if hf_args is None:
         hf_args = []
@@ -142,13 +149,51 @@ def make_all_dbs(
     return cache
 
 def find_all_pairs(
-        inputs,
-        output_dir,
-        cache_dir,
-        path_to_sample,
-        hf_args=[],
-        jobs=multiprocessing.cpu_count()-1,
-):
+        inputs: Iterable[Path],
+        output_dir: Path,
+        cache_dir: Path,
+        path_to_sample: Callable[[Path], str],
+        hf_args: Iterable = [],
+        jobs: int = multiprocessing.cpu_count() - 1,
+) -> tuple[Iterator[pd.DataFrame], Iterator[Path], int]:
+    """Obtain gene matches tables for all pairs of input samples.
+
+    This function takes the (top n genes of) the transcriptomes of some number
+    of samples as input and produces a "gene matches table" for every pair of
+    samples. Each gene matches table contains the putative orthologous genes
+    found in that pair of samples along with alignment statistics for the
+    alignments between the orthologous genes.
+
+    This function performs much I/O, but it also returns an iterator over the
+    gene matches tables that are produced. To reduce the memory footprint, the
+    function does not hold all tables at once. Instead, they are prodduced as
+    requested from the consumer of the iterator. As the gene matches tables are
+    produced, they are simultaneously saved to disk. Inconveniently, this means
+    that code that wishes to use this function without performing any operations
+    on the tables will have to iterate through the returned iterator and discard
+    each of the tables. This can be done easily with a function like
+    more_itertools.consume.
+
+    This function also returns an iterator over the output table paths. To
+    facilitate pipelining, the order in which the (first) tables iterator is
+    simply the order in which the parallel jobs complete. Hence, the two
+    iterators are generally NOT parallel and typically should not be zipped.
+
+    The final element of the returned value is the total number of gene matches
+    tables. This value is provided for convenience---it's always s choose 2,
+    where s is the number of samples.
+
+    Parameters:
+        inputs:         Paths to sample transcripts (of top n genes).
+        output_dir:     Output directory in which to store gene matches tables.
+        cache_dir:      Intermediate BLAST DB cache directory
+        path_to_sample: Function mapping paths to sample names.
+        hf_args:        Arguments to pass to HomologFinder.
+        jobs (int):     Number of parallel jobs to use.
+
+    Returns:
+        Gene matches tables, paths to tables, number of tables
+    """
     cache = None
     if cache_dir:
         eprint("Building BLAST DBs.")

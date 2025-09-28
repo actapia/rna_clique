@@ -2,20 +2,24 @@ import argparse
 import json
 import sys
 import re
+
 import search_ideal_components
 import export_orthologs
 import config as config_module
-from filtered_distance import SampleSimilarity
-from name_conflict_resolver import NameConflictResolver
-from find_homologs import eprint
-from gene_matches_tables import get_table_files
 
-from collections import defaultdict, Counter
+from name_conflict_resolver import NameConflictResolver
+
+from collections import Counter
+from collections.abc import Iterable
+from typing import Optional, Callable
+from pathlib import Path
+
 from tqdm import tqdm
 
+from filtered_distance import SampleSimilarity
+from find_homologs import eprint
+from gene_matches_tables import get_table_files
 from transcripts import default_gene_re, TranscriptID
-
-from pathlib import Path
 
 def handle_arguments():
     parser = argparse.ArgumentParser()
@@ -36,63 +40,65 @@ def handle_arguments():
     )
     return parser.parse_args()
 
-def get_analysis_name(config):
+def get_analysis_name(config: config_module.RNACliqueConfig) -> str:
+    """Get a suitable name for the analysis represented by the configuration.
+
+    If the configuration includes a title, this is preferred. Otherwise, the
+    name of the output directory is used. If neither is present in the
+    configuration, this function raises a ValueError.
+
+    Parasmeters:
+        config: RNACliqueConfig representing analysis for which to get a name.
+
+    Returns:
+        A string that can be used as a name for the analysis.
+    """
     name = config.title
     if not name:
         try:
             out_dir = config.output_dir
         except AttributeError:
             raise ValueError("Could not determine analysis name.")
-        name = out_dir.title
+        name = out_dir.name
     return name
 
-# def select_out_dir_names(analyses, resolve=True):
-#     out_to_analysis = {}
-#     to_fix = defaultdict(set)
-#     for a in analyses:
-#         try:
-#             new = {(a,)*2, out_to_analysis[get_analysis_name(a)]}
-#             to_fix[a.name] |= new
-#         except KeyError:
-#             out_to_analysis[a.name] = (a, a)
-#     if to_fix and not resolve:
-#         raise ValueError("Could not resolve output name conflicts.")
-#     while to_fix:
-#         new_to_fix = {}
-#         for k, s in to_fix.items():
-#             del out_to_analysis[k]
-#             for analysis, ancestor in s:
-#                 if not ancestor.parent.name:
-#                     raise ValueError("Could not resolve output name conflicts.")
-#                 try:
-#                     new = {
-#                         (analysis, ancestor.parent),
-#                         out_to_analysis[ancestor.parent.name]
-#                     }
-#                     new_to_fix[ancestor.parent.name] |= new
-#                 except KeyError:
-#                     out_to_analysis[ancestor.parent.name] = (
-#                         analysis,
-#                         ancestor.parent
-#                     )
-#         to_fix = new_to_fix
-#     return {v[0]: k for (k, v) in out_to_analysis.items()}
+class NameConflictError(ValueError):
+    pass
 
-def main():
-    args = handle_arguments()
-    configs = [config_module.RNACliqueConfig.yaml_load(c) for c in args.configs]
-    args.export_output_dir.mkdir(exist_ok=True)
-    out_names = [args.export_output_dir / get_analysis_name(c) for c in configs]
+def export_and_search(
+        configs: list[config_module.RNACliqueConfig],
+        export_output_dir: Path,
+        queries: Iterable[Path],
+        parse_transcript_id: Optional[Callable[[str], TranscriptID]] = None,
+        jobs: Optional[int] = None,
+        resolve_name_conflicts: bool = False,
+        export_only: bool = False,
+):
+    """Export transcripts in ideal components and search them for sequences.
+
+    This function allows you to export transcripts belonging to genes in ideal
+    component and search for sequences in multiple query FASTA files within
+    them for multiple analyses at once. Each analysis should be represented by
+    an RNACliqueConfig object.
+
+    Parameters:
+        configs (list):                Configs for analyses to export/search.
+        export_output_dir:             Export/search result output directory.
+        queries:                       Paths to query sequence FASTA files.
+        parse_transcript_id:           Function to parse transcript FASTA IDs.
+        jobs (int):                    Number of parallel jobs to use.
+        resolve_name_conflicts (bool): Auto-resolve conflicting analysis names.
+        export_only (bool):            Only perform the export step.
+    """
+    out_names = [export_output_dir / get_analysis_name(c) for c in configs]
     counts = Counter(out_names)
     try:
         multiple = next(x for (x, c) in counts.items() if c > 1).name
-        eprint(f"Multiple analyses named {multiple!r}.")
-        if not args.resolve_name_conflicts:
-             eprint(("Cannot continue. Provide the -r option to try automatic "
-                     "resolution."))
-             sys.exit(1)
-        else:
-            eprint("Resolving conflicts automatically.")
+        #eprint(f"Multiple analyses named {multiple!r}.")
+        if not resolve_name_conflicts:
+            raise NameConflictError(f"Multiple analyses named {multiple!r}.")
+        # else:
+        #     eprint("Resolving conflicts automatically.")
     except StopIteration:
         pass
     resolver = NameConflictResolver.from_keys(
@@ -100,10 +106,10 @@ def main():
         out_names.__getitem__
     )
     for config, (_, (_, out_dir)) in zip(configs, resolver.resolve()):
-        if config.transcript_id_regex is None:
-            config.transcript_id_regex = args.transcript_id_regex
-        if args.jobs is not None:
-            config.jobs = args.jobs
+        # if config.transcript_id_regex is None:
+        #     config.transcript_id_regex = transcript_id_regex
+        if jobs is not None:
+            config.jobs = jobs
         out_dir.mkdir(exist_ok=True)
         export_dir = out_dir / "export"
         export_dir.mkdir(exist_ok=True)
@@ -113,12 +119,14 @@ def main():
             tqdm(comparison_paths),
             store_dfs=True
         )
-        parse_transcript_id = TranscriptID.parser_from_re(
-            config.transcript_id_regex,
-        )
+        pti = parse_transcript_id
+        if pti is None:
+            pti = TranscriptID.parser_from_re(
+                config.transcript_id_regex,
+            )
         exporter = export_orthologs.OrthologExporter(
             sim,
-            parse_transcript_id,
+            pti,
             False,
             debug=True,
             consistent_strands=True,
@@ -126,7 +134,7 @@ def main():
             jobs=config.jobs,
         )
         component_paths = exporter.by_component(export_dir, order="after")
-        if not args.export_only:
+        if not export_only:
             all_ideal_path = export_dir / "all_ideal.fasta"
             with open(all_ideal_path, "w") as all_ideal:
                 for path in component_paths.values():
@@ -134,32 +142,50 @@ def main():
                         all_ideal.write(component_fasta.read())
             db_cache = export_dir / "db_cache"
             db_cache.mkdir(exist_ok=True)
-            for query in args.queries:
+            for query in queries:
                 search_dir = out_dir / ("search_" + query.stem)
                 search_dir.mkdir(exist_ok=True)
                 stats = search_ideal_components.search(
-                    graph_loc=config.graph,
-                    comparisons_loc=comparison_paths,
+                    sim=sim,                    
                     exported=all_ideal_path,
                     db_cache_loc=db_cache,
                     out_dir=search_dir,
                     query=query,
-                    debug=True,
-                    sample_count=None,
-                    clean=True,
                     merge_sams=True,
-                    parse_transcript_id=parse_transcript_id,
+                    parse_transcript_id=pti,
                     jobs=config.jobs,
-                    sim=sim,
-                    strand_graph_out=(
-                        exporter.strand_graph,
-                        exporter.node_to_component_component
-                    )
+                    strand_graph=exporter.strand_graph,
+                    node_to_ccc=exporter.node_to_component_component
                 )
                 if stats is None:
                     from IPython import embed; embed()
                 with open(search_dir / "stats", "w") as stats_file:
                     json.dump(stats._asdict(), stats_file)
+
+def main():
+    args = handle_arguments()
+    configs = [config_module.RNACliqueConfig.yaml_load(c) for c in args.configs]
+    args.export_output_dir.mkdir(exist_ok=True)
+    parse_transcript_id = None
+    if args.transcript_id_regex is not None:
+        parse_transcript_id = TranscriptID.parser_from_re(
+            args.transcript_id_regex
+        )
+    try:
+        export_and_search(
+            configs,
+            args.export_output_dir,
+            args.queries,
+            parse_transcript_id,
+            args.jobs,
+            args.resolve_name_conflicts,
+            args.export_only
+        )
+    except NameConflictError as e:
+        eprint(e)
+        eprint(("Cannot continue. Provide the -r option to try automatic "
+                "resolution."))
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

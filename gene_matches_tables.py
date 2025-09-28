@@ -1,5 +1,6 @@
 import itertools
 import pandas as pd
+
 from pathlib import Path
 from collections.abc import Iterable
 from typing import Iterator
@@ -55,7 +56,27 @@ def write_table(df: pd.DataFrame, path: Path):
         )
 
 def multi_glob(path: Path, globs: Iterable[str]) -> Iterator[Path]:
+    """Return an iterator over multiple glob patterns.
+
+    Parameters:
+        path:  The path at which to glob.
+        globs: The glob patterns to use.
+    """
     return itertools.chain(*map(path.glob, globs))
 
 def get_table_files(path: Path) -> Iterator[Path]:
+    """Get stored gene matches talbes from a directory.
+
+    This function simply uses glob patterns to look for files that could be
+    serialized gene matches tables---it makes no effort to verify the contents
+    of the files. If your directory contains non-gene matches table pickle or
+    HDF5 files, this function will unwittingly get those files, too.
+
+    Untrusted files should not be loaded this way since pickles allow arbitrary
+    code exection. This may be true even for HDF5 files, which can indirectly
+    cause pickles to be loaded.
+
+    Parameters:
+        path: Path to the directory containing the gene matches tables.
+    """    
     return multi_glob(path, ["*.pkl", "*.h5"])
