@@ -15,7 +15,8 @@ from .plots import default_group_label_maker, _keyed_multi_sort, as_tuple
 from .confidence_ellipsoid import Ellipsoid, draw_ellipse, conf_ellipsoid
 from .identity import id_
 
-def empty_dict(*args, **kwargs):
+def empty_dict(*args, **kwargs) -> dict:
+    """Return an empty dict, ignoring any arguments."""
     return {}
 
 default_marker_style = {"color": "black", "ls": "", "marker": "d"}

@@ -1,5 +1,6 @@
 import pickle
 import sys
+import io
 import functools
 import tempfile
 
@@ -9,7 +10,7 @@ import networkx as nx
 from functools import cached_property
 from fractions import Fraction
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Callable, Any
 from collections.abc import Iterable, Iterator
 
 from multiset_key_dict import FrozenMultiset
@@ -33,68 +34,24 @@ def get_ideal_components(
         if len(s) == samples and is_complete(s):
             yield s
 
-def write_hdf(df, f):
-    with pd.HDFStore(
-            tempfile.mktemp(),
-            driver="H5FD_CORE",
-            driver_core_backing_store=0
-    ) as store:
-        store.put("matrix", df, errors="string", encoding="UTF-8")
-        f.write(store._handle.get_file_image())
-
-def ignore_kwargs(f, ignore):
-    ignore = set(ignore)
-    def inner(*args, **kwargs):
-        kwargs = {k: v for (k, v) in kwargs.items() if k not in ignore}
-        return f(*args, **kwargs)
-    return inner
-
-ignore_header = functools.partial(ignore_kwargs, ignore={"header"})
-
-writers = {
-    "matrix": ignore_header(
-        functools.partial(
-            pd.DataFrame.to_csv,
-            sep=" ",
-            header=False,
-            index=False
-        ),
-    ),
-    "table": functools.partial(pd.DataFrame.to_csv, sep=" "),
-    "csv": pd.DataFrame.to_csv,
-    "hdf": ignore_header(write_hdf),
-    "pickle": ignore_header(pd.DataFrame.to_pickle),
-}
-
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager()
     arg_config.expose_fields_with_default_aliases(
         "graph",
         "tables_dir",
+        "matrix",        
         required=True
     )
     arg_config.expose_fields_with_default_aliases(
         "output_dir",
-        "matrix",
     )
-    arg_config.add_argument(
-        "-e",
-        "--embed",
-        action="store_true",
-        help="enter an IPython shell after computing the matrix"
-    )
-    arg_config.add_argument(
-        "-f",
-        "--format",
-        choices=writers,
-        default="matrix",
-        help="Format for writing distance matrix to stdout."
-    )
-    arg_config.add_argument(
-        "--header",
-        action="store_true",
-        help="Include header in distance matrix written to stdout."
-    )
+
+    # arg_config.add_argument(
+    #     "-e",
+    #     "--embed",
+    #     action="store_true",
+    #     help="enter an IPython shell after computing the matrix"
+    # )
     arg_config.add_output_config_argument()
     return arg_config
 
@@ -135,7 +92,27 @@ def restrict_to(
         )["index_x"]
     ]
 
-def restrict_multi(df2, df1, columns):
+# TODO: Clarify the explanation in this docstring.
+def restrict_multi(
+        df2: pd.DataFrame,
+        df1: pd.DataFrame,
+        columns: Iterable[Iterable[str]]
+):
+    """Restrict df1 to rows in df2 based on multiple lists of columns.
+
+    This function essentially performs restrict_to multiple times with the same
+    df2 but different columns in each step. The dataframe to be filtered is
+    initially df1, and the restricted dataframe after each step is used as the
+    dataframe to be filtered for the next.
+
+    Parameters:
+        df2:     The dataframe used for filtering.
+        df1:     The dataframe from which to draw rows.
+        columns: The lists of columns of df1 that correspond to those of df2.
+
+    Returns:
+        df1, without rows where values for some column list isn't a row in df2.
+    """
     return functools.reduce(functools.partial(restrict_to, df2), columns, df1)
 
     
@@ -162,11 +139,14 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         comparison_dfs: An iterable mapping sample pairs to comparisons.
     """
 
+    # List of lists of columns corresponding to sample and gene IDs for subject
+    # and queries.
     sample_gene_columns = [
         [a + b for b in ["sample", "gene"]]
         for a in ["s", "q"]
     ]
 
+    # Columns that can be stored as Pandas categorical values.
     categorical_columns = ["qsample", "ssample", "sstrand"]
     
     def __init__(
@@ -240,7 +220,14 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         for k, df in self.comparison_dfs.multiset_iter():
             yield k, self.restricted(df)
 
-    def _similarity_helper(self):
+    def _similarity_helper(self) -> Iterator[tuple[frozenset[str], Fraction]]:
+        """Yield similarities for pairs of samples.
+
+        Each value yielded is a pair. The first element of the pair is itself a
+        frozenset containing the IDs of the two samples for which the similarity
+        was computed. The second element is a Fraction object, the similarity
+        between the two samples.
+        """
         for (qsample, ssample), comp_df in self.comparison_dfs:
             restricted = self.restricted(comp_df)
             dist = Fraction(
@@ -259,7 +246,27 @@ class SampleSimilarity(ComparisonSimilarityComputer):
             convert_to_categorical: bool = True,
             *args,
             **kwargs
-    ):
+    ) -> tuple[list, dict[str, Any]]:
+        """Get constructor arguments for constructing from filenames.
+
+        To save memory, the store_dfs parameter can be set to False. In that
+        case, comparison_dfs will be generator, and it will not be possible to
+        access them more than once.
+
+        The qseqid and sseqid columns are often long and can also be removed to
+        save memory. Likewise, certain columns (specified in the class's
+        cateogrical_columns attribute) can be made Pandas categorical columns,
+        which can further reduce the memory footprint.        
+
+        Parameters:
+            comparison_fns:                 Paths to stored gene matches tables.
+            store_dfs (bool):               Store the dataframes loaded.
+            remove_seqids (bool):           Delete seqid columns.
+            convert_to_categorical (bool):  Make certain columns categorical.
+
+        Returns:
+            The positional and keyword constructor arguments.
+        """        
         args, kwargs = super()._constructor_args_from_filenames(
             comparison_fns,
             store_dfs,
@@ -271,42 +278,44 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         args = [graph] + args
         return args, kwargs
 
-
     @classmethod
     def from_filenames(
             cls,
             *args,
             **kwargs
     ):
-        """Constructs a SampleSimilarity from paths to graph and table files.
+        """Constructs a SampleSimilarity from paths to table files.
+
+        To save memory, the store_dfs parameter can be set to False. In that
+        case, comparison_dfs will be generator, and it will not be possible to
+        access them more than once.
+
+        The qseqid and sseqid columns are often long and can also be removed to
+        save memory. Likewise, certain columns (specified in the class's
+        cateogrical_columns attribute) can be made Pandas categorical columns,
+        which can further reduce the memory footprint.        
 
         Parameters:
-            graph_fn:         Path to pickle for gene matches graph.
-            comparison_fns:   Paths to stored gene matches tables.
-            store_dfs (bool): Whether to store the dataframes loaded.
+            comparison_fns:                 Paths to stored gene matches tables.
+            store_dfs (bool):               Store the dataframes loaded.
+            remove_seqids (bool):           Delete seqid columns.
+            convert_to_categorical (bool):  Make certain columns categorical.
 
         Returns:
-            A SampleSimilarity using the pickled gene matches graph and tables.
-        """
-        return super().from_filenames(*args, **kwargs)    
+            A SampleSimilarity using the given gene matches graph and tables.        
+        """        
+        return super().from_filenames(*args, **kwargs)
         
 def main():
-    _, args, config = build_parser().get_arguments_and_config()    
+    _, args, config = build_parser().get_arguments_and_config()
     sim = SampleSimilarity.from_filenames(
         config.graph,
         get_table_files(config.tables_dir)
     )
     mat = sim.get_dissimilarity_df()
-    if args.embed:
-        from IPython import embed
-        embed()
-    else:
-        writers[args.format](mat, sys.stdout.buffer, header=args.header)
-        if config.matrix:
-            with open(config.matrix, "wb") as out:
-                writers[args.format](mat, out, header=args.header)
-        config.mark_finish()
-        config.yaml_save(args.output_config)
+    mat.to_hdf(config.matrix, key="matrix", mode="w")
+    config.mark_finish()
+    config.yaml_save(args.output_config)
 
 if __name__ == "__main__":
     main()

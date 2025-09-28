@@ -6,7 +6,7 @@ import networkx as nx
 import pandas as pd
 
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Callable
 
 from joblib import Parallel, delayed
 from tqdm import tqdm
@@ -50,20 +50,75 @@ def build_parser():
     return arg_config
 
 
+# TODO: Link to a better explanation of the parameters rather than trying to
+# rehash the whole algorithm here.
 def filtering_step(
-        dirs,
-        out_dir_1,
-        out_dir_2,
-        cache_dir,
-        output_graph,
-        top_genes,
-        transcripts="transcripts.fasta",
-        top_matches=1,
-        id_parser=TranscriptID.parser_from_re(default_gene_re),
-        evalue=1e-99,
-        keep_all=True,
-        jobs=multiprocessing.cpu_count() - 1,
+        dirs: Iterable[Path],
+        out_dir_1: Path,
+        out_dir_2: Path,
+        cache_dir: Path,
+        output_graph: Path,
+        top_genes: int,
+        transcripts: str = "transcripts.fasta",
+        top_matches: int = 1,
+        id_parser: Callable[
+            [str],
+            TranscriptID
+        ]=TranscriptID.parser_from_re(default_gene_re),
+        evalue: float = 1e-99,
+        keep_all: bool = True,
+        jobs: int = multiprocessing.cpu_count() - 1,
 ) -> tuple[Iterable[pd.DataFrame], Iterable[Path], nx.Graph]:
+    """Perform the filtering step (phase 1) of RNA-clique.
+
+    This function performs the full filtering step of RNA-clique, which has also
+    been referred to as "phase 1" in some RNA-clique documentation. Phase 1
+    consists of the following steps:
+
+        1. Selection of top n genes by k-mer coverage for every sample.
+        2. BLASTn searching for top n genes of every ordered sample pair.
+        3. Processing of the BLASTn searches to get gene matches tables.
+        4. Building the gene matches graph.
+
+    The third step involves finding for each unordered pair of samples the best
+    matches in both directions for every gene belonging to one of the samples. A
+    pair of genes, one from each sample, makes it into the "gene matches table"
+    for the pair of samples only when that pair of genes appears among the top N
+    matches for the first sample in both directions. This parameter is usually
+    set to 1, so a match is only counted if it is (one of) the best in both
+    directions. In the rare case of ties, you can keep all mathces using the
+    keep_all parameter.
+
+    For a more thorough explanation, please refer to the RNA-clique paper.
+
+    This function mainly performs I/O, but it also returns three objects that
+    are convenient for downstream processing. First, the function returns an
+    iterable of the gene matches tables. Second, the function returns an
+    iterable of paths to the gene matches tables. Third, the function returns
+    the gene matches graph.
+
+    To reduce memory requirements, the function avoids loading all gene matches
+    tables into memory at once. To this end, the returned iterable over gene
+    matches tables does not iterate over tables stored in memory. Instead,
+    tables are loaded from disk as the iteratable is iterated.
+
+    Parameters:
+        dirs:              Input directory containing transcriptomes.
+        out_dir_1:         Output directory for storing top genes by coverage.
+        out_dir_2:         Output directory for storing gene matches tables.
+        cache_dir:         Intermediate directory storing BLAST DB caches.
+        output_graph:      Path to output gene matches graph pickle.
+        top_genes (int):   Number of top genes to select.
+        transcripts (str): Name of transcript FASTA files within input dirs.
+        top_matches (int): Threshold for counting matches between directions.
+        id_parser:         Function to parse TranscriptIDs from FASTA IDs.
+        evalue (float):    BLAST search e-value threshold.
+        keep_all (bool):   Whether to keep all matches in case of a tie.
+        jobs (int):        Number of parallel jobs to use.
+
+    Returns:
+        Two iterables with gene matches tables and paths, gene matches graph.
+    """
     path_to_sample = dict(
         Parallel(n_jobs=jobs)(
             map(

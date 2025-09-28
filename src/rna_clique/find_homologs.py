@@ -52,7 +52,18 @@ def parse_seq_id(regex: re.compile, s: pd.Series) -> pd.DataFrame:
     """Parse a seq_id column to extract the gene and isoform IDs."""
     return s.str.extract(regex).astype(np.int32)
 
-def shrink_df(df: pd.DataFrame):
+def shrink_df(df: pd.DataFrame) -> pd.DataFrame:
+    """Try to reduce the size of a dataframe by downcasting integers.
+
+    Beware that if the dataframe is shrunk, Pandas will not consider the input
+    dataframe equal to the output because of differing datatypes.
+
+    Parameters:
+        df: The Pandas dataframe to shrink via downcasting.
+
+    Returns:
+        A Pandas dataframe with the same data, minimizing integer type sizes.
+    """
     df = df.copy()
     for col in df.columns:
         if issubclass(df[col].dtype.type, numbers.Integral):
@@ -296,6 +307,13 @@ class HomologFinder:
             columns: Optional[list[str]] = None
     ) -> pd.DataFrame:
         """Returns the given columns of the dataframe, excluding duplicate rows.
+
+        Parameters:
+            df:              Dataframe to get data without duplicate rows from.
+            columns (list):  Columns of data to get from the dataframe.
+
+        Returns:
+            The specified columns of the dataframe, without duplicate rows.
         """
         if columns is None:
             columns = cls.merge_columns
