@@ -264,7 +264,7 @@ def get_clades(
         sample_metadata: pd.DataFrame,
         sample_name_column: str,
         group_by: str | list[str]
-) -> Iterator[tuple[Any], Bio.Phylo.BaseTree.Clade]:
+) -> Iterator[tuple[Any, Bio.Phylo.BaseTree.Clade]]:
     """Get maximal clades containing terminals with exactly one metadata value.
 
     This function tries to find the largest clades such that every terminal of
