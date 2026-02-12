@@ -94,7 +94,7 @@ def bbox_max_x(bbox: mpl.transforms.BboxBase) -> float:
     """Get the maximum x coordinate of a bounding box."""
     return max(bbox.bounds[0] + bbox.bounds[2], bbox.bounds[0])
 
-def bbox_min_y(bbox: mpl.tranforms.BboxBase) -> float:
+def bbox_min_y(bbox: mpl.transforms.BboxBase) -> float:
     """Get the minimum y coordinate of a bounding box."""    
     return min(bbox.bounds[1], bbox.bounds[1] + bbox.bounds[3])
 
