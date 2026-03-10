@@ -14,13 +14,22 @@ from typing import Iterator, Callable
 from transcripts import TranscriptID, default_parser
 
 def build_parser():
-    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description=(
+            "Select top genes by k-mer covereage in a transcripts FASTA file."
+        )
+    )
     arg_config.expose_fields_with_default_aliases(
         "top_genes",
         "transcript_id_regex",
         required=True
     )
-    arg_config.add_argument("--transcripts", "-i", type=Path)
+    arg_config.add_argument(
+        "--transcripts",
+        "-i",
+        type=Path,
+        help="FASTA file from which to select top genes by k-mer coverage.",
+    )
     return arg_config
 
 class TopGeneSelector:

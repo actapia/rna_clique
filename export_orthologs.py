@@ -57,7 +57,9 @@ def named_reverse_complement(t: Bio.SeqRecord) -> Bio.SeqRecord:
     return rc
 
 def build_parser():
-    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description="Export ortholog sequences from ideal components."
+    )
     arg_config.expose_fields_with_default_aliases(
         "graph",
         "tables_dir",
@@ -67,50 +69,57 @@ def build_parser():
     )
     arg_config.expose_config_field(
         "output_dir",
-        aliases=["--analysis-root", "--rna-clique-output-dir", "-A"]        
+        aliases=["--analysis-root", "--rna-clique-output-dir", "-A"],
+        help="RNA-clique analysis root (output_dir).",
     )
     arg_config.add_argument(
         "--export-output-dir",
         "-X",
         type=Path,
-        required=True
+        required=True,
+        help="Output directory in which to store exported orthologs.",
     )
     arg_config.add_argument(
         "--by",
         "-b",
         choices=["sample", "component"],
-        default="sample"
+        default="sample",
+        help="Attribute by which to organize orthologs in export.",
     )
     arg_config.add_argument(
         "--remove-non-contributing",
         "-N",
         action="store_true",
-        help="Remove ideal components that do not contribute to the distance"
+        help="Remove ideal components that contribute no differences.",
     )
     arg_config.add_argument(
         "--debug",
-        action="store_true"
+        action="store_true",
+        help="Enable debug behavior.",
     )
     arg_config.add_argument(
         "-o",
         "--concat-id-order",
         choices=["before", "after"],
         default="after",
+        help="Where to place original sequence ID relative to group name.",
     )
     arg_config.add_argument(
         "--no-fix-strand",
-        action="store_true"
+        action="store_true",
+        help="Do not attempt to put transcripts in consistent orientations.",
     )
     arg_config.add_argument(
         "-i",
         "--allow-inconsistent",
-        action="store_true"
+        action="store_true",
+        help="Approximate transcript reorientation instead of failing.",
     )
     arg_config.add_argument(
         "--all",
         "-a",
         action="store_true",
-        help="Create concatenated all_ideal.fasta file"
+        help="Create concatenated all_ideal.fasta file."
     )
     return arg_config
 

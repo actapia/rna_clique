@@ -45,7 +45,9 @@ def select_top_and_save(
     return (out, x.stem)
 
 def build_parser():
-    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description="Select top genes by k-mer coverage for given samples.",
+    )
     arg_config.expose_fields_with_default_aliases(
         "top_genes",
         "transcripts_name",

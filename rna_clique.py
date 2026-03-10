@@ -19,18 +19,6 @@ from transcripts import default_gene_re
 def build_parser():
     parser = filtering_step.build_parser()
     parser.expose_fields_with_default_aliases("matrix")
-    parser.add_argument(
-        "-f",
-        "--format",
-        choices=filtered_distance.writers,
-        default="table",
-        help="Format for writing distance matrix to stdout."
-    )
-    parser.add_argument(
-        "--header",
-        action="store_true",
-        help="Include header in distance matrix written to stdout."
-    )
     return parser
 
 def rna_clique(
@@ -197,14 +185,9 @@ def main():
         False,
         jobs=config.jobs
     )
-    filtered_distance.writers[
-        args.format
-    ](
-        sim.get_dissimilarity_df(),
-        sys.stdout.buffer,
-        header=args.header
-    )
     config.path_to_sample = pts
+    mat = sim.get_dissimilarity_df()
+    mat.to_hdf(config.matrix, key="matrix", mode="w")    
     config.mark_finish()
     config.yaml_save(args.output_config)
 

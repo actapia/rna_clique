@@ -1,0 +1,40 @@
+# Version of the configuration schema used.
+config_version: 0.0.1
+# Name to assign to the analysis.
+title:
+# Directories containing the transcript FASTA files.
+input_dirs:
+# Output directory containing top n genes by coverage.
+top_genes_dir:
+# Output directory containing gene matches tables.
+tables_dir:
+# Intermediate directory containing BLAST DB caches.
+cache_dir:
+# Output directory root.
+output_dir:
+# Output gene matches graph.
+graph:
+# Number of top genes by k-mer coverate to select.
+top_genes:
+# Name of transcripts files in input directories.
+transcripts_name: transcripts.fasta
+# Threshold for counting a match between two genes.
+top_matches: 1
+# e-value threshold to use for BLASTn searches.
+evalue: 1e-99
+# Keep all matches between genes in the case of ties.
+keep_all: true
+# Number of parallel jobs to use.
+jobs: 31
+# Python regex to use for parsing transcript IDs.
+transcript_id_regex: ^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)
+# Mapping from paths to sample names.
+path_to_sample:
+# Output distance matrix location.
+matrix:
+# When the last analysis associated with this config file finished.
+finished:
+# Version of RNA-clique used to create this analysis.
+version: v0.2.0
+# Path to analysis of which this is a subset.
+subset_of:

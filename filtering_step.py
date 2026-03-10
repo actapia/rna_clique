@@ -21,7 +21,9 @@ from build_graph import build_graph
 from similarity_computer import ComparisonSimilarityComputer
 
 def build_parser():
-    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description="Select top genes and get gene matches tables and graph."
+    )
     arg_config.expose_fields_with_default_aliases(
         "top_genes",
         "top_matches",

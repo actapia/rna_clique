@@ -25,7 +25,9 @@ from transcripts import TranscriptID
 default_sample_regex = re.compile(os.environ.get("SAMPLE_RE", "^(.*?)_.*$"))
 
 def build_parser():
-    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description="Calculate gene matches tables for all pairs of samples.",
+    )
     arg_config.expose_fields_with_default_aliases(
         "top_genes_dir",
         "transcript_id_regex",

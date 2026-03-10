@@ -20,7 +20,9 @@ def write_cytoscape(graph: nx.Graph, out_file: io.TextIOBase):
     json.dump(nx.cytoscape_data(graph), out_file)
 
 def build_parser():
-    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description="Export a gene matches graph to another format."
+    )
     arg_config.expose_fields_with_default_aliases(
         "graph",
         required=True

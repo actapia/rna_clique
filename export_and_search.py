@@ -21,15 +21,67 @@ from find_homologs import eprint
 from gene_matches_tables import get_table_files
 from transcripts import default_gene_re, TranscriptID
 
-def handle_arguments():
-    parser = argparse.ArgumentParser()
+# @marshalling_dataclass(optional=True)
+# class ExportAndSearchConfig:
+#     """Dataclass with config data for the export and search program.."""
+#     config_version: str = marshalling_field(default="0.0.1", metadata={
+#         "description": "Version of the configuration schema used."})
+#     resolve_name_conflicts: Optional[bool] = marshalling_field(metadata={
+#         "description": "Automatically resolve conflicting filenames."
+#     })
+#     export_output_dir: Optional[Path] = marshalling_field(metadata={
+#         "description": "Output directory for exported sequences."
+#     })    
+    
+
+def build_parser():
+    parser = config_module.ArgumentManager(
+        description=(
+            "Export orthologs from ideal components and search their sequences."
+        ),
+    )
     #parser.add_argument("-A", "--analyses", type=Path, nargs="+", required=True)
-    parser.add_argument("-C", "--configs", type=Path, nargs="+", required=True)
-    parser.add_argument("-r", "--resolve-name-conflicts", action="store_true")
-    parser.add_argument("-X", "--export-output-dir", type=Path, required=True)
-    parser.add_argument("-j", "--jobs", type=int)
-    parser.add_argument("-x", "--export-only", action="store_true")
-    parser.add_argument("-Q", "--queries", nargs="+", type=Path, required=True)
+    parser.add_argument(
+        "-C",
+        "--configs",
+        type=Path,
+        nargs="+",
+        required=True,
+        help="RNA-clique configs for which to export and search orthologs.",
+    )
+    parser.add_argument(
+        "-r",
+        "--resolve-name-conflicts",
+        action="store_true",
+        help="Resolve conflicting output filenames automatically.",
+    )
+    parser.add_argument(
+        "-X",
+        "--export-output-dir",
+        type=Path,
+        required=True,
+        help="Output directory for exported sequences.",
+    )
+    parser.add_argument(
+        "-j",
+        "--jobs",
+        type=int,
+        help="Number of parallel jobs to use.",
+    )
+    parser.add_argument(
+        "-x",
+        "--export-only",
+        action="store_true",
+        help="Only export the orthologs; don't search."
+    )
+    parser.add_argument(
+        "-Q",
+        "--queries",
+        nargs="+",
+        type=Path,
+        required=True,
+        help="FASTA files containing sequences to search in orthologs.",
+    )
     parser.add_argument(
         "--transcript-id-regex",
         "-p",
@@ -38,7 +90,10 @@ def handle_arguments():
         help="Python regex for parsing sequence IDs",
         default=default_gene_re
     )
-    return parser.parse_args()
+    return parser
+
+def handle_arguments():    
+    return build_parser().parse_args()
 
 def get_analysis_name(config: config_module.RNACliqueConfig) -> str:
     """Get a suitable name for the analysis represented by the configuration.
@@ -163,7 +218,7 @@ def export_and_search(
                     json.dump(stats._asdict(), stats_file)
 
 def main():
-    args = handle_arguments()
+    _, args = build_parser().get_arguments()
     configs = [config_module.RNACliqueConfig.yaml_load(c) for c in args.configs]
     args.export_output_dir.mkdir(exist_ok=True)
     parse_transcript_id = None

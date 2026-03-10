@@ -17,7 +17,9 @@ from simple_blast.blasting import TabularBlastnSearch
 from transcripts import TranscriptID
 
 def build_parser():
-    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description="Compute a genetic distance for one pair of samples."
+    )
     arg_config.expose_fields_with_default_aliases(
         "transcript_id_regex",
         "evalue",

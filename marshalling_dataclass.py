@@ -250,6 +250,7 @@ class MarshallingDataclassBase(abc.ABC):
     difficult to include in annotations. This class addresses that problem for
     marshalling dataclasses.
     """
+    __dataclass_fields__ = {}
     pass
 
 def marshalling_dataclass(

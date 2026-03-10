@@ -14,7 +14,9 @@ from graph import component_subgraphs
 from gene_matches_tables import read_table, get_table_files
 
 def build_parser():
-    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description="Produce visualizations based on a gene matches graph.",
+    )
     arg_config.expose_fields_with_default_aliases(
         "graph",
         required=True

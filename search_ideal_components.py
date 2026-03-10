@@ -26,7 +26,12 @@ from transcripts import default_gene_re, TranscriptID
 #default_gene_re = re.compile("^.*g([0-9]+)_i([0-9]+)")
 
 def build_parser():
-    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description=(
+            "BLAST search sequences of orthologous transcripts from ideal "
+            "components."
+        )
+    )
     arg_config.expose_fields_with_default_aliases(
         "graph",
         "tables_dir",
@@ -36,12 +41,14 @@ def build_parser():
     )
     arg_config.expose_config_field(
         "output_dir",
-        aliases=["--analysis-root", "--rna-clique-output-dir", "-A"]        
+        aliases=["--analysis-root", "--rna-clique-output-dir", "-A"],
+        help="RNA-clique analysis root (output_dir).",
     )
     arg_config.add_argument(
         "--export-output-dir",
         "-X",
         type=Path,
+        help="Directory containing exported orthologs to search.",
     )
     arg_config.add_argument(
         "--all-ideal",
@@ -51,52 +58,60 @@ def build_parser():
         default={
             ("export_output_dir",): lambda export_output_dir:
             export_output_dir / "all_ideal.fasta"
-        }
+        },
+        help="FASTA file containing all sequences from ideal components.",
     )
-
     arg_config.add_argument(
-        "--ortholog-db-cache",        
+        "--ortholog-db-cache",
         "-D",
         type=Path,
         default={
             ("export_output_dir",): lambda export_output_dir:
             export_output_dir / "db_cache"
-        }
+        },
+        help="Directory in which to store BLAST databases for orthologs.",
     )
     arg_config.add_argument(
         "--search-output-dir",
         "-S",
         type=Path,
-        required=True
+        required=True,
+        help="Output directory in which to store BLAST results.",
     )
     arg_config.add_argument(
         "--query",
         "-q",
         type=Path,
-        required=True
+        required=True,
+        help="FASTA file containing query sequences.",
     )
     arg_config.add_argument(
         "--debug",
-        action="store_true"
+        action="store_true",
+        help="Enable debug behavior.",
     )
     arg_config.add_argument(
         "--clean",
-        action="store_true"
+        action="store_true",
+        help="Delete existing BLAST DB cache before beginning search.",
     )
     arg_config.add_argument(
         "--merge-sams",
         "-m",
-        action="store_true"
+        action="store_true",
+        help="Merge extended search results into one file.",
     )
     arg_config.add_argument(
         "--extended-search",
         "-e",
-        action="store_true"
+        action="store_true",
+        help="Search other isoforms of a gene that produces a hit.",
     )
     arg_config.add_argument(
         "--export-components",
         "-x",
-        action="store_true"
+        action="store_true",
+        help="Save matching orientation graph components in extended search.",
     )
     return arg_config
 
@@ -122,7 +137,7 @@ def search(
         #strand_graph_out: tuple[nx.Graph, dict] = None
         strand_graph: nx.Graph = None,
         node_to_ccc: dict[tuple[str, int], nx.Graph] = None,
-        jobs: int = 1,        
+        jobs: int = 1,
         debug: bool = False,
 ) -> SearchResult:
     """Search for sequences within exported orthologs.
@@ -233,7 +248,7 @@ def search(
         subjects = set()
         export_index = Bio.SeqIO.index(exported, "fasta")
         ideal = list(get_ideal_components(sim.graph, sim.sample_count))
-        sample_gene_to_component = get_sample_gene_to_component(ideal)        
+        sample_gene_to_component = get_sample_gene_to_component(ideal)
         # TODO: See if we can avoid rebuilding node_to_ccc when only
         # strand_graph is provided.
         if strand_graph is None or node_to_ccc is None:
@@ -374,8 +389,8 @@ def main():
         export_components=args.export_components,
         merge_sams=args.merge_sams,
         jobs=config.jobs,
-        debug=args.debug,        
+        debug=args.debug,
     )
-        
+
 if __name__ == "__main__":
     main()

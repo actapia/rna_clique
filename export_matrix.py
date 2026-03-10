@@ -68,7 +68,9 @@ extension_to_format = {
 }
 
 def build_parser():
-    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description="Export a computed dissimilarity matrix.",
+    )
     arg_config.expose_fields_with_default_aliases(
         "matrix",        
         required=True

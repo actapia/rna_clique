@@ -1,9 +1,10 @@
 name: rna-clique
 channels:
   - conda-forge
+  - bioconda
   - defaults
 dependencies:
-  - python=3.12
+  - python>=3.12
   - pip
   - tqdm
   - pandas
@@ -13,16 +14,20 @@ dependencies:
   - seaborn
   - scikit-bio
   - pytables
+  - biopython
+  - more-itertools
+  - dendropy
+  - pyyaml
+  - adjusttext
+  - numpy
+  - psutil
+  - sympy
+  - pysam
   - pip:
-      - biopython
-      - dendropy
       - nice-colorsys
-      - simple-blast==0.7.0
-      # scikit-bio 0.6.0 (in development)
-#      - git+https://github.com/scikit-bio/scikit-bio.git@df931a0f518f105cb648b29fe38b2a114b5ece96
+      - simple-blast>=0.7.0
+      - python-sat[aiger,approxmc,cryptosat,pblib]
       # For simulator:
-      - more_itertools
-      - PyYAML
       - multiset-key-dict
   # For simulator:
   - scipy

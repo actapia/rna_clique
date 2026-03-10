@@ -11,11 +11,12 @@ import itertools
 import re
 import pprint
 import copy
+import enum
 
 import networkx as nx
 
 from datetime import datetime
-from typing import Optional, Any
+from typing import Optional, Any, Iterator, Callable
 from collections import deque, ChainMap
 from collections.abc import Collection, Iterable
 from pathlib import Path
@@ -214,7 +215,7 @@ def detect_nargs(t, multi_type: str="+") -> Optional[str]:
             if issubclass(type_, tuple) or issubclass(type_, Collection):
                 return multi_type
         elif type_ is typing.Union:
-            non_none = [f for f in fields if f is not type(None)]    
+            non_none = [f for f in fields if f is not type(None)]
             if len(fields) == 2 and len(non_none) == 1:
                 # Handle "Optional" types.
                 non_none = non_none[0]
@@ -224,6 +225,19 @@ def detect_nargs(t, multi_type: str="+") -> Optional[str]:
 def get_edge_priority(graph: nx.Graph, edge) -> int:
     """Get the priority of an edge in the given graph."""
     return graph.edges[edge]["priority"]
+
+def get_in_edge_groups(
+        graph: nx.Graph,
+        origin
+) -> Iterator[tuple[int, list[tuple[Any, Any]]]] :
+    priority_key = functools.partial(get_edge_priority, graph)
+    return itertools.groupby(
+        sorted(
+            graph.in_edges(origin),
+            key=priority_key
+        ),
+        priority_key
+    )
 
 def update_node(graph: nx.Graph, origin) -> bool:
     """Update a configuration graph node with higher priority values.
@@ -241,33 +255,26 @@ def update_node(graph: nx.Graph, origin) -> bool:
         A boolean indicating whether the node was updated.
     """
     changed = False
-    priority_key = functools.partial(get_edge_priority, graph)
-    for priority, edge_group in itertools.groupby(
-            sorted(
-                graph.in_edges(origin),
-                key=priority_key
-            ),
-            priority_key
-        ):
-            if priority > graph.nodes[origin]["priority"]:
+    for priority, edge_group in get_in_edge_groups(graph, origin):
+        if priority > graph.nodes[origin]["priority"]:
+            break
+        edge = next(iter(edge_group))
+        kwargs = {
+            x: graph.nodes[x]["value"]
+            for x in graph.edges[edge]["args"]
+        }
+        if all(kwargs.values()):
+            new_value = graph.edges[edge]["function"](**kwargs)
+            if new_value is not None:
+                if new_value != graph.nodes[origin]["value"]:
+                    graph.nodes[origin]["value"] = new_value
+                    changed = True
+                graph.nodes[origin]["priority"] = graph.edges[
+                    edge
+                ]["priority"]
                 break
-            edge = next(iter(edge_group))
-            kwargs = {
-                x: graph.nodes[x]["value"]
-                for x in graph.edges[edge]["args"]
-            }
-            if all(kwargs.values()):
-                new_value = graph.edges[edge]["function"](**kwargs)
-                if new_value is not None:
-                    if new_value != graph.nodes[origin]["value"]:
-                        graph.nodes[origin]["value"] = new_value
-                        changed = True
-                    graph.nodes[origin]["priority"] = graph.edges[
-                        edge
-                    ]["priority"]
-                    break
     return changed
-    
+
 
 def propagate_defaults(graph: nx.Graph):
     """Update node values in the graph to minimize priority.
@@ -278,7 +285,7 @@ def propagate_defaults(graph: nx.Graph):
     Parameters:
         graph: The configuration graph in which to update all node values.
     """
-    con = nx.condensation(graph)    
+    con = nx.condensation(graph)
     for scc in nx.topological_sort(con):
         st = deque()
         for pred in con.predecessors(scc):
@@ -289,10 +296,10 @@ def propagate_defaults(graph: nx.Graph):
                     con.nodes[pred]["members"],
                     con.nodes[scc]["members"]
             ):
-                
+
                 if update_node(graph, node):
                     st.append(node)
-        subgraph = graph.subgraph(con.nodes[scc]["members"])                
+        subgraph = graph.subgraph(con.nodes[scc]["members"])
         # st = deque(
         #     (n, True)
         #     for n in subgraph.nodes if subgraph.nodes[n]["value"] is not None
@@ -331,21 +338,223 @@ class MultiArgConstAction(argparse.Action):
             return self.const
         else:
             return values
-        
+
     def __call__(self, parser, namespace, values, option_string):
         setattr(namespace, self.dest, self._get_values(values))
 
 class UnmarshallingStoreAction(MultiArgConstAction):
     """Argparse action that performs unmarshalling."""
     # TODO: Remind myself why this is necessary instead of using the type kwarg.
-    def __init__(self, *args, unmarshal=lambda x: x, **kwargs):        
+    def __init__(self, *args, unmarshal=lambda x: x, **kwargs):
         super().__init__(*args, **kwargs)
         self.unmarshal = unmarshal
 
     def _get_values(self, values):
         return self.unmarshal(super()._get_values(values))
 
+DescriptionType = enum.StrEnum(
+    "DescriptionType",
+    [
+        "plain",
+        "pseudocode",
+        "constant"
+    ]
+)
 
+class RuleDescription:
+    def __init__(
+            self,
+            value,
+            type_: DescriptionType | str = DescriptionType.plain
+    ):
+        try:
+            self.value = value.value
+            self.type_ = value.type_
+        except AttributeError:
+            self.value = value
+            self.type_ = DescriptionType(type_)
+
+    def __str__(self):
+        return self.value
+
+    def __repr__(self):
+        return f"RuleDescription({self.value}, {self.type_})"
+
+    def __eq__(self, other):
+        return self.value == other.value and self.type_ == other.type_
+
+class Rule:
+    """Class representing a rule for producing options from others.
+
+    By default, this class is merely a wrapper around a function that can be
+    used to produce an option's value from some other set of named options, but
+    a Rule may also have a description to describe the rule for use in generated
+    usage messages.
+    """
+    def __init__(
+            self,
+            function: Callable,
+            description: Optional[str | RuleDescription] = None
+    ):
+        """Construct a rule from a function and, optionally, a description.
+
+        Parameters:
+            function:    A callable producing an option value from others.
+            description: A description of the rule.
+        """
+        self.function = function
+        if description is not None:
+            self._description = RuleDescription(description, "plain")
+        else:
+            self._description = None
+
+    @property
+    def description(self) -> RuleDescription:
+        return self._description
+
+    def __call__(self, *args, **kwargs):
+        return self.function(*args, **kwargs)
+
+    def __eq__(self, other):
+        return self.function == other.function and \
+            self.description == other.description
+
+    @classmethod
+    def as_rule(cls, f: Callable):
+        if isinstance(f, cls):
+            return f
+        return cls(f)
+
+# TODO: Make this more general?
+class FileRule(Rule):
+    """Rule for constructing option values as child paths.
+
+    This class should be treated as abstract; only subclasses of this class
+    should be instantitated. Subclasses of this class must implement a
+    classmethod rule_function that returns the a function that accepts the
+    parent path as a keyword argument and returns the child path (or None).
+    """
+
+    @classmethod
+    def rule_function(
+            cls,
+            root: str,
+            filename: str
+    ) -> Callable[[Path], Optional[Path]]:
+        """Return a function for getting child path from the parent value.
+
+        Parameters:
+            root (str):     The name of the parent path option.
+            filename (str): The filename under the parent path.
+
+        Returns:
+            A function getting the named child within the parent, possibly.
+        """
+        raise NotImplementedError()
+
+    def __init__(
+            self,
+            root: str,
+            filename: str,
+            root_metavar: Optional[str] = None
+    ):
+        """Construct a rule whose value is a child of some parent option value.
+
+        Parameters:
+            root (str):         Name of config option serving as parent path.
+            filename (str):     Name of child with parent path option's value.
+            root_metavar (str): Metavariable to use for description.
+        """
+        if root_metavar is None:
+            root_metavar = root.upper()
+        super().__init__(
+            type(self).rule_function(root, filename),
+            RuleDescription(f"{root_metavar}/{filename}", "pseudocode")
+        )
+
+class InFileRule(FileRule):
+    """Rule for deriving a path to an input file as a child of some parent.
+
+    An InFileRule returns the child with the given name of the parent config
+    option's value if it exists. Otherwise, it returns None.
+    """
+    @classmethod
+    def rule_function(
+            cls,
+            root: str,
+            filename: str
+    ) -> Callable[[Path], Optional[Path]]:
+        """Return a function for getting child path from the parent value.
+
+        This function produces a unary function that accepts a keyword argument
+        of the same name as the parent path option. The returned function's
+        argument should be the parent path. The returned function returns the
+        child of the parent path with the given filename if it
+        exists. Otherwise, it returns None.
+
+        Parameters:
+            root (str):     The name of the parent path option.
+            filename (str): The filename under the parent path.
+
+        Returns:
+            A function getting the named child within the parent, if it exists.
+        """
+        def inner(cls, **kwargs) -> Optional[Path]:
+            f = kwargs[root] / filename
+            if f.exists():
+                return f
+            return None
+        return inner
+
+class OutFileRule(FileRule):
+    @classmethod
+    def rule_function(cls, root: str, filename: str) -> Callable[[Path], Path]:
+        """Return a function for getting child path from the parent value.
+
+        This function produces a unary function that accepts a keyword argument
+        of the same name as the parent path option. The returned function's
+        argument should be the parent path. The returned function returns the
+        child of the parent path with the given filename.
+
+        Parameters:
+            root (str):     The name of the parent path option.
+            filename (str): The filename under the parent path.
+
+        Returns:
+            A function getting the named child within the parent.
+        """
+        def inner(cls, **kwargs) -> Path:
+            return kwargs[root] / filename
+        return inner
+
+class ConstantRule(Rule):
+    """Nullary rule returning a constant value."""
+    def __init__(
+            self,
+            value,
+            description: Optional[str | RuleDescription] = None
+    ):
+        """Construct a ConstantRule returning the given value.
+
+        Parameters:
+            value:             Constant value to return.
+            description (str): Optional description of the rule.
+        """
+        super().__init__(lambda: value, description)
+        self.value = value
+
+    @property
+    def description(self):
+        if self._description is None:
+            return RuleDescription(str(self.value), "constant")
+        return self._description
+
+# TODO: Rethink this class hierarchy. Having ArgumentManager as a subclass of
+# ConfigArgumentManagaer works, but it's inelegant and leaves some unnecessary
+# or oddly-named methods in the child class.
+#
+# It might be helpful to make a separate class for managing a configuration
+# graph and a add proper support for configuration "sources."
 class ConfigArgumentManager[T: MarshallingDataclassBase]:
     """Class that manages configuration via config files and CLI arguments.
 
@@ -375,7 +584,7 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
     set of edges) has an associated priority; edges with lower priority values
     are preferred when deriving a vertex's value.
     """
-    
+
     # default_node is a "dummy" value that allows configuration graph nodes to
     # inherit constant default values.
     default_node = object()
@@ -385,15 +594,16 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
         bool: "store_true",
         Optional[bool]: "store_true"
     }
-    
+
     def __init__(
             self,
             config_class: type[T],
             *args,
             default_deps: dict[str, Any] = {},
             accept_input: bool = True,
-            show_config: bool = True,
-            show_config_format: bool = True,
+            show_config: bool | list[str] = True,
+            show_config_format: bool | list[str] = True,
+            add_help: bool = True,
             type_to_action: Optional[dict[Any, str]] = None,
             multi_nargs_type: str = "+",
             **kwargs
@@ -428,19 +638,20 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
         arguments to this constructor.
 
         Parameters:
-            config_class (type):       Dataclass to use for storing config.
-            default_deps (dict):       Dependencies to add to defaults graph.
-            accept_input (bool):       Add argument to accept input config file.
-            show_config (bool):        Add argument to show processed config.
-            show_config_format (bool): Add argument to set show config format.
-            type_to_action (dict):     Mapping from type annotations to actions.
-            multi_nargs_type (str):    argparse nargs for multi-arg options.
+            config_class (type):    Dataclass to use for storing config.
+            default_deps (dict):    Dependencies to add to defaults graph.
+            accept_input (bool):    Add argument to accept input config file.
+            show_config:            Arguments to show processed config.
+            show_config_format:     Arguments to set show config format.
+            add_help:               Arguments to show help messasge.
+            type_to_action (dict):  Mapping from type annotations to actions.
+            multi_nargs_type (str): argparse nargs for multi-arg options.
 
         """
         if type_to_action is None:
             self._type_to_action = dict(type(self)._type_to_action)
         self._config_class = config_class
-        self.parser = argparse.ArgumentParser(*args, **kwargs)
+        self.parser = argparse.ArgumentParser(*args, add_help=False, **kwargs)
         self._default_graph = DefaultDiGraph(
             node_defaults={
                 "value": None,
@@ -449,7 +660,7 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
             }
         )
         self._option_string_to_dest = {}
-        self._dest_to_option_strings = {}#defaultdict(list)
+        self._dest_to_action = {}#defaultdict(list)
         for name, f in self._config_class.__dataclass_fields__.items():
             self._default_graph.add_node(name, value=f.default)
         for dest, deps in default_deps.items():
@@ -469,6 +680,11 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
             if show_config_format is not True:
                 kw = {"aliases": show_config_format}
             self.add_show_config_format_argument(**kw)
+        if add_help:
+            kw = {}
+            if add_help is not True:
+                kw = {"aliases": add_help}
+            self.add_help_argument(**kw)
         self._multi_nargs_type = multi_nargs_type
         # self._post_type = defaultdict(lambda: lambda x: x)
         # self._use_post_type = use_post_type
@@ -478,13 +694,14 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
             aliases: Iterable[str] = ["--input-config", "-c", "-c1"]
     ):
         """Add a command-line argument for providing an input config file.
-        
+
         Parameters:
             aliases: Option strings to use for input config argument.
         """
         self.add_argument(
             *aliases,
             dest="input_config",
+            help="File from which to load configuration settings.",
             type=Path
         )
 
@@ -509,8 +726,36 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
             nargs="*",
             action=MultiArgConstAction,
             const=["config"],
-            choices=["original_args", "args", "config"]
+            choices=["original_args", "args", "config"],
+            help="Display the computed configuration or arguments.",
         )
+
+    def add_help_argument(
+            self,
+            aliases: Iterable[str] = ["-h", "--help"]
+    ):
+        """Add a command-line argument for showing a help message.
+
+        This function adds an argument to the parser that shows a help message
+        and exits when provided by the user. The format of the displayed
+        message and the default option strings (aliases) for the help argument
+        are the same as those added by argparse.ArgumentParser when True is
+        provided as the actual parameter add_help to the ArgumentParser
+        constructor.
+
+        Parameters:
+            aliases: Option strings to use for help argument.
+        """
+        self.add_argument(
+            *aliases,
+            dest="_help",
+            action="help",
+            default=argparse.SUPPRESS,
+            help="Display a help message and exit.",
+        )
+
+
+
 
     @classmethod
     def select_default_config_format(
@@ -558,7 +803,8 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
                 (
                     "_config_show_config",
                 ): type(self).select_default_config_format
-            }
+            },
+            help="Format for displaying computed config or arguments.",
         )
 
     # def set_priority(
@@ -567,7 +813,7 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
     #         pred: tuple[str,...],
     #         priority: int
     # ):
-        
+
 
     def add_defaults(
             self,
@@ -621,23 +867,24 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
                         self._default_graph.add_edge(
                             parent, dest,
                             priority=priority,
-                            function=fun,
+                            function=Rule.as_rule(fun),
                             args=parents
-                        )                        
+                        )
                 else:
                     self._default_graph.add_edge(
                         self.default_node, dest,
                         priority=priority,
-                        function=lambda: fun,
+                        function=Rule.as_rule(fun),
                         args=(),
                     )
         except AttributeError:
-            self._default_graph.add_edge(
-                self.default_node, dest,
-                priority=next_priority,
-                function=lambda: default,
-                args=(),
-            )
+            if default is not None:
+                self._default_graph.add_edge(
+                    self.default_node, dest,
+                    priority=next_priority,
+                    function=ConstantRule.as_rule(default),
+                    args=(),
+                )
 
     def set_defaults(
             self,
@@ -665,7 +912,7 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
         Parameters:
             option (str): Option string of setting for which to set defaults.
             default:      Defaults to set for the setting.
-        """        
+        """
         dest = self._option_string_to_dest.get(option, option)
         self._default_graph.remove_edges_from(
             list(self._default_graph.in_edges(dest))
@@ -714,13 +961,14 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
         try:
             action = self.parser.add_argument(*args, **kwargs)
         except ValueError:
+            print("VE")
             from IPython import embed; embed()
         self._default_graph.add_node(action.dest, required=required)
         self.add_defaults(action.dest, default)
         self._option_string_to_dest |= {
             s: action.dest for s in action.option_strings
         }
-        self._dest_to_option_strings[action.dest] = action.option_strings
+        self._dest_to_action[action.dest] = action
         # if post_type is not None:
         #     self._post_type[action.dest] = post_type
         return action
@@ -797,9 +1045,14 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
                    is not None:
                     graph.remove_edges_from(list(graph.in_edges(v)))
             except KeyError:
+                print("KE")
                 from IPython import embed; embed()
         propagate_defaults(graph)
-        config_path = graph.nodes["input_config"]["value"]
+        config_path = None
+        try:
+            config_path = graph.nodes["input_config"]["value"]
+        except KeyError:
+            pass
         config = self._config_class()
         if config_path is not None:
             config = self._config_class.yaml_load(config_path)
@@ -817,7 +1070,7 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
                     err = f"Missing required value {node}."
                     try:
                         err += " You can provide it with {}.".format(
-                            self._dest_to_option_strings[node][0]
+                            self._dest_to_action[node].option_strings[0]
                         )
                     except KeyError:
                         pass
@@ -946,8 +1199,11 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
             aliases = ["--{}".format(f.replace("_", "-"))] + aliases
         if positional:
             aliases = [f]
-        if default is None:
-            default = self._config_class.__dataclass_fields__[f].default
+        if default is None \
+           and self._config_class.__dataclass_fields__[f].default is not None:
+            default = ConstantRule(
+                self._config_class.__dataclass_fields__[f].default,
+            )
         if help is None:
             try:
                 help = self._config_class.__dataclass_fields__[
@@ -1000,7 +1256,137 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
         """Expose multiple fields at once using the same parameters."""
         for f in fields:
             self.expose_config_field(f, **kwargs)
+
+class ArgumentManager(ConfigArgumentManager[MarshallingDataclassBase]):
+    """ConfigArgumentManager that handles ad-hoc arguments only.
+
+    This class uses MarshallingDataclassBase as its config schema. Since the
+    base class has no fields, all arguments must be added manually using
+    add_argument.
+    """
+    def __init__(
+            self,
+            *args,
+            default_deps: dict[str, Any] = {},
+            add_help: bool = True,
+            show_args: bool | list[str] = True,
+            show_args_format: bool | list[str] = True,
+            **kwargs
+    ):
+        """Construct an ArgumentManager.
+
+        Optionally, entries in the configuration graph may be added via the
+        default_deps keyword argument. Each key should be the name of a
+        configuration setting---i.e., the name of the destination attribute in
+        the argparse.Namespace object returned by get_arguments. The
+        corresponding value should either be the default value of that setting
+        or a dict containing rules for producing the setting from other
+        settings. In the latter case, the inner dict's keys should be tuples of
+        names of configuration settings, and each key's value should be a
+        function. The function should accept keyword arguments corresponding to
+        the inner key's elements; the actual parameters passed to the function
+        will be the values of those settings. The funciton should return the
+        value for the outer key derived from the values of the inner key element
+        settings.
+
+        ArgumentManager can also add certain arguments automatically for getting
+        help or debugging the configuration. These are enabled by default but
+        can be disabled by passing False for the corresponding keyword arguments
+        to this constructor.
+
+        Parameters:
+            default_deps (dict): Dependencies to add to config graph.
+            add_help (bool):     Whether to add a show help option.
+            show_args:           Arguments to show computed arguments option.
+            show_args_format:    Arguments to control format of computed args.            
+        """
+        super().__init__(
+            MarshallingDataclassBase,
+            *args,
+            default_deps=default_deps,
+            accept_input=False,
+            show_config=show_args,
+            show_config_format=show_args_format,
+            add_help=add_help,
+            **kwargs
+        )
+
+    def add_show_config_argument(
+            self,
+            aliases: Iterable[str] = ["--show-args"]
+    ):
+        """Add a command-line argument for showing the processed arguments.
+
+        The added argument allows the user to show the original parsed
+        command-line arguments or the updated arguments after processing. By
+        default, only the processed arguments are shown.
+
+        Parameters:
+            aliases: Option strings to use for show args argument.
+        """
+        self.add_argument(
+            *aliases,
+            dest="_config_show_config",
+            nargs="*",
+            action=MultiArgConstAction,
+            const=["args"],
+            choices=["original_args", "args"],
+            help="Display the computed or original parsed arguments.",
+        )
+
+    def add_show_args_argument(self, *args, **kwargs):
+        """Alias for add_show_config_argument."""
+        return self.add_show_config_argument(*args, **kwargs)
+
+    def add_show_config_format_argument(
+            self,
+            aliases: Iterable[str] = ["--show-args-format"]
+    ):
+        """Add a command-line argument for selecting argument display format.
+
+        The added command-line argument allows the user to select the
+        serialization format for displaying the original or processed args. The
+        currently supported formats are dict (Python dict repr), json, and yaml.
+
+        Parameters:
+            aliases: Option strings to use for the argument.
+        """
+        self.add_argument(
+            *aliases,
+            dest="_config_show_config_format",
+            choices=["dict", "yaml", "json"],
+            default={
+                (
+                    "_config_show_config",
+                ): type(self).select_default_config_format
+            },
+            help="Format for displaying computed or original parsed arguments.",
+        )
+
+    def add_show_args_format_argument(self, *args, **kwargs):
+        """Alias for add_show_config_format_argument."""
+        self.add_show_config_argument_format(*args, **kwargs)
+
+    def get_arguments(self) -> tuple[argparse.Namespace, argparse.Namespace]:
+        """Parse and process arguments.
+
+        This function returns two values. The first is the "raw" argparse
+        Namespace returned by the parse_args method of the
+        argparse.ArgumentParser object maintained by this ArgumentManager. The
+        second is the processed argparse Namespace that possibly incorporates
+        values for settings derived from other settings.
+
+        This method uses the parent class's get_arguments_and_config method to
+        process arguments.  See the documentation for
+        ConfigurationArgumentManager.get_arguments_and_config for more details
+        on the operation of this method.
         
+        Returns:
+            Unprocessed and processed parsed arguments.        
+        """
+        
+        return super().get_arguments_and_config()[:-1]
+
 class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
     """Manager of configuration and arguments for RNA-clique programs.
 
@@ -1019,7 +1405,7 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
         "graph": "graph.pkl",
         "matrix": "distance_matrix.h5",
         "output_config": "config.yaml",
-    }        
+    }
 
     # Default input files to be located in the output directory.
     default_in_names = {
@@ -1045,7 +1431,7 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
         "matrix": ["-m"],
         "title": ["-T"],
     }
-    
+
     def __init__(self, *args, **kwargs):
         """Construct an RNACliqueArgumentManager with the given settings.
 
@@ -1071,7 +1457,10 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
         self.add_defaults(
             "title",
             {
-                ("output_dir",): lambda output_dir: output_dir.name
+                ("output_dir",): Rule(
+                    lambda output_dir: output_dir.name,
+                    RuleDescription("OUTPUT_DIR.name", "pseudocode")
+                )
             }
         )
 
@@ -1082,12 +1471,10 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
             name (str): Name of the input file setting.
             filename:   Default filename for the input file.
         """
-        def inner(output_dir):
-            f = output_dir / filename
-            if f.exists():
-                return f
-            return None
-        self.add_defaults(name, {("output_dir",): inner})
+        self.add_defaults(
+            name,
+            {("output_dir",): OutFileRule("output_dir", filename)}
+        )
 
     def _add_out_file_deps(self, name: str, filename: Path | str):
         """Add a rule for deriving an output file setting from the output_dir.
@@ -1096,9 +1483,10 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
             name (str): Name of the output file setting.
             filename:   Default filename for the output file.
         """
-        def inner(output_dir):
-            return output_dir / filename
-        self.add_defaults(name, {("output_dir",): inner})
+        self.add_defaults(
+            name,
+            {("output_dir",): InFileRule("output_dir", filename)}
+        )
 
     def expose_fields_with_default_aliases(self, *fields: str, **kwargs):
         """Expose multiple fields using the default aliases.
@@ -1117,14 +1505,15 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
             aliases: Iterable[str] = ["--output-config", "-c2"]
     ):
         """Add a command-line argument for providing an output config file.
-        
+
         Parameters:
             aliases: Option strings to use for output config argument.
-        """        
+        """
         self.add_argument(
             *aliases,
             dest="output_config",
             type=Path,
+            help="File in which to store computed config after analysis.",
         )
 
     @classmethod
@@ -1140,7 +1529,7 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
             pass
         for d in cls.default_out_dirs:
             getattr(config, d).mkdir(exist_ok=True)
-        
+
 
 # This ChainMap map all of the output file and directory fields to their
 # corresponding default filenames within the output directory.

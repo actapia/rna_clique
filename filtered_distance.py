@@ -32,7 +32,11 @@ def get_ideal_components(
             yield s
 
 def build_parser():
-    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description=(
+            "Compute pairwise distasnces from gene matches tables and graph."
+        ),
+    )
     arg_config.expose_fields_with_default_aliases(
         "graph",
         "tables_dir",

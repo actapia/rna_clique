@@ -20,7 +20,12 @@ from find_homologs import eprint
 from gene_matches_tables import get_table_files
 
 def build_parser():
-    arg_config = config_module.RNACliqueConfigArgumentManager()
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description=(
+            "Create an analysis by reusing previous results for a subset of "
+            "samples."
+        ),
+    )
     arg_config.expose_fields_with_default_aliases(
         "tables_dir",
         "graph",
