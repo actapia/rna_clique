@@ -65,10 +65,15 @@ extension_to_format = {
 #     "graphviz": "Graphviz"
 # }
 
+def text_io_wrapped(fun):
+    def inner(graph, f):
+        return fun(graph, io.TextIOWrapper(f))
+    return inner
+
 writers = {
-    "cytoscape": write_cytoscape,
+    "cytoscape": text_io_wrapped(write_cytoscape),
     "graphml": nx.write_graphml,
-    "graphviz": nx.drawing.nx_pydot.write_dot
+    "graphviz": text_io_wrapped(nx.drawing.nx_pydot.write_dot)
 }
 
 def main():
@@ -77,11 +82,11 @@ def main():
         graph = pickle.load(graph_pickle)
     with ExitStack() as stack:
         if args.export_out:
-            f = open(args.export_out, "w")
+            f = open(args.export_out, "wb")
             stack.push(f)
         else:
-            f = sys.stdout
-        writers[args.format](graph, f)        
+            f = sys.stdout.buffer
+        writers[args.format](graph, f)
 
 if __name__ == "__main__":
     main()

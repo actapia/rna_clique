@@ -499,7 +499,7 @@ class InFileRule(FileRule):
         Returns:
             A function getting the named child within the parent, if it exists.
         """
-        def inner(cls, **kwargs) -> Optional[Path]:
+        def inner(**kwargs) -> Optional[Path]:
             f = kwargs[root] / filename
             if f.exists():
                 return f
@@ -523,7 +523,7 @@ class OutFileRule(FileRule):
         Returns:
             A function getting the named child within the parent.
         """
-        def inner(cls, **kwargs) -> Path:
+        def inner(**kwargs) -> Path:
             return kwargs[root] / filename
         return inner
 
@@ -1473,7 +1473,7 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
         """
         self.add_defaults(
             name,
-            {("output_dir",): OutFileRule("output_dir", filename)}
+            {("output_dir",): InFileRule("output_dir", filename)}
         )
 
     def _add_out_file_deps(self, name: str, filename: Path | str):
@@ -1485,7 +1485,7 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
         """
         self.add_defaults(
             name,
-            {("output_dir",): InFileRule("output_dir", filename)}
+            {("output_dir",): OutFileRule("output_dir", filename)}
         )
 
     def expose_fields_with_default_aliases(self, *fields: str, **kwargs):
