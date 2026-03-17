@@ -79,7 +79,6 @@ def build_parser():
         "--queries",
         nargs="+",
         type=Path,
-        required=True,
         help="FASTA files containing sequences to search in orthologs.",
     )
     parser.add_argument(
@@ -212,8 +211,8 @@ def export_and_search(
                     strand_graph=exporter.strand_graph,
                     node_to_ccc=exporter.node_to_component_component
                 )
-                if stats is None:
-                    from IPython import embed; embed()
+                # if stats is None:
+                #     from IPython import embed; embed()
                 with open(search_dir / "stats", "w") as stats_file:
                     json.dump(stats._asdict(), stats_file)
 
