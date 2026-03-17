@@ -77,15 +77,15 @@ class RNACliqueConfig:
     input_dirs: Optional[list[Path]] = marshalling_field(list[str], metadata={
         "description": "Directories containing the transcript FASTA files."})
     top_genes_dir: Optional[Path] = marshalling_field(str, metadata={
-        "description": "Output directory containing top n genes by coverage."})
+        "description": "Directory containing top n genes by coverage."})
     tables_dir: Optional[Path] = marshalling_field(str, metadata={
-        "description": "Output directory containing gene matches tables."})
+        "description": "Directory containing gene matches tables."})
     cache_dir: Optional[Path] = marshalling_field(str, metadata={
-        "description": "Intermediate directory containing BLAST DB caches."})
+        "description": "Directory containing BLAST DB caches."})
     output_dir: Optional[Path] = marshalling_field(str, metadata={
-        "description": "Output directory root."})
+        "description": "RNA-clique analysis output root directory."})
     graph: Optional[Path] = marshalling_field(str, metadata={
-        "description": "Output gene matches graph."})
+        "description": "Gene matches graph."})
     top_genes: Optional[int] = marshalling_field(metadata={
         "description": "Number of top genes by k-mer coverate to select."})
     transcripts_name: Optional[str] = marshalling_field(
