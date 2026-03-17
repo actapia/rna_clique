@@ -1,6 +1,9 @@
 import sys
+import re
 import textwrap
 import contextlib
+
+par_special_characters = re.compile(r"([#\[\]\\*_~^])")
 
 class MarkdownDocument:
     def __init__(self, depth=1, file=sys.stdout, wrap=80):
@@ -44,3 +47,7 @@ class MarkdownDocument:
 
     def code_block(self, contents, language=""):
         self.paragraph(f"```{language}\n{contents}\n```", wrap=False)
+
+    @classmethod
+    def escape(cls, text):
+        return par_special_characters.sub(r"\\\1", text)

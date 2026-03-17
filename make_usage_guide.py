@@ -286,7 +286,7 @@ def main():
                     continue
                 raise e
             parser = bp()
-            with md.section(module_file):
+            with md.section(MarkdownDocument.escape(str(module_file))):
                 if parser.parser.description:
                     md.paragraph(parser.parser.description)
                 elif "missing-program-description" in args.check:
