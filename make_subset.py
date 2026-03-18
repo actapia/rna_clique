@@ -232,8 +232,9 @@ def main():
             sys.exit(1)
         if config.output_dir is not None:
             config.output_dir.mkdir(exist_ok=True)
-        creator = SubsetAnalysisCreator(matcher, super_config, config)
+        creator = SubsetAnalysisCreator(matches, super_config, config)
         creator.make()
+        #from IPython import embed; embed()
         creator.config.mark_finish()
         creator.config.yaml_save(args.output_config)
 
