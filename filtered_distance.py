@@ -1,5 +1,6 @@
 import pickle
 import functools
+import sys
 
 import pandas as pd
 import networkx as nx
@@ -16,6 +17,7 @@ from graph import component_subgraphs
 from multiset_key_dict import FrozenMultiset
 from gene_matches_tables import get_table_files
 from similarity_computer import ComparisonSimilarityComputer
+from find_homologs import eprint
 
 def is_complete(g : nx.Graph) -> bool:
     """Returns whether g is a complete (sub)graph."""
@@ -116,6 +118,8 @@ def restrict_multi(
     """
     return functools.reduce(functools.partial(restrict_to, df2), columns, df1)
 
+class NoIdealComponentsError(Exception):
+    pass
     
 class SampleSimilarity(ComparisonSimilarityComputer):
     """Computes samples' similarities from gene matches graph and comparisons.
@@ -228,13 +232,22 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         frozenset containing the IDs of the two samples for which the similarity
         was computed. The second element is a Fraction object, the similarity
         between the two samples.
+
+        This function can raise a NoIdealComponentsError when attempting to
+        yield the similarity for a pair of samples if "restricting" the gene
+        matches table for that sample pair to genes in ideal components results
+        in an empty dataframe. In that case, the similarity could be considered
+        undefined or unknown.
         """
         for (qsample, ssample), comp_df in self.comparison_dfs:
             restricted = self.restricted(comp_df)
-            dist = Fraction(
-                int(restricted["nident"].sum()),
-                int(restricted["length"].sum() - restricted["gaps"].sum())
-            )
+            try:
+                dist = Fraction(
+                    int(restricted["nident"].sum()),
+                    int(restricted["length"].sum() - restricted["gaps"].sum())
+                )
+            except ZeroDivisionError:
+                raise NoIdealComponentsError()
             yield frozenset((qsample, ssample)), dist
 
     @classmethod
@@ -313,9 +326,13 @@ def main():
         config.graph,
         get_table_files(config.tables_dir)
     )
-    mat = sim.get_dissimilarity_df()
-    mat.to_hdf(config.matrix, key="matrix", mode="w")
-    config.mark_finish()
+    try:
+        mat = sim.get_dissimilarity_df()
+        mat.to_hdf(config.matrix, key="matrix", mode="w")
+        config.mark_finish()
+    except NoIdealComponentsError:
+        eprint("No ideal components found. Cannot report distances!")
+        sys.exit(1)
     config.yaml_save(args.output_config)
 
 if __name__ == "__main__":

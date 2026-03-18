@@ -7,14 +7,15 @@ import filtered_distance
 import filtering_step
 
 from pathlib import Path
-from typing import Callable, Iterable
+from typing import Callable, Iterable, Optional
 
 from multiset_key_dict import MultisetKeyDict
 
 from transcripts import TranscriptID
-from filtered_distance import SampleSimilarity
+from filtered_distance import SampleSimilarity, NoIdealComponentsError
 from similarity_computer import ComparisonSimilarityComputer
 from transcripts import default_gene_re
+from find_homologs import eprint
 
 def build_parser():
     parser = filtering_step.build_parser()
@@ -27,7 +28,7 @@ def rna_clique(
         out_dir_2: Path,
         cache_dir: Path,
         output_graph: Path,
-        output_matrix: Path,
+        output_matrix: Optional[Path],
         top_genes: int,
         transcripts: str = "transcripts.fasta",
         top_matches: int = 1,
@@ -115,6 +116,13 @@ def rna_clique(
     genetic distances from RNA-seq data" for more details on RNA-clique's
     workings.
 
+    When a non-None value is provided for output_matrix, this function eagerly
+    computes the distance matrix and saves it to the provided Path. If there are
+    no ideal components in the gene matches graph, computing distances is not
+    possible, and attempting to get the distances will raise a
+    NoIdealComponentsError. To avoid this possibility, provide None for the
+    output_matrix parameter instead.
+
     This function returns two values. The first is a SampleSimilarity object for
     the analysis. The SampleSimilarity object provides access to the gene
     matches graph, gene matches tables (if stored), and distance matrix. The
@@ -161,8 +169,9 @@ def rna_clique(
         graph,
         tables,
     )
-    mat = sim.get_dissimilarity_df()
-    mat.to_hdf(output_matrix, "matrix")
+    if output_matrix is not None:
+        mat = sim.get_dissimilarity_df()
+        mat.to_hdf(output_matrix, "matrix")
     return sim, pts
     
 def main():
@@ -175,7 +184,7 @@ def main():
         config.tables_dir,
         config.cache_dir,
         config.graph,
-        config.matrix,
+        None,
         config.top_genes,
         config.transcripts_name,
         config.top_matches,
@@ -185,10 +194,14 @@ def main():
         False,
         jobs=config.jobs
     )
-    config.path_to_sample = pts
-    mat = sim.get_dissimilarity_df()
-    mat.to_hdf(config.matrix, key="matrix", mode="w")    
-    config.mark_finish()
+    config.path_to_sample = pts    
+    try:
+        mat = sim.get_dissimilarity_df()
+        mat.to_hdf(config.matrix, "matrix")
+        config.mark_finish()
+    except NoIdealComponentsError:
+        eprint("No ideal components found. Cannot report distances!")
+        sys.exit(1)
     config.yaml_save(args.output_config)
 
     
