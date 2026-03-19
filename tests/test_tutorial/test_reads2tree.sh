@@ -110,7 +110,7 @@ for f in out/*; do
 done
 cd "$RNA_CLIQUE"
 out_dir="$TUTORIAL_DIR/rna_clique_out/"
-bash typical_filtering_step.sh -o "$out_dir" \
+python filtering_step.py -O "$out_dir" \
      -n 50000 \
      "$TUTORIAL_DIR"/out/*
 [ -d "$out_dir" ]

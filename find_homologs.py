@@ -1,75 +1,83 @@
-import argparse
 import sys
 import re
+import numbers
 import functools
-from simple_blast.blasting import TabularBlastnSearch
+
 import numpy as np
+import pandas as pd
+
+import config as config_module
 
 from fractions import Fraction
 from pathlib import Path
-
-import pandas as pd
-
 from typing import Callable, Optional
 
-def parse_arguments():
-    parser = argparse.ArgumentParser(
-        description="get the genetic distance for a pair of samples"
+from simple_blast.blasting import TabularBlastnSearch
+
+from transcripts import TranscriptID
+
+def build_parser():
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description="Compute a genetic distance for one pair of samples."
     )
-    parser.add_argument(
+    arg_config.expose_fields_with_default_aliases(
+        "transcript_id_regex",
+        "evalue",
+        "top_matches",
+        "keep_all",
+        required=True
+    )
+    arg_config.add_argument(
         "transcripts1",
         type=Path,
         help="path to the (top n) transcripts for the first sample"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "transcripts2",
         type=Path,
         help="path to the (top n) transcripts for the second sample"
     )
-    parser.add_argument(
-        "--regex",
-        "-r",
-        type=re.compile,
-        default=re.compile("^.*g([0-9]+)_i([0-9]+)"),
-        help="Python regex for parsing sequence IDs"
-    )
-    parser.add_argument(
-        "-e",
-        "--evalue",
-        type=float,
-        default=1e-50,
-        help="e-value threshold to use for BLAST alignments"
-    )
-    parser.add_argument(
-        "-n",
-        "--top-n",
-        type=int,
-        default=1,
-        help="use top n matches (parameter big N)"
-    )
-    parser.add_argument(
-        "--keep-all",
-        "-k",
-        action="store_true",
-        help="keep all pairs in case of a tie"
-    )
-    parser.add_argument(
+    arg_config.add_argument(
         "-q",
         "--quiet",
         action="store_true",
         help="hide the matches found"
     )
-    parser.add_argument(
+    arg_config.add_argument(
         "-f",
         "--report-float",
         action="store_true",
         help="report float instead of fraction"
     )
-    return parser.parse_args()
+    return arg_config
 
 def parse_seq_id(regex: re.compile, s: pd.Series) -> pd.DataFrame:
     """Parse a seq_id column to extract the gene and isoform IDs."""
     return s.str.extract(regex).astype(np.int32)
+
+def shrink_df(df: pd.DataFrame) -> pd.DataFrame:
+    """Try to reduce the size of a dataframe by downcasting integers.
+
+    Beware that if the dataframe is shrunk, Pandas will not consider the input
+    dataframe equal to the output because of differing datatypes.
+
+    Parameters:
+        df: The Pandas dataframe to shrink via downcasting.
+
+    Returns:
+        A Pandas dataframe with the same data, minimizing integer type sizes.
+    """
+    df = df.copy()
+    for col in df.columns:
+        if issubclass(df[col].dtype.type, numbers.Integral):
+            df[col] = pd.to_numeric(
+                pd.to_numeric(
+                    df[col],
+                    downcast="integer"
+                ),
+                downcast="unsigned"
+            )
+    return df
 
 def gene_matches(
         parse: Callable[[pd.Series], pd.DataFrame],
@@ -77,6 +85,8 @@ def gene_matches(
         path2: str,
         evalue: float,
         n: int = 1,
+        keep_seqids: bool = False,
+        shrink: bool = True,
         **blast_kwargs
 ) -> pd.DataFrame:
     """Find the isotigs in file 2 that best match each gene in file 1.
@@ -98,11 +108,13 @@ def gene_matches(
     arguments to this function.
 
     Parameters:
-        parse:          Function to parse sequence IDs into gene and isotig IDs.
-        path1 (str):    Path to the FASTA file used as the BLAST search query.
-        path2 (str):    Path to the FASTA file used as the BLAST search subject.
-        evalue (float): Expect value cutoff for BLAST search.
-        n (int):        Number of top matches to select for each query gene.
+        parse:              Function to parse seq IDs into gene and isotig IDs.
+        path1 (str):        Path to the BLAST search query FASTA file.
+        path2 (str):        Path to the BLAST search subject FASTA file.
+        evalue (float):     Expect value cutoff for BLAST search.
+        n (int):            Number of top matches to select for each query gene.
+        keep_seqids (bool): Whether to keep the raw seqid columns.
+        shrink (bool):      Attempt to reduce memory usage.
 
     Returns:
         A dataframe of BLAST hits for subject isotigs best matching query genes.
@@ -110,9 +122,15 @@ def gene_matches(
     # TODO: Check whether we really want the top n subject isotigs or the top
     # n subject genes. (I suspect we really want the latter.)
     search = TabularBlastnSearch(path2, path1, evalue=evalue, **blast_kwargs)
+    hits = search.hits
     for t in ["q", "s"]:
-        search.hits[[t + "gene", t + "iso"]] = parse(search.hits[t + "seqid"])
-    return highest_bitscores(search.hits, n, keep="all")
+        hits[[t + "gene", t + "iso"]] = parse(search.hits[t + "seqid"])
+    if not keep_seqids:
+        hits = search.hits.drop(["qseqid", "sseqid"], axis=1)
+    res = highest_bitscores(hits, n, keep="all")
+    if shrink:
+        res = shrink_df(res)
+    return res
 
 eprint = functools.partial(print, file=sys.stderr)
 
@@ -156,7 +174,7 @@ class HomologFinder:
     
     def __init__(
             self,
-            regex: str,
+            parse_transcript_id: Callable[[str], TranscriptID],
             top_n: int,
             evalue: float,
             keep_all: bool,
@@ -166,17 +184,19 @@ class HomologFinder:
         """Constructs a HomomlogFinder that uses the provided parameters.
 
         Parameters:
-            regex (str):     A string representing a regex for parsing seq IDs.
-            top_n (int):     Top hits to select for each query gene (big N).
-            evalue (float):  e-value cutoff to use for BLAST searches
-            keep_all (bool): Whether to keep all matches in the case of ties.
-            debug (bool):    Whether debug behavior is enabled.
+            parse_transcript_id: Function to parse transcript IDs.
+            top_n (int):         Top hits to select for each query gene (big N).
+            evalue (float):      e-value cutoff to use for BLAST searches
+            keep_all (bool):     Keep all matches in the case of ties.
+            debug (bool):        Whether debug behavior is enabled.
         """            
         # self.regex = regex
         # self.top_n = top_n
         # self.evalue = evalue
         # Partially apply some functions to make the code below less repetitive.
-        parse = functools.partial(parse_seq_id, regex)
+        parse = lambda x: pd.DataFrame(
+            x.apply(lambda y: parse_transcript_id(y)[1:]).tolist()
+        )
         # gm is a function that obtains unidirectional best matches for a pair
         # of samples using the given parameters.
         self.gm = functools.partial(
@@ -184,7 +204,7 @@ class HomologFinder:
             parse=parse,
             evalue=evalue,
             n=top_n,
-            additional_columns=["gaps", "nident"],
+            additional_columns=["gaps", "nident", "sstrand"],
             **blast_kwargs
         )
         self.keep_all = keep_all
@@ -214,12 +234,14 @@ class HomologFinder:
             path1=transcripts1,
             path2=transcripts2
         )
+        forward_matches["reverse"] = False
         if self.debug:
             eprint("Getting reverse matches.")
         backward_matches = self.gm(
             path1=transcripts2,
             path2=transcripts1
         )
+        backward_matches["reverse"] = True
         # We rename the columns in the reverse matches to enable merging.
         backward_matches.rename(
             columns={
@@ -240,7 +262,7 @@ class HomologFinder:
         # 
         # (Keep in mind that we swapped the order of query and subject in the
         # reverse dataframe, so "query" is always something in sample 1, and
-        # "subject" is always something in sample 2 from now on.)
+        # "subject" is always something in sample 2 from now on.)        
         if forward_matches.empty or backward_matches.empty:
             intersection = pd.DataFrame(
                 columns=self.merge_columns + ["index_x", "index_y"]
@@ -288,18 +310,25 @@ class HomologFinder:
             columns: Optional[list[str]] = None
     ) -> pd.DataFrame:
         """Returns the given columns of the dataframe, excluding duplicate rows.
+
+        Parameters:
+            df:              Dataframe to get data without duplicate rows from.
+            columns (list):  Columns of data to get from the dataframe.
+
+        Returns:
+            The specified columns of the dataframe, without duplicate rows.
         """
         if columns is None:
             columns = cls.merge_columns
         return df[columns].drop_duplicates()
 
 def main():
-    args = parse_arguments()
+    _, args, config = build_parser().get_arguments_and_config()    
     match_finder = HomologFinder(
-        args.regex,
-        args.top_n,
-        args.evalue,
-        args.keep_all
+        TranscriptID.parse_from_re(config.transcript_id_regex),
+        config.top_matches,
+        config.evalue,
+        config.keep_all
     )
     best_matches = match_finder.get_match_table(
         args.transcripts1,

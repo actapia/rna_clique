@@ -3,7 +3,9 @@ name: mkdocs
 on:
   push:
     branches: ["main", "mkdocs"]
-
+  release:
+    types: [published]
+    
 jobs:
   deploy-mkdocs:
     name: Deploy mkdocs
@@ -11,8 +13,23 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Deploy docs
-        uses: mhausenblas/mkdocs-deploy-gh-pages@1.26
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Configure Git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Install mkdocs and friends
+        run: pip install mkdocs-material mike mkdocs-macros-plugin
+      - name: Set default version
+        run: mike set-default --allow-undefined latest
+      - name: Deploy development
+        run: mike deploy --push dev
+        if: ${{ github.event_name == 'push' }}
+      - name: Deploy release
+        run: mike deploy --push -u ${{github.event.release.tag_name}} latest
+        if: ${{ github.event_name == 'release' }}

@@ -28,7 +28,9 @@ jobs:
     name: Test installation on macOS
     strategy:
       matrix:
-        os: [macos-14, macos-13]
+        os:
+          - macos-15
+          - macos-14
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4

@@ -1,23 +1,23 @@
-import argparse
 import pickle
-import sys
 import functools
+import sys
 
-import numpy as np
 import pandas as pd
 import networkx as nx
+
+import config as config_module
 
 from functools import cached_property
 from fractions import Fraction
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 from collections.abc import Iterable, Iterator
 
-from build_graph import component_subgraphs
-from multiset_key_dict import MultisetKeyDict, FrozenMultiset
-from similarity_computer import ComparisonSimilarityComputer, id_
-
-from tqdm import tqdm
+from graph import component_subgraphs
+from multiset_key_dict import FrozenMultiset
+from gene_matches_tables import get_table_files
+from similarity_computer import ComparisonSimilarityComputer
+from find_homologs import eprint
 
 def is_complete(g : nx.Graph) -> bool:
     """Returns whether g is a complete (sub)graph."""
@@ -33,51 +33,30 @@ def get_ideal_components(
         if len(s) == samples and is_complete(s):
             yield s
 
-def handle_arguments():
-    parser = argparse.ArgumentParser(
-        description="compute pairwise similarities from graph and comparisons"
+def build_parser():
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description=(
+            "Compute pairwise distasnces from gene matches tables and graph."
+        ),
     )
-    parser.add_argument(
-        "-g",
-        "--graph",
-        type=Path,
-        required=True,
-        help="path to the gene matches graph pickle"
+    arg_config.expose_fields_with_default_aliases(
+        "graph",
+        "tables_dir",
+        "matrix",        
+        required=True
     )
-    parser.add_argument(
-        "-c",
-        "--comparisons",
-        type=Path,
-        nargs="+",
-        required=True,
-        help="paths to the gene matches tables"
+    arg_config.expose_fields_with_default_aliases(
+        "output_dir",
     )
-    parser.add_argument(
-        "-s",
-        "--samples",
-        type=int,
-        help="number of samples"
-    )
-    parser.add_argument(
-        "-e",
-        "--embed",
-        action="store_true",
-        help="enter an IPython shell after computing the matrix"
-    )
-    parser.add_argument(
-        "-o",
-        "--out-type",
-        choices=["sim", "dis"], # Similarity, dissimilarity
-        default="sim",
-        help="type of matrix to produce (similarity or dissimilarity)"
-    )
-    parser.add_argument(
-        "-l",
-        "--print-sample-list",
-        action="store_true",
-        help="print the list of samples before the matrix"
-    )
-    return parser.parse_args()
+
+    # arg_config.add_argument(
+    #     "-e",
+    #     "--embed",
+    #     action="store_true",
+    #     help="enter an IPython shell after computing the matrix"
+    # )
+    arg_config.add_output_config_argument()
+    return arg_config
 
 def restrict_to(
         df2 : pd.DataFrame,
@@ -116,8 +95,31 @@ def restrict_to(
         )["index_x"]
     ]
 
-def print_mat(m : np.ndarray):
-    np.savetxt(sys.stdout, m, fmt="%s", delimiter=' ')
+# TODO: Clarify the explanation in this docstring.
+def restrict_multi(
+        df2: pd.DataFrame,
+        df1: pd.DataFrame,
+        columns: Iterable[Iterable[str]]
+):
+    """Restrict df1 to rows in df2 based on multiple lists of columns.
+
+    This function essentially performs restrict_to multiple times with the same
+    df2 but different columns in each step. The dataframe to be filtered is
+    initially df1, and the restricted dataframe after each step is used as the
+    dataframe to be filtered for the next.
+
+    Parameters:
+        df2:     The dataframe used for filtering.
+        df1:     The dataframe from which to draw rows.
+        columns: The lists of columns of df1 that correspond to those of df2.
+
+    Returns:
+        df1, without rows where values for some column list isn't a row in df2.
+    """
+    return functools.reduce(functools.partial(restrict_to, df2), columns, df1)
+
+class NoIdealComponentsError(Exception):
+    pass
     
 class SampleSimilarity(ComparisonSimilarityComputer):
     """Computes samples' similarities from gene matches graph and comparisons.
@@ -141,6 +143,17 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         graph:          The gene matches graph representing gene orthologies.
         comparison_dfs: An iterable mapping sample pairs to comparisons.
     """
+
+    # List of lists of columns corresponding to sample and gene IDs for subject
+    # and queries.
+    sample_gene_columns = [
+        [a + b for b in ["sample", "gene"]]
+        for a in ["s", "q"]
+    ]
+
+    # Columns that can be stored as Pandas categorical values.
+    categorical_columns = ["qsample", "ssample", "sstrand"]
+    
     def __init__(
             self,
             graph: nx.Graph,
@@ -149,7 +162,7 @@ class SampleSimilarity(ComparisonSimilarityComputer):
     ):
         super().__init__(comparison_dfs, sample_count)
         self.graph = graph
-
+            
     @property
     def sample_count(self):
         """The number of samples in the similarity matrix."""
@@ -167,6 +180,7 @@ class SampleSimilarity(ComparisonSimilarityComputer):
     def valid(self):
         """A dataframe containing all genes found in ideal components."""
         return pd.DataFrame(
+
             (
                 n for comp in get_ideal_components(
                     self.graph,
@@ -187,17 +201,7 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         Returns:
             comp_df, restricted to genes appearing in ideal components.
         """
-        return functools.reduce(
-            functools.partial(
-                restrict_to,
-                self.valid
-            ),
-            [
-                [a + b for b in ["sample", "gene"]]
-                for a in ["s", "q"]
-            ],
-            comp_df
-        )
+        return restrict_multi(self.valid, comp_df, self.sample_gene_columns)
 
     def restricted_comparison_dfs(
             self
@@ -221,13 +225,29 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         for k, df in self.comparison_dfs.multiset_iter():
             yield k, self.restricted(df)
 
-    def _similarity_helper(self):
+    def _similarity_helper(self) -> Iterator[tuple[frozenset[str], Fraction]]:
+        """Yield similarities for pairs of samples.
+
+        Each value yielded is a pair. The first element of the pair is itself a
+        frozenset containing the IDs of the two samples for which the similarity
+        was computed. The second element is a Fraction object, the similarity
+        between the two samples.
+
+        This function can raise a NoIdealComponentsError when attempting to
+        yield the similarity for a pair of samples if "restricting" the gene
+        matches table for that sample pair to genes in ideal components results
+        in an empty dataframe. In that case, the similarity could be considered
+        undefined or unknown.
+        """
         for (qsample, ssample), comp_df in self.comparison_dfs:
             restricted = self.restricted(comp_df)
-            dist = Fraction(
-                restricted["nident"].sum(),
-                restricted["length"].sum() - restricted["gaps"].sum()
-            )
+            try:
+                dist = Fraction(
+                    int(restricted["nident"].sum()),
+                    int(restricted["length"].sum() - restricted["gaps"].sum())
+                )
+            except ZeroDivisionError:
+                raise NoIdealComponentsError()
             yield frozenset((qsample, ssample)), dist
 
     @classmethod
@@ -236,9 +256,31 @@ class SampleSimilarity(ComparisonSimilarityComputer):
             graph_fn : Path,
             comparison_fns : Iterable[Path],
             store_dfs : bool = True,
+            remove_seqids: bool = True,
+            convert_to_categorical: bool = True,
             *args,
             **kwargs
-    ):
+    ) -> tuple[list, dict[str, Any]]:
+        """Get constructor arguments for constructing from filenames.
+
+        To save memory, the store_dfs parameter can be set to False. In that
+        case, comparison_dfs will be generator, and it will not be possible to
+        access them more than once.
+
+        The qseqid and sseqid columns are often long and can also be removed to
+        save memory. Likewise, certain columns (specified in the class's
+        cateogrical_columns attribute) can be made Pandas categorical columns,
+        which can further reduce the memory footprint.        
+
+        Parameters:
+            comparison_fns:                 Paths to stored gene matches tables.
+            store_dfs (bool):               Store the dataframes loaded.
+            remove_seqids (bool):           Delete seqid columns.
+            convert_to_categorical (bool):  Make certain columns categorical.
+
+        Returns:
+            The positional and keyword constructor arguments.
+        """        
         args, kwargs = super()._constructor_args_from_filenames(
             comparison_fns,
             store_dfs,
@@ -250,44 +292,48 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         args = [graph] + args
         return args, kwargs
 
-
     @classmethod
     def from_filenames(
             cls,
             *args,
             **kwargs
     ):
-        """Constructs a SampleSimilarity from paths to graph and table files.
+        """Constructs a SampleSimilarity from paths to table files.
+
+        To save memory, the store_dfs parameter can be set to False. In that
+        case, comparison_dfs will be generator, and it will not be possible to
+        access them more than once.
+
+        The qseqid and sseqid columns are often long and can also be removed to
+        save memory. Likewise, certain columns (specified in the class's
+        cateogrical_columns attribute) can be made Pandas categorical columns,
+        which can further reduce the memory footprint.        
 
         Parameters:
-            graph_fn:         Path to pickle for gene matches graph.
-            comparison_fns:   Paths to stored gene matches tables.
-            store_dfs (bool): Whether to store the dataframes loaded.
+            comparison_fns:                 Paths to stored gene matches tables.
+            store_dfs (bool):               Store the dataframes loaded.
+            remove_seqids (bool):           Delete seqid columns.
+            convert_to_categorical (bool):  Make certain columns categorical.
 
         Returns:
-            A SampleSimilarity using the pickled gene matches graph and tables.
-        """
+            A SampleSimilarity using the given gene matches graph and tables.        
+        """        
         return super().from_filenames(*args, **kwargs)
-
-    
         
 def main():
-    args = handle_arguments()
+    _, args, config = build_parser().get_arguments_and_config()
     sim = SampleSimilarity.from_filenames(
-        args.graph,
-        tqdm(args.comparisons),
-        sample_count=args.samples
+        config.graph,
+        get_table_files(config.tables_dir)
     )
-    if args.print_sample_list:
-        print("\n".join(sim.samples))
-    if args.out_type == "sim":
-        print_mat(sim.get_similarity_matrix())
-    elif args.out_type == "dis":
-        print_mat(sim.get_dissimilarity_matrix())
-    if args.embed:
-        from IPython import embed
-        embed()
+    try:
+        mat = sim.get_dissimilarity_df()
+        mat.to_hdf(config.matrix, key="matrix", mode="w")
+        config.mark_finish()
+    except NoIdealComponentsError:
+        eprint("No ideal components found. Cannot report distances!")
+        sys.exit(1)
+    config.yaml_save(args.output_config)
 
-        
 if __name__ == "__main__":
     main()

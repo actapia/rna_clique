@@ -19,6 +19,11 @@ This section provides brief installation instructions for each piece of
 software. More detailed instructions may be found at each program's GitHub
 repository.
 
+This tutorial also expects the reader to have a POSIX-compatible shell like
+`bash` or `zsh`, and common command-line utilities like `wget` or `curl`,
+`tail`, `cut`, and `basename`. Some commands can also be run via GNU Parallel,
+but this is optional.
+
 It is recommended that the software be downloaded somewhere outside the
 RNA-clique git repository. For example, you may wish to put the software in your
 `~/Documents` directory.
@@ -114,6 +119,22 @@ Add the SPAdes `bin` directory to your `PATH`.
 ```bash
 export PATH="$PATH:$(realpath SPAdes-*/bin)"
 ```
+
+### GNU Parallel (optional)
+
+We can use GNU Parallel to run multiple SPAdes jobs
+simultaneously. Parallelization can speed up these parts on systems with more
+than one logical core ("thread").
+
+=== "Ubuntu"
+    ```bash
+	sudo apt install parallel
+	```
+=== "macOS"
+	```zsh
+	brew install parallel
+	```
+
 
 ## Creating a directory for our work
 
@@ -269,8 +290,8 @@ First, return to the RNA-clique repository root.
 cd "$RNA_CLIQUE"
 ```
 
-Then, run `typical_filtering_step.sh` on the transcriptomes we just
-assembled. This script will perform "phase 1" of RNA-clique, which involves:
+Then, run `filtering_step.py` on the transcriptomes we just assembled. This
+script will perform "phase 1" of RNA-clique, which involves:
 
 1. Selecting the top $n$ genes for each transcriptome
 2. BLASTing each sample's top genes against every other's to get gene matches
@@ -288,9 +309,9 @@ Previous tests with this data revealed that $n = 50000$ is a good setting, so we
 will use that value.
 
 ```bash
-bash typical_filtering_step.sh -o "$TUTORIAL_DIR"/rna_clique_out \
-                               -n 50000 \
-                               "$TUTORIAL_DIR"/out/*
+python filtering_step.py -O "$TUTORIAL_DIR"/rna_clique_out \
+                         -n 50000 \
+                         "$TUTORIAL_DIR"/out/*
 ```
 
 Verify that the `graph.pkl` file was created in the output directory.

@@ -5,6 +5,12 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.transforms
+import matplotlib as mpl
+
+from collections.abc import Sequence
+from typing import Union, Optional, Callable, Literal, Any
+from collections.abc import Iterable
+
 from matplotlib import pyplot as plt
 
 from plots import (
@@ -13,13 +19,6 @@ from plots import (
     BasicCompositeTransform,
     _transform_ax
 )
-
-from collections.abc import Sequence
-from typing import Union, Optional, Callable, Literal, Any
-from itertools import zip_longest
-from collections.abc import Iterable
-
-#from IPython import embed
 
 # noinspection PyTypeChecker
 axis_to_pos = dict(map(reversed, enumerate(["x", "y"])))
@@ -81,9 +80,9 @@ def draw_heatmap(
             axis: Literal["x", "y"],
             padding: float = 0,
             **kwargs
-    ):
+    ) -> float:
         
-        def draw_labels(ppos=0):
+        def draw_labels(ppos: float = 0.0) -> tuple[mpl.text.Text, float]:
             texts = []
             max_width = 0
             for group, df in sample_metadata.groupby(group_by):

@@ -1,92 +1,55 @@
-import argparse
 import re
+import math
 import multiprocessing
 import functools
 import itertools
-from typing import Optional, Any
+import os
+
+import pandas as pd
+
+import config as config_module
+
+from typing import Optional, Any, Callable, Iterator
 from collections.abc import Iterable, Mapping
 from pathlib import Path
-from find_homologs import HomologFinder, eprint
+
+from more_itertools import consume
 from simple_blast import BlastDBCache
 from joblib import Parallel, delayed
-import os
 from tqdm import tqdm
 
+from find_homologs import HomologFinder, eprint
 from gene_matches_tables import write_table
+from transcripts import TranscriptID
 
 default_sample_regex = re.compile(os.environ.get("SAMPLE_RE", "^(.*?)_.*$"))
 default_gene_regex = re.compile("^.*g([0-9]+)_i([0-9]+)")
 
-def handle_arguments():
-    parser = argparse.ArgumentParser(
-        description=(
-            "get comparisons (gene matches tables) for all pairs of "
-            "FASTA files"
-        )
+def build_parser():
+    arg_config = config_module.RNACliqueConfigArgumentManager(
+        description="Calculate gene matches tables for all pairs of samples.",
     )
-    parser.add_argument(
-        "-i",
-        "--inputs",
-        nargs="+",
-        type=Path,
-        required=True,
-        help="input FASTA files (containing top n genes)"
+    arg_config.expose_fields_with_default_aliases(
+        "top_genes_dir",
+        "transcript_id_regex",
+        "tables_dir",
+        required=True
     )
-    parser.add_argument(
-        "-O",
-        "--output-dir",
-        type=Path,
-        required=True,
-        help="directory in which to write results"
+    arg_config.expose_fields_with_default_aliases(
+        "cache_dir",
+        "evalue",
+        "title",
+        "output_dir",        
     )
-    parser.add_argument(
-        "-D",
-        "--db-cache-dir",
-        type=Path,
-        help="directory in which to store BLAST DBs for input FASTA files"
-    )
-    parser.add_argument(
-        "--gene-regex",
-        "-r",
-        type=re.compile,
-        default=default_gene_regex,
-        help="Python regex for parsing sequence IDs"
-    )
-    parser.add_argument(
+    arg_config.add_argument(
         "--sample-regex",
         "-R",
         type=re.compile,
         default=default_sample_regex,
         help="Python regex for parsing sample names"
     )
-    parser.add_argument(
-        "-e",
-        "--evalue",
-        type=float,
-        default=1e-50,
-        help="e-value threshold to use for BLAST alignemnts"
-    )
-    parser.add_argument(
-        "-n",
-        "--top-n",
-        type=int,
-        default=1,
-        help="use top n matches (parameter big N)"
-    )
-    parser.add_argument(
-        "--keep-all",
-        "-k",
-        action="store_true",
-        help="keep all pairs in case of a tie"
-    )
-    parser.add_argument(
-        "--jobs",
-        "-j",
-        type=int,
-        default=multiprocessing.cpu_count()-1,
-        help="number of parallel jobs to use"
-    )
-    return parser.parse_args()
+    arg_config.add_output_config_argument()
+    return arg_config
 
 def find_homologs_and_save(
         transcripts1 : Path,
@@ -94,7 +57,7 @@ def find_homologs_and_save(
         out_path : Path,
         hf_args : Optional[Iterable] = None,
         hf_kwargs : Optional[Mapping[str, Any]] = None
-):
+) -> pd.DataFrame:
     """Get the gene matches tables for the given FASTA files and save results.
 
     Parameters:
@@ -103,6 +66,9 @@ def find_homologs_and_save(
         out_path:     Output file in which to store the gene matches table.
         hf_args:      Arguments to pass to HomologFinder constructor.
         hf_kwargs:    Keyword arguments to pass to HomologFinder constructor.
+
+    Returns:
+        The gene matches tables computed for the two sets of transcripts.
     """
     if hf_args is None:
         hf_args = []
@@ -112,14 +78,17 @@ def find_homologs_and_save(
     table = finder.get_match_table(transcripts1, transcripts2)
     table["ssample"] = str(transcripts1)
     table["qsample"] = str(transcripts2)
+    table[["ssample", "qsample"]] = table[["ssample", "qsample"]].astype(
+        "category"
+    )
     write_table(table, out_path)
-    return True
+    return table
 
 def make_output_path(
         dir_ : Path,
         t1 : Path,
         t2 : Path,
-        regex : Optional[re.Pattern] = None,
+        path_to_sample: Optional[Callable] = None,
         extension : str = "h5"
 ) -> Path:
     """Return the output path for the comparison between the two files.
@@ -128,17 +97,17 @@ def make_output_path(
         dir_:            Path to output directory.
         t1:              Path to (top n) transcripts for first sample.
         t2:              Path to (top n) transcripts for second sample.
-        regex:           Regular expression to use to parse t1 and t2 filenames.
+        path_to_sample:  Function mapping paths to sample names.
         extension (str): File extension to use for output file.
 
     Returns:
         The constructed path for the comparison between t1 and t2.
     """
-    t1 = t1.stem
-    t2 = t2.stem
-    if regex:
-        t1 = regex.match(t1).group(1)
-        t2 = regex.match(t2).group(1)
+    # t1 = t1.stem
+    # t2 = t2.stem
+    if path_to_sample:
+        t1 = path_to_sample(t1)
+        t2 = path_to_sample(t2)
     return dir_ / ("{}--{}.{}".format(t1, t2, extension))
 
 def make_one_db(db_loc : Path, seq_file_path : Path) -> BlastDBCache:
@@ -182,41 +151,103 @@ def make_all_dbs(
     cache._cache = cdict
     return cache
 
-def main():
-    args = handle_arguments()
-    args.output_dir.mkdir(exist_ok=True)
+def find_all_pairs(
+        inputs: Iterable[Path],
+        output_dir: Path,
+        cache_dir: Path,
+        path_to_sample: Callable[[Path], str],
+        hf_args: Iterable = [],
+        jobs: int = multiprocessing.cpu_count() - 1,
+) -> tuple[Iterator[pd.DataFrame], Iterator[Path], int]:
+    """Obtain gene matches tables for all pairs of input samples.
+
+    This function takes the (top n genes of) the transcriptomes of some number
+    of samples as input and produces a "gene matches table" for every pair of
+    samples. Each gene matches table contains the putative orthologous genes
+    found in that pair of samples along with alignment statistics for the
+    alignments between the orthologous genes.
+
+    This function performs much I/O, but it also returns an iterator over the
+    gene matches tables that are produced. To reduce the memory footprint, the
+    function does not hold all tables at once. Instead, they are prodduced as
+    requested from the consumer of the iterator. As the gene matches tables are
+    produced, they are simultaneously saved to disk. Inconveniently, this means
+    that code that wishes to use this function without performing any operations
+    on the tables will have to iterate through the returned iterator and discard
+    each of the tables. This can be done easily with a function like
+    more_itertools.consume.
+
+    This function also returns an iterator over the output table paths. To
+    facilitate pipelining, the order in which the (first) tables iterator is
+    simply the order in which the parallel jobs complete. Hence, the two
+    iterators are generally NOT parallel and typically should not be zipped.
+
+    The final element of the returned value is the total number of gene matches
+    tables. This value is provided for convenience---it's always s choose 2,
+    where s is the number of samples.
+
+    Parameters:
+        inputs:         Paths to sample transcripts (of top n genes).
+        output_dir:     Output directory in which to store gene matches tables.
+        cache_dir:      Intermediate BLAST DB cache directory
+        path_to_sample: Function mapping paths to sample names.
+        hf_args:        Arguments to pass to HomologFinder.
+        jobs (int):     Number of parallel jobs to use.
+
+    Returns:
+        Gene matches tables, paths to tables, number of tables
+    """
     cache = None
-    if args.db_cache_dir:
-        args.db_cache_dir.mkdir(exist_ok=True)
+    if cache_dir:
         eprint("Building BLAST DBs.")
-        cache = make_all_dbs(args.db_cache_dir, args.inputs, jobs=args.jobs)
+        cache = make_all_dbs(cache_dir, inputs, jobs=jobs)
     fh = functools.partial(
         find_homologs_and_save,
-        hf_args=[
-            args.gene_regex,
-            args.top_n,
-            args.evalue,
-            args.keep_all
-        ],
-        hf_kwargs={
+        hf_args=hf_args,
+        hf_kwargs = {
             "db_cache": cache
         }
     )
     mop = functools.partial(
         make_output_path,
-        regex=args.sample_regex,
+        path_to_sample=path_to_sample,
         extension="h5"
     )
-    combos = list(itertools.combinations(args.inputs, 2))
-    res = list(
-        Parallel(n_jobs=args.jobs)(
+    return (
+        Parallel(n_jobs=jobs, return_as="generator_unordered")(
             delayed(
                 fh
-            )(*p, mop(args.output_dir, *p))
-            for p in tqdm(combos)
-        )
+            )(*p, mop(output_dir, *p))
+            for p in itertools.combinations(inputs, 2)
+        ), map(
+            lambda x: mop(output_dir, *x),
+            itertools.combinations(inputs,2)
+        ), math.comb(len(inputs), 2)
     )
-    assert all(res)
 
+def main():
+    original_args, args, config = build_parser().get_arguments_and_config()
+    config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
+    id_parser = TranscriptID.parser_from_re(config.transcript_id_regex)
+    if original_args.sample_regex or not config.path_to_sample:
+        path_to_sample = lambda x: args.sample_regex.match(x.stem).group(1)
+    else:
+        path_to_sample = config.path_to_sample.__getitem__
+    gen, _, gen_len = find_all_pairs(
+        list(config.top_genes_dir.glob("*.fasta")),
+        config.tables_dir,
+        config.cache_dir,
+        path_to_sample,
+        hf_args=[
+            id_parser,
+            config.top_genes,
+            config.evalue,
+            config.keep_all
+        ]
+    )
+    consume(tqdm(gen, total=gen_len))
+    config.mark_finish()
+    config.yaml_save(args.output_config)
+    
 if __name__ == "__main__":
     main()

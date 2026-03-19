@@ -30,9 +30,11 @@ You can download RNA-clique by cloning its GitHub repository. (Alternatively,
 you can extract the release zip or tarball, but be mindful that the repository
 root will have a different name than the one presented here.)
 
-```zsh
+<!--{{clone_command(git_branch()) | code_fence("zsh") | comment_surround}}{{empty("-->
+```bash
 git clone --recurse-submodules https://github.com/actapia/rna_clique
 ```
+<!--")}}-->
 
 ## Installing Homebrew
 
@@ -51,7 +53,7 @@ needed software.
 
 ## Installing Bash
 
-We will install a few packages using Homebrew.
+We will install a couple of packages using Homebrew.
 
 First, we will install **Bash**, which is a Unix shell. The version of Bash that
 comes installed on macOS is very out of date, but RNA-clique requires some new
@@ -60,40 +62,8 @@ features of Bash.
 Second, we will install **NCBI BLAST+**, a popular implementation of the BLAST
 local sequence alignment software.
 
-Third, we will install **cpanminus**`, a Perl package manager that will help us
-install the Perl dependencies.
-
 ```zsh
-brew install bash blast cpanminus
-```
-
-## Installing GNU Parallel (optional)
-
-Some parts of RNA-clique can use GNU Parallel to run multiple jobs 
-simultaneously. Parallelization can speed up these parts on systems with more
-than one logical core ("thread"). GNU parallel be installed via `brew`.
-
-```zsh
-brew install parallel
-```
-
-## Installing Bio::SeqIO
-
-We can use `cpan` to install the Bio::SeqIO Perl module.
-
-```zsh
-sudo cpanm Bio::SeqIO
-```
-
-macOS may ask you to permit Terminal to access certain files and settings
-on your computer. You can safely allow Terminal that access.
-
-## Installing Array::Heap
-
-Again, we can use `cpan`.
-
-```zsh
-sudo cpanm Array::Heap
+brew install bash blast
 ```
 
 ## Installing Miniconda

@@ -1,22 +1,25 @@
 import json
 import functools
+
 import skbio as skb
 import pandas as pd
 import matplotlib as mpl
-from matplotlib import pyplot as plt
-from adjustText import adjust_text
-
-from plots import default_group_label_maker, _keyed_multi_sort
 
 from collections import defaultdict
 from typing import Callable, Union, Optional, Any
 from collections.abc import Iterable, Sequence, Mapping
 
-from confidence_ellipsoid import Ellipsoid, draw_ellipsoid, conf_ellipsoid
-from plots import as_tuple
-from similarity_computer import id_
+from matplotlib import pyplot as plt
+from adjustText import adjust_text
 
-def empty_dict(*args, **kwargs):
+from plots import default_group_label_maker, _keyed_multi_sort
+from confidence_ellipsoid import Ellipsoid, draw_ellipsoid, conf_ellipsoid
+
+from plots import as_tuple
+from identity import id_
+
+def empty_dict(*args, **kwargs) -> dict:
+    """Return an empty dict, ignoring any arguments."""
     return {}
 
 try:

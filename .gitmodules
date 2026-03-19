@@ -1,6 +1,3 @@
-[submodule "select_top_genes"]
-	path = select_top_genes
-	url = https://github.com/actapia/select_top_genes.git
 [submodule "distance_sequence_simulator"]
 	path = distance_sequence_simulator
 	url = https://github.com/actapia/distance_sequence_simulator.git

@@ -25,6 +25,8 @@ bash ./Miniconda3-latest-Linux-x86_64.sh -b -f
 eval "$("$HOME/miniconda3/bin/conda" shell.bash hook)"
 git clone -b "$branch" --recurse-submodules https://github.com/actapia/rna_clique
 cd rna_clique
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
 conda env create -y -f environment.yml --name rna-clique
 conda activate rna-clique
 bash tests/verify_install/test_install.sh
