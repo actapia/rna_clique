@@ -553,7 +553,7 @@ class OrthologExporter:
 
     The class includes various options for controlling the way in which the
     transcripts are exported. First, the exporter can "slice" the orthologs two
-    different ways by using either the by_samples or by_components method. The
+    different ways by using either the by_sample or by_component method. The
     first groups sequences into FASTA files based on sample. The second groups
     seqsuences into FASTA files based on ideal component. In both cases, the
     ideal component and sample to which a sequence belongs can always be
@@ -834,10 +834,10 @@ class OrthologExporter:
                                     sample,
                                     self.parse_transcript_id
                                 )
-                                if self.sample_gene_to_component.get(t[:-1])
+                                if self.sample_gene_to_component.get(t[:-2])
                                 in self.ideal_ids
                             ),
-                            key=lambda x: self.sample_gene_to_component[x[:-1]]
+                            key=lambda x: self.sample_gene_to_component[x[:-2]]
                         ),
                     )
                 ),

@@ -16,7 +16,7 @@ from transcripts import TranscriptID, default_parser
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(
         description=(
-            "Select top genes by k-mer covereage in a transcripts FASTA file."
+            "Select top genes by k-mer coverage in a transcripts FASTA file."
         )
     )
     arg_config.expose_fields_with_default_aliases(
@@ -89,7 +89,7 @@ class TopGeneSelector:
         """Construct a TopGeneSelector for given transcripts and top gene count.
 
         The first argument, transcripts, must be a nullary function returning an
-        iterator over the transcript Bio.SeqRecrod objects fromo which to select
+        iterator over the transcript Bio.SeqRecrod objects from which to select
         the top genes. For convenience, this method also provides from_
         classmethods. Each can construct a TopGeneSelector object from a more
         common object, such as a Path to the FASTA file containing the

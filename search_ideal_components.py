@@ -166,10 +166,10 @@ def search(
     to possibly find hits missing in the original search. For each transcript
     appearing in the initial search, the additional isoforms searched are
     exactly those isoforms of the same gene that appear in the same strand graph
-    connected component are search. Note that since two isoforms of the same
-    gene might not appear in the same strand graph connected component, the
-    presence of one isoform in the initial search does not guarantee that any
-    other isoform will be searched in the extended search.
+    connected component. Note that since two isoforms of the same gene might not
+    appear in the same strand graph connected component, the presence of one
+    isoform in the initial search does not guarantee that any other isoform will
+    be searched in the extended search.
 
     Additionally, during the extended search, this function can export the
     components of the strand graph corresponding to the ideal components to
