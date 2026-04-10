@@ -19,6 +19,8 @@ from find_homologs import eprint
 
 def build_parser():
     parser = filtering_step.build_parser()
+    parser.parser.description = ("Get a genetic distance matrix from input "
+                                 "transcriptomes.")
     parser.expose_fields_with_default_aliases("matrix")
     return parser
 
