@@ -325,7 +325,7 @@ class HomologFinder:
 def main():
     _, args, config = build_parser().get_arguments_and_config()    
     match_finder = HomologFinder(
-        TranscriptID.parse_from_re(config.transcript_id_regex),
+        TranscriptID.parser_from_re(config.transcript_id_regex),
         config.top_matches,
         config.evalue,
         config.keep_all
@@ -343,8 +343,8 @@ def main():
     #
     # I use a Fraction here to avoid loss of precision.
     dist = Fraction(
-        best_matches["nident"].sum(),
-        best_matches["length"].sum() - best_matches["gaps"].sum()
+        int(best_matches["nident"].sum()),
+        int(best_matches["length"].sum() - best_matches["gaps"].sum())
     )
     if args.report_float:
         print(float(dist))
