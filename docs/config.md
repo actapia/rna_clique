@@ -163,26 +163,26 @@ setting to document where the analysis was executed.
 
 | Setting                                                | Python type               | YAML type                     | Description                                                       |
 |:-------------------------------------------------------|:--------------------------|:------------------------------|:------------------------------------------------------------------|
-| [`config_version`](config.md#config-version)           | `str`                     | Scalar                        | Version of the configuration schema used.                         |
+| [`config_version`](config.md#config_version)           | `str`                     | Scalar                        | Version of the configuration schema used.                         |
 | `title`                                                | `str`                     | Scalar                        | Name to assign to the analysis.                                   |
-| [`input_dirs`](config.md#input-dirs)                   | `list[pathlib.Path]`      | Sequence of Scalar            | Directories containing the transcript FASTA files.                |
-| [`top_genes_dir`](config.md#top-genes-dir)             | `pathlib.Path`            | Scalar                        | Directory containing top n genes by coverage.                     |
-| [`tables_dir`](config.md#tables-dir)                   | `pathlib.Path`            | Scalar                        | Directory containing gene matches tables.                         |
-| [`cache_dir`](config.md#cache-dir)                     | `pathlib.Path`            | Scalar                        | Directory containing BLAST DB caches.                             |
-| [`output_dir`](config.md#output-dir)                   | `pathlib.Path`            | Scalar                        | RNA-clique analysis output root directory.                        |
+| [`input_dirs`](config.md#input_dirs)                   | `list[pathlib.Path]`      | Sequence of Scalar            | Directories containing the transcript FASTA files.                |
+| [`top_genes_dir`](config.md#top_genes_dir)             | `pathlib.Path`            | Scalar                        | Directory containing top n genes by coverage.                     |
+| [`tables_dir`](config.md#tables_dir)                   | `pathlib.Path`            | Scalar                        | Directory containing gene matches tables.                         |
+| [`cache_dir`](config.md#cache_dir)                     | `pathlib.Path`            | Scalar                        | Directory containing BLAST DB caches.                             |
+| [`output_dir`](config.md#output_dir)                   | `pathlib.Path`            | Scalar                        | RNA-clique analysis output root directory.                        |
 | [`graph`](config.md#graph)                             | `pathlib.Path`            | Scalar                        | Gene matches graph.                                               |
-| [`top_genes`](config.md#top-genes)                     | `int`                     | Scalar                        | Number of top genes by k-mer coverate to select.                  |
-| [`transcripts_name`](config.md#transcripts-name)       | `str`                     | Scalar                        | Name of transcripts files in input directories.                   |
-| [`top_matches`](config.md#top-matches)                 | `int`                     | Scalar                        | Threshold for counting a match between two genes.                 |
+| [`top_genes`](config.md#top_genes)                     | `int`                     | Scalar                        | Number of top genes by k-mer coverate to select.                  |
+| [`transcripts_name`](config.md#transcripts_name)       | `str`                     | Scalar                        | Name of transcripts files in input directories.                   |
+| [`top_matches`](config.md#top_matches)                 | `int`                     | Scalar                        | Threshold for counting a match between two genes.                 |
 | `evalue`                                               | `float`                   | Scalar                        | e-value threshold to use for BLASTn searches.                     |
-| [`keep_all`](config.md#keep-all)                       | `bool`                    | Scalar                        | Keep all matches between genes in the case of ties.               |
+| [`keep_all`](config.md#keep_all)                       | `bool`                    | Scalar                        | Keep all matches between genes in the case of ties.               |
 | `jobs`                                                 | `int`                     | Scalar                        | Number of parallel jobs to use.                                   |
-| [`transcript_id_regex`](config.md#transcript-id-regex) | `re.Pattern`              | Scalar                        | Python regex to use for parsing transcript IDs.                   |
-| [`path_to_sample`](config.md#path-to-sample)           | `dict[pathlib.Path, str]` | Mapping from Scalar to Scalar | Mapping from paths to sample names.                               |
+| [`transcript_id_regex`](config.md#transcript_id_regex) | `re.Pattern`              | Scalar                        | Python regex to use for parsing transcript IDs.                   |
+| [`path_to_sample`](config.md#path_to_sample)           | `dict[pathlib.Path, str]` | Mapping from Scalar to Scalar | Mapping from paths to sample names.                               |
 | [`matrix`](config.md#matrix)                           | `pathlib.Path`            | Scalar                        | Output distance matrix location.                                  |
 | `finished`                                             | `datetime.datetime`       | Scalar                        | When the last analysis associated with this config file finished. |
 | `version`                                              | `str`                     | Scalar                        | Version of RNA-clique used to create this analysis.               |
-| [`subset_of`](config.md#subset-of)                     | `pathlib.Path`            | Scalar                        | Path to analysis of which this is a subset.                       |
+| [`subset_of`](config.md#subset_of)                     | `pathlib.Path`            | Scalar                        | Path to analysis of which this is a subset.                       |
 
 ### config\_version
 
