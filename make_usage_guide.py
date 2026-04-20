@@ -17,7 +17,7 @@ from IPython import embed
 
 from find_homologs import eprint
 from markdown import MarkdownDocument
-from docs import unoptional, get_type_name
+from docs import unoptional, get_type_name, column_to_text
 
 checks = ["missing-argument-description", "missing-program-description"]
 
@@ -250,11 +250,6 @@ def text_list(l, end: str) -> str:
 
 def remove_empty_columns(df):
     return df[df.columns[~df.isnull().all()]]
-
-def column_to_text(c):
-    sp = c.split("_")
-    sp[0] = sp[0][0].upper() + sp[0][1:]
-    return " ".join(sp)
 
 new_column_names = {
     "nargs": "Argument count",

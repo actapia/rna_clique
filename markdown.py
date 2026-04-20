@@ -4,6 +4,7 @@ import textwrap
 import contextlib
 
 par_special_characters = re.compile(r"([#\[\]\\*_~^])")
+unescape_re = re.compile(r"\\(.)")
 
 class MarkdownDocument:
     def __init__(self, depth=1, file=sys.stdout, wrap=80):
@@ -51,3 +52,14 @@ class MarkdownDocument:
     @classmethod
     def escape(cls, text):
         return par_special_characters.sub(r"\\\1", text)
+
+    @classmethod
+    def unescape(cls, text):
+        return unescape_re.sub(r"\1", text)
+
+    @classmethod
+    def link(cls, text, link=None):
+        if link is None:
+            return f"[{text}]"
+        return f"[{text}]({link})"
+        

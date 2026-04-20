@@ -7,7 +7,7 @@ import config as config_module
 from pathlib import Path
 
 from markdown import MarkdownDocument
-from docs import unoptional, get_type_name
+from docs import unoptional, get_type_name, column_to_text
 from identity import id_
 
 def build_parser():
@@ -86,19 +86,33 @@ def main():
     _, args = build_parser().get_arguments()
     md = MarkdownDocument(depth=args.depth)
     with md.section("Configuration files"):
-        with md.section("Settings"):
-            md.paragraph(
-                summarize_config_format(
-                    config_module.RNACliqueConfig
-                ).to_markdown(index=False),
-                wrap=False
-            )
         try:
             with open(args.config_template, "r") as temp:
                 with md.section("Template"):
                     md.code_block(temp.read().strip(), "yaml")
         except TypeError:
-            pass
+            pass        
+        with md.section("Settings"):
+            conf_summary = summarize_config_format(
+                config_module.RNACliqueConfig
+            )
+            summary_table = conf_summary.copy()
+            summary_table["setting"] = summary_table["setting"].apply(
+                MarkdownDocument.md_code
+            )
+            md.paragraph(
+                summary_table.rename(
+                    columns=column_to_text
+                ).rename(
+                    columns=lambda x: x.replace("Yaml", "YAML"),
+                ).to_markdown(
+                    index=False
+                ),
+                wrap=False
+            )
+            # for setting in conf_summary.setting:
+            #     with md.Section(MarkdownDocument.escape(setting)):
+            #         md.paragraph(
 
 if __name__ == "__main__":
     main()

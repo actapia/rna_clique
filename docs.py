@@ -19,3 +19,8 @@ def get_type_name(t):
     if t.__module__ != "builtins":
         type_name = "{}.{}".format(t.__module__, type_name)
     return type_name
+
+def column_to_text(c):
+    sp = c.split("_")
+    sp[0] = sp[0][0].upper() + sp[0][1:]
+    return " ".join(sp)
