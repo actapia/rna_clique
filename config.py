@@ -383,6 +383,12 @@ class RuleDescription:
     def __eq__(self, other):
         return self.value == other.value and self.type_ == other.type_
 
+    @classmethod
+    def as_description(cls, v, default_type="plain"):
+        if isinstance(v, cls):
+            return v
+        return cls(v, default_type)
+
 class Rule:
     """Class representing a rule for producing options from others.
 
@@ -404,7 +410,7 @@ class Rule:
         """
         self.function = function
         if description is not None:
-            self._description = RuleDescription(description, "plain")
+            self._description = RuleDescription.as_description(description)
         else:
             self._description = None
 
@@ -418,6 +424,12 @@ class Rule:
     def __eq__(self, other):
         return self.function == other.function and \
             self.description == other.description
+
+    def __repr__(self):
+        inner = [repr(self.function)]
+        if self._description is not None:
+            inner.append(repr(self._description))
+        return "{}({})".format(type(self).__name__, ", ".join(inner))
 
     @classmethod
     def as_rule(cls, f: Callable):
@@ -960,9 +972,10 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
         """
         try:
             action = self.parser.add_argument(*args, **kwargs)
-        except ValueError:
+        except ValueError as e:
             print("VE")
             from IPython import embed; embed()
+            raise e
         self._default_graph.add_node(action.dest, required=required)
         self.add_defaults(action.dest, default)
         self._option_string_to_dest |= {
@@ -1200,7 +1213,8 @@ class ConfigArgumentManager[T: MarshallingDataclassBase]:
         if positional:
             aliases = [f]
         if default is None \
-           and self._config_class.__dataclass_fields__[f].default is not None:
+           and self._config_class.__dataclass_fields__[f].default is not None \
+           and (self.default_node, f) not in self._default_graph.edges:
             default = ConstantRule(
                 self._config_class.__dataclass_fields__[f].default,
             )
@@ -1462,6 +1476,13 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
                     RuleDescription("OUTPUT_DIR.name", "pseudocode")
                 )
             }
+        )
+        self.set_defaults(
+            "jobs",
+            ConstantRule(
+                multiprocessing.cpu_count() - 1,
+                RuleDescription("THREADS - 1", "pseudocode")
+            )
         )
 
     def _add_in_file_deps(self, name: str, filename: Path | str):
