@@ -418,7 +418,7 @@ this:
 tutorial. Clades containing all samples of a given genotype and only samples of
 that genotype are color coded and labeled with calipers on the right side of the
 figure. CTE46, CTE27, NTE, and FATG4 are in orange, blue, red, and green,
-respectively.](images/nj_tree.svg)
+respectively.](../../images/nj_tree.svg)
 
 ### Getting a PCoA plot
 
@@ -450,7 +450,7 @@ CTE46 samples cluster together. Samples are color-coded by genotype. Blue points
 represent CTE27, orange points CTE46, green points FATG4, and red points
 NTE. The principal component axes are labeled with their relative contributions,
 measured as the percentage of the sum of eigenvalues of the distance
-matrix.](images/pcoa_2d.svg) 
+matrix.](../../images/pcoa_2d.svg) 
 
 The three-dimensional PCoA plot should look something like this:
 
@@ -460,7 +460,7 @@ CTE27 and CTE46 samples cluster together. Samples are color-coded by
 genotype. Blue points represent CTE27, orange points CTE46, green points FATG4,
 and red points NTE. The principal component axes are labeled with their relative
 contributions, measured as the percentage of the sum of eigenvalues of the
-distance matrix.](images/pcoa_3d.svg)
+distance matrix.](../../images/pcoa_3d.svg)
 
 ### Getting a heatmap
 
@@ -494,4 +494,4 @@ corresponds to. Samples are ordered and grouped by genotype on both axes. Cell
 colors follow the colormap shown on the right, which maps values from $0.0095$
 to $0.0075$ to colors on a gradient from dark indigo to light green. Cells
 additionally show the distance values in
-ten-thousandths.](images/distance_heatmap.svg).
+ten-thousandths.](../../images/distance_heatmap.svg).
