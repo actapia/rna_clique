@@ -432,9 +432,11 @@ class Rule:
         return "{}({})".format(type(self).__name__, ", ".join(inner))
 
     @classmethod
-    def as_rule(cls, f: Callable):
+    def as_rule(cls, f):
         if isinstance(f, cls):
             return f
+        if not callable(f):
+            return ConstantRule(f)
         return cls(f)
 
 # TODO: Make this more general?
