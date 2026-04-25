@@ -1,52 +1,44 @@
 import os
+import functools
+
+import pandas as pd
+import matplotlib as mpl
+
+import pcoa
+
 from pathlib import Path
 
-import skbio as skb
-import pandas as pd
 from matplotlib import pyplot as plt
 
-from filtered_distance import SampleSimilarity
-from path_to_sample import path_to_sample
-from make_subset import get_table_files
+from config import RNACliqueConfig
 
 tutorial_doc_dir = Path(os.environ["RNA_CLIQUE"]) / "docs/tutorials/reads2tree"
 rna_clique_out_dir = Path(os.environ["TUTORIAL_DIR"]) / "rna_clique_out"
 
 def main():
     sample_metadata = pd.read_csv(tutorial_doc_dir / "tall_fescue_accs.csv")
-    similarity_computer = SampleSimilarity.from_filenames(
-        rna_clique_out_dir / "graph.pkl",
-        list(get_table_files(rna_clique_out_dir / "od2"))
+    config = RNACliqueConfig.yaml_load(rna_clique_out_dir / "config.yaml")
+    path_to_sample = {str(k): v for (k, v) in config.path_to_sample.items()}
+    dis_df = pd.read_hdf(config.matrix).rename(
+        index=path_to_sample.__getitem__,
+        columns=path_to_sample.__getitem__,
     )
-    dis_df = similarity_computer.get_dissimilarity_df().rename(
-        index=path_to_sample,
-        columns=path_to_sample,
+    draw_pcoa = functools.partial(
+        pcoa.draw_pcoa,
+        dis_df,
+        sample_metadata,
+        group_by="genotype",
+        sample_name_column="accession",
+        colors=mpl.colormaps.get_cmap("tab10"),
+        edgecolors="black",
+        linewidth=0.3,
     )
-    # 3D PCoA
-    pcoa_results = skb.stats.ordination.pcoa(
-        skb.DistanceMatrix(dis_df, ids=dis_df.columns)
-    )
-    pcoa_results.plot(
-        df=sample_metadata.set_index("accession"),
-        column="genotype",
-    )
-    plt.savefig(rna_clique_out_dir / "pcoa_3d.svg")
     # 2D PCoA
-    pcoa_results_2d = skb.stats.ordination.pcoa(
-        skb.DistanceMatrix(dis_df, ids=dis_df.columns),
-        number_of_dimensions=2
-    )
-    plt.figure()
-    for g, df in sample_metadata.join(
-            pcoa_results_2d.samples[["PC1","PC2"]],
-            "accession"
-    ).groupby("genotype"):
-        plt.scatter(df["PC1"], df["PC2"], label=g)
-    plt.xlabel("PC1")
-    plt.ylabel("PC2")
-    plt.legend()
-    plt.savefig(rna_clique_out_dir / "pcoa_2d.svg")
-    
+    draw_pcoa(dimensions=2)
+    plt.savefig(rna_clique_out_dir / "pcoa_2d.svg")    
+    # 3D PCoA
+    draw_pcoa(dimensions=3)
+    plt.savefig(rna_clique_out_dir / "pcoa_3d.svg")
 
 if __name__ == "__main__":
     main()

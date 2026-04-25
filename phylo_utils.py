@@ -214,6 +214,7 @@ def draw_clade_labels(
             verticalalignment="center",
             color=text_color
         )
+    ax.get_figure().tight_layout()
 
 def phylo_to_dendropy(
         tree: Bio.Phylo.BaseTree.Tree,

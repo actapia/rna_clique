@@ -7,9 +7,28 @@ to show a typical workflow using RNA-clique.
 The tutorial assumes that RNA-clique has already been downloaded and that its
 dependencies and conda environment have already been installed.
 
+The most resource-consuming part of this tutorial is downloading and assembling
+the RNA-seq reads. If you would rather skip this step, you can instead download
+pre-assembled transcriptomes by skipping to the
+["Assembling transcriptomes"](#assembling-transcriptomes) section and following
+the note under the section heading. If you downloaded this software from Zenodo,
+these pre-assembled transcriptomes will already be included with the software.
+
 ## Setup
 
-In addition to RNA-clique, this tutorial requires the following software:
+This tutorial expects the reader to have a POSIX-compatible shell like
+`bash` or `zsh`, and common command-line utilities like `wget` or `curl`,
+`tail`, `cut`, and `basename`. Some commands can also be run via GNU Parallel,
+but this is optional.
+
+### Software for getting sequence data
+
+!!! note
+    If you are using pre-assembled transcriptomes, you can skip installing this
+    software in this section.
+
+In addition to RNA-clique, this tutorial requires the following software for
+obtaining and assembling the sequence reads:
 
 * [sratoolkit](https://github.com/ncbi/sra-tools)
 * [download_sra](https://github.com/actapia/download_sra)
@@ -19,16 +38,11 @@ This section provides brief installation instructions for each piece of
 software. More detailed instructions may be found at each program's GitHub
 repository.
 
-This tutorial also expects the reader to have a POSIX-compatible shell like
-`bash` or `zsh`, and common command-line utilities like `wget` or `curl`,
-`tail`, `cut`, and `basename`. Some commands can also be run via GNU Parallel,
-but this is optional.
-
 It is recommended that the software be downloaded somewhere outside the
 RNA-clique git repository. For example, you may wish to put the software in your
 `~/Documents` directory.
 
-### sratoolkit
+#### sratoolkit
 
 Download the appropriate `sratoolkit` binaries for your system.
 
@@ -57,7 +71,7 @@ Add the `bin` directory of the extracted archive to your `PATH`.
 export PATH="$PATH:$(realpath sratoolkit*/bin)"
 ```
 
-### download_sra
+#### download_sra
 
 !!! note
     If you downloaded this software from Zenodo, the test data SRA files are
@@ -89,23 +103,23 @@ Add the repository root to your `PATH`.
 export PATH="$PATH:$PWD/download_sra"
 ```
 
-### SPAdes
+#### SPAdes
 
 !!! note
     If you downloaded this software from Zenodo, the assembled transcriptomes
     are included in the release zip. If you don't want to assemble the
     transcriptomes yourself, you can skip downloading SPAdes.
 
-Download the SPAdes assembler. As of this writing, 4.0.0 is the newest
+Download the SPAdes assembler. As of this writing, 4.2.0 is the newest
 version.
 
 === "Ubuntu"
     ```bash
-    wget https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Linux.tar.gz
+    wget https://github.com/ablab/spades/releases/download/v4.2.0/SPAdes-4.2.0-Linux.tar.gz
     ```
 === "macOS"
     ```zsh
-    curl -L -O https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Darwin-$(uname -m).tar.gz
+    curl -L -O https://github.com/ablab/spades/releases/download/v4.2.0/SPAdes-4.2.0-Darwin-$(uname -m).tar.gz
     ```
 
 Extract the archive:
@@ -264,7 +278,7 @@ trial and error; you may need to simply guess how many are appropriate for your
 computer and retry if you run out of memory.
 
 On a computer with over 120 GB of memory, we can run 6 jobs with 3 threads
-safely.
+safely./
 
 === "With parallel"
     ```bash
@@ -282,7 +296,7 @@ safely.
 The assembled transcriptomes will be located at `transcripts.fasta` in
 directories corresponding to their samples names under the `out` directory.
 
-## Running phase 1 of RNA-clique
+## Running RNA-clique
 
 First, return to the RNA-clique repository root.
 
@@ -290,46 +304,99 @@ First, return to the RNA-clique repository root.
 cd "$RNA_CLIQUE"
 ```
 
-Then, run `filtering_step.py` on the transcriptomes we just assembled. This
-script will perform "phase 1" of RNA-clique, which involves:
-
-1. Selecting the top $n$ genes for each transcriptome
-2. BLASTing each sample's top genes against every other's to get gene matches
-   tables
-3. Building the gene matches graph from the gene matches tables
-
-<!-- We need to create a directory in which RNA-clique can write its output. We'll -->
-<!-- create a directory named `rna_clique_out` in the `$TUTORIAL_DIR`. -->
-
-<!-- ```bash -->
-<!-- mkdir "$TUTORIAL_DIR/rna_clique_out" -->
-<!-- ``` -->
-
 Previous tests with this data revealed that $n = 50000$ is a good setting, so we
 will use that value.
 
 ```bash
-python filtering_step.py -O "$TUTORIAL_DIR"/rna_clique_out \
-                         -n 50000 \
-                         "$TUTORIAL_DIR"/out/*
+python rna_clique.py -O "$TUTORIAL_DIR/rna_clique_out" \
+                     -n 50000 \
+                     "$TUTORIAL_DIR"/out/*
 ```
 
-Verify that the `graph.pkl` file was created in the output directory.
+Verify that the `distance_matrix.h5` file was created in the output directory.
 
 ```bash
-ls "$TUTORIAL_DIR/rna_clique_out/graph.pkl"
+ls "$TUTORIAL_DIR/rna_clique_out/distance_matrix.h5"
 ```
 
 ## Results
 
+Once RNA-clique has completed, you will likely want to [count the ideal
+components](#counting-ideal-components),[see the distance
+matrix](#viewing-the-distance-matrix), and possibly use the matrix as input to
+downstream analyses, such as construction of a phylogenetic tree or a PCoA plot,
+or a more direct visualization of the matrix like a heatmap. Although RNA-clique
+does *not* seek to integrate code for every possible downstream analysis that
+could be performed on a distance matrix, and it is assumed that many users of
+RNA-clique will prefer to export the matrix and use other software for these
+analyses, RNA-clique nevertheless does provide a handful of Python functions
+that are useful for creating trees, PCoA plots, and heatmaps.
+
+Since RNA-clique's downstream analysis utility functions rely on metadata about
+the samples, and metadata could be expressed in a variety of formats, RNA-clique
+currently does not expose the downstream analysis functions via a command-line
+interface. To take advantage of the visualization functions RNA-clique provides,
+one must write code that calls the visualization functions. The sections below
+provide sample code that works for the data in this particular tutorial, but the
+provided code might also be useful as a template for creating similar
+visualizations with custom data.
+
+### Counting ideal components
+
+The number of ideal components in an analysis is the number of genes on which
+the distances are based. Since the analysis completed, we know we have at least
+one ideal component, but we should hopefully have many more. An analysis based
+on a number of ideal components in the single or low double digits might be too
+error prone.
+
+To check the number of ideal components, use the
+[`plot_component_sizes.py`](../../usage.md#plot_component_sizespy) script, which
+can report statistics about gene matches graph components, among other things.
+
+```bash
+python plot_component_sizes.py --statistics -A "$TUTORIAL_DIR/rna_clique_out"
+```
+
+You should see that we obtained around $9848$ ideal components, which is plenty
+for our analysis.
+
+### Viewing the distance matrix
+
+To simply view the distance matrix, use the [`export_matrix.py`
+script](../usage.md#export_matrixpy).
+
+```python
+python export_matrix.py -O "$TUTORIAL_DIR/rna_clique_out"
+```
+
+The distance matrix should look something like this:
+
+```text
+0.0 0.0071998839240669035 0.009704850162794031 0.009340099262568933 0.009252514087212184 0.009505858709940489
+0.0071998839240669035 0.0 0.009841755746060485 0.009670137702344005 0.009524426325509126 0.009712599413466836
+0.009704850162794031 0.009841755746060485 0.0 0.009721949374373574 0.009786716141556896 0.009817204331389039
+0.009340099262568933 0.009670137702344005 0.009721949374373574 0.0 0.009467437205501427 0.009449106568039713
+0.009252514087212184 0.009524426325509126 0.009786716141556896 0.009467437205501427 0.0 0.0072939623981727415
+0.009505858709940489 0.009712599413466836 0.009817204331389039 0.009449106568039713 0.0072939623981727415 0.0
+```
+
+Note that the rows and columns are not labeled. To get labels for both the rows
+and columns, provide the `--format table` and `--header` options.
+
+```python
+python export_matrix.py --format table \
+                        --header \
+						-O "$TUTORIAL_DIR/rna_clique_out"
+```
+
 ### Getting a tree
 
 If you want a tree, you can create one using RNA-clique and Biopython. The code
-below, also found in `docs/tutorials/reads2tree/make_tree.py`, computes the
-distance matrix from the `graph.pkl` and `od2/*.h5` (or `od2/*.pkl`) files and
-constructs a tree using the neighbor-joining algorithm. The tree is also rooted
-at its midpoint. The tree is saved to `nj_tree.tree`, and a visualization is
-saved to `nj_tree.svg` in the `rna_clique_out` directory.
+below, also found in `docs/tutorials/reads2tree/make_tree.py`, loads the
+distance matrix from `distance_matrix.h5` and constructs a tree using the
+neighbor-joining algorithm. The tree is also rooted at its midpoint. The tree is
+saved to `nj_tree.tree`, and a visualization is saved to `nj_tree.svg` in the
+`rna_clique_out` directory.
 
 ```python
 --8<-- "docs/tutorials/reads2tree/make_tree.py"
@@ -343,9 +410,20 @@ so you can run it as follows:
 PYTHONPATH='.' python docs/tutorials/reads2tree/make_tree.py
 ```
 
+The script create a file called `nj_tree.svg` in the
+`$TUTORIAL_DIR/rna_clique_out` directory. The result should look something like
+this:
+
+![A phylogram with six leaves representing the samples analyzed in this
+tutorial. Clades containing all samples of a given genotype and only samples of
+that genotype are color coded and labeled with calipers on the right side of the
+figure. CTE46, CTE27, NTE, and FATG4 are in orange, blue, red, and green,
+respectively.](images/nj_tree.svg)
+
 ### Getting a PCoA plot
 
-We can use `scikit-bio` to create a PCoA plot from our distance matrix. To
+We can use the `pcoa` module to create a PCoA plot from our distance matrix. (In
+turn, `pcoa` uses [`scikit-bio`](https://scikit.bio/index.html).)  To
 distinguish points by genotype, we will need to use the metadata for the samples
 stored at `$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv`.
 
@@ -364,6 +442,26 @@ The example can be run as follows from the root of the RNA-clique repository.
 PYTHONPATH="." python docs/tutorials/reads2tree/make_pcoa.py
 ```
 
+The two-dimensional PCoA plot should look something like this:
+
+![A two-dimensional PCoA plot visualizing genetic distances for the six samples
+used in this tutorial. Samples separate according to genotype; the two CTE27 and
+CTE46 samples cluster together. Samples are color-coded by genotype. Blue points
+represent CTE27, orange points CTE46, green points FATG4, and red points
+NTE. The principal component axes are labeled with their relative contributions,
+measured as the percentage of the sum of eigenvalues of the distance
+matrix.](images/pcoa_2d.svg) 
+
+The three-dimensional PCoA plot should look something like this:
+
+![A three-dimensional PCoA plot visualizing genetic distances for the six
+samples used in this tutorial. Samples separate according to genotype; the two
+CTE27 and CTE46 samples cluster together. Samples are color-coded by
+genotype. Blue points represent CTE27, orange points CTE46, green points FATG4,
+and red points NTE. The principal component axes are labeled with their relative
+contributions, measured as the percentage of the sum of eigenvalues of the
+distance matrix.](images/pcoa_3d.svg)
+
 ### Getting a heatmap
 
 We can use the `draw_heatmap` function of RNA-clique to display a similarity or
@@ -379,10 +477,21 @@ as `distance_heatmap.svg`.
 --8<-- "docs/tutorials/reads2tree/make_heatmap.py"
 ```
 
-
 To generate a heatmap using this code, you can run the Python script as follows
 from the RNA-clique repository root.
 
 ```bash
 PYTHONPATH="." python docs/tutorials/reads2tree/make_heatmap.py
 ```
+
+The resulting heatmap will be saved ata `$TUTORIAL_DIR/distance_heatmap.svg` and
+should look something like this:
+
+![A heatmap showing distances for the six samples analyzed in this tutorial. The
+heatmap is organized as a grid, and the indices shown on the left and bottom of
+the heatmap indicate for each cell which pair of samples the distance shown
+corresponds to. Samples are ordered and grouped by genotype on both axes. Cell
+colors follow the colormap shown on the right, which maps values from $0.0095$
+to $0.0075$ to colors on a gradient from dark indigo to light green. Cells
+additionally show the distance values in
+ten-thousandths.](images/distance_heatmap.svg).
