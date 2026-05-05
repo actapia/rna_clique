@@ -7,11 +7,14 @@ from gene_matches_tables import get_table_files
 class UnfilteredSimilarity(ComparisonSimilarityComputer):
     def _similarity_helper(self):
         for (qsample, ssample), comp_df in self.comparison_dfs:
-            dist = Fraction(
-                comp_df["nident"].sum(),
-                comp_df["length"].sum() - comp_df["gaps"].sum()
-            )
-            yield frozenset((qsample, ssample)), dist
+            try:
+                dist = Fraction(
+                    int(comp_df["nident"].sum()),
+                    int(comp_df["length"].sum() - comp_df["gaps"].sum())
+                )
+                yield frozenset((qsample, ssample)), dist
+            except TypeError as e:
+                from IPython import embed; embed()
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(
