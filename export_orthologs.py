@@ -119,7 +119,7 @@ def build_parser():
         "--all",
         "-a",
         action="store_true",
-        help="Create concatenated all_ideal.fasta file."
+        help="Create combined all_ideal.fasta file."
     )
     return arg_config
 
@@ -809,7 +809,7 @@ class OrthologExporter:
             out_dir:         Directory in which to create exported FASTA files.
             rename:          Optional function to rename sequences.
             order (str):     Put new name before or after the original.
-            make_all (bool): Concatenate all files into all_ideal.fasta.
+            make_all (bool): Combine all files into all_ideal.fasta.
 
         Returns:
             A dictionary mapping sample IDs to paths to exported FASTA files.
@@ -879,7 +879,7 @@ class OrthologExporter:
             rename:            Optional function to rename sequences.
             order (str):       Put new name before or after the original.
             set_rlimit (bool): Try to increase rlimit.
-            make_all (bool):   Concatenate all files into all_ideal.fasta.
+            make_all (bool):   Combine all files into all_ideal.fasta.
 
         Returns:
             A dictionary mapping ideal component IDs exported FASTA file paths.
@@ -960,12 +960,18 @@ class OrthologExporter:
         """Create a file containing all exported transcripts.
 
         The created file is located at all_ideal.fasta under the provided
-        export_out_dir directory and is a concatenation of the files located at
-        the Paths given by the values of the paths argument.
+        export_out_dir directory and is a contains all sequences in the
+        individual files located at the Paths given by the values of the paths
+        argument.
+
+        The combined file contains the same sequences as the individual files
+        but changes their FASTA headers by appending the name of the file where
+        each sequence was originally found.
 
         Parameters:
             paths (dict):   dict containing component FASTA files as values.
-            export_out_dir: Directory in which to create concatenated file.
+            export_out_dir: Directory in which to create combined file.
+
         """
         def seqs():            
             for path in paths.values():

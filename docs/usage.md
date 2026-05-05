@@ -520,25 +520,25 @@ to use [`export_and_search.py`](#export-and-searchpy).
 
 ### Options
 
-| Config option                                          | Long name                   | Short name   | Description                                                   | Argument count   | Type           | Choices                              | Default value                                     | Default value (flag only)   | Required   |
-|:-------------------------------------------------------|:----------------------------|:-------------|:--------------------------------------------------------------|:-----------------|:---------------|:-------------------------------------|:--------------------------------------------------|:----------------------------|:-----------|
-|                                                        | `--input-config`            | `-c`         | File from which to load configuration settings.               | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
-|                                                        | `--show-config`             |              | Display the computed configuration or arguments.              | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`                | No         |
-|                                                        | `--show-config-format`      |              | Format for displaying computed config or arguments.           | $1$              | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                             | No         |
-|                                                        | `--help`                    | `-h`         | Display a help message and exit.                              | $0$              |                |                                      |                                                   |                             | No         |
-| [`graph`](config.md#graph)                             | `--graph`                   | `-g`         | Gene matches graph.                                           | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`                            |                             | Yes        |
-| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`              | `-O2`        | Directory containing gene matches tables.                     | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                                  |                             | Yes        |
-| `jobs`                                                 | `--jobs`                    | `-j`         | Number of parallel jobs to use.                               | $1$              | `int`          |                                      | `THREADS - 1`                                     |                             | Yes        |
-| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex`     | `-p`         | Python regex to use for parsing transcript IDs.               | $1$              | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                             | Yes        |
-| [`output_dir`](config.md#output_dir)                   | `--output-dir`              | `-A`         | RNA-clique analysis root.                                     | $1$              | `pathlib.Path` |                                      |                                                   |                             | No         |
-|                                                        | `--export-output-dir`       | `-X`         | Output directory in which to store exported orthologs.        | $1$              | `pathlib.Path` |                                      |                                                   |                             | Yes        |
-|                                                        | [`--by`](#by)               | [`-b`](#by)  | Attribute by which to organize orthologs in export.           | $1$              | `str`          | `sample` or `component`              | `sample`                                          |                             | No         |
-|                                                        | `--remove-non-contributing` | `-N`         | Remove ideal components that contribute no differences.       | $0$              |                |                                      |                                                   | `True`                      | No         |
-|                                                        | `--debug`                   |              | Enable debug behavior.                                        | $0$              |                |                                      |                                                   | `True`                      | No         |
-|                                                        | `--concat-id-order`         | `-o`         | Where to place original sequence ID relative to group name.   | $1$              | `str`          | `before` or `after`                  | `after`                                           |                             | No         |
-|                                                        | `--no-fix-strand`           |              | Do not attempt to put transcripts in consistent orientations. | $0$              |                |                                      |                                                   | `True`                      | No         |
-|                                                        | `--allow-inconsistent`      | `-i`         | Approximate transcript reorientation instead of failing.      | $0$              |                |                                      |                                                   | `True`                      | No         |
-|                                                        | `--all`                     | `-a`         | Create concatenated `all_ideal.fasta` file.                   | $0$              |                |                                      |                                                   | `True`                      | No         |
+| Config option                                          | Long name                   | Short name  | Description                                                   | Argument count | Type           | Choices                              | Default value                                     | Default value (flag only) | Required |
+|:-------------------------------------------------------|:----------------------------|:------------|:--------------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:--------------------------------------------------|:--------------------------|:---------|
+|                                                        | `--input-config`            | `-c`        | File from which to load configuration settings.               | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
+|                                                        | `--show-config`             |             | Display the computed configuration or arguments.              | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`              | No       |
+|                                                        | `--show-config-format`      |             | Format for displaying computed config or arguments.           | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                           | No       |
+|                                                        | `--help`                    | `-h`        | Display a help message and exit.                              | $0$            |                |                                      |                                                   |                           | No       |
+| [`graph`](config.md#graph)                             | `--graph`                   | `-g`        | Gene matches graph.                                           | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`                            |                           | Yes      |
+| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`              | `-O2`       | Directory containing gene matches tables.                     | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                                  |                           | Yes      |
+| `jobs`                                                 | `--jobs`                    | `-j`        | Number of parallel jobs to use.                               | $1$            | `int`          |                                      | `THREADS - 1`                                     |                           | Yes      |
+| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex`     | `-p`        | Python regex to use for parsing transcript IDs.               | $1$            | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                           | Yes      |
+| [`output_dir`](config.md#output_dir)                   | `--output-dir`              | `-A`        | RNA-clique analysis root.                                     | $1$            | `pathlib.Path` |                                      |                                                   |                           | No       |
+|                                                        | `--export-output-dir`       | `-X`        | Output directory in which to store exported orthologs.        | $1$            | `pathlib.Path` |                                      |                                                   |                           | Yes      |
+|                                                        | [`--by`](#by)               | [`-b`](#by) | Attribute by which to organize orthologs in export.           | $1$            | `str`          | `sample` or `component`              | `sample`                                          |                           | No       |
+|                                                        | `--remove-non-contributing` | `-N`        | Remove ideal components that contribute no differences.       | $0$            |                |                                      |                                                   | `True`                    | No       |
+|                                                        | `--debug`                   |             | Enable debug behavior.                                        | $0$            |                |                                      |                                                   | `True`                    | No       |
+|                                                        | `--concat-id-order`         | `-o`        | Where to place original sequence ID relative to group name.   | $1$            | `str`          | `before` or `after`                  | `after`                                           |                           | No       |
+|                                                        | `--no-fix-strand`           |             | Do not attempt to put transcripts in consistent orientations. | $0$            |                |                                      |                                                   | `True`                    | No       |
+|                                                        | `--allow-inconsistent`      | `-i`        | Approximate transcript reorientation instead of failing.      | $0$            |                |                                      |                                                   | `True`                    | No       |
+|                                                        | `--all`                     | `-a`        | Create combined `all_ideal.fasta` file.                       | $0$            |                |                                      |                                                   | `True`                    | No       |
 
 #### by
 
@@ -602,13 +602,21 @@ the output files are organized is specified using the `--by` parameter.
 Optionally, when `--all` is specified, this script will also produce an
 `all_ideal.fasta` file containing all of the output transcripts from the other
 files. Such a file is useful for searching with BLAST. The `all_ideal.fasta`
-file should be equivalent to a concatenation of the individual output
-files. (Note that using `cat` on the input files may produce different results
-due to system argument vector length limits.) When outputs are organized by
-`component`, the files are concatenated in increasing order of ideal component
-ID. When outputs are organized by `sample`, the files are concatenated in the
-order their corresponding samples appear in the rows or columns of the distance
-matrix. 
+file should contain all of the exported transcripts from ideal components. It
+differs from the file that would be produced by simply concatenating all of the
+other exported FASTA files in that the `all_ideal.fasta` file appends
+identifiers to each transcript's FASTA sequence header indicating in which file
+the sequence was originally found. For example, where an individual ideal
+component file would have a sequence with FASTA header
+`NODE_1_length_15383_cov_32.255511_g0_i0:SRR2321385`, the same sequence would
+have the FASTA header
+`NODE_1_length_15383_cov_32.255511_g0_i0:SRR2321385:ideal_component_0` in the
+`all_ideal.fasta` file.
+
+When outputs are organized by `component`, the files are combined in increasing
+order of ideal component ID. When outputs are organized by `sample`, the files
+are combined in the order their corresponding samples appear in the rows or
+columns of the distance matrix.
 
 #### File format
 
@@ -638,7 +646,7 @@ python export_orthologs.py -O my_analysis -X export -b component
 Export orthologs from ideal components identified in the analysis located at
 `my_analysis` to a directory called `export2`. Organize the results by
 sample. Ignore ideal components where there are no differences in the aligned
-regions of the transcripts, and create a concatenated `all_ideal.fasta` file
+regions of the transcripts, and create a combined `all_ideal.fasta` file
 containing all of the other exported transcripts.
 
 ```bash
@@ -1238,13 +1246,9 @@ This script expects as its input a single [FASTA
 file](https://blast.ncbi.nlm.nih.gov/doc/blast-topics/#fasta) containing all
 exported transcripts from ideal components. Since
 [`export_orthologs.py`](#export-orthologspy) ordinarily separates exported
-transcripts into multiple files, it may be necessary to provide the `--all`/`-a`
-command-line option to concatenate the output files into an `all_ideal.fasta`
-file. Alternatively, the separate FASTA file output by `export_orthologs.py` can
-be combined after the export. Beware that simply providing all the exported
-files as command-line arguments to `cat` might not work due to system limits on
-the length of the argument vector; it may be preferable to run `cat` with `find`
-or `xargs` instead.
+transcripts into multiple files, it is necessary to provide the `--all`/`-a`
+command-line option to combine the output files into an `all_ideal.fasta`
+file.
 
 ### Output format
 
