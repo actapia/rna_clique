@@ -24,6 +24,8 @@ from path_to_sample import path_to_sample
 from transcripts import default_gene_re, TranscriptID
 
 #default_gene_re = re.compile("^.*g([0-9]+)_i([0-9]+)")
+default_search_evalue = 1e-50
+default_extended_search_evalue = 1e-20
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(
@@ -102,9 +104,11 @@ def build_parser():
         help="Merge extended search results into one file.",
     )
     arg_config.add_argument(
-        "--extended-search",
-        "-e",
-        action="store_true",
+        "--extended-search-evalue",
+        "-E",
+        const=default_extended_search_evalue,
+        nargs="?",
+        type=float,
         help="Search other isoforms of a gene that produces a hit.",
     )
     arg_config.add_argument(
@@ -112,6 +116,13 @@ def build_parser():
         "-x",
         action="store_true",
         help="Save matching orientation graph components in extended search.",
+    )
+    arg_config.add_argument(
+        "--search-evalue",
+        "-e",
+        type=float,
+        default=default_search_evalue,
+        help="e-value cutoff to use for initial searches."
     )
     return arg_config
 
@@ -131,12 +142,13 @@ def search(
         ] = TranscriptID.parser_from_re(default_gene_re),
         path_to_sample: Optional[Callable[[Path], str]] = path_to_sample,
         # clean: bool = False,
-        extended_search: bool = False,
+        extended_evalue: Optional[float | bool] = None,
         export_components: bool = True,
         merge_sams: bool = False,
         #strand_graph_out: tuple[nx.Graph, dict] = None
         strand_graph: nx.Graph = None,
         node_to_ccc: dict[tuple[str, int], nx.Graph] = None,
+        evalue: float = default_search_evalue,
         jobs: int = 1,
         debug: bool = False,
 ) -> SearchResult:
@@ -213,19 +225,22 @@ def search(
         query:                    Path to sequences to search for.
         parse_transcript_id:      FASTA ID to TranscriptID parsing function.
         path_to_sample:           Top genes path to sample name function.
-        extended_search (bool):   Search other isotigs of matched genes.
+        extended_evalue (float):  e-value cutoff for extended search.
         export_components (bool): Save matching strand graph components in
                                   extended search.
         merge_sams (bool):        Merge extended search results into one SAM.
         strand_graph:             Strand graph for the analysis.
         node_to_ccc (dict):       dict mapping ideal component nodes to
                                   meta-strand graph connected components.
+        evalue (float):           e-value cutoff to use for initial searches.
         jobs (int):               Number of parallel jobs to use.
         debug (bool):             Enable debug behavior.
 
     Returns:
         The SearchResult object representing results of searching the exports.
     """
+    if extended_evalue is True:
+        extended_evalue = default_extended_search_evalue
     db_cache_loc.mkdir(exist_ok=True)
     out_dir.mkdir(exist_ok=True)
     # TODO: Why use a DB cache here?
@@ -234,7 +249,12 @@ def search(
     cache.makedb(exports)
     # Start by just searching for the query sequences in all of the exported
     # transcripts.
-    search = MultiformatBlastnSearch(query, exports, db_cache=cache)
+    search = MultiformatBlastnSearch(
+        query,
+        exports,
+        db_cache=cache,
+        evalue=evalue,
+    )
     tab_search = search.to_search(6)
     if not tab_search.hits.empty:
         # print("Found {} hits.".format(tab_search.hits.shape[0]))
@@ -263,17 +283,17 @@ def search(
         # nodes can be found in the BLAST results.
         cccs = defaultdict(list)
         for full_seq_id in tab_search.hits["sseqid"].drop_duplicates():
-            seq_id, sample = full_seq_id.split(":")
+            seq_id, sample, _ = full_seq_id.split(":")
             node = (sample_to_path[sample],) + \
                 parse_transcript_id(seq_id)[1:]
             cccs[node_to_ccc[node]].append(node)
             subjects.add(full_seq_id)
         sam_paths = []
-        if extended_search:
+        if extended_evalue is not None:
             # Get a mapping from gene matches graph nodes to sequence IDs.
             node_to_seq_id = {}
             for full_seq_id in export_index:
-                seq_id, sample = full_seq_id.split(":")
+                seq_id, sample, _ = full_seq_id.split(":")
                 node = (sample_to_path[sample],) + \
                     parse_transcript_id(full_seq_id)[1:]
                 node_to_seq_id[node] = full_seq_id
@@ -327,7 +347,7 @@ def search(
                             with MultiformatBlastnSearch.from_sequences(
                                     [export_index[node_to_seq_id[n]]],
                                     queries,
-                                    evalue=1e-5,
+                                    evalue=extended_evalue,
                             ) as new_search:
                                 out_path = out_dir / "{}_g{}_i{}.sam".format(
                                     path_to_sample(n[0]),
@@ -385,11 +405,12 @@ def main():
         parse_transcript_id=TranscriptID.parser_from_re(
             config.transcript_id_regex
         ),
-        extended_search=args.extended_search,
+        extended_evalue=args.extended_search_evalue,
         export_components=args.export_components,
         merge_sams=args.merge_sams,
         jobs=config.jobs,
         debug=args.debug,
+        evalue=args.evalue,
     )
 
 if __name__ == "__main__":

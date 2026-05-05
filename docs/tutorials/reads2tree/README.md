@@ -14,6 +14,39 @@ pre-assembled transcriptomes by skipping to the
 the note under the section heading. If you downloaded this software from Zenodo,
 these pre-assembled transcriptomes will already be included with the software.
 
+## Background
+
+The RNA-seq data used in this tutorial are from plants derived from the
+"Kentucky 31" tall fescue (*Lolium arundinaceum*) cultivar and were originally
+used in gene expression studies described in [*Transcriptome analysis and
+differential expression in tall fescue harboring different endophyte strains in
+response to water
+deficit*](https://doi.org/10.3835/plantgenome2018.09.0071). Each set of RNA-seq 
+reads comes from a different individual, and although we will be using RNA-seq
+reads for six individuals, the individuals have only four distinct
+genotypes. Individuals with the same genotype are clones, and should thus have
+almost no differences in their genomes.
+
+Some of the individuals possess an endosymbiotic fungus, *Epichloë coenophiala*,
+while others were treated to remove the fungus. The endophyte statuses of the
+individuals, which are relevant for later tutorials such as the "[Quickly
+computing subsets of existing analyses](../susbsets/README.md)" tutorial, are
+also shown in the metadata table below.
+
+| SRA Accession                                                                                 | Genotype | Endophyte |
+|-----------------------------------------------------------------------------------------------|----------|-----------|
+| [SRR2321388](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR2321388acc=SRR2321388) | CTE46    | infected  |
+| [SRR2321385](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR2321385acc=SRR2321385) | CTE46    | minus     |
+| [SRR8003761](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR8003761acc=SRR8003761) | CTE27    | infected  |
+| [SRR8003762](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR8003762acc=SRR8003762) | CTE27    | minus     |
+| [SRR7990321](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR7990321acc=SRR7990321) | FATG4    | infected  |
+| [SRR8003736](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR8003736acc=SRR8003736) | NTE      | infected  |
+
+For the purpose of this tutorial, each individual (associated with a single set
+of RNA-seq reads, and, eventually, a single assembled transcriptome) will be a
+"sample," and the goal of the tutorial is to obtain a genetic distance matrix
+that quantifies pairwise differences in the genomes of the samples. 
+
 ## Setup
 
 This tutorial expects the reader to have a POSIX-compatible shell like
@@ -200,23 +233,13 @@ export TUTORIAL_DIR=$PWD
     If either of these does not print a path, you have forgotten to set the
     appropriate environment variables.
 
-We will start out with RNA-seq reads for six samples of tall fescue (*Lolium
-arundinaceum*). These samples are a subset of the sixteen used in the paper
-*RNA-clique: A method for computing genetic distances from RNA-seq data*. The
-sample metadata is shown below.
-
-| SRA Accession                                                                                 | Genotype |
-|-----------------------------------------------------------------------------------------------|----------|
-| [SRR2321388](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR2321388acc=SRR2321388) | CTE46    |
-| [SRR2321385](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR2321385acc=SRR2321385) | CTE46    |
-| [SRR8003761](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR8003761acc=SRR8003761) | CTE27    |
-| [SRR8003762](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR8003762acc=SRR8003762) | CTE27    |
-| [SRR7990321](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR7990321acc=SRR7990321) | FATG4    |
-| [SRR8003736](https://trace.ncbi.nlm.nih.gov/Traces/?view=run_browserSRR8003736acc=SRR8003736) | NTE      |
-
-The list of accessions is in the file
-[`tall_fescue_accs.csv`](./tall_fescue_accs.csv). We can download these all
-easily using the `download_sra` tool.
+We will start out with RNA-seq reads for six samples of tall fescue. These
+samples are a subset of the sixteen used in the paper *RNA-clique: A method for
+computing genetic distances from RNA-seq data*. The sample metadata shown
+previously in the [Background](#background) section is also present in the file
+[`tall_fescue_accs.csv`](./tall_fescue_accs.csv). We can easily download all of
+the RNA-seq data we need using the `tall_fescue_accs.svg` file and the
+`download_sra` tool.
 
 First, change to your `TUTORIAL_DIR`.
 

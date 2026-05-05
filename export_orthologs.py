@@ -967,12 +967,18 @@ class OrthologExporter:
             paths (dict):   dict containing component FASTA files as values.
             export_out_dir: Directory in which to create concatenated file.
         """
-        all_ideal_path = export_out_dir / "all_ideal.fasta"
-        with open(all_ideal_path, "w") as all_ideal:
+        def seqs():            
             for path in paths.values():
-                with open(path, "r") as component_fasta:
-                    all_ideal.write(component_fasta.read())    
-
+                for seq in Bio.SeqIO.parse(path, "fasta"):
+                    seq.description = ""
+                    seq.title = ""
+                    seq.name = ""
+                    seq.id = "{}:{}".format(seq.id, path.stem)
+                    #from IPython import embed; embed()
+                    yield seq
+        all_ideal_path = export_out_dir / "all_ideal.fasta"        
+        Bio.SeqIO.write(seqs(), all_ideal_path, "fasta")
+        #from IPython import embed; embed()        
 
 def main():
     _, args, config = build_parser().get_arguments_and_config()

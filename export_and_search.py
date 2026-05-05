@@ -89,6 +89,21 @@ def build_parser():
         help="Python regex for parsing sequence IDs",
         default=default_gene_re
     )
+    parser.add_argument(
+        "--extended-search-evalue",
+        "-E",
+        const=search_ideal_components.default_extended_search_evalue,
+        nargs="?",
+        type=float,
+        help="Search other isoforms of a gene that produces a hit.",
+    )
+    parser.add_argument(
+        "--search-evalue",
+        "-e",
+        type=float,
+        help="e-value cutoff to use for initial searches.",
+        default=search_ideal_components.default_search_evalue,
+    )
     return parser
 
 def handle_arguments():    
@@ -127,6 +142,8 @@ def export_and_search(
         jobs: Optional[int] = None,
         resolve_name_conflicts: bool = False,
         export_only: bool = False,
+        extended_evalue: Optional[bool | float] = None,
+        evalue: float = search_ideal_components.default_search_evalue
 ):
     """Export transcripts in ideal components and search them for sequences.
 
@@ -143,6 +160,8 @@ def export_and_search(
         jobs (int):                    Number of parallel jobs to use.
         resolve_name_conflicts (bool): Auto-resolve conflicting analysis names.
         export_only (bool):            Only perform the export step.
+        extended_evalue (float):       e-value cutoff for extended searches.
+        evalue (float):                e-value cutoff for initial searches.
     """
     out_names = [export_output_dir / get_analysis_name(c) for c in configs]
     counts = Counter(out_names)
@@ -190,10 +209,11 @@ def export_and_search(
         component_paths = exporter.by_component(export_dir, order="after")
         if not export_only:
             all_ideal_path = export_dir / "all_ideal.fasta"
-            with open(all_ideal_path, "w") as all_ideal:
-                for path in component_paths.values():
-                    with open(path, "r") as component_fasta:
-                        all_ideal.write(component_fasta.read())
+            # with open(all_ideal_path, "w") as all_ideal:
+            #     for path in component_paths.values():
+            #         with open(path, "r") as component_fasta:
+            #             all_ideal.write(component_fasta.read())
+            exporter.make_all_ideal(component_paths, export_dir)
             db_cache = export_dir / "db_cache"
             db_cache.mkdir(exist_ok=True)
             for query in queries:
@@ -209,7 +229,9 @@ def export_and_search(
                     parse_transcript_id=pti,
                     jobs=config.jobs,
                     strand_graph=exporter.strand_graph,
-                    node_to_ccc=exporter.node_to_component_component
+                    node_to_ccc=exporter.node_to_component_component,
+                    extended_evalue=extended_evalue,
+                    evalue=evalue,
                 )
                 # if stats is None:
                 #     from IPython import embed; embed()
@@ -233,7 +255,9 @@ def main():
             parse_transcript_id,
             args.jobs,
             args.resolve_name_conflicts,
-            args.export_only
+            args.export_only,
+            args.extended_search_evalue,
+            args.search_evalue,
         )
     except NameConflictError as e:
         eprint(e)
