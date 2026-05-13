@@ -33,7 +33,7 @@ reproduced below.
 | SRR8003736    | NTE      | infected  |
 
 Recall that some of the samples have an endophyte&mdash;the fungus *Epichloë
-coenophiala*&mdash;and such samples exactly those labeled as "infected" in the
+coenophiala*&mdash;such samples are those labeled as "infected" in the
 endophyte column of the sample metadata. In this tutorial, I will also describe
 such samples as "E+" ("E plus") and will refer to samples without endophytes as
 "E&minus;" ("E minus"). In this exercise, we will export the orthologs from the
@@ -236,7 +236,7 @@ We use the sequence headers in `subjects.fasta` to check whether matches all
 come from E+ samples.
 
 ```bash
-grep "$TUTORIAL_DIR"/full_ec_search_out/*/search_e19*/subjects.fasta \
+grep "$TUTORIAL_DIR"/full_ec_search_out/*/search_*/subjects.fasta \
      -e '>' | grep '[^:]*:[^:]*$' -o | sort -u | sort -t: -k2
 ```
 
@@ -247,6 +247,7 @@ sample-ideal component pairs and then sort them by ideal component.
 You should see something like this:
 
 ```text
+SRR7990321:ideal_component_1127
 SRR8003761:ideal_component_1331
 SRR8003761:ideal_component_1459
 SRR2321388:ideal_component_2366
@@ -274,8 +275,8 @@ SRR2321388:ideal_component_793
 SRR7990321:ideal_component_8416
 ```
 
-Notice that a transcript from SRR2321385 in ideal component $6249$ matched one
-of the endophyte assemblies. We can conclude that the hits are not merely a
+Notice that transcripts from SRR2321385 in ideal components $6249$ and $6777$
+matched the endophyte assemblies. We can conclude that the hits are not merely a
 result of assembly errors incorporating endophyte reads into plant sequences.
 
 ### Visualizing alignments produced by export\_and\_search.py
@@ -340,38 +341,57 @@ alignments span the majority of the transcript.](igv_snapshot.svg)
 
 You should see the alignments span most of the transcript, and if you look at
 the other transcripts from the same ideal component, you should see the same
-thing for the other alignments. This is true even for the E- samples, such as
-SRR2321385, and the alignments clearly span much more than the length of a
+thing for the other alignments. This is true even for the E&minus; samples, such
+as SRR2321385, and the alignments clearly span much more than the length of a
 single read.
 
 #### Searching the Nucleotide database for matches transcripts
 
 One other possible explanation for the alignments we see is that the genome
 assemblies could inadvertently have included some sequences from the host
-plant. We can check if this is true by BLASTing the matched transcripts in
-`subjects.fasta` against the NCBI non-redundant Nucleotide database and seeing
-in which kinds of organisms we get hits. (You may prefer to do this in the web
-BLAST interface to avoid rate limits.)
+plant. We can check if this is true by BLASTing the transcripts in the matched
+exported ideal components against the NCBI non-redundant Nucleotide
+database. From such a BLAST search, we could see in which kinds of organisms we
+get hits. We will also learn more about the identity of the matching sequences,
+which might help explain the matches to the E&minus; samples. 
+
+First, let's concatenate the exported transcripts from the ideal components
+where all samples had matching transcripts. For this run, we want ideal
+components $6249$ $6777$, but beck the results you got at the end of the
+["Checking represented samples in matching
+component"](#checking-represented-samples-in-matching-components) section to
+make sure you are using the right ideal component IDs here.
 
 ```bash
-blastn -query "$TUTORIAL_DIR"/full_ec_search_out/*/search_e19*/subjects.fasta \
-       -evalue 1e-99 -remote -db nr -outfmt 6 -out remote_results
+cat "$TUTORIAL_DIR"/full_ec_search_out/*/export/ideal_component_6249.fasta \
+    "$TUTORIAL_DIR"/full_ec_search_out/*/export/ideal_component_6777.fasta \
+	> matching_components.fasta
+```
+
+
+Now, we will search the created `matching_components.fasta` against the NCBI
+Nucleotide database. (You may prefer to do this step in the web BLAST interface
+to avoid rate limits.)
+
+```bash
+blastn -query matching_components.fasta -evalue 1e-99 -remote -db nr -outfmt 6 \
+       -out remote_results
 ```
 
 If you view the subject sequence IDs in the resulting `remote_results` file and
 search for them within the
 [Nucleotide](https://www.ncbi.nlm.nih.gov/nucleotide/) database, you should find
-that most of the matches are for fungi. For example, XM_046169884.1 corresponds
-to [*Alternaria rosae* elongation
-factor-1a](https://www.ncbi.nlm.nih.gov/nuccore/XM_046169884.1). Thus, the
-explanation that endophyte genome the hits in the ideal components are a result
-of unintentional incorporation of plant sequence in the endophyte genomes seems
-unlikely.
+that 
+
+Actually, further investigation of the sequences we found reveals that they code
+for highly conserved proteins, and we are getting matches to both a plant and
+the fungal homolog of the gene. This explains why we get matches for the
+endophyte sequence even in E&minus; samples.
 
 ## Export and search ideal components in the subset analysis
 
 Now that we've looked at the results for the full analysis, we will see how our
-results differ for the subset analysis that included only E- samples. Run
+results differ for the subset analysis that included only E&minus; samples. Run
 `export_and_search.py` again but provide it with the configuration file for the
 subset analysis and a different output directory.
 
