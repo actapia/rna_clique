@@ -1,4 +1,5 @@
 import os
+import argparse
 import functools
 
 import pandas as pd
@@ -13,11 +14,13 @@ from matplotlib import pyplot as plt
 from config import RNACliqueConfig
 
 tutorial_doc_dir = Path(os.environ["RNA_CLIQUE"]) / "docs/tutorials/reads2tree"
-rna_clique_out_dir = Path(os.environ["TUTORIAL_DIR"]) / "rna_clique_out"
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("rna_clique_out", type=Path)
+    args = parser.parse_args()
     sample_metadata = pd.read_csv(tutorial_doc_dir / "tall_fescue_accs.csv")
-    config = RNACliqueConfig.yaml_load(rna_clique_out_dir / "config.yaml")
+    config = RNACliqueConfig.yaml_load(args.rna_clique_out / "config.yaml")
     path_to_sample = {str(k): v for (k, v) in config.path_to_sample.items()}
     dis_df = pd.read_hdf(config.matrix).rename(
         index=path_to_sample.__getitem__,
@@ -35,10 +38,10 @@ def main():
     )
     # 2D PCoA
     draw_pcoa(dimensions=2)
-    plt.savefig(rna_clique_out_dir / "pcoa_2d.svg")    
+    plt.savefig(args.rna_clique_out / "pcoa_2d.svg")    
     # 3D PCoA
     draw_pcoa(dimensions=3)
-    plt.savefig(rna_clique_out_dir / "pcoa_3d.svg")
+    plt.savefig(args.rna_clique_out / "pcoa_3d.svg")
 
 if __name__ == "__main__":
     main()

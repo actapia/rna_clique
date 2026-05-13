@@ -301,7 +301,7 @@ trial and error; you may need to simply guess how many are appropriate for your
 computer and retry if you run out of memory.
 
 On a computer with over 120 GB of memory, we can run 6 jobs with 3 threads
-safely./
+safely.
 
 === "With parallel"
     ```bash
@@ -462,7 +462,8 @@ respectively. The code can also be found at
 The example can be run as follows from the root of the RNA-clique repository.
 
 ```bash
-PYTHONPATH="." python docs/tutorials/reads2tree/make_pcoa.py
+PYTHONPATH="." python docs/tutorials/reads2tree/make_pcoa.py \
+                      "$TUTORIAL_DIR"/rna_clique_out
 ```
 
 The two-dimensional PCoA plot should look something like this:
