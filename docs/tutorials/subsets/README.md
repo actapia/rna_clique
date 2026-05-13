@@ -10,7 +10,7 @@ end-to-end ["From RNA-seq reads to a phylogenetic tree with
 RNA-clique"](../reads2tree/README.md) tutorial; this will give us a completed
 analysis to work from.
 
-## Check your environment variables
+## Check your environment
 
 Before we begin, check that your `RNA_CLIQUE` and `TUTORIAL_DIR` environment
 variables are set and pointing to the RNA-clique root directory and the working
@@ -26,6 +26,14 @@ that does not exist, you may need to reset the environment variables to the
 values described in the ["Creating a directory for our
 work"](../reads2tree/README.md#creating-a-directory-for-our-work) section of the
 end-to-end tutorial.
+
+Also, check that you are in the `rna-clique` Conda environment. You should see
+`(rna-clique)` at the beginning of your prompt. If not, try activating the
+environment with
+
+```bash
+conda activate rna-clique
+```
 
 ## Goal and rationale
 
