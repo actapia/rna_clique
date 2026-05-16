@@ -39,6 +39,17 @@ above and to the left of the rows and columns of squares in the heatmap. Each
 rectangle representing a matrix element is colored according to a colormap,
 which is also shown with a scale next to the heatmap.
 
+![A heatmap showing distances for the six samples analyzed in the end-to-end
+"From RNA-seq reads to a phylogenetic tree with RNA-clique" tutorial. The
+heatmap is organized as a grid, and the indices shown on the left and bottom of
+the heatmap indicate for each cell which pair of samples the distance shown
+corresponds to. Samples are ordered and grouped by genotype on both axes. Cell
+colors follow the colormap shown on the right, which maps values from $0.0095$
+to $0.0075$ to colors on a gradient from dark indigo to light green. Cells
+additionally show the distance values in
+ten-thousandths.](../images/distance_heatmap.svg).
+
+
 RNA-clique offers a `draw_heatmap` function, which can be found in the
 `heatmap.py` module. The arguments accepted by `draw_heatmap` are summarized in
 the table below.
@@ -138,6 +149,15 @@ A real example of using `draw_heatmap` can also be found at
 A Principal Coordinate Analysis (PCoA) plot represents samples as points in a
 scatter plot. Point coordinates are chosen for the samples such that distances
 are preserved as well as possible given the number of dimensions allowed.
+
+![A two-dimensional PCoA plot visualizing genetic distances for the six samples
+used in the end-to-end "From RNA-seq reads to a phylogenetic tree with
+RNA-clique" tutorial. Samples separate according to genotype; the two CTE27 and
+CTE46 samples cluster together. Samples are color-coded by genotype. Blue points
+represent CTE27, orange points CTE46, green points FATG4, and red points
+NTE. The principal component axes are labeled with their relative contributions,
+measured as the percentage of the sum of eigenvalues of the distance
+matrix.](../images/pcoa_2d.svg)
 
 RNA-clique provides the `draw_pcoa` function for drawing PCoA plots in two or
 three dimensions. `draw_pcoa` is in the `pcoa.py` module and returns a
@@ -409,6 +429,14 @@ module. Unlike the functions for heatmaps and PCoA plots, the functions for
 phylograms expect to be given a BioPython Tree instead of a distance
 matrix. Such trees can be constructed using BioPython or some other Python
 libraries. 
+
+![A phylogram with six leaves representing the samples analyzed in the
+end-to-end "From RNA-seq reads to a phylogenetic tree with RNA-clique"
+tutorial. Clades containing all samples of a given genotype and only samples of
+that genotype are color coded and labeled with calipers on the right side of the
+figure. CTE46, CTE27, NTE, and FATG4 are in orange, blue, red, and green,
+respectively.](../images/nj_tree.svg)
+
 
 The main function for drawing phylograms is the `draw_tree` function in the
 `phylo_utils.py` module. The parameters that the function accepts are described
