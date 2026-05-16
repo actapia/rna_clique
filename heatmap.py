@@ -52,11 +52,88 @@ def draw_heatmap(
 ):
     """Draw a heatmap representing a (dis)similarity matrix.
 
-    This function uses sns.heatmap but applies a few changes to the plot that
+    This function uses sns.heatmap but applies some changes to the plot that
     are appropriate for visualizing distance matrices. Any additional positional
     or keyword arguments provided to this function will be passed to
     sns.heatmap.
 
+    A heatmap visualizes a matrix as a grid of rectangles that I will call
+    "cells." Each cell in the grid represents one element of the matrix, and the
+    value of that element is encoded in the cell's color via a colormap, which
+    is also shown as part of the heatmap visualization.
+
+    Since this function is part of RNA-clique, and RNA-clique produces symmetric
+    distance matrices, only the upper triangle of the distance matrix is shown.
+
+    A basic heatmap needs no metadata; it merely shows the matrix of values,
+    with possible labels for individual rows and columns (corresponding, in this
+    case, to samples). However, sample metadata can allow the samples to be more
+    helpfully organized an labeled, so this function accepts sample metadata for
+    that purpose.
+
+    This function requires that sample metadata be provided in the form of a
+    Pandas DataFrame via the sample_metadata parameter. Each row of the sample
+    metadata should correspond to one sample is the analysis, and the columns of
+    that row should provide some information about the sample to which the row
+    corresponds.
+
+    This function must be able to map rows or columns in the distance matrix to
+    their corresponding rows in the sample metadata. It is expected that the
+    distance matrix has its rows and columns labeled with some form of ID for
+    each sample, and this ID should also appear in one column of the metadata,
+    making the mapping from distance matrix row/column to sample metadata row
+    possible. The name of the column containing the ID should be provided to
+    this function via the sample_name_column parameter.
+
+    draw_heatmap supports two ways of organizing the rows and columns of the
+    distance matrix for the heatmap, and the two ways can also be used in
+    tandem. First, the group_by parameter allows grouping samples by some column
+    or columns in the sample metadata. All samples having the same values in
+    those columns will be adjacent in the rows and columns of the
+    heatmap. Second, the order_by parameter sorts all samples by their values in
+    the specified columns; samples appear in that sorted order in the rows and
+    columns of the heatmap.
+
+    Note that if samples are sorted according to some sample metadata columns
+    using the order_by parameter, then those samples are also grouped by those
+    same columns, but the converse is not necessarily true. draw_heatmap
+    enforces this relationship between order_by and group_by, so trying to group
+    by a sequence of columns that does not also appear as a prefix of the
+    order_by columns will raise an AssertionError. Additionally, if order_by is
+    specified, but group_by is not, then group_by will automatically be set to
+    order_by.
+
+    group_by and order_by also differ in that draw_heatmap can display labels
+    grouping samples with the same values for the group_by columns but cannot
+    display such labels for samples with the same values for the order_by
+    columns. To enable drawing labels for groups, pass True for the
+    draw_group_labels parameter.
+
+    By default, the text used to label a group is just the values of the
+    group_by columns for that group, joined by commas and spaces. A custom
+    function can also be specified to customize how group labels are created;
+    the make_group_label parameter should be a function accepting a list of
+    values for the group_by columns for a group and should return a string, the
+    label of the group.
+
+    In addition to the colormapping, matrix values can be indicated by numbers
+    drawn on top of the cells. To enable this, set the digit_annot parameter to
+    some nonzero value. The specific number drawn for a cell corresponding to
+    matrix value x is x * 10**(digit_annot - D - 1), rounded to the nearest
+    integer. In the expression, D is the minimum floor of the base 10 log of any
+    value in the distance matrix. The effect of this transformation is that the
+    largest value in the matrix is represented with no more than digit_annot of
+    its leading significant digits, and all values in the matrix are represented
+    in the same unit, even if this means that some values are shown as 0.
+
+    When order_by is used, samples are sorted along the axes of the heatmap
+    according to their values for the columns specified in order_by. To sort by
+    a value that does not appear in the columns but can be derived from some
+    column values, use the sort_key parameter. sort_key should be a function or
+    sequence of functions. Function sort_key[i] should take a Pandas series
+    containing values for column order_by[i] and should return a new series that
+    is suitable for sorting.
+    
     Parameters:
         mat:                      (Dis)similarity matrix to visualize.
         sample_metadata:          Pandas dataframe containing sample metadata.
@@ -74,6 +151,7 @@ def draw_heatmap(
         x_label_kwargs (dict):    kwargs to give to plt.text for x group labels.
         y_label_kwargs (dict):    kwargs to give to plt.text for y group labels.
         draw_debug_points (bool): Whether to plot points useful for debugging.
+
     """
 
     def _draw_group_labels(
