@@ -21,7 +21,7 @@ from filtered_distance import (
 )
 from export_orthologs import build_strand_graph, get_sample_gene_to_component
 from path_to_sample import path_to_sample
-from transcripts import default_gene_re, TranscriptID
+from transcripts import default_parser, TranscriptID
 
 #default_gene_re = re.compile("^.*g([0-9]+)_i([0-9]+)")
 default_search_evalue = 1e-50
@@ -139,7 +139,7 @@ def search(
         #gene_regex: re.Pattern = default_gene_re,
         parse_transcript_id: Callable[
             [str], TranscriptID
-        ] = TranscriptID.parser_from_re(default_gene_re),
+        ] = default_parser,
         path_to_sample: Optional[Callable[[Path], str]] = path_to_sample,
         # clean: bool = False,
         extended_evalue: Optional[float | bool] = None,
