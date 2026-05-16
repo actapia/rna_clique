@@ -2,9 +2,8 @@
 
 This guide will walk you through installing RNA-clique on Ubuntu. The guide
 assumes you have some basic familiarity working with Ubuntu using the command
-line. The guide is designed for Ubuntu 23.10 and has also been tested on Ubuntu
-22.04 and 24.04. The guide likely works on other recent versions of Ubuntu as
-well, but such configurations are untested.
+line. The guide is designed for Ubuntu 26.04; it likely works on other recent
+versions of Ubuntu as well, but such configurations are untested.
 
 ## Installing dependencies via APT
 
@@ -19,15 +18,16 @@ sudo apt update
 Then, install the first set of packages. The table below describes what we will
 install.
 
-| Software          | Description                                                                            |
-| ----------------- | -------------------------------------------------------------------------------------- |
-| Git               | Version control system used by RNA-clique (usually installed by default)               |
-| wget              | Command-line utility for downloading files from the web (usually installed by default) |
-| NCBI BLAST+       | Popular implementation of the BLAST local sequence alignment algorithm                 |
+| Software    | Description                                                                            |
+|-------------|----------------------------------------------------------------------------------------|
+| Git         | Version control system used by RNA-clique (usually installed by default)               |
+| wget        | Command-line utility for downloading files from the web (usually installed by default) |
+| NCBI BLAST+ | Popular implementation of the BLAST local sequence alignment algorithm                 |
+| g++         | Popular C++ compiler needed for building some Python extensions                        |
 
 
 ```bash
-sudo apt install git wget ncbi-blast+ ncbi-blast+ ncbi-blast+-legacy
+sudo apt install git wget ncbi-blast+ ncbi-blast+ ncbi-blast+-legacy g++
 ```
 
 ## Installing Miniconda
@@ -47,6 +47,8 @@ Then, run the installer.
 ```bash
 bash Miniconda3-latest-Linux-x86_64.sh
 ```
+
+Accept the terms of the license agreement when prompted.
 
 Unless you have a reason to install somewhere else, you can install to the
 default locaton Miniconda suggests.
@@ -81,6 +83,11 @@ of the repository.
 ```bash
 conda env create -f environment.yml --name rna-clique
 ```
+
+If you are following this tutorial exactly, this will be the first time you've
+installed packages from conda repositories, and you must accept the Terms of
+Service of each repository before you can install packages. When prompted,
+accept the Terms of Service for each repository.
 
 When asked to confirm that you want to install the dependencies, say yes.
 

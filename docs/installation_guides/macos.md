@@ -51,7 +51,10 @@ You will most likely need to enter your password to install Homebrew as root.
 The install script will also ask you to confirm that you want to install the
 needed software.
 
-## Installing Bash
+After the install has finished, run the commands that the installer suggests to
+add Homebrew to your `PATH`, and the restart your shell.
+
+## Installing Bash and BLAST
 
 We will install a couple of packages using Homebrew.
 
@@ -84,8 +87,8 @@ Then, run the installer.
 bash Miniconda3-latest-MacOSX-$(uname -m).sh
 ```
 
-Agree to the license terms. Unless you have a reason to install somewhere else,
-you can install to the default location Miniconda suggests.
+View and agree to the license terms. Unless you have a reason to install
+somewhere else, you can install to the default location Miniconda suggests.
 
 When asked about initializing Miniconda for the current shell, say yes.
 
@@ -105,6 +108,11 @@ of the repository.
 ```zsh
 conda env create -f environment.yml --name rna-clique
 ```
+
+If you are following this tutorial exactly, this will be the first time you've
+installed packages from conda repositories, and you must accept the Terms of
+Service of each repository before you can install packages. When prompted,
+accept the Terms of Service for each repository.
 
 When asked to confirm that you want to install the dependencies, say yes.
 
