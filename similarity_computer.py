@@ -8,10 +8,34 @@ from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import Optional, Any
 from numbers import Real
+from fractions import Fraction
 
 from gene_matches_tables import read_table
 from multiset_key_dict import MultisetKeyDict
 from identity import id_
+
+def similarities_from_dfs(
+    tables: Iterable[tuple[frozenset[str], pd.DataFrame]]
+) -> Iterable[tuple[frozenset[str], Fraction]]:
+    """Yield similarities for pairs of samples using gene matches tables.
+
+    Each value yielded is a pair. The first element of the pair is itself a
+    frozenset containing the IDs of the two samples for which the similarity was
+    computed. The second element is a Fraction object, the similarity between
+    the two samples.
+
+    This function can raise a ZeroDivsionError when attempting to yield the
+    similarity for a pair of samples if the filtered gene matches table for that
+    sample pair is an empty dataframe. In that case, the similarity could be
+    considered undefined or unknown.
+    """
+    
+    for (qsample, ssample), restricted in tables:
+        dist = Fraction(
+            int(restricted["nident"].sum()),
+            int(restricted["length"].sum() - restricted["gaps"].sum())
+        )
+        yield frozenset((qsample, ssample)), dist
 
 class ComparisonSimilarityComputer:
     """Base class for computing similarities from comparison statistics.

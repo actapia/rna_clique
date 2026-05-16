@@ -1,21 +1,15 @@
 import config as config_module
 
-from fractions import Fraction
-from similarity_computer import ComparisonSimilarityComputer
+from similarity_computer import (
+    ComparisonSimilarityComputer,
+    similarities_from_dfs
+)
 from gene_matches_tables import get_table_files
 
 class UnfilteredSimilarity(ComparisonSimilarityComputer):
     def _similarity_helper(self):
-        for (qsample, ssample), comp_df in self.comparison_dfs:
-            try:
-                dist = Fraction(
-                    int(comp_df["nident"].sum()),
-                    int(comp_df["length"].sum() - comp_df["gaps"].sum())
-                )
-                yield frozenset((qsample, ssample)), dist
-            except TypeError as e:
-                from IPython import embed; embed()
-
+        return similarities_from_dfs(self.comparison_dfs)
+    
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(
         description=(

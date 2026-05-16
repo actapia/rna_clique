@@ -16,7 +16,10 @@ from collections.abc import Iterable, Iterator
 from graph import component_subgraphs
 from multiset_key_dict import FrozenMultiset
 from gene_matches_tables import get_table_files
-from similarity_computer import ComparisonSimilarityComputer
+from similarity_computer import (
+    ComparisonSimilarityComputer,
+    similarities_from_dfs
+)
 from find_homologs import eprint
 
 def is_complete(g : nx.Graph) -> bool:
@@ -226,29 +229,19 @@ class SampleSimilarity(ComparisonSimilarityComputer):
             yield k, self.restricted(df)
 
     def _similarity_helper(self) -> Iterator[tuple[frozenset[str], Fraction]]:
-        """Yield similarities for pairs of samples.
-
-        Each value yielded is a pair. The first element of the pair is itself a
-        frozenset containing the IDs of the two samples for which the similarity
-        was computed. The second element is a Fraction object, the similarity
-        between the two samples.
+        """Yield similarities for pairs of samples using filtered tables.
 
         This function can raise a NoIdealComponentsError when attempting to
-        yield the similarity for a pair of samples if "restricting" the gene
-        matches table for that sample pair to genes in ideal components results
-        in an empty dataframe. In that case, the similarity could be considered
-        undefined or unknown.
+        yield the similarity for a pair of samples if the filtered gene matches
+        table for that sample pair is an empty dataframe. In that case, the
+        similarity could be considered undefined or unknown.
         """
-        for (qsample, ssample), comp_df in self.comparison_dfs:
-            restricted = self.restricted(comp_df)
-            try:
-                dist = Fraction(
-                    int(restricted["nident"].sum()),
-                    int(restricted["length"].sum() - restricted["gaps"].sum())
-                )
-            except ZeroDivisionError:
-                raise NoIdealComponentsError()
-            yield frozenset((qsample, ssample)), dist
+        try:
+            return similarities_from_dfs(
+                (k, self.restricted(v)) for (k, v) in self.comparison_dfs
+            )
+        except ZeroDivisionError:
+            raise NoIdealComponentsError()
 
     @classmethod
     def _constructor_args_from_filenames(
