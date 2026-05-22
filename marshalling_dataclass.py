@@ -34,8 +34,9 @@ def custom_field(
         repr: bool = True,
         hash: Optional[bool] = None,
         compare: bool = True,
-        metadata: Optional[Mapping] =None,
+        metadata: Optional[Mapping] = None,
         kw_only: bool | _MISSING_TYPE = MISSING,
+        doc: Optional[str] = None,
         **kwargs,
 ) -> FieldT:
     """Create a field belonging to a custom type.
@@ -59,14 +60,28 @@ def custom_field(
         compare (bool):  Should be used for comparisons on the dataclass?
         metadata (dict): Arbitrary data to store with the field.
         kw_only (bool):  Should be keyword-only in dataclass's __init__?
+        doc (str):       Docstring for the field.
 
     Returns:
         A field of the specified type, constructed with given kwargs.
     """
     if default is not MISSING and default_factory is not MISSING:
         raise ValueError('cannot specify both default and default_factory')
-    return cls(default, default_factory, init, repr, hash, compare,
-               metadata, kw_only,  **kwargs)
+    try:
+        # Python >= 3.14
+        res = cls(default, default_factory, init, repr, hash, compare,
+                  metadata, kw_only, doc,  **kwargs)
+    except TypeError:
+        try:
+            # 3.10 <= Python < 3.14 
+            res = cls(default, default_factory, init, repr, hash, compare,
+                      metadata, kw_only,  **kwargs)
+        except TypeError:
+            # Python < 3.10
+            res = cls(default, default_factory, init, repr, hash, compare,
+                      metadata, **kwargs)
+    return res
+        
 
 def typing_to_cast(t) -> Callable:
     """Convert a type annotation into a function to convert values to that type.
