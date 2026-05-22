@@ -82,6 +82,7 @@ if [ "$PASSWORDLESS" -ne 1 ] && which sudo && ! sudo -n -v; then
     echo "$password" | sudo -S -v
 fi
 CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 brew install bash blast
 if [ "$PASSWORDLESS" -ne 1 ] && which sudo; then
     echo "$password" | startsudo
