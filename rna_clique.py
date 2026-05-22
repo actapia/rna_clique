@@ -174,7 +174,7 @@ def rna_clique(
     )
     if output_matrix is not None:
         mat = sim.get_dissimilarity_df()
-        mat.to_hdf(output_matrix, "matrix")
+        mat.to_hdf(output_matrix, key="matrix")
     return sim, pts
     
 def main():

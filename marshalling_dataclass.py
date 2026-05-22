@@ -108,7 +108,15 @@ def typing_to_cast(t) -> Callable:
     fields = typing.get_args(t)
     type_ = typing.get_origin(t)
     if type_ is not None:
-        if isinstance(type_, type):
+        if type_ is typing.Union:
+            non_none = [f for f in fields if f is not type(None)]            
+            if len(fields) == 2 and len(non_none) == 1:
+                # Handle "Optional" types.
+                non_none = non_none[0]
+                return lambda x: typing_to_cast(
+                    non_none
+                )(x) if x is not None else None        
+        elif isinstance(type_, type):
             if issubclass(type_, tuple):
                 return lambda x: type_(
                     typing_to_cast(f)(v) for (f, v) in zip(fields, x)
@@ -125,14 +133,6 @@ def typing_to_cast(t) -> Callable:
                 elif len(fields) == 1:
                     return lambda x: type_(map(typing_to_cast(fields[0]), x))
                 raise ValueError(f"Cannot automatically (un)marshal {t!r}.")
-        elif type_ is typing.Union:
-            non_none = [f for f in fields if f is not type(None)]            
-            if len(fields) == 2 and len(non_none) == 1:
-                # Handle "Optional" types.
-                non_none = non_none[0]
-                return lambda x: typing_to_cast(
-                    non_none
-                )(x) if x is not None else None
     return t
         
 class MarshallingField(Field):
