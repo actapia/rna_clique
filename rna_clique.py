@@ -203,7 +203,7 @@ def main():
             )
             config.path_to_sample = pts    
             mat = sim.get_dissimilarity_df()
-            mat.to_hdf(config.matrix, "matrix")
+            mat.to_hdf(config.matrix, key="matrix")
             config.mark_finish()
             if args.output_config:
                 config.yaml_save(args.output_config)        
