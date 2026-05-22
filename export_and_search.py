@@ -2,6 +2,7 @@ import argparse
 import json
 import sys
 import re
+import app
 
 import search_ideal_components
 import export_orthologs
@@ -16,10 +17,16 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from filtered_distance import SampleSimilarity
-from find_homologs import eprint
+from filtered_distance import SampleSimilarity, NoIdealComponentsError
 from gene_matches_tables import get_table_files
-from transcripts import default_gene_re, TranscriptID
+from transcripts import default_gene_re, TranscriptID, TranscriptIDParseError
+from app import set_except_hook, eprint
+from path_to_sample import (
+    path_to_sample,
+    dict_path_to_sample,
+    sample_re,
+    PathToSampleError
+)
 
 # @marshalling_dataclass(optional=True)
 # class ExportAndSearchConfig:
@@ -104,6 +111,12 @@ def build_parser():
         help="e-value cutoff to use for initial searches.",
         default=search_ideal_components.default_search_evalue,
     )
+    parser.add_argument(
+        "--verbose",
+        "-v",
+        action="store_true",
+        help="Print more output than ususal."
+    )
     return parser
 
 def handle_arguments():    
@@ -134,6 +147,11 @@ def get_analysis_name(config: config_module.RNACliqueConfig) -> str:
 class NameConflictError(ValueError):
     pass
 
+class RegexTranscriptIDParseError(TranscriptIDParseError):
+    def __init__(self, message, regex):
+        super().__init__(message)
+        self.regex = regex
+
 def export_and_search(
         configs: list[config_module.RNACliqueConfig],
         export_output_dir: Path,
@@ -143,7 +161,7 @@ def export_and_search(
         resolve_name_conflicts: bool = False,
         export_only: bool = False,
         extended_evalue: Optional[bool | float] = None,
-        evalue: float = search_ideal_components.default_search_evalue
+        evalue: float = search_ideal_components.default_search_evalue,
 ):
     """Export transcripts in ideal components and search them for sequences.
 
@@ -192,11 +210,23 @@ def export_and_search(
             tqdm(comparison_paths),
             store_dfs=True
         )
+        try:
+            sim.similarities
+        except NoIdealComponentsError:
+            eprint(
+                "Warning: One or more analyses has no ideal components to "
+                "export! Skipping ... "
+            )
+            continue
         pti = parse_transcript_id
         if pti is None:
             pti = TranscriptID.parser_from_re(
                 config.transcript_id_regex,
             )
+        if config.path_to_sample is not None:
+            pts = dict_path_to_sample(config.path_to_sample)
+        else:
+            pts = path_to_sample
         exporter = export_orthologs.OrthologExporter(
             sim,
             pti,
@@ -205,6 +235,7 @@ def export_and_search(
             consistent_strands=True,
             allow_inconsistent=True,
             jobs=config.jobs,
+            path_to_sample=pts,
         )
         component_paths = exporter.by_component(export_dir, order="after")
         if not export_only:
@@ -232,6 +263,7 @@ def export_and_search(
                     node_to_ccc=exporter.node_to_component_component,
                     extended_evalue=extended_evalue,
                     evalue=evalue,
+                    path_to_sample=pts
                 )
                 # if stats is None:
                 #     from IPython import embed; embed()
@@ -239,31 +271,70 @@ def export_and_search(
                     json.dump(stats._asdict(), stats_file)
 
 def main():
-    _, args = build_parser().get_arguments()
-    configs = [config_module.RNACliqueConfig.yaml_load(c) for c in args.configs]
-    args.export_output_dir.mkdir(exist_ok=True)
-    parse_transcript_id = None
-    if args.transcript_id_regex is not None:
+    with set_except_hook():
+        _, args = build_parser().get_arguments()
+    with set_except_hook(args.verbose):
+        for query in args.queries:
+            config_module.RNACliqueConfig.validate_file(query, "Query file ")
+            search_ideal_components.check_is_not_empty(query, "query")
+        configs = [
+            config_module.RNACliqueConfig.yaml_load(c) for c in args.configs
+        ]
+        no_path_to_sample = [
+            p for (c, p) in zip(configs, args.configs)
+            if c.path_to_sample is None
+        ]
+        if no_path_to_sample:
+            eprint("Warning: the following configuration files lack "
+                   "path_to_sample attributes:\n")
+            for p in no_path_to_sample:
+                eprint(p)
+            eprint("\nFor those analyses, this script will parse sample names "
+                   "from paths using the default regular expression "
+                   f"{sample_re.pattern}.")                
+        args.export_output_dir.mkdir(exist_ok=True)
         parse_transcript_id = TranscriptID.parser_from_re(
             args.transcript_id_regex
         )
-    try:
-        export_and_search(
-            configs,
-            args.export_output_dir,
-            args.queries,
-            parse_transcript_id,
-            args.jobs,
-            args.resolve_name_conflicts,
-            args.export_only,
-            args.extended_search_evalue,
-            args.search_evalue,
-        )
-    except NameConflictError as e:
-        eprint(e)
-        eprint(("Cannot continue. Provide the -r option to try automatic "
-                "resolution."))
-        sys.exit(1)
-
+        # if .path_to_sample is not None:
+        #     pts = dict_path_to_sample(config.path_to_sample)
+        #     mode = f"path_to_sample in configuration file {args.input_config}"
+        # else:
+        #     eprint("Warning: path_to_sample attribute not found in input "
+        #            "config. Will parse sample names from paths using default "
+        #            f"regular expression {sample_re.pattern}.")
+        #     pts = path_to_sample
+        #     mode = f"sample_regex {sample_re.pattern}"        
+        try:
+            export_and_search(
+                configs,
+                args.export_output_dir,
+                args.queries,
+                parse_transcript_id,
+                args.jobs,
+                args.resolve_name_conflicts,
+                args.export_only,
+                args.extended_search_evalue,
+                args.search_evalue,
+            )
+        except NameConflictError as e:
+            eprint(e)
+            eprint(("Cannot continue. Provide the -r option to try "
+                    "automatic resolution."))
+            sys.exit(1)
+        except PathToSampleError as e:
+            eprint(
+                f"RNA-clique could not get the sample name for path {e.path}. "
+                "Please ensure that path_to_sample is provided in the configs "
+                "for any analyses where sample names cannot be parsed with the "
+                f"default regex {sample_re.pattern}."
+            )
+            raise e
+        except TranscriptIDParseError as e:
+            app.print_transcript_id_parse_error_message(
+                args.transcript_id_regex
+            )
+            raise e
+        
 if __name__ == "__main__":
     main()

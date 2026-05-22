@@ -1,4 +1,5 @@
 import functools
+import itertools
 
 import numpy as np
 import pandas as pd
@@ -9,6 +10,8 @@ from pathlib import Path
 from typing import Optional, Any
 from numbers import Real
 from fractions import Fraction
+
+from more_itertools import consume
 
 from gene_matches_tables import read_table
 from multiset_key_dict import MultisetKeyDict
@@ -35,7 +38,7 @@ def similarities_from_dfs(
             int(restricted["nident"].sum()),
             int(restricted["length"].sum() - restricted["gaps"].sum())
         )
-        yield frozenset((qsample, ssample)), dist
+        yield frozenset((qsample, ssample)), dist        
 
 class ComparisonSimilarityComputer:
     """Base class for computing similarities from comparison statistics.
@@ -79,6 +82,7 @@ class ComparisonSimilarityComputer:
             sample_count (int): Number of samples in the analysis.
         """
         self.comparison_dfs = comparison_dfs
+        self._comparison_df_iter = self._iter_comparison_dfs()
         self._sample_count =  sample_count
         self._samples = None
 
@@ -249,17 +253,32 @@ class ComparisonSimilarityComputer:
         """Returns the similarities between pairs of samples."""
         return self.similarities
 
+    def _iter_comparison_dfs(self):
+        """Iterate over comparison dataframes while also getting samples."""
+        samples = set()
+        for pair, df in self.comparison_dfs:
+            samples |= pair
+            yield (pair, df)
+        self._samples = list(samples) 
+
     @property
     def samples(self):
         """The samples in the analysis.
 
-        Since the list of samples is obtained in the process of computing
-        similarities, this property will compute similarities first if they have
-        not been computed already. If the similarities are not needed, this
-        property is an inefficient way of obtaining the list of samples.
+        The list of samples can be obtained in the process of computing the
+        similarities. When samples are requested, but similarities have not been
+        computed, this function may tee an internal iterator over the
+        comparison_dfs, possibly causing increased memory usage.
         """
         if self._samples is None:
-            self.similarities
+            if isinstance(self.comparison_dfs, Iterator):
+                print("IS ITER")
+                my_iter, self._comparison_df_iter = itertools.tee(
+                    self._comparison_df_iter
+                )
+                consume(my_iter)
+            else:
+                consume(self._iter_comparison_dfs())
         return self._samples
 
     def _pair_dict_to_matrix(
@@ -279,16 +298,17 @@ class ComparisonSimilarityComputer:
 
         Returns:
             An equivalent matrix for the provided mapping.
-        """        
-        return np.vstack(
+        """
+        rows = [
             [
-                [
-                    float(
-                        d[[a, b]]
-                    ) for b in self.samples
-                ] for a in self.samples
-            ]
-        )
+                float(
+                    d[[a, b]]
+                ) for b in self.samples
+            ] for a in self.samples
+        ]
+        if not rows:
+            return np.zeros(shape=(0,0))        
+        return np.vstack(rows)
 
     def get_similarity_matrix(self) -> np.ndarray:
         """Returns the computed pairwise similarity matrix.

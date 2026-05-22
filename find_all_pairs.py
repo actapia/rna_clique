@@ -4,10 +4,12 @@ import multiprocessing
 import functools
 import itertools
 import os
+import sys
 
 import pandas as pd
 
 import config as config_module
+import app
 
 from typing import Optional, Any, Callable, Iterator
 from collections.abc import Iterable, Mapping
@@ -18,12 +20,13 @@ from simple_blast import BlastDBCache
 from joblib import Parallel, delayed
 from tqdm import tqdm
 
-from find_homologs import HomologFinder, eprint
+from find_homologs import HomologFinder
+from app import eprint, set_except_hook
 from gene_matches_tables import write_table
-from transcripts import TranscriptID
+from transcripts import TranscriptID, TranscriptIDParseError
+from path_to_sample import PathToSampleError, dict_path_to_sample
 
 default_sample_regex = re.compile(os.environ.get("SAMPLE_RE", "^(.*?)_.*$"))
-default_gene_regex = re.compile("^.*g([0-9]+)_i([0-9]+)")
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(
@@ -33,13 +36,14 @@ def build_parser():
         "top_genes_dir",
         "transcript_id_regex",
         "tables_dir",
+        "cache_dir",
         required=True
     )
     arg_config.expose_fields_with_default_aliases(
-        "cache_dir",
         "evalue",
         "title",
-        "output_dir",        
+        "output_dir",
+        "jobs"
     )
     arg_config.add_argument(
         "--sample-regex",
@@ -105,10 +109,14 @@ def make_output_path(
     """
     # t1 = t1.stem
     # t2 = t2.stem
+    ts = [t1, t2]
     if path_to_sample:
-        t1 = path_to_sample(t1)
-        t2 = path_to_sample(t2)
-    return dir_ / ("{}--{}.{}".format(t1, t2, extension))
+        new_ts = []
+        for t in ts:
+            new_ts.append(path_to_sample(t))
+        ts = new_ts
+    return dir_ / ("{}--{}.{}".format(*ts, extension))
+
 
 def make_one_db(db_loc : Path, seq_file_path : Path) -> BlastDBCache:
     """Create a BlastDBCache with a database for a single FASTA file.
@@ -225,29 +233,76 @@ def find_all_pairs(
         ), math.comb(len(inputs), 2)
     )
 
+def sample_regex_parse(regex):
+    def parse(x):
+        match_ = regex.match(x.name)
+        if not match_:
+            #from IPython import embed; embed()
+            raise PathToSampleError(
+                f"Cannot parse sample name from path {x}.",
+                x
+            )
+        return match_.group(1)
+    return parse
+
 def main():
-    original_args, args, config = build_parser().get_arguments_and_config()
-    config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
-    id_parser = TranscriptID.parser_from_re(config.transcript_id_regex)
-    if original_args.sample_regex or not config.path_to_sample:
-        path_to_sample = lambda x: args.sample_regex.match(x.stem).group(1)
-    else:
-        path_to_sample = config.path_to_sample.__getitem__
-    gen, _, gen_len = find_all_pairs(
-        list(config.top_genes_dir.glob("*.fasta")),
-        config.tables_dir,
-        config.cache_dir,
-        path_to_sample,
-        hf_args=[
-            id_parser,
-            config.top_genes,
-            config.evalue,
-            config.keep_all
-        ]
-    )
-    consume(tqdm(gen, total=gen_len))
-    config.mark_finish()
-    config.yaml_save(args.output_config)
+    with set_except_hook():
+        _, args, config = build_parser().get_arguments_and_config()
+    with set_except_hook(config.verbose):
+        config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
+        id_parser = TranscriptID.parser_from_re(config.transcript_id_regex)
+        if config.path_to_sample:
+            path_to_sample = dict_path_to_sample(config.path_to_sample)
+            mode = f"path_to_sample in configuration file {args.input_config}"
+            verify = "the mapping is correct or use a sample_regex instead"
+        elif args.sample_regex:
+            path_to_sample = sample_regex_parse(args.sample_regex)
+            mode = f"sample_regex {args.sample_regex.pattern}"
+            verify = (
+                "the regex is correct or use a path_to_sample mapping "
+                "instead"
+            )
+        else:
+            eprint(
+                "Must provide path_to_sample or sample_regex. Cannot continue."
+            )
+            sys.exit(1)
+        top_genes = list(config.top_genes_dir.glob("*.fasta"))
+        if not top_genes:
+            eprint(
+                "Warning: No top genes found in {}".format(
+                    config.top_genes_dir
+                )
+            )
+        try:
+            gen, _, gen_len = find_all_pairs(
+                top_genes,
+                config.tables_dir,
+                config.cache_dir,
+                path_to_sample,
+                hf_args=[
+                    id_parser,
+                    config.top_matches,
+                    config.evalue,
+                    config.keep_all
+                ],
+                jobs=config.jobs
+            )
+            consume(tqdm(gen, total=gen_len))
+            config.mark_finish()
+        except TranscriptIDParseError:
+            app.print_transcript_id_parse_error_message(
+                config.transcript_id_regex
+            )
+            raise
+        except PathToSampleError as e:
+            eprint(
+                f"RNA-clique could not get the sample name for path {e.path} "
+                f"using {mode}. Please verify that {verify}.\n"
+            )
+            raise e
+        if args.output_config:
+            config.yaml_save(args.output_config)
     
 if __name__ == "__main__":
     main()

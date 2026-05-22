@@ -2,6 +2,7 @@ import multiprocessing
 import itertools
 import pickle
 import config as config_module
+import app
 
 from typing import Iterable
 
@@ -14,11 +15,12 @@ from typing import Callable
 from joblib import Parallel, delayed
 from tqdm import tqdm
 
-from transcripts import default_gene_re, TranscriptID
+from transcripts import default_gene_re, TranscriptID, TranscriptIDParseError
 from select_top_genes_all import select_top_and_save
 from find_all_pairs import find_all_pairs
 from build_graph import build_graph
 from similarity_computer import ComparisonSimilarityComputer
+from app import set_except_hook, validate_input_dirs
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(
@@ -163,26 +165,36 @@ def filtering_step(
     
 
 def main():
-    _, args, config = build_parser().get_arguments_and_config()
-    config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
-    id_parser = TranscriptID.parser_from_re(config.transcript_id_regex)
-    pts = filtering_step(
-        config.input_dirs,
-        config.top_genes_dir,
-        config.tables_dir,
-        config.cache_dir,
-        config.graph,
-        config.top_genes,
-        config.transcripts_name,
-        config.top_matches,
-        id_parser,
-        config.evalue,
-        config.keep_all,
-        config.jobs
-    )[-1]
-    config.path_to_sample = pts
-    config.mark_finish()
-    config.yaml_save(args.output_config)
+    with set_except_hook():
+        _, args, config = build_parser().get_arguments_and_config()
+    with set_except_hook(config.verbose):
+        config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
+        id_parser = TranscriptID.parser_from_re(config.transcript_id_regex)
+        validate_input_dirs(config)
+        try:
+            pts = filtering_step(
+                config.input_dirs,
+                config.top_genes_dir,
+                config.tables_dir,
+                config.cache_dir,
+                config.graph,
+                config.top_genes,
+                config.transcripts_name,
+                config.top_matches,
+                id_parser,
+                config.evalue,
+                config.keep_all,
+                config.jobs
+            )[-1]
+        except TranscriptIDParseError:
+            app.print_transcript_id_parse_error_message(
+                config.transcript_id_regex
+            )
+            raise        
+        config.path_to_sample = pts
+        config.mark_finish()
+        if args.output_config:
+            config.yaml_save(args.output_config)
 
 if __name__ == "__main__":
     main()

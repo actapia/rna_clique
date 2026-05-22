@@ -1,5 +1,6 @@
 import itertools
 import re
+import sys
 try:
     import resource
 except ImportError:
@@ -13,6 +14,7 @@ import networkx as nx
 import numpy as np
 
 import config as config_module
+import app
 
 from collections import defaultdict
 from contextlib import ExitStack
@@ -28,12 +30,19 @@ from find_homologs import highest_bitscores
 from filtered_distance import (
     SampleSimilarity,
     get_ideal_components,
+    NoIdealComponentsError
 )
-from path_to_sample import path_to_sample
+from path_to_sample import (
+    path_to_sample,
+    sample_re,
+    PathToSampleError,
+    dict_path_to_sample
+)
 from graph import component_subgraphs
 from strand_sat import sat_assign_strands
-from transcripts import TranscriptID
+from transcripts import TranscriptID, TranscriptIDParseError
 from gene_matches_tables import get_table_files
+from app import set_except_hook, eprint
 
 default_gene_re = re.compile("^.*g([0-9]+)_i([0-9]+)")
 
@@ -211,7 +220,11 @@ def concat_names(
             isoform_id: int,
             old: str
     ) -> str:
+        # try:
         new_component = rename(sample_id, gene_id, isoform_id)
+        # except PathToSampleError:
+        #     from IPython import embed; embed()
+        #     raise
         if order == "before":
             t = (new_component, old)
         else:
@@ -386,7 +399,7 @@ def build_strand_graph(
 
     Vertices in the strand graph can be assigned "strand" attributes indicating
     whether they need to be reoriented to ensure all isotigs in the component
-    are in the same orientation. When the strand attribute is +1, no
+>    are in the same orientation. When the strand attribute is +1, no
     reorientation is necessary. When the strand attribute is -1, the isotig
     needs to be reoriented as its reverse complement. This function returns an
     unassigned graph; other functions can be used to assign the strand
@@ -602,6 +615,7 @@ class OrthologExporter:
             consistent_strands: bool = True,
             allow_inconsistent: bool = True,
             jobs: int = 1,
+            path_to_sample: Callable[[Path], str] = path_to_sample,
             debug: bool = False,
     ):
         """Construct OrthologExporter for a SampleSimilarity with given options.
@@ -633,6 +647,7 @@ class OrthologExporter:
             consistent_strands (bool): Reorient transcripts per ideal component.
             allow_inconsistent (bool): Continue if strand graph is inconsistent.
             jobs (int):                Number of parallel jobs to use.
+            path_to_sample:            Function mapping paths to sample names.
             debug (bool):              Enable debug behavior.
         """
         self.samples = sim.samples
@@ -641,6 +656,7 @@ class OrthologExporter:
         #print(self.sample_gene_to_component)
         self.parse_transcript_id = parse_transcript_id
         self.ideal_ids = set(range(len(self.ideal)))
+        self.path_to_sample = path_to_sample
         if not non_contributing:
             print("Filtering non-contributing.")
             total_distances = [0]*len(self.ideal)
@@ -819,7 +835,7 @@ class OrthologExporter:
         sample_paths = {}
         for sample in self.samples:
             out_fn = out_dir / "{}_orthologs.fasta".format(
-                path_to_sample(sample)
+                self.path_to_sample(sample)
             )
             sample_paths[sample] = out_fn
             Bio.SeqIO.write(
@@ -886,7 +902,7 @@ class OrthologExporter:
         """
         if rename is None:
             rename = concat_names(
-                lambda a, b, c: path_to_sample(a),
+                lambda a, b, c: self.path_to_sample(a),
                 order=order
             )
         component_paths = {
@@ -987,28 +1003,69 @@ class OrthologExporter:
         #from IPython import embed; embed()        
 
 def main():
-    _, args, config = build_parser().get_arguments_and_config()
-    config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
-    args.export_output_dir.mkdir(exist_ok=True)
-    sim = SampleSimilarity.from_filenames(
-        config.graph,
-        get_table_files(config.tables_dir),
-        store_dfs=True
-    )
-    exporter = OrthologExporter(
-        sim,
-        TranscriptID.parser_from_re(config.transcript_id_regex),
-        not args.remove_non_contributing,
-        debug=args.debug,
-        consistent_strands=not args.no_fix_strand,
-        allow_inconsistent=args.allow_inconsistent,
-        jobs=config.jobs,
-    )
-    getattr(exporter, "by_{}".format(args.by))(
-        args.export_output_dir,
-        order=args.concat_id_order,
-        make_all=args.all
-    )
+    with set_except_hook():
+        _, args, config = build_parser().get_arguments_and_config()
+    with set_except_hook(config.verbose):
+        config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
+        args.export_output_dir.mkdir(exist_ok=True)
+        sim = SampleSimilarity.from_filenames(
+            config.graph,
+            get_table_files(config.tables_dir),
+            store_dfs=True
+        )
+        try:
+            sim.similarities
+        except NoIdealComponentsError:
+            eprint("Warning: There are no ideal components to export!")
+        if config.path_to_sample is not None:
+            pts = dict_path_to_sample(config.path_to_sample)
+            mode = f"path_to_sample in configuration file {args.input_config}"
+            verify = "the mapping is correct or use a sample_regex instead"
+        else:
+            eprint("Warning: path_to_sample attribute not found in input "
+                   "config. Will parse sample names from paths using default "
+                   f"regular expression {sample_re.pattern}.")
+            pts = path_to_sample
+            mode = f"sample_regex {sample_re.pattern}"
+            verify = (
+                "the filename can be parsed using the regex or use a "
+                "path_to_sample mapping instead"
+            )            
+        try:
+            exporter = OrthologExporter(
+                sim,
+                TranscriptID.parser_from_re(config.transcript_id_regex),
+                not args.remove_non_contributing,
+                debug=args.debug,
+                consistent_strands=not args.no_fix_strand,
+                allow_inconsistent=args.allow_inconsistent,
+                path_to_sample=pts,
+                jobs=config.jobs,
+            )
+            getattr(exporter, "by_{}".format(args.by))(
+                args.export_output_dir,
+                order=args.concat_id_order,
+                make_all=args.all
+            )
+        except InconsistentGraphError:
+            eprint(
+                "Unable to put all transcripts in a consistent orientation "
+                "perfectly for one or more ideal compoenents. Exiting. Try "
+                "with -i/--allow-inconsistent to put transcripts in the same "
+                "orientation as well as possible."
+            )
+            sys.exit(1)
+        except TranscriptIDParseError:
+            app.print_transcript_id_parse_error_message(
+                config.transcript_id_regex
+            )
+            raise
+        except PathToSampleError as e:
+            eprint(
+                "RNA-clique was unable to get the sample name from path "
+                f"{e.path} using {mode}. Please verify {verify}.\n"
+            )
+            raise e
     
 if __name__ == "__main__":
     main()

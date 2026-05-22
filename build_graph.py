@@ -2,10 +2,12 @@ import functools
 import operator
 import pickle
 import config as config_module
-from find_homologs import eprint
+import app
+from app import eprint, set_except_hook
 from gene_matches_tables import get_table_files, read_table
 
 from collections.abc import Iterable
+from pathlib import Path
 
 import pandas as pd
 import networkx as nx
@@ -66,14 +68,25 @@ def build_graph(dfs : Iterable[pd.DataFrame]) -> nx.Graph:
     return graph
 
 def main():
-    _, args, config = build_parser().get_arguments_and_config()
-    graph = build_graph(
-        read_table(f) for f in tqdm(list(get_table_files(config.tables_dir)))
-    )
-    with open(config.graph, "wb") as f:
-        pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
-    config.mark_finish()
-    config.yaml_save(args.output_config)
+    with set_except_hook():
+        _, args, config = build_parser().get_arguments_and_config()
+    with set_except_hook(config.verbose):
+        config_module.RNACliqueConfig.validate_dir(config.tables_dir)
+        tables = list(get_table_files(config.tables_dir))
+        if not tables:
+            eprint(
+                "Warning: No gene matches tables found in {}".format(
+                    config.tables_dir
+                )
+            )
+        graph = build_graph(
+            read_table(f) for f in tqdm(tables)
+        )
+        with open(config.graph, "wb") as f:
+            pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)
+        config.mark_finish()
+        if args.output_config:
+            config.yaml_save(args.output_config)
 
 if __name__ == "__main__":
     main()

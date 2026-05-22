@@ -12,6 +12,7 @@ import re
 import pprint
 import copy
 import enum
+import os
 
 import networkx as nx
 
@@ -56,6 +57,7 @@ def get_version():
             rnac = importlib.import_module(__package__)
             files = {
                 str(Path(rnac.__file__).parent / f)
+
                 for f in importlib.metadata.files(rnac.__name__)
             }
             if __file__ in files:
@@ -65,6 +67,13 @@ def get_version():
     if version is None:
         version = "dev"
     return version
+
+
+class InputValidationError(Exception):
+    pass
+
+class YAMLConfigFileError(Exception):
+    pass
 
 @marshalling_dataclass(optional=True)
 class RNACliqueConfig:
@@ -138,6 +147,12 @@ class RNACliqueConfig:
             "description": "Path to analysis of which this is a subset."
         }
     )
+    verbose: Optional[bool] = marshalling_field(
+        default=False,
+        metadata={
+            "description": "Print more output than usual."
+        }
+    )
 
     @classmethod
     def yaml_load(cls, path: Path):
@@ -147,12 +162,27 @@ class RNACliqueConfig:
             path: Path to the YAML file from which to load the configuration.
         """
         with open(path, "r") as f:
-            return cls.from_marshalled_representation(
-                load(
-                    f,
-                    Loader=Loader
+            yaml_contents = load(f, Loader=Loader)
+            try:
+                bad = next(
+                    y for y in yaml_contents.keys()
+                    if y not in cls.__dataclass_fields__
                 )
-            )
+                raise YAMLConfigFileError(
+                    f"Unknown configuration setting {bad} in {path}."
+                )
+            except AttributeError:
+                raise YAMLConfigFileError(
+                    f"YAML file {path} does not contain a mapping."
+                )
+            except StopIteration:
+                pass
+            try:
+                return cls.from_marshalled_representation(yaml_contents)
+            except TypeError:
+                raise YAMLConfigFileError(
+                    f"Failed to load YAML config {path}."
+                )
 
     def mark_finish(self):
         """Set the finished attribute to the current date and time."""
@@ -194,6 +224,52 @@ class RNACliqueConfig:
                 setattr(config, field, arg_value)
         return config
 
+    def validate_input_dirs(self):
+        if self.input_dirs is not None and self.transcripts_name is not None:
+            for d in self.input_dirs:
+                type(self).validate_dir(d)
+                transcripts = d / self.transcripts_name
+                if not transcripts.exists():
+                    raise InputValidationError(
+                        f"{transcripts} does not exist."
+                    )
+                if not transcripts.is_file():
+                    raise InputValidationError(
+                        f"{transcripts} is not a file."
+                    )
+                if not os.access(transcripts, os.R_OK):
+                    raise InputValidationError(
+                        f"{transcripts} is a file but is not a accessible."
+                    )
+
+    @classmethod
+    def validate_dir(self, d):
+        if not d.exists():
+            raise InputValidationError(
+                f"{d} does not exist."
+            )
+        if not d.is_dir():
+            raise InputValidationError(
+                f"{d} is not a directory."
+            )
+
+    @classmethod
+    def validate_file(self, f, prefix=""):
+        if not f.exists():
+            raise InputValidationError(
+                f"{prefix}{f} does not exist."
+            )
+        if f.is_dir():
+            raise InputValidationError(
+                f"{prefix}{f} is a directory."
+            )
+        if not os.access(f, os.R_OK):
+            raise InputValidationError(
+                f"{prefix}{f} is not readable."
+            )           
+        
+        
+                
 def detect_nargs(t, multi_type: str="+") -> Optional[str]:
     """Detect whether an attribute type should correspond to multiple arguments.
 
@@ -342,6 +418,11 @@ class MultiArgConstAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string):
         setattr(namespace, self.dest, self._get_values(values))
 
+class UnmarshalArgumentException(Exception):
+    def __init__(self, message, source):
+        super().__init__(message)
+        self.source = source
+
 class UnmarshallingStoreAction(MultiArgConstAction):
     """Argparse action that performs unmarshalling."""
     # TODO: Remind myself why this is necessary instead of using the type kwarg.
@@ -350,7 +431,14 @@ class UnmarshallingStoreAction(MultiArgConstAction):
         self.unmarshal = unmarshal
 
     def _get_values(self, values):
-        return self.unmarshal(super()._get_values(values))
+        try:
+            return self.unmarshal(super()._get_values(values))
+        except Exception as e:
+            uae = UnmarshalArgumentException(
+                f"Failed to process argument {self.dest}. {e}",
+                e
+            )
+            raise uae
 
 DescriptionType = enum.StrEnum(
     "DescriptionType",
@@ -1446,6 +1534,7 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
         "input_dirs": ["-I"],
         "matrix": ["-m"],
         "title": ["-T"],
+        "verbose": ["-v"],
     }
 
     def __init__(self, *args, **kwargs):
@@ -1486,6 +1575,12 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
                 RuleDescription("THREADS - 1", "pseudocode")
             )
         )
+        self.expose_fields_with_default_aliases("verbose")
+
+    # def get_arguments_and_config(self, set_traceback_behavior=True):
+    #     res = super().get_arguments_and_config()
+    #     type(self).set_traceback_behavior(res[-1])
+    #     return res
 
     def _add_in_file_deps(self, name: str, filename: Path | str):
         """Add a rule for deriving an input file setting from the output_dir.
@@ -1551,7 +1646,14 @@ class RNACliqueConfigArgumentManager(ConfigArgumentManager[RNACliqueConfig]):
         except AttributeError:
             pass
         for d in cls.default_out_dirs:
-            getattr(config, d).mkdir(exist_ok=True)
+            dir_ = getattr(config, d)
+            if dir_:
+                dir_.mkdir(exist_ok=True)
+
+    # @classmethod
+    # def set_traceback_behavior(cls, config: RNACliqueConfig):
+    #     if not config.verbose:
+    #         sys.excepthook = except_hook
 
 
 # This ChainMap map all of the output file and directory fields to their

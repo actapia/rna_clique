@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 import config as config_module
+import app
 
 from fractions import Fraction
 from pathlib import Path
@@ -14,7 +15,8 @@ from typing import Callable, Optional
 
 from simple_blast.blasting import TabularBlastnSearch
 
-from transcripts import TranscriptID
+from transcripts import TranscriptID, TranscriptIDParseError
+from app import eprint, set_except_hook
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(
@@ -132,8 +134,6 @@ def gene_matches(
         res = shrink_df(res)
     return res
 
-eprint = functools.partial(print, file=sys.stderr)
-
 def highest_bitscores(
         df: pd.DataFrame,
         n: int = 1,
@@ -156,11 +156,14 @@ def highest_bitscores(
         n (int):       Number of top hits to select per group.
         groupby (str): Column on which to group hits.
     """
-    return df.loc[
-        df.groupby(
-            groupby
-        )["bitscore"].nlargest(n, **kwargs).index.get_level_values(-1)
-    ]
+    try:
+        return df.loc[
+            df.groupby(
+                groupby
+            )["bitscore"].nlargest(n, **kwargs).index.get_level_values(-1)
+        ]
+    except TypeError:
+        from IPython import embed; embed()
 
 class HomologFinder:
     """Obtains gene matches tables using given parameters.
@@ -199,6 +202,7 @@ class HomologFinder:
         )
         # gm is a function that obtains unidirectional best matches for a pair
         # of samples using the given parameters.
+        assert top_n is not None
         self.gm = functools.partial(
             gene_matches,
             parse=parse,
@@ -323,33 +327,42 @@ class HomologFinder:
         return df[columns].drop_duplicates()
 
 def main():
-    _, args, config = build_parser().get_arguments_and_config()    
-    match_finder = HomologFinder(
-        TranscriptID.parser_from_re(config.transcript_id_regex),
-        config.top_matches,
-        config.evalue,
-        config.keep_all
-    )
-    best_matches = match_finder.get_match_table(
-        args.transcripts1,
-        args.transcripts2,        
-    )
-    dedup = match_finder.without_duplicates(best_matches)
-    if not args.quiet:
-        for match in dedup.itertuples(index=False):
-            print(*match)
-    eprint(f"Found {len(dedup)} matches.")
-    # Compute the overall distance using all identified homologs.
-    #
-    # I use a Fraction here to avoid loss of precision.
-    dist = Fraction(
-        int(best_matches["nident"].sum()),
-        int(best_matches["length"].sum() - best_matches["gaps"].sum())
-    )
-    if args.report_float:
-        print(float(dist))
-    else:
-        print(dist)
+    with set_except_hook():
+        _, args, config = build_parser().get_arguments_and_config()
+    with set_except_hook(config.verbose):
+        match_finder = HomologFinder(
+            TranscriptID.parser_from_re(config.transcript_id_regex),
+            config.top_matches,
+            config.evalue,
+            config.keep_all
+        )
+        try:
+            best_matches = match_finder.get_match_table(
+                args.transcripts1,
+                args.transcripts2, 
+            )
+        except TranscriptIDParseError:
+            app.print_transcript_id_parse_error_message(
+                config.transcript_id_regex
+            )
+            raise
+
+        dedup = match_finder.without_duplicates(best_matches)
+        if not args.quiet:
+            for match in dedup.itertuples(index=False):
+                print(*match)
+        eprint(f"Found {len(dedup)} matches.")
+        # Compute the overall distance using all identified homologs.
+        #
+        # I use a Fraction here to avoid loss of precision.
+        dist = Fraction(
+            int(best_matches["nident"].sum()),
+            int(best_matches["length"].sum() - best_matches["gaps"].sum())
+        )
+        if args.report_float:
+            print(float(dist))
+        else:
+            print(dist)
     #embed()
     
 if __name__ == "__main__":

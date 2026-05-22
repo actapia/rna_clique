@@ -6,6 +6,7 @@ import Bio.Align
 import networkx as nx
 
 import config as config_module
+import app
 
 from typing import Optional, Callable
 from pathlib import Path
@@ -20,8 +21,14 @@ from filtered_distance import (
     get_ideal_components,
 )
 from export_orthologs import build_strand_graph, get_sample_gene_to_component
-from path_to_sample import path_to_sample
-from transcripts import default_parser, TranscriptID
+from path_to_sample import (
+    path_to_sample,
+    sample_re,
+    PathToSampleError,
+    dict_path_to_sample
+)
+from transcripts import default_parser, TranscriptID, TranscriptIDParseError
+from app import set_except_hook, eprint
 
 #default_gene_re = re.compile("^.*g([0-9]+)_i([0-9]+)")
 default_search_evalue = 1e-50
@@ -72,6 +79,7 @@ def build_parser():
             export_output_dir / "db_cache"
         },
         help="Directory in which to store BLAST databases for orthologs.",
+        required=True
     )
     arg_config.add_argument(
         "--search-output-dir",
@@ -258,7 +266,15 @@ def search(
     tab_search = search.to_search(6)
     if not tab_search.hits.empty:
         # print("Found {} hits.".format(tab_search.hits.shape[0]))
-        sample_to_path = {path_to_sample(v): v for v in sim.samples}
+        sample_to_path = {}
+        for v in sim.samples:            
+            try:
+                sample_to_path[path_to_sample(v)] = v
+            except (KeyError, PathToSampleError):
+                raise PathToSampleError(
+                    f"Cannot get sample name for path {v}",
+                    v
+                )
         # Save the initial search alignments in SAM format.
         Bio.Align.write(
             search.to_sam(subject_as_reference=True).hits,
@@ -283,7 +299,13 @@ def search(
         # nodes can be found in the BLAST results.
         cccs = defaultdict(list)
         for full_seq_id in tab_search.hits["sseqid"].drop_duplicates():
-            seq_id, sample, _ = full_seq_id.split(":")
+            try:
+                seq_id, sample, _ = full_seq_id.split(":")
+            except ValueError:
+                raise TranscriptIDParseError(
+                    f"FASTA ID {full_seq_id} in {exported} is missing one or "
+                    "more group identifiers (expected 3)."
+                )
             node = (sample_to_path[sample],) + \
                 parse_transcript_id(seq_id)[1:]
             cccs[node_to_ccc[node]].append(node)
@@ -385,33 +407,67 @@ def search(
     else:
         return SearchResult(0, 0, 0)
 
+def check_is_not_empty(f, name):
+    if f.is_file():
+        if f.stat().st_size == 0:
+            eprint(f"Warning: {name} file {f} is empty.")
+
 def main():
-    _, args, config = build_parser().get_arguments_and_config()
-    args.ortholog_db_cache.mkdir(exist_ok=True)
-    args.search_output_dir.mkdir(exist_ok=True)
-    if args.ortholog_db_cache.exists() and args.clean:
-        shutil.rmtree(args.ortholog_db_cache)
-    sim = SampleSimilarity.from_filenames(
-        config.graph,
-        get_table_files(config.tables_dir),
-        store_dfs=True,
-    )
-    search(
-        sim,
-        exported=args.all_ideal,
-        db_cache_loc=args.ortholog_db_cache,
-        out_dir=args.search_output_dir,
-        query=args.query,
-        parse_transcript_id=TranscriptID.parser_from_re(
-            config.transcript_id_regex
-        ),
-        extended_evalue=args.extended_search_evalue,
-        export_components=args.export_components,
-        merge_sams=args.merge_sams,
-        jobs=config.jobs,
-        debug=args.debug,
-        evalue=args.evalue,
-    )
+    with set_except_hook():
+        _, args, config = build_parser().get_arguments_and_config()
+    with set_except_hook(config.verbose):
+        check_is_not_empty(args.all_ideal, "all_ideal")
+        check_is_not_empty(args.query, "query")            
+        args.ortholog_db_cache.mkdir(exist_ok=True)
+        args.search_output_dir.mkdir(exist_ok=True)
+        if args.ortholog_db_cache.exists() and args.clean:
+            shutil.rmtree(args.ortholog_db_cache)
+        sim = SampleSimilarity.from_filenames(
+            config.graph,
+            get_table_files(config.tables_dir),
+            store_dfs=True,
+        )
+        if config.path_to_sample is not None:
+            pts = dict_path_to_sample(config.path_to_sample)
+            mode = f"path_to_sample in configuration file {args.input_config}"
+        else:
+            eprint("Warning: path_to_sample attribute not found in input "
+                   "config. Will parse sample names from paths using default "
+                   f"regular expression {sample_re.pattern}.")
+            pts = path_to_sample
+            mode = f"sample_regex {sample_re.pattern}"
+        try:
+            search(
+                sim,
+                exported=args.all_ideal,
+                db_cache_loc=args.ortholog_db_cache,
+                out_dir=args.search_output_dir,
+                query=args.query,
+                parse_transcript_id=TranscriptID.parser_from_re(
+                    config.transcript_id_regex
+                ),
+                path_to_sample=pts,
+                extended_evalue=args.extended_search_evalue,
+                export_components=args.export_components,
+                merge_sams=args.merge_sams,
+                jobs=config.jobs,
+                debug=args.debug,
+                evalue=args.search_evalue,
+            )
+        except PathToSampleError as e:
+            eprint(
+                f"RNA-clique could not get the sample name for path {e.path} "
+                f"using {mode}. Please ensure path_to_sample is provided in "
+                "the configuration file and that the mapping is accurate and "
+                "complete.\n"
+            )
+            raise e
+        except TranscriptIDParseError:
+            app.print_transcript_id_parse_error_message(
+                config.transcript_id_regex
+            )
+            raise
+
 
 if __name__ == "__main__":
     main()

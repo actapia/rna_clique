@@ -20,7 +20,7 @@ from similarity_computer import (
     ComparisonSimilarityComputer,
     similarities_from_dfs
 )
-from find_homologs import eprint
+from app import eprint, set_except_hook
 
 def is_complete(g : nx.Graph) -> bool:
     """Returns whether g is a complete (sub)graph."""
@@ -39,7 +39,7 @@ def get_ideal_components(
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(
         description=(
-            "Compute pairwise distasnces from gene matches tables and graph."
+            "Compute pairwise distances from gene matches tables and graph."
         ),
     )
     arg_config.expose_fields_with_default_aliases(
@@ -170,20 +170,14 @@ class SampleSimilarity(ComparisonSimilarityComputer):
     def sample_count(self):
         """The number of samples in the similarity matrix."""
         if self._sample_count is None:
-            self._sample_count = len(
-                set(
-                    n[0] for comp in component_subgraphs(
-                        self.graph
-                    ) for n in comp.nodes
-                )
-            )
+            self._sample_count = len(self.samples)
         return self._sample_count
 
     @cached_property
     def valid(self):
         """A dataframe containing all genes found in ideal components."""
+        #from IPython import embed; embed()
         return pd.DataFrame(
-
             (
                 n for comp in get_ideal_components(
                     self.graph,
@@ -237,8 +231,8 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         similarity could be considered undefined or unknown.
         """
         try:
-            return similarities_from_dfs(
-                (k, self.restricted(v)) for (k, v) in self.comparison_dfs
+            yield from similarities_from_dfs(
+                (k, self.restricted(v)) for (k, v) in self._comparison_df_iter
             )
         except ZeroDivisionError:
             raise NoIdealComponentsError()
@@ -257,7 +251,7 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         """Get constructor arguments for constructing from filenames.
 
         To save memory, the store_dfs parameter can be set to False. In that
-        case, comparison_dfs will be generator, and it will not be possible to
+        case, comparison_dfs will be a generator, and it will not be possible to
         access them more than once.
 
         The qseqid and sseqid columns are often long and can also be removed to
@@ -314,19 +308,29 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         return super().from_filenames(*args, **kwargs)
         
 def main():
-    _, args, config = build_parser().get_arguments_and_config()
-    sim = SampleSimilarity.from_filenames(
-        config.graph,
-        get_table_files(config.tables_dir)
-    )
-    try:
-        mat = sim.get_dissimilarity_df()
-        mat.to_hdf(config.matrix, key="matrix", mode="w")
-        config.mark_finish()
-    except NoIdealComponentsError:
-        eprint("No ideal components found. Cannot report distances!")
-        sys.exit(1)
-    config.yaml_save(args.output_config)
+    with set_except_hook():
+        _, args, config = build_parser().get_arguments_and_config()
+    with set_except_hook(config.verbose):
+        tables = list(get_table_files(config.tables_dir))
+        if not tables:
+            eprint(
+                "Warning: No gene matches tables found in {}".format(
+                    config.tables_dir
+                )
+            )        
+        sim = SampleSimilarity.from_filenames(
+            config.graph,
+            tables,
+        )
+        try:
+            mat = sim.get_dissimilarity_df()
+            mat.to_hdf(config.matrix, key="matrix", mode="w")
+            config.mark_finish()
+        except NoIdealComponentsError:
+            eprint("No ideal components found. Cannot report distances!")
+            sys.exit(1)
+        if args.output_config:
+            config.yaml_save(args.output_config)
 
 if __name__ == "__main__":
     main()

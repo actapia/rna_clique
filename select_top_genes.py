@@ -5,13 +5,15 @@ import Bio
 import Bio.SeqIO
 
 import config as config_module
+import app
 
 from pathlib import Path
 from collections import defaultdict
 from collections.abc import Collection
 from typing import Iterator, Callable
 
-from transcripts import TranscriptID, default_parser
+from transcripts import TranscriptID, default_parser, TranscriptIDParseError
+from app import set_except_hook
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(
@@ -136,23 +138,33 @@ class TopGeneSelector:
         return cls(lambda: seqs, *args, **kwargs)
         
 def main():
-    _, args, config = build_parser().get_arguments_and_config()
-    parse_transcript_id = TranscriptID.parser_from_re(
-        config.transcript_id_regex
-    )
-    if args.transcripts:
-        top = TopGeneSelector.from_path(
-            args.transcripts,
-            config.top_genes,
-            parse_transcript_id
+    with set_except_hook():
+        _, args, config = build_parser().get_arguments_and_config()
+    with set_except_hook(config.verbose):
+        parse_transcript_id = TranscriptID.parser_from_re(
+            config.transcript_id_regex
         )
-    else:
-        top = TopGeneSelector.from_sequences(
-            list(Bio.SeqIO.parse(sys.stdin, "fasta")),
-            config.top_genes,
-            parse_transcript_id,
-        )
-    Bio.SeqIO.write(top.get_top_gene_seqs(), sys.stdout, "fasta")
+        if args.transcripts:
+            top = TopGeneSelector.from_path(
+                args.transcripts,
+                config.top_genes,
+                parse_transcript_id
+            )
+        else:
+            top = TopGeneSelector.from_sequences(
+                list(Bio.SeqIO.parse(sys.stdin, "fasta")),
+                config.top_genes,
+                parse_transcript_id,
+            )
+        try:            
+            Bio.SeqIO.write(top.get_top_gene_seqs(), sys.stdout, "fasta")
+        except TranscriptIDParseError:
+            print("HEY")
+            app.print_transcript_id_parse_error_message(
+                config.transcript_id_regex
+            )
+            raise
+        
 
 if __name__ == "__main__":
     main()

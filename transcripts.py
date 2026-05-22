@@ -62,6 +62,9 @@ TranscriptID = cast_namedtuple(
     [float, int, int]
 )
 
+class TranscriptIDParseError(Exception):
+    pass
+
 def re_parse_transcript_id(
         cls: type,
         expr: re.Pattern
@@ -103,6 +106,10 @@ def re_parse_transcript_id(
                 d[field] = match_.group(field)
             except IndexError:
                 remaining.append(field)
+            except AttributeError:
+                raise TranscriptIDParseError(
+                    f"Could not parse transcript ID {id_}."
+                )
         named = set(expr.groupindex.values())
         for field, i in zip(
                 remaining,
@@ -110,9 +117,10 @@ def re_parse_transcript_id(
         ):
             try:
                 d[field] = match_.group(i)
-            except IndexError as e:
-                print("Bad ID?", id_)
-                raise e
+            except IndexError:
+                raise TranscriptIDParseError(
+                    f"Could not parse transcript ID {id_}."
+                )                
         return TranscriptID(**d)
     return parse_transcript_id
 

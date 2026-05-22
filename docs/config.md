@@ -63,6 +63,8 @@ finished:
 version: v0.2.0
 # Path to analysis of which this is a subset.
 subset_of:
+# Print more output than usual.
+verbose: false
 ```
 
 ## Derived settings
@@ -183,6 +185,8 @@ setting to document where the analysis was executed.
 | `finished`                                             | `datetime.datetime`       | Scalar                        | When the last analysis associated with this config file finished. |
 | `version`                                              | `str`                     | Scalar                        | Version of RNA-clique used to create this analysis.               |
 | [`subset_of`](config.md#subset_of)                     | `pathlib.Path`            | Scalar                        | Path to analysis of which this is a subset.                       |
+| `verbose`                                              | `bool`                    | Scalar                        | Print more output than usual. (Useful for debugging.)             |
+
 
 ### config\_version
 

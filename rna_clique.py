@@ -5,17 +5,18 @@ import config as config_module
 
 import filtered_distance
 import filtering_step
+import app
 
 from pathlib import Path
 from typing import Callable, Iterable, Optional
 
 from multiset_key_dict import MultisetKeyDict
 
-from transcripts import TranscriptID
+from transcripts import TranscriptID, TranscriptIDParseError
 from filtered_distance import SampleSimilarity, NoIdealComponentsError
 from similarity_computer import ComparisonSimilarityComputer
 from transcripts import default_gene_re
-from find_homologs import eprint
+from app import eprint, validate_input_dirs, set_except_hook
 
 def build_parser():
     parser = filtering_step.build_parser()
@@ -177,34 +178,43 @@ def rna_clique(
     return sim, pts
     
 def main():
-    _, args, config = build_parser().get_arguments_and_config()
-    config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
-    id_parser = TranscriptID.parser_from_re(config.transcript_id_regex)
-    sim, pts = rna_clique(
-        config.input_dirs,
-        config.top_genes_dir,
-        config.tables_dir,
-        config.cache_dir,
-        config.graph,
-        None,
-        config.top_genes,
-        config.transcripts_name,
-        config.top_matches,
-        id_parser,
-        config.evalue,
-        config.keep_all,
-        False,
-        jobs=config.jobs
-    )
-    config.path_to_sample = pts    
-    try:
-        mat = sim.get_dissimilarity_df()
-        mat.to_hdf(config.matrix, "matrix")
-        config.mark_finish()
-    except NoIdealComponentsError:
-        eprint("No ideal components found. Cannot report distances!")
-        sys.exit(1)
-    config.yaml_save(args.output_config)
+    with set_except_hook():
+        _, args, config = build_parser().get_arguments_and_config()
+    with set_except_hook(config.verbose):
+        config_module.RNACliqueConfigArgumentManager.make_output_dirs(config)
+        id_parser = TranscriptID.parser_from_re(config.transcript_id_regex)
+        validate_input_dirs(config)
+        try:
+            sim, pts = rna_clique(
+                config.input_dirs,
+                config.top_genes_dir,
+                config.tables_dir,
+                config.cache_dir,
+                config.graph,
+                None,
+                config.top_genes,
+                config.transcripts_name,
+                config.top_matches,
+                id_parser,
+                config.evalue,
+                config.keep_all,
+                False,
+                jobs=config.jobs
+            )
+            config.path_to_sample = pts    
+            mat = sim.get_dissimilarity_df()
+            mat.to_hdf(config.matrix, "matrix")
+            config.mark_finish()
+            if args.output_config:
+                config.yaml_save(args.output_config)        
+        except NoIdealComponentsError:
+            eprint("No ideal components found. Cannot report distances!")
+            sys.exit(1)
+        except TranscriptIDParseError:
+            app.print_transcript_id_parse_error_message(
+                config.transcript_id_regex
+            )
+            raise
 
     
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ from similarity_computer import (
     similarities_from_dfs
 )
 from gene_matches_tables import get_table_files
+from app import set_except_hook, eprint
 
 class UnfilteredSimilarity(ComparisonSimilarityComputer):
     def _similarity_helper(self):
@@ -28,14 +29,24 @@ def build_parser():
     return arg_config
 
 def main():
-    _, args, config = build_parser().get_arguments_and_config()
-    sim = UnfilteredSimilarity.from_filenames(
-        get_table_files(config.tables_dir)
-    )
-    mat = sim.get_dissimilarity_df()
-    mat.to_hdf(config.matrix, key="matrix", mode="w")
-    config.mark_finish()
-    config.yaml_save(args.output_config)    
+    with set_except_hook():
+        _, args, config = build_parser().get_arguments_and_config()
+    with set_except_hook(config.verbose):
+        tables = list(get_table_files(config.tables_dir))
+        if not tables:
+            eprint(
+                "Warning: No gene matches tables found in {}".format(
+                    config.tables_dir
+                )
+            )        
+        sim = UnfilteredSimilarity.from_filenames(
+            get_table_files(config.tables_dir)
+        )
+        mat = sim.get_dissimilarity_df()
+        mat.to_hdf(config.matrix, key="matrix", mode="w")
+        config.mark_finish()
+        if args.output_config is not None:
+            config.yaml_save(args.output_config)    
 
 if __name__ == "__main__":
     main()

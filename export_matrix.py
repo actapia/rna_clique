@@ -11,6 +11,8 @@ from pathlib import Path
 from typing import Callable
 from collections.abc import Iterable
 
+from app import set_except_hook
+
 def write_hdf(df: pd.DataFrame, f: io.BytesIO, key: str = "matrix"):
     """Write the dataframe in HD5 format to the file-like object.
 
@@ -105,13 +107,15 @@ def build_parser():
     return arg_config
 
 def main():
-    _, args, config = build_parser().get_arguments_and_config()
-    mat = pd.read_hdf(config.matrix)
-    if args.export_out:
-        with open(args.export_out, "wb") as out:
-            writers[args.format](mat, out, header=args.header)
-    else:
-        writers[args.format](mat, sys.stdout.buffer, header=args.header)        
+    with set_except_hook():
+        _, args, config = build_parser().get_arguments_and_config()
+    with set_except_hook(config.verbose):
+        mat = pd.read_hdf(config.matrix)
+        if args.export_out:
+            with open(args.export_out, "wb") as out:
+                writers[args.format](mat, out, header=args.header)
+        else:
+            writers[args.format](mat, sys.stdout.buffer, header=args.header)
 
 if __name__ == "__main__":
     main()

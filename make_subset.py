@@ -18,6 +18,7 @@ from subset_comparisons import (
 from build_graph import build_graph
 from find_homologs import eprint
 from gene_matches_tables import get_table_files
+from app import set_except_hook
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(
@@ -201,42 +202,44 @@ class SubsetAnalysisCreator:
             pickle.dump(graph, f, pickle.HIGHEST_PROTOCOL)        
 
 def main():
-    _, args, config = build_parser().get_arguments_and_config()
-    include = handle_filters(args.include, args.include_file)
-    if not include:
-        include = None
-    exclude = handle_filters(args.exclude, args.exclude_file)
-    if not exclude:
-        exclude = None
-    matches = matcher(
-        include,
-        exclude,
-        args.include_regex
-    )
-    super_config = config_module.RNACliqueConfig.yaml_load(args.subset_of)
-    if super_config.path_to_sample is None:
-        eprint("Parent config must contain path_to_sample attribute.")
-        sys.exit(1)
-    if args.show_included:
-        for sample in super_config.path_to_sample.values():
-            if matches(sample):
-                print(sample)
-    else:
-        if config.top_genes_dir is not None and \
-           config.top_genes_dir != super_config.top_genes_dir:
-            eprint(
-                ("top_genes_dir is {} but should not be set for this "
-                 "program.").format(repr(config.top_genes__dir))
-            )
-            eprint("Failing.")
+    with set_except_hook():
+        _, args, config = build_parser().get_arguments_and_config()
+    with set_except_hook(config.verbose):
+        include = handle_filters(args.include, args.include_file)
+        if not include:
+            include = None
+        exclude = handle_filters(args.exclude, args.exclude_file)
+        if not exclude:
+            exclude = None
+        matches = matcher(
+            include,
+            exclude,
+            args.include_regex
+        )
+        super_config = config_module.RNACliqueConfig.yaml_load(args.subset_of)
+        if super_config.path_to_sample is None:
+            eprint("Parent config must contain path_to_sample attribute.")
             sys.exit(1)
-        if config.output_dir is not None:
-            config.output_dir.mkdir(exist_ok=True)
-        creator = SubsetAnalysisCreator(matches, super_config, config)
-        creator.make()
-        #from IPython import embed; embed()
-        creator.config.mark_finish()
-        creator.config.yaml_save(args.output_config)
+        if args.show_included:
+            for sample in super_config.path_to_sample.values():
+                if matches(sample):
+                    print(sample)
+        else:
+            if config.top_genes_dir is not None and \
+               config.top_genes_dir != super_config.top_genes_dir:
+                eprint(
+                    ("top_genes_dir is {} but should not be set for this "
+                     "program.").format(repr(config.top_genes__dir))
+                )
+                eprint("Failing.")
+                sys.exit(1)
+            if config.output_dir is not None:
+                config.output_dir.mkdir(exist_ok=True)
+            creator = SubsetAnalysisCreator(matches, super_config, config)
+            creator.make()
+            #from IPython import embed; embed()
+            creator.config.mark_finish()
+            creator.config.yaml_save(args.output_config)
 
 if __name__ == "__main__":
     main()
