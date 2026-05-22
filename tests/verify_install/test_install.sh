@@ -13,6 +13,6 @@ mkdir "$distance_dir"
 
 python generate_simulated_data.py -c "$config_file"  -j 0 -O "$sim_data_dir"
 cd ..
-python filtering_step.py -n "$(python "$DIR/get_yaml_key.py" "$config_file" count)" -O "$distance_dir" "$sim_data_dir/"T*
+python rna_clique.py -n "$(python "$DIR/get_yaml_key.py" "$config_file" count)" -O "$distance_dir" "$sim_data_dir/"T*
 PYTHONPATH="$(realpath "$DIR/../.."):$PYTHONPATH" python "$DIR/verify_distances.py" "$distance_dir" "$sim_data_dir/phylogeny.tree"
 rm -r "$out_dir"

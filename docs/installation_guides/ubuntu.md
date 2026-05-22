@@ -27,7 +27,7 @@ install.
 
 
 ```bash
-sudo apt install git wget ncbi-blast+ ncbi-blast+ ncbi-blast+-legacy g++
+sudo apt install git wget ncbi-blast+ ncbi-blast+-legacy g++
 ```
 
 ## Installing Miniconda
