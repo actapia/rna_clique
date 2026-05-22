@@ -5,13 +5,17 @@ import typing
 from collections.abc import Collection, Mapping
 from dataclasses import (
     Field,
-    _recursive_repr,
     dataclass,
     MISSING,
     KW_ONLY,
     _get_field,
     _MISSING_TYPE
 )
+try:
+    from dataclasses import recursive_repr
+except ImportError:
+    # Python <= 3.12
+    from dataclasses import _recursive_repr as recursive_repr 
 from typing import Callable, Any, Optional, TypeVar
 
 from identity import id_
@@ -193,7 +197,7 @@ class MarshallingField(Field):
         """Get representations of attributes to use in the field's repr."""
         return {f: self._repr_field(f) for f in self.__slots__}
 
-    @_recursive_repr
+    @recursive_repr
     def _repr_fields1(self) -> dict[str, str]:
         return self._repr_fields()
 
