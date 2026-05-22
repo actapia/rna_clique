@@ -69,10 +69,10 @@ git clone https://github.com/actapia/download_sra
 export PATH="$PATH:$PWD/download_sra"
 case "$(uname)" in
     Linux)
-	wget --no-verbose https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Linux.tar.gz
+	wget --no-verbose https://github.com/ablab/spades/releases/download/v4.2.0/SPAdes-4.2.0-Linux.tar.gz
 	;;
     Darwin)
-	curl -L -O https://github.com/ablab/spades/releases/download/v4.0.0/SPAdes-4.0.0-Darwin-$(uname -m).tar.gz
+	curl -L -O https://github.com/ablab/spades/releases/download/v4.2.0/SPAdes-4.2.0-Darwin-$(uname -m).tar.gz
 	;;
     *)
 	>&2 echo "Unrecognized system $(uname)."
@@ -110,11 +110,19 @@ for f in out/*; do
 done
 cd "$RNA_CLIQUE"
 out_dir="$TUTORIAL_DIR/rna_clique_out/"
-python filtering_step.py -O "$out_dir" \
+python rna_clique.py -O "$out_dir" \
      -n 50000 \
      "$TUTORIAL_DIR"/out/*
 [ -d "$out_dir" ]
+[ -f "$out_dir/distance_matrix.h5" ]
 [ -f "$out_dir/graph.pkl" ]
+components="$(python plot_component_sizes.py --statistics \
+                                             -A "$TUTORIAL_DIR/rna_clique_out")"
+[ "$components" -gt 8000 ]
+python export_matrix.py -O "$TUTORIAL_DIR/rna_clique_out"
+python export_matrix.py --format table \
+                        --header \
+			-O "$TUTORIAL_DIR/rna_clique_out"
 PYTHONPATH='.' python docs/tutorials/reads2tree/make_tree.py
 [ -f "$out_dir/nj_tree.svg" ]
 [ -f "$out_dir/nj_tree.tree" ]

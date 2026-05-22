@@ -425,7 +425,6 @@ saved to `nj_tree.tree`, and a visualization is saved to `nj_tree.svg` in the
 --8<-- "docs/tutorials/reads2tree/make_tree.py"
 ```
 
-
 The script requires some modules found in the root of the RNA-clique repository,
 so you can run it as follows:
 
