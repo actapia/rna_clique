@@ -116,8 +116,8 @@ python rna_clique.py -O "$out_dir" \
 [ -d "$out_dir" ]
 [ -f "$out_dir/distance_matrix.h5" ]
 [ -f "$out_dir/graph.pkl" ]
-components="$(python plot_component_sizes.py --statistics \
-                                             -A "$TUTORIAL_DIR/rna_clique_out")"
+components="$(python plot_component_sizes.py --statistics m \
+		     -A "$TUTORIAL_DIR/rna_clique_out" | cut -d' ' -f4)"
 [ "$components" -gt 8000 ]
 python export_matrix.py -O "$TUTORIAL_DIR/rna_clique_out"
 python export_matrix.py --format table \
