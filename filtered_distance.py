@@ -29,9 +29,11 @@ def is_complete(g : nx.Graph) -> bool:
 
 def get_ideal_components(
         g : nx.Graph,
-        samples: int
+        samples: Optional[int] = None
 ) -> Iterator[nx.Graph]:
     """Yields the ideal components of g, assuming a given number of samples."""
+    if samples is None:
+        samples = g.samples
     for s in component_subgraphs(g):
         if len(s) == samples and is_complete(s):
             yield s
@@ -170,7 +172,13 @@ class SampleSimilarity(ComparisonSimilarityComputer):
     def sample_count(self):
         """The number of samples in the similarity matrix."""
         if self._sample_count is None:
-            self._sample_count = len(self.samples)
+             self._sample_count = len(
+                set(
+                    n[0] for comp in component_subgraphs(
+                        self.graph
+                    ) for n in comp.nodes
+                )
+             )
         return self._sample_count
 
     @cached_property
@@ -186,6 +194,10 @@ class SampleSimilarity(ComparisonSimilarityComputer):
             ),
             columns=["sample", "gene"]
         )
+
+    @property
+    def samples(self):
+        return list(self.graph.samples)
 
     def restricted(self, comp_df: pd.DataFrame) -> pd.DataFrame:
         """Returns the provided dataframe, restricted to valid genes.
