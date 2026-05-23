@@ -241,7 +241,8 @@ class SampleSimilarity(ComparisonSimilarityComputer):
         """
         try:
             yield from similarities_from_dfs(
-                (k, self.restricted(v)) for (k, v) in self._comparison_df_iter
+                (k, self.restricted(v)) for (k, v)
+                in self._iter_comparison_dfs()
             )
         except ZeroDivisionError:
             raise NoIdealComponentsError()

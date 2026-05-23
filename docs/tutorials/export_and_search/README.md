@@ -87,24 +87,32 @@ genomes
 mkdir "$TUTORIAL_DIR"/ec_genomes
 ```
 
-To download the genomes, run
+Change to the new directory.
 
 ```bash
-wget -P "$TUTORIAL_DIR"/ec_genomes/ \
-        https://cs.uky.edu/~acta225/rna_clique/ec_genomes.tar.xz
+"$TUTORIAL_DIR"/ec_genomes
 ```
 
+To download the genomes, run
+
+=== "Ubuntu"
+    ```bash
+    wget https://cs.uky.edu/~acta225/rna_clique/ec_genomes.tar.xz
+    ```
+=== "macOS"
+    ```bash
+    curl -L -O https://cs.uky.edu/~acta225/rna_clique/ec_genomes.tar.xz
+    ```
 Then, extract the genomes with `tar`.
 
 ```bash
-tar xJvf "$TUTORIAL_DIR"/ec_genomes/ec_genomes.tar.xz \
-         -C "$TUTORIAL_DIR"/ec_genomes
+tar xJvf ec_genomes.tar.xz
 ```
 
 Verify that the genomes have been extracted to `$TUTORIAL_DIR/ec_genomes`.
 
 ```bash
-ls "$TUTORIAL_DIR"/ec_genomes/
+ls
 ```
 
 You should see three files: `ec_genomes.tar.xz`,
@@ -112,6 +120,12 @@ You should see three files: `ec_genomes.tar.xz`,
 `e4305_Mas339_20200623_Ref_Scaffolds_CLS.fasta`.
 
 ## Export and search ideal components in the original analysis
+
+First, change back to your RNA-clique directory.
+
+```bash
+cd "$RNA_CLIQUE"
+```
 
 To export and search the orthologous genes in ideal components at once, run the
 `export_and_search.py` script. We'll use a low e-value threshold, `1e-99`, to
@@ -365,7 +379,7 @@ make sure you are using the right ideal component IDs here.
 ```bash
 cat "$TUTORIAL_DIR"/full_ec_search_out/*/export/ideal_component_6249.fasta \
     "$TUTORIAL_DIR"/full_ec_search_out/*/export/ideal_component_6777.fasta \
-	> matching_components.fasta
+	> "$TUTORIAL_DIR"/matching_components.fasta
 ```
 
 
@@ -374,8 +388,8 @@ Nucleotide database. (You may prefer to do this step in the web BLAST interface
 to avoid rate limits.)
 
 ```bash
-blastn -query matching_components.fasta -evalue 1e-99 -remote -db nr -outfmt 6 \
-       -out remote_results
+blastn -query "$TUTORIAL_DIR"/matching_components.fasta -evalue 1e-99 -remote \
+       -db nr -outfmt 6 -out "$TUTORIAL_DIR"/remote_results
 ```
 
 If you view the subject sequence IDs in the resulting `remote_results` file and

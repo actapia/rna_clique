@@ -200,10 +200,17 @@ cd trinity_assemblies
 
 Download the Trinity assemblies into that directory and unzip them.
 
-```bash
-wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.zip"
-unzip trinity_assemblies.zip
-```
+=== Ubuntu
+	```bash
+	wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.zip"
+	unzip trinity_assemblies.zip
+	```
+=== macOS
+    ```zsh
+	curl -L -O "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.zip"
+	unzip trinity_assemblies.zip
+	```
+
 
 ## Examining the Trinity assemblies
 
