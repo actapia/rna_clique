@@ -229,7 +229,7 @@ def main():
                config.top_genes_dir != super_config.top_genes_dir:
                 eprint(
                     ("top_genes_dir is {} but should not be set for this "
-                     "program.").format(repr(config.top_genes__dir))
+                     "program.").format(repr(config.top_genes_dir))
                 )
                 eprint("Failing.")
                 sys.exit(1)
