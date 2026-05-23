@@ -126,7 +126,8 @@ python export_matrix.py --format table \
 PYTHONPATH='.' python docs/tutorials/reads2tree/make_tree.py
 [ -f "$out_dir/nj_tree.svg" ]
 [ -f "$out_dir/nj_tree.tree" ]
-PYTHONPATH="." python docs/tutorials/reads2tree/make_pcoa.py
+PYTHONPATH="." python docs/tutorials/reads2tree/make_pcoa.py \
+	  "$TUTORIAL_DIR/rna_clique_out"
 [ -f "$out_dir/pcoa_2d.svg" ]
 [ -f "$out_dir/pcoa_3d.svg" ]
 PYTHONPATH="." python docs/tutorials/reads2tree/make_heatmap.py

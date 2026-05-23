@@ -319,7 +319,7 @@ performing this process using standard Unix command-line tools would be
 difficult, so we opt to use a Python script.
 
 The script, also shown below, can be found at
-`docs/tutorial/nonspades/add_tpm.py` under the root of the repository.
+`docs/tutorial/nonspades/assign_gene_ids.py` under the root of the repository.
 
 ```py
 --8<-- "docs/tutorials/nonspades/assign_gene_ids.py"
