@@ -15,7 +15,7 @@ python make_subset.py -I "$TUTORIAL_DIR"/rna_clique_out/config.yaml \
 ! [ -f "tutorial/infected_subset_out/distance_matrix.h5" ]
 python filtered_distance.py -O "$TUTORIAL_DIR"/infected_subset_out
 [ -f "tutorial/infected_subset_out/distance_matrix.h5" ]
-components="$(python plot_component_sizes.py --statistics \
-                     -A "$TUTORIAL_DIR"/infected_subset_out)"
+components="$(python plot_component_sizes.py --statistics m \
+                     -A "$TUTORIAL_DIR"/infected_subset_out | cut -d' ' -f4)"
 [ "$components" -ge 10000 ]
 
