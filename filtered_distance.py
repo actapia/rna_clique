@@ -195,9 +195,6 @@ class SampleSimilarity(ComparisonSimilarityComputer):
             columns=["sample", "gene"]
         )
 
-    @property
-    def samples(self):
-        return list(self.graph.samples)
 
     def restricted(self, comp_df: pd.DataFrame) -> pd.DataFrame:
         """Returns the provided dataframe, restricted to valid genes.
