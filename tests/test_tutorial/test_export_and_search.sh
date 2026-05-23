@@ -25,7 +25,7 @@ conda activate rna-clique
 mkdir "$TUTORIAL_DIR"/ec_genomes
 cd "$TUTORIAL_DIR"/ec_genomes
 case "$(uname)" in
-    Linus)
+    Linux)
 	wget https://cs.uky.edu/~acta225/rna_clique/ec_genomes.tar.xz
 	;;
     Darwin)
