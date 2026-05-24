@@ -911,9 +911,9 @@ class OrthologExporter:
         }
         if set_rlimit:
             try:
-                file_max = resource.getrlimit(resource.RLIMIT_OFILE)[1]
+                file_max = resource.getrlimit(resource.RLIMIT_NOFILE)[1]
                 resource.setrlimit(
-                    resource.RLIMIT_OFILE,
+                    resource.RLIMIT_NOFILE,
                     (
                         min(
                             (len(component_paths) + \
@@ -923,9 +923,9 @@ class OrthologExporter:
                         file_max
                     )
                 )
-                print("rlimit is", resource.getrlimit(resource.RLIMIT_OFILE))
+                print("rlimit is", resource.getrlimit(resource.RLIMIT_NOFILE))
             except AttributeError:
-                from IPython import embed; embed()
+                eprint("Could not set rlimit!")
             
         #print(component_paths)
         with ExitStack() as stack:
