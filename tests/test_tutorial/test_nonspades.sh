@@ -117,7 +117,7 @@ else
 	( grep "$f" -e '^>' | grep -v -e 'TRINITY_.*_c.*_g.*_i.*' ) && exit 1
     done
 fi
-cd "$TUTORIAL_DIR"
+cd "$TUTORIAL_DIR/trinity_assemblies"
 for f in trinity_*/; do
     [ -f "$f/salmon_outdir/quant.sf" ]
 done
