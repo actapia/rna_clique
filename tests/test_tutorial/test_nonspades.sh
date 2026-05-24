@@ -99,7 +99,7 @@ if [ "$assemble" = true ]; then
 else
     mkdir trinity_assemblies
     cd trinity_assemblies
-    case "$(uname -m)" in
+    case "$(uname)" in
 	Linux)
 	    wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.zip"
 	    ;;
@@ -108,6 +108,7 @@ else
 	    ;;
 	*)
 	    >&2 echo "Unrecognized system $(uname)."
+	    exit 1
 	    ;;
     esac
     unzip trinity_assemblies.zip
