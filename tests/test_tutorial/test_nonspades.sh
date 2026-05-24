@@ -157,6 +157,8 @@ python rna_clique.py "$TUTORIAL_DIR"/trinity_assemblies/SRR* -n 50000 \
 python export_matrix.py --format table \
        --header \
        -O "$TUTORIAL_DIR/trinity_rna_clique_out"
+PYTHONPATH="." python docs/tutorials/reads2tree/make_pcoa.py \
+                      "$TUTORIAL_DIR"/trinity_rna_clique_out
 [ -f "$TUTORIAL_DIR"/trinity_rna_clique_out/pcoa_2d.svg ]
 [ -f "$TUTORIAL_DIR"/trinity_rna_clique_out/pcoa_3d.svg ]
 
