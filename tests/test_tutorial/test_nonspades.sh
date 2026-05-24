@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 readonly TRINITY_THREADS=3
-readonly TRINITY_MEMORY=13
+readonly TRINITY_MEMORY=13G
 readonly PARALLEL_JOBS=1
 assemble=false
 if ! which sudo; then
