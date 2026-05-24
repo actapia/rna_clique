@@ -36,9 +36,11 @@ if [ "$assemble" = true ]; then
     case "$(uname)" in
 	Linux)
 	    sudo apt update
-	    sudo NEEDRESTART_MODE=a apt -y install trinityrnaseq
+	    sudo NEEDRESTART_MODE=a DEBIAN_FRONTEND=noninteractive \
+		 apt -y install trinityrnaseq
 	    if [ "$parallel" = true ]; then
-		sudo NEEDRESTART_MODE=a apt -y install parallel
+		sudo NEEDRESTART_MODE=a DEBIAN_FRONTEND=noninteractive \
+		     apt -y install parallel
 	    fi
 	    if ! compgen -G "sratoolkit*.tar.gz"; then
 		wget --no-verbose https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
