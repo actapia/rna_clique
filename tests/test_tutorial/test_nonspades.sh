@@ -5,6 +5,23 @@ if ! which sudo; then
 	"$@"
     }
 fi
+parallel=true
+assemble=true
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+	"--no-parallel" | "-P")
+	    parallel=false
+	    ;;
+	"--assemble" | "-a")
+	    assemble=true	    
+	    ;;
+	*)
+	    >&2 echo "Unrecognized argument $1."
+	    exit 1
+	    ;;
+    esac
+    shift
+done
 set -e
 cd rna_clique
 export RNA_CLIQUE="$PWD"
