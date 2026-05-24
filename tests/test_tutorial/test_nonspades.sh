@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+readonly TRINITY_THREADS=3
+readonly TRINITY_MEMORY=13
+readonly PARALLEL_JOBS=1
 assemble=false
 if ! which sudo; then
     function sudo {
@@ -92,7 +95,7 @@ if [ "$assemble" = true ]; then
     else
 	while read -u 6 -r line; do
 	    download_sra.sh -j 0 -r "$line"
-	    Trinity --seqType fq --max-memory "$TRINITY_MEMORY" \
+	    Trinity --seqType fq --max_memory "$TRINITY_MEMORY" \
 		    --single "$line.fastq" --output "trinity_$line" \
 		    --CPU "$TRINITY_THREADS"
 	    rm "$line.fastq"
