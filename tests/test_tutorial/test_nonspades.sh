@@ -77,6 +77,7 @@ if [ "$assemble" = true ]; then
     if ! [ -d "download_sra" ]; then
 	git clone https://github.com/actapia/download_sra
     fi
+    export PATH="$PATH:$PWD/download_sra"
     cd "$TUTORIAL_DIR"
     mkdir trinity_assemblies
     cd trinity_assemblies
