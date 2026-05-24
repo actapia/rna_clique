@@ -75,6 +75,7 @@ if [ "$assemble" = true ]; then
     esac
     compgen -G "sratoolkit.current-*.tar.gz"
     tar xzvf sratoolkit.current-*.tar.gz
+    export PATH="$PATH:$(realpath sratoolkit*/bin)"    
     conda install -y lxml requests
     if ! [ -d "download_sra" ]; then
 	git clone https://github.com/actapia/download_sra
