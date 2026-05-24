@@ -67,7 +67,7 @@ if [ "$assemble" = true ]; then
 	    fi
 	    ;;
 	*)
-	    >&2 "Unrecognized system $(uname)."
+	    >&2 echo "Unrecognized system $(uname)."
 	    exit 1
 	    ;;
     esac
@@ -84,7 +84,7 @@ if [ "$assemble" = true ]; then
 	tail -n+2 "$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv" | \
 	    cut -d, -f1 | \
 	    parallel --jobs "$PARALLEL_JOBS" \
-		     "download_sra.sh -j 0 -r {}; Trinity --seqType fq --max_memory $TRINITY_MEMORY --single {}.fastq  --output trinity_{} --CPU $TRINITY_THREADS; rm {}.fastq;"# rm -r trinity_{}"
+		     "download_sra.sh -j 0 -r {}; Trinity --seqType fq --max_memory $TRINITY_MEMORY --single {}.fastq  --output trinity_{} --CPU $TRINITY_THREADS; rm {}.fastq;"
     else
 	while read -u 6 -r line; do
 	    download_sra.sh -j 0 -r "$line"
@@ -93,12 +93,12 @@ if [ "$assemble" = true ]; then
 		    --CPU "$TRINITY_THREADS"
 	    rm "$line.fastq"
 	    #rm -r "trinity_$line"
-	done 6< <(tail -n+2 "$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv" | cut -d, -f1)	
+	done 6< <(tail -n+2 "$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv" | cut -d, -f1)
     fi
 else
     mkdir trinity_assemblies
     cd trinity_assemblies
-    case "$(uname -m)"; in
+    case "$(uname -m)" in
 	Linux)
 	    wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.zip"
 	    ;;
@@ -111,7 +111,7 @@ else
     esac
     unzip trinity_assemblies.zip
     for f in trinity_*.Trinity.fasta; do 
-	! ( grep "$f" -e '^>' | grep -v -e 'TRINITY_.*_c.*_g.*_i.*' )
+	( grep "$f" -e '^>' | grep -v -e 'TRINITY_.*_c.*_g.*_i.*' ) && exit 1
     done    
     for f in trinity_*/; do
 	[ -f "$f/salmon_outdir/quant.sf" ]
@@ -124,7 +124,8 @@ else
 	       "trinity_$f/salmon_outdir/quant.sf" > "with_tpm/$f.fasta"
     done
     for f in with_tpm/*.fasta; do
-	! ( grep "%f" -e '^>' | grep -v -e 'tpm.*_TRINITY_.*_c.*_g.*_i.*' )
+	( grep "%f" -e '^>' | grep -v -e 'tpm.*_TRINITY_.*_c.*_g.*_i.*' ) \
+	    && exit 1
     done
     mkdir integer_ids
     for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
@@ -133,8 +134,8 @@ else
 	       < "with_tpm/$f.fasta" > "integer_ids/$f.fasta"
     done
     for f in integer_ids/*.fasta; do
-	! ( grep "%f" -e '^>' | \
-		grep -v -e 'tpm.*_TRINITY_.*_c.*_g.*_gid.*_i.*' )
+	( grep "%f" -e '^>' | \
+	      grep -v -e 'tpm.*_TRINITY_.*_c.*_g.*_gid.*_i.*' ) && exit 1
     done
     rm -r with_tpm
     for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
@@ -152,5 +153,5 @@ else
            --header \
 	   -O "$TUTORIAL_DIR/trinity_rna_clique_out"
     [ -f "$TUTORIAL_DIR"/trinity_rna_clique_out/pcoa_2d.svg ]
-    [ -f "$TUTORIAL_DIR"/trinity_rna_clique_out/pcoa_3d.svg ]    
+    [ -f "$TUTORIAL_DIR"/trinity_rna_clique_out/pcoa_3d.svg ]
 fi
