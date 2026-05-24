@@ -97,6 +97,7 @@ if [ "$assemble" = true ]; then
 	done 6< <(tail -n+2 "$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv" | cut -d, -f1)
     fi
 else
+    cd "$TUTORIAL_DIR"    
     mkdir trinity_assemblies
     cd trinity_assemblies
     case "$(uname)" in
@@ -114,46 +115,48 @@ else
     unzip trinity_assemblies.zip
     for f in trinity_*.Trinity.fasta; do 
 	( grep "$f" -e '^>' | grep -v -e 'TRINITY_.*_c.*_g.*_i.*' ) && exit 1
-    done    
-    for f in trinity_*/; do
-	[ -f "$f/salmon_outdir/quant.sf" ]
     done
-    mkdir with_tpm
-    for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
-			SRR8003761 SRR8003762; do
-	python "$RNA_CLIQUE/docs/tutorials/nonspades/add_tpm.py" \
-	       "trinity_$f.Trinity.fasta" \
-	       "trinity_$f/salmon_outdir/quant.sf" > "with_tpm/$f.fasta"
-    done
-    for f in with_tpm/*.fasta; do
-	( grep "%f" -e '^>' | grep -v -e 'tpm.*_TRINITY_.*_c.*_g.*_i.*' ) \
-	    && exit 1
-    done
-    mkdir integer_ids
-    for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
-			SRR8003761 SRR8003762; do
-	python "$RNA_CLIQUE/docs/tutorials/nonspades/assign_gene_ids.py" \
-	       < "with_tpm/$f.fasta" > "integer_ids/$f.fasta"
-    done
-    for f in integer_ids/*.fasta; do
-	( grep "%f" -e '^>' | \
-	      grep -v -e 'tpm.*_TRINITY_.*_c.*_g.*_gid.*_i.*' ) && exit 1
-    done
-    rm -r with_tpm
-    for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
-			SRR8003761 SRR8003762; do
-	mkdir "$f"
-	mv "integer_ids/$f.fasta" "$f"/transcripts.fasta
-    done
-    rmdir integer_ids
-    cd "$RNA_CLIQUE"
-    python rna_clique.py "$TUTORIAL_DIR"/trinity_out/SRR* -n 50000 \
-           -O "$TUTORIAL_DIR/trinity_rna_clique_out" \
-           -p '^.*tpm([0-9]+(?:\.[0-9]+)).*gid([0-9]+)_i([0-9]+)'
-
-    python export_matrix.py --format table \
-           --header \
-	   -O "$TUTORIAL_DIR/trinity_rna_clique_out"
-    [ -f "$TUTORIAL_DIR"/trinity_rna_clique_out/pcoa_2d.svg ]
-    [ -f "$TUTORIAL_DIR"/trinity_rna_clique_out/pcoa_3d.svg ]
 fi
+cd "$TUTORIAL_DIR"
+for f in trinity_*/; do
+    [ -f "$f/salmon_outdir/quant.sf" ]
+done
+mkdir with_tpm
+for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
+		    SRR8003761 SRR8003762; do
+    python "$RNA_CLIQUE/docs/tutorials/nonspades/add_tpm.py" \
+	   "trinity_$f.Trinity.fasta" \
+	   "trinity_$f/salmon_outdir/quant.sf" > "with_tpm/$f.fasta"
+done
+for f in with_tpm/*.fasta; do
+    ( grep "%f" -e '^>' | grep -v -e 'tpm.*_TRINITY_.*_c.*_g.*_i.*' ) \
+	&& exit 1
+done
+mkdir integer_ids
+for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
+		    SRR8003761 SRR8003762; do
+    python "$RNA_CLIQUE/docs/tutorials/nonspades/assign_gene_ids.py" \
+	   < "with_tpm/$f.fasta" > "integer_ids/$f.fasta"
+done
+for f in integer_ids/*.fasta; do
+    ( grep "%f" -e '^>' | \
+	  grep -v -e 'tpm.*_TRINITY_.*_c.*_g.*_gid.*_i.*' ) && exit 1
+done
+rm -r with_tpm
+for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
+		    SRR8003761 SRR8003762; do
+    mkdir "$f"
+    mv "integer_ids/$f.fasta" "$f"/transcripts.fasta
+done
+rmdir integer_ids
+cd "$RNA_CLIQUE"
+python rna_clique.py "$TUTORIAL_DIR"/trinity_out/SRR* -n 50000 \
+       -O "$TUTORIAL_DIR/trinity_rna_clique_out" \
+       -p '^.*tpm([0-9]+(?:\.[0-9]+)).*gid([0-9]+)_i([0-9]+)'
+
+python export_matrix.py --format table \
+       --header \
+       -O "$TUTORIAL_DIR/trinity_rna_clique_out"
+[ -f "$TUTORIAL_DIR"/trinity_rna_clique_out/pcoa_2d.svg ]
+[ -f "$TUTORIAL_DIR"/trinity_rna_clique_out/pcoa_3d.svg ]
+
