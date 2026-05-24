@@ -6,7 +6,7 @@ if ! which sudo; then
     }
 fi
 parallel=true
-assemble=true
+assemble=false
 while [ "$#" -gt 0 ]; do
     case "$1" in
 	"--no-parallel" | "-P")
