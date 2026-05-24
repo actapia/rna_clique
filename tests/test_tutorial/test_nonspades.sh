@@ -104,17 +104,17 @@ else
     cd trinity_assemblies
     case "$(uname)" in
 	Linux)
-	    wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.zip"
+	    wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz"
 	    ;;
 	macOS)
-	    curl -L -O "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.zip"
+	    curl -L -O "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz"
 	    ;;
 	*)
 	    >&2 echo "Unrecognized system $(uname)."
 	    exit 1
 	    ;;
     esac
-    unzip trinity_assemblies.zip
+    tar xJvf trinity_assemblies.tar.xz
     for f in trinity_*.Trinity.fasta; do 
 	( grep "$f" -e '^>' | grep -v -e 'TRINITY_.*_c.*_g.*_i.*' ) && exit 1
     done

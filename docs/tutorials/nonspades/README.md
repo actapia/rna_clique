@@ -198,17 +198,17 @@ mkdir trinity_assemblies
 cd trinity_assemblies
 ```
 
-Download the Trinity assemblies into that directory and unzip them.
+Download the Trinity assemblies into that directory and untar them.
 
 === Ubuntu
 	```bash
-	wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.zip"
-	unzip trinity_assemblies.zip
+	wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz"
+	tar xJvf trinity_assemblies.tar.xz
 	```
 === macOS
     ```zsh
-	curl -L -O "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.zip"
-	unzip trinity_assemblies.zip
+	curl -L -O "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz"
+	tar xJvf trinity_assemblies.tar.xz
 	```
 
 
