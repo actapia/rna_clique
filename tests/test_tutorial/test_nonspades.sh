@@ -150,7 +150,7 @@ for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
 done
 rmdir integer_ids
 cd "$RNA_CLIQUE"
-python rna_clique.py "$TUTORIAL_DIR"/trinity_out/SRR* -n 50000 \
+python rna_clique.py "$TUTORIAL_DIR"/trinity_assemblies/SRR* -n 50000 \
        -O "$TUTORIAL_DIR/trinity_rna_clique_out" \
        -p '^.*tpm([0-9]+(?:\.[0-9]+)).*gid([0-9]+)_i([0-9]+)'
 

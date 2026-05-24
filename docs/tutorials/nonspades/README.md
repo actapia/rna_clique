@@ -403,7 +403,7 @@ floating-point number immediately after `tpm`, the integer immediately after
 Then, run RNA-clique on the transformed data.
 
 ```bash
-python rna_clique.py "$TUTORIAL_DIR"/trinity_out/SRR* -n 50000 \
+python rna_clique.py "$TUTORIAL_DIR"/trinity_assemblies/SRR* -n 50000 \
                      -O "$TUTORIAL_DIR/trinity_rna_clique_out" \
                      -p '^.*tpm([0-9]+(?:\.[0-9]+)).*gid([0-9]+)_i([0-9]+)'
 ```
