@@ -2,6 +2,13 @@
 readonly TRINITY_THREADS=3
 readonly TRINITY_MEMORY=13G
 readonly PARALLEL_JOBS=1
+
+function glob_exists {
+    find "$1" -name "$2" -mindepth 1 -maxdepth 1 | grep -q .
+    return "$?"
+}
+
+
 assemble=false
 if ! which sudo; then
     function sudo {
@@ -45,7 +52,7 @@ if [ "$assemble" = true ]; then
 		sudo NEEDRESTART_MODE=a DEBIAN_FRONTEND=noninteractive \
 		     apt -y install parallel
 	    fi
-	    if ! compgen -G "sratoolkit*.tar.gz"; then
+	    if ! glob_exists . "sratoolkit*.tar.gz"; then
 		wget --no-verbose https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
 	    fi
 	    ;;
@@ -55,7 +62,7 @@ if [ "$assemble" = true ]; then
 	    if [ "$parallel" = true ]; then
 		brew install parallel
 	    fi
-	    if ! compgen -G "sratoolkit*.tar.gz"; then
+	    if ! glob_exists . "sratoolkit*.tar.gz"; then
 		case "$(uname -m)" in
 		    x86_64)
 			curl -L -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac64.tar.gz
@@ -76,7 +83,7 @@ if [ "$assemble" = true ]; then
 	    exit 1
 	    ;;
     esac
-    compgen -G "sratoolkit.current-*.tar.gz"
+    glob_exists . "sratoolkit.current-*.tar.gz"
     tar xzvf sratoolkit.current-*.tar.gz
     export PATH="$PATH:$(realpath sratoolkit*/bin)"    
     conda install -y lxml requests

@@ -682,7 +682,7 @@ class OrthologExporter:
                 if v in self.ideal_ids
             }
         if consistent_strands:
-            print("Determining relative strand orientations.")
+            print("Determining relative transcript orientations.")
             # parse = functools.partial(parse_seq_id, self.gene_regex)
             # aligner = Bio.Align.PairwiseAligner()
             # aligner.substitution_matrix = Bio.Align.substitution_matrices.load(
@@ -718,7 +718,8 @@ class OrthologExporter:
                 self.strand_graph.edges[m]["mismatch"] = True
             if mismatches:
                 msg = (
-                    "Found {} strand mismatches in {} component groups.".format(
+                    ("Found {} orientation mismatches in {} component"
+                    "groups.").format(
                         len(mismatches),
                         len(mismatch_component_components)
                     )

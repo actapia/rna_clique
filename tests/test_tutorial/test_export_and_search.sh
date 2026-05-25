@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+
+function glob_exists {
+    find "$1" -name "$2" -mindepth 1 -maxdepth 1 | grep -q .
+    return "$?"
+}
+
 search=false
 while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -45,7 +51,7 @@ python export_and_search.py -C "$TUTORIAL_DIR"/rna_clique_out/config.yaml \
                             -X "$TUTORIAL_DIR"/full_ec_search_out \
                             -e 1e-99
 [ -d "$TUTORIAL_DIR/full_ec_search_out/rna_clique_out" ]
-compgen -G "$TUTORIAL_DIR/full_ec_search_out/rna_clique_out/export/*.fasta"
+glob_exists "$TUTORIAL_DIR/full_ec_search_out/rna_clique_out/export/" "*.fasta"
 grep -q "$TUTORIAL_DIR/full_ec_search_out/rna_clique_out/export/"*.fasta \
      -e '^>-.*:SRR.*$'
 grep -q \
