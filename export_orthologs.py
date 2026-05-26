@@ -550,9 +550,15 @@ def get_sample_gene_to_component(
     }
 
 class ExportTooManyFilesError(OSError):
-    def __init___(self, message, tried=None):
+    def __init__(self, message, tried=None):
         super().__init__(errno.EMFILE, message)
         self.tried = tried
+
+    def __repr__(self):
+        return f"{type(self).__name__}({self.strerror!r}, {self.tried!r})"
+
+    def __str__(self):
+        return self.strerror
 
 class InconsistentGraphError(ValueError):
     """Raised when a strand graph does not have a consistent assignment.
