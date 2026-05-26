@@ -1,6 +1,7 @@
 import sys
 import functools
 import os
+import platform
 
 from contextlib import contextmanager
 from pathlib import Path
@@ -57,6 +58,18 @@ def print_transcript_id_parse_error_message(regex):
             regex.pattern
         )
     )
+
+def print_too_many_files_error_message(e):
+    recommended_files = e.tried * 2            
+    eprint("RNA-clique failed because it tried to open too many files.\n\n"
+           f"Check that you can open at least {recommended_files}.\n")
+    if platform.uname().system == "Darwin":
+        eprint("If you are on macOS, you may need to raise the global "
+               "per-process open file limit with: \n\n"
+               "\tsudo sysctl -w kern.maxfilesperproc={0}\n\n"
+               "If {0} also exceeds kern.maxfiles, you will also need to "
+               "increase that value.\n".format(recommended_files))
+    
 
 generic_error_message = "An error occurred. {} did not finish successfully."
 

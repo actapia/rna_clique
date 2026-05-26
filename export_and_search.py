@@ -335,6 +335,9 @@ def main():
                 args.transcript_id_regex
             )
             raise e
+        except export_orthologs.ExportTooManyFilesError as e:
+            app.print_too_many_files_error_message(e)
+            raise e
         
 if __name__ == "__main__":
     main()

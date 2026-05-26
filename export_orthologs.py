@@ -5,6 +5,7 @@ try:
     import resource
 except ImportError:
     resource = None
+import errno
 
 import psutil
 import Bio
@@ -548,6 +549,11 @@ def get_sample_gene_to_component(
         v: i for (i, c) in enumerate(ideal) for v in c.nodes
     }
 
+class ExportTooManyFilesError(OSError):
+    def __init___(self, message, tried=None):
+        super().__init__(errno.EMFILE, message)
+        self.tried = tried
+
 class InconsistentGraphError(ValueError):
     """Raised when a strand graph does not have a consistent assignment.
 
@@ -929,41 +935,49 @@ class OrthologExporter:
                 eprint("Could not set rlimit!")
             
         #print(component_paths)
-        with ExitStack() as stack:
-            component_files = {
-                i: stack.enter_context(open(f, "w"))
-                for (i, f) in component_paths.items()
-            }
-            for sample in self.samples:
-                # for _, gene, isoform, seq in seq_tuples(
-                #         sample,
-                #         self.gene_regex
-                # ):
-                #     pass
-                print(sample)
-                #from IPython import embed; embed()
-                for _, gene, isoform, seq in renamed_seqs(
-                        rename,
-                        (
-                            t for t in seq_tuples(
-                                sample,
-                                self.parse_transcript_id
-                            )
-                            if t[:-2] in self.sample_gene_to_component
-                        )
-                ):
-                    Bio.SeqIO.write(
-                        self._orient((sample, gene, isoform, seq))[-1],
-                        component_files[
-                            self.sample_gene_to_component[
-                                (
+        try:
+            with ExitStack() as stack:
+                component_files = {
+                    i: stack.enter_context(open(f, "w"))
+                    for (i, f) in component_paths.items()
+                }
+                for sample in self.samples:
+                    # for _, gene, isoform, seq in seq_tuples(
+                    #         sample,
+                    #         self.gene_regex
+                    # ):
+                    #     pass
+                    print(sample)
+                    #from IPython import embed; embed()
+                    for _, gene, isoform, seq in renamed_seqs(
+                            rename,
+                            (
+                                t for t in seq_tuples(
                                     sample,
-                                    self.parse_transcript_id(seq.id).gene
+                                    self.parse_transcript_id
                                 )
-                            ]
-                        ],
-                        "fasta"
-                    )
+                                if t[:-2] in self.sample_gene_to_component
+                            )
+                    ):
+                        Bio.SeqIO.write(
+                            self._orient((sample, gene, isoform, seq))[-1],
+                            component_files[
+                                self.sample_gene_to_component[
+                                    (
+                                        sample,
+                                        self.parse_transcript_id(seq.id).gene
+                                    )
+                                ]
+                            ],
+                            "fasta"
+                        )
+        except OSError as e:
+            if e.errno == errno.EMFILE:
+                raise ExportTooManyFilesError(
+                    f"Could not open {len(component_paths)} files for export.",
+                    len(component_paths)
+                )
+            raise e
         if make_all:
             self.make_all_ideal(component_paths, out_dir)
         return component_paths
@@ -1067,6 +1081,9 @@ def main():
                 f"{e.path} using {mode}. Please verify {verify}.\n"
             )
             raise e
-    
+        except ExportTooManyFilesError as e:
+            app.print_too_many_files_error_message(e)
+            raise e
+        
 if __name__ == "__main__":
     main()
