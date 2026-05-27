@@ -19,6 +19,14 @@ while [ "$#" -gt 0 ]; do
     shift
 done
 set -e
+if ! which sudo; then
+    function sudo {
+	"$@"
+    }
+fi
+if [ "$(uname)" = "Darwin" ]; then
+    sudo sysctl -w kern.maxfilesperproc=30000
+fi
 cd rna_clique
 export RNA_CLIQUE="$PWD"
 cd ..
