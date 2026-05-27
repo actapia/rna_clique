@@ -142,7 +142,7 @@ for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
 	   "trinity_$f/salmon_outdir/quant.sf" > "with_tpm/$f.fasta"
 done
 for f in with_tpm/*.fasta; do
-    ( grep "%f" -e '^>' | grep -v -e 'tpm.*_TRINITY_.*_c.*_g.*_i.*' ) \
+    ( grep "$f" -e '^>' | grep -v -e 'tpm.*_TRINITY_.*_c.*_g.*_i.*' ) \
 	&& exit 1
 done
 mkdir integer_ids
@@ -152,7 +152,7 @@ for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
 	   < "with_tpm/$f.fasta" > "integer_ids/$f.fasta"
 done
 for f in integer_ids/*.fasta; do
-    ( grep "%f" -e '^>' | \
+    ( grep "$f" -e '^>' | \
 	  grep -v -e 'tpm.*_TRINITY_.*_c.*_g.*_gid.*_i.*' ) && exit 1
 done
 rm -r with_tpm
