@@ -4,24 +4,20 @@ from pathlib import Path
 import pandas as pd
 from matplotlib import pyplot as plt
 
-from filtered_distance import SampleSimilarity
-from path_to_sample import path_to_sample
 from heatmap import draw_heatmap
-from make_subset import get_table_files
+from config import RNACliqueConfig
 
 tutorial_doc_dir = Path(os.environ["RNA_CLIQUE"]) / "docs/tutorials/reads2tree"
 rna_clique_out_dir = Path(os.environ["TUTORIAL_DIR"]) / "rna_clique_out"
 
 def main():
     sample_metadata = pd.read_csv(tutorial_doc_dir / "tall_fescue_accs.csv")
-    similarity_computer = SampleSimilarity.from_filenames(
-        rna_clique_out_dir / "graph.pkl",
-        list(get_table_files(rna_clique_out_dir / "od2"))
-    )
-    dis_df = similarity_computer.get_dissimilarity_df().rename(
-        index=path_to_sample,
-        columns=path_to_sample,
-    )
+    config = RNACliqueConfig.yaml_load(rna_clique_out_dir / "config.yaml")
+    path_to_sample = {str(k): v for (k, v) in config.path_to_sample.items()}
+    dis_df = pd.read_hdf(config.matrix).rename(
+        index=path_to_sample.__getitem__,
+        columns=path_to_sample.__getitem__,
+    )    
     draw_heatmap(
         dis_df,
         sample_metadata=sample_metadata,
@@ -35,7 +31,6 @@ def main():
     )
     plt.savefig(rna_clique_out_dir / "distance_heatmap.svg")
     
-
 if __name__ == "__main__":
     main()
 

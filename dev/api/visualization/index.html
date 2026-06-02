@@ -1,0 +1,1508 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Visualization - RNA-clique user guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#visualization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="RNA-clique user guide" class="md-header__button md-logo" aria-label="RNA-clique user guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            RNA-clique user guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Visualization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/actapia/rna_clique" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="RNA-clique user guide" class="md-nav__button md-logo" aria-label="RNA-clique user guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    RNA-clique user guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/actapia/rna_clique" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command-line usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation_guides/ubuntu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation_guides/macos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    macOS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/reads2tree/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From RNA-seq reads to a phylogenetic tree with RNA-clique
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sample-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample metadata
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#heatmaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Heatmaps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pcoa-plots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PCoA plots
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PCoA plots">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#group_by" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group_by
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#make_group_label-and-labelers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        make_group_label and labelers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        colors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#index_to_kwargs-group_to_kwargs-and-index_group_to_kwargs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        index_to_kwargs, group_to_kwargs, and index_group_to_kwargs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#order_by-and-sort_key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        order_by and sort_key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ellipsoids-and-make_ellipsoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ellipsoids and make_ellipsoid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        contribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annotate-and-adjust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        annotate and adjust
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#legend_factors-and-default_legend_marker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        legend_factors and default_legend_marker
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phylograms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phylograms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phylograms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_clades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_clades
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#draw_clade_labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        draw_clade_labels
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="visualization">Visualization</h1>
+<p>RNA-clique does not primarily aim to offer tools for data visualization; other
+software exists for that and probably does it better than RNA-clique
+could. Nevertheless, some data visualization functions that the author uses for
+his own analyses are included with RNA-clique and can be used via the Python
+API.</p>
+<p>Examples for using these visualization functions are also provided as part of
+the end-to-end <a href="tutorials/reads2tree/README.md">"From RNA-seq reads to a phylogenetic tree with
+RNA-clique"</a> tutorial. Sample code from these
+tutorials is linked in the subsections covering individual visualizations below.</p>
+<h2 id="sample-metadata">Sample metadata</h2>
+<p>The visualization functions depend on sample metadata to properly organize,
+label, and visually encode information about each sample in the created
+visualizations. In this context, sample metadata should be a Pandas DataFrame in
+which there is one-to-one correspondence between rows and samples. Each row
+should give some information about the sample. For example, sample metadata
+might include information about which population a sample comes from, or what
+the sample's chemotype is.</p>
+<p>It must be possible to map each sample to its corresponding metadata by the ID
+of the sample in the distance matrix. To make this possible, one column should
+contain these IDs. Which column to use can usually be specified to visualization
+function via the <code>sample_name_column</code> keyword argument. Note that, by default,
+<code>SampleSimilarity</code> gives distance matrices with rows and columns labeled with
+the paths to the top genes for the sample rather than the sample name itself. If
+your metadata uses the names of the samples, it may be necessary to rename the
+rows and columns of the distance matrix to use the actual names of the samples.</p>
+<h2 id="heatmaps">Heatmaps</h2>
+<p>A distance matrix can be visualized in a straightforward fashion via a
+heatmap. In a heatmap, the elements of the distance matrix are represented by
+rectangles in a grid. Labels for the rows and columns of the matrix are shown
+above and to the left of the rows and columns of squares in the heatmap. Each
+rectangle representing a matrix element is colored according to a colormap,
+which is also shown with a scale next to the heatmap.</p>
+<p><img alt="A heatmap showing distances for the six samples analyzed in the end-to-end
+&quot;From RNA-seq reads to a phylogenetic tree with RNA-clique&quot; tutorial. The
+heatmap is organized as a grid, and the indices shown on the left and bottom of
+the heatmap indicate for each cell which pair of samples the distance shown
+corresponds to. Samples are ordered and grouped by genotype on both axes. Cell
+colors follow the colormap shown on the right, which maps values from \(0.0095\)
+to \(0.0075\) to colors on a gradient from dark indigo to light green. Cells
+additionally show the distance values in
+ten-thousandths." src="../../images/distance_heatmap.svg" />.</p>
+<p>RNA-clique offers a <code>draw_heatmap</code> function, which can be found in the
+<code>heatmap.py</code> module. The arguments accepted by <code>draw_heatmap</code> are summarized in
+the table below.</p>
+<table>
+<thead>
+<tr>
+<th>Formal parameter</th>
+<th>Description</th>
+<th>Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mat</code></td>
+<td>The distance (or similarity) matrix to visualize as a heatmap.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sample_metadata</code></td>
+<td>Sample metadata for sorting and grouping samples in the heatmap.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>sample_name_column</code></td>
+<td>Column of the sample metadata that names each sample.</td>
+<td><code>"name"</code></td>
+</tr>
+<tr>
+<td><code>order_by</code></td>
+<td>Column(s) by which to order samples along the axes of the heatmap.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>square</code></td>
+<td>Whether to draw heatmap cells as squares.</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>group_by</code></td>
+<td>Column(s) by which to group samples along the axes of the heatmap.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>draw_group_labels</code></td>
+<td>Whether to draw labels for sample groupings.</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>make_group_label</code></td>
+<td>Function to get label for group from group value.</td>
+<td><code>default_group_label_maker</code></td>
+</tr>
+<tr>
+<td><code>digit_annot</code></td>
+<td>Digits of actual value to show within cells, if any.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>label_padding_x</code></td>
+<td>Horizontal padding to add to labels on vertical axis.</td>
+<td><code>0.0275</code></td>
+</tr>
+<tr>
+<td><code>label_padding_y</code></td>
+<td>Vertical padding to add to labels on horizontal axis.</td>
+<td><code>0.0275</code></td>
+</tr>
+<tr>
+<td><code>sort_key</code></td>
+<td>Function to transform sort column(s).</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>label_kwargs</code></td>
+<td>Additional keyword arguments to pass to <code>plt.text</code> for group labels.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>x_label_kwargs</code></td>
+<td>Additional keyword arguments for labels on vertical axis.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>y_label_kwargs</code></td>
+<td>Additional keyword arguments for labels on horizontal axis.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>draw_debug_points</code></td>
+<td>Whether to draw points useful for debugging drawing code.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<p>Any additional arguments or keyword arguments provided to <code>draw_heatmap</code> will be
+passed to Seaborn's
+<a href="https://seaborn.pydata.org/generated/seaborn.heatmap.html"><code>heatmap</code></a> function,
+which is what <code>draw_heatmap</code> uses as a base for its heatmap plots.</p>
+<p>RNA-clique's <code>draw_heatmap</code> function assumes that the distance matrix to be
+drawn is symmetric, so it only draws the upper triangle of the matrix,
+regardless of whether the matrix it is given is actually symmetric.</p>
+<p>Samples can be both ordered and grouped by values from the <code>sample_metadata</code>.
+When samples are grouped by some columns, those samples that have the same value
+for those columns will be adjacent in the rows and columns of the heatmap. When
+samples are ordered by some columns, the samples are sorted
+according to their values for those columns along the rows and columns of the
+heatmap. If samples are ordered by some columns, then they are also grouped by
+those columns, but not vice versa. Hence, the <code>group_by</code> columns must always be
+a prefix of the <code>order_by</code> columns. If <code>order_by</code> is specified, but <code>group_by</code>
+is not, then <code>group_by</code> will be set automatically to <code>order_by</code>.</p>
+<p>Vertical and horizontal lines separate groups on the axes of the heatmap. When
+<code>draw_group_label</code> is <code>True</code>, labels are also drawn to identify the groups. What
+the labels say can be controlled via the <code>make_group_label</code>
+function. <code>make_group_label</code> should take the value(s) for a particular group and
+return a string to be used as the label for that group. By default, the group
+label is simply the values (converted to strings) and joined with commas and
+spaces.</p>
+<p>As a supplement to the colormapping, it is sometimes helpful to display digits
+of the actual value of a matrix element on top of the heatmap cell for that
+element. Since distance values do not typically have short decimal
+representations, only a few digits can usually be shown per heatmap cell. The
+<code>digit_annot</code> parameter, when specified (not <code>None</code>), shows no more than the
+specified number of digits of each value. The value shown in a cell represents
+the value of the element in the smallest <code>1/(10**n)</code> unit such that the largest
+value to show needs no more than <code>digit_annot</code> digits. Values shown are rounded
+to the nearest unit. For example, if the distances to show are <code>0.123</code>, <code>0.012</code>,
+and <code>0.015</code>, displaying with two digits would display values in hundredths,
+giving <code>12</code>, <code>1</code>, and <code>2</code>, respectively.</p>
+<p>In some cases, it may be desirable to sort the samples by values that don't
+appear explicitly in the <code>sample_metadata</code>. The <code>draw_heatmap</code> function supports
+such sorting via the <code>sort_key</code> keyword argument. <code>sort_key</code> must be a function
+that maps the <code>order_by</code> columns in <code>sample_metadata</code> to other columns to be
+used for sorting.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">heatmap</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_heatmap</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">path_to_sample</span><span class="w"> </span><span class="kn">import</span> <span class="n">path_to_sample</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">sample_metadata</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;my_metadata.csv&quot;</span><span class="p">)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">distances</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_dissimilarity_df</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">columns</span><span class="o">=</span><span class="n">path_to_sample</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">rows</span><span class="o">=</span><span class="n">path_to_sample</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Draw a heatmap with samples grouped and ordered by population and chemotype.</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Display two digit representations of the distances on the cells.</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">draw_heatmap</span><span class="p">(</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">distances</span><span class="p">,</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">sample_metadata</span><span class="p">,</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">order_by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;population&quot;</span><span class="p">,</span> <span class="s2">&quot;chemotype&quot;</span><span class="p">],</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">draw_group_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">digit_annot</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>A real example of using <code>draw_heatmap</code> can also be found at
+<a href="docs/tutorials/reads2tree/make_heatmap.py"><code>docs/tutorials/reads2tree/make_heatmap.py</code></a>.</p>
+<h2 id="pcoa-plots">PCoA plots</h2>
+<p>A Principal Coordinate Analysis (PCoA) plot represents samples as points in a
+scatter plot. Point coordinates are chosen for the samples such that distances
+are preserved as well as possible given the number of dimensions allowed.</p>
+<p><img alt="A two-dimensional PCoA plot visualizing genetic distances for the six samples
+used in the end-to-end &quot;From RNA-seq reads to a phylogenetic tree with
+RNA-clique&quot; tutorial. Samples separate according to genotype; the two CTE27 and
+CTE46 samples cluster together. Samples are color-coded by genotype. Blue points
+represent CTE27, orange points CTE46, green points FATG4, and red points
+NTE. The principal component axes are labeled with their relative contributions,
+measured as the percentage of the sum of eigenvalues of the distance
+matrix." src="../../images/pcoa_2d.svg" /></p>
+<p>RNA-clique provides the <code>draw_pcoa</code> function for drawing PCoA plots in two or
+three dimensions. <code>draw_pcoa</code> is in the <code>pcoa.py</code> module and returns a
+<a href="https://scikit.bio/"><code>scikit-bio</code></a> <code>skbio.stats.ordination.OrdinationResults</code>
+object representing the results of the PCoA analysis. The parameters accepted by
+<code>draw_pcoa</code> are summarized in the table below.</p>
+<table>
+<thead>
+<tr>
+<th>Formal parameter</th>
+<th>Description</th>
+<th>Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dis_df</code></td>
+<td>Distance matrix to visualize, as a Pandas DataFrame.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sample_metadata</code></td>
+<td>Sample metadata to use for encoding sample information into the point markers and ellipsoids.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>group_by</code></td>
+<td>Columns from sample metadata to encode in point markers and ellipsoids.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sample_name_column</code></td>
+<td>Column containing sample names in <code>sample_metadata</code>.</td>
+<td><code>"name"</code></td>
+</tr>
+<tr>
+<td><code>make_group_label</code></td>
+<td>Functions mapping group values to text labels to display in legend.</td>
+<td><code>default_group_label_maker</code></td>
+</tr>
+<tr>
+<td><code>labelers</code></td>
+<td>Functions to transform group values before making group labels.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>colors</code></td>
+<td>Colors to use for encoding values of the <code>group_by</code> column.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>legend</code></td>
+<td>Whether to create a legend.</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>index_to_kwargs</code></td>
+<td>Function mapping index among <code>group_by</code> values to keyword arguments to pass to <code>scatter</code>.</td>
+<td><code>empty_dict</code></td>
+</tr>
+<tr>
+<td><code>group_to_kwargs</code></td>
+<td>Function mapping <code>group_by</code> values to keyword arguments to pass to <code>scatter</code>.</td>
+<td><code>empty_dict</code></td>
+</tr>
+<tr>
+<td><code>index_group_to_kwargs</code></td>
+<td>Function mapping both index and values for <code>group_by</code> to keyword arguments to pass to <code>scatter</code>.</td>
+<td><code>empty_dict</code></td>
+</tr>
+<tr>
+<td><code>order_by</code></td>
+<td>Columns on which to order samples (influences order that groups appear in legend).</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>sort_key</code></td>
+<td>Functions to transform <code>order_by</code> columns for purposes of sorting.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>ellipsoids</code></td>
+<td>Whether to draw ellipsoids on the plot.</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>make_ellipsoid</code></td>
+<td>Function to create ellipsoid to draw from data for a group.</td>
+<td><code>conf_ellipsoid(0.95)</code></td>
+</tr>
+<tr>
+<td><code>ellipsoid_kwargs</code></td>
+<td>Extra keyword arguments to pass to <code>draw_ellipsoid</code>.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>contribution</code></td>
+<td>Display relative contributions of principal component axes on axis labels.</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>annotate</code></td>
+<td>Label individual points with their sample names.</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>adjust</code></td>
+<td>Whether to space out labels automatically using <a href="https://github.com/Phlya/adjustText"><code>adjustText</code></a>.</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>legend_factors</code></td>
+<td>Try to separate independent encodings in the legend.</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>default_legend_marker</code></td>
+<td>Default kwargs to pass to <code>mpl.lines.Line2D</code> for creating legend entries.</td>
+<td><code>default_marker_style</code></td>
+</tr>
+<tr>
+<td><code>dropna</code></td>
+<td>Drop rows where the <code>group_by</code> columns have NA values.</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>dimensions</code></td>
+<td>Number of dimensions for the PCoA plot.</td>
+<td><code>2</code></td>
+</tr>
+<tr>
+<td><code>ax</code></td>
+<td><code>matplotlib.axes.Axes</code> on which to draw the plot.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>axis_label_kwargs</code></td>
+<td>Keyword arguments for creating axis labels.</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+<p>Although a few of these options are self-explanatory, many of them require
+further explanation.</p>
+<h3 id="group_by">group_by</h3>
+<p>When making a PCoA plot, it is common to want to encode metadata about samples
+using various visual variables such as point marker color, shape, opacity,
+etc. For example, one might want to encode population with marker shape and
+chemotype with marker color. <code>draw_pcoa</code> enables encoding metadata in visual
+variables by allowing the caller of the function to specify metadata columns on
+which to group samples via the <code>group_by</code> parameter. All samples that have the
+same value for all of the columns in <code>group_by</code> form a group. Other parameters
+to <code>draw_pcoa</code> can then be used to specify how groups should be drawn
+differently.</p>
+<h3 id="make_group_label-and-labelers">make_group_label and labelers</h3>
+<p>The actual values for the <code>group_by</code> columns are not necessarily what you want
+displayed in the legend entries corresponding to those values. To allow the
+caller to specify arbitrary labels for each <code>group_by</code> columns value,
+<code>draw_pcoa</code> allows the caller to specify <code>make_group_label</code> and <code>labelers</code>.</p>
+<p>The <code>labelers</code> are functions such that <code>labelers[i]</code> is used to create the label
+for the value of column <code>i</code> of <code>group_by</code>. Each element of <code>labelers</code> should
+accept a value of column <code>i</code> of <code>group_by</code> and should return a string, the label
+to use for that value. If a labeler doesn't exist for column <code>i</code>&mdash;i.e., if
+a labeler is <code>None</code>, or if <code>i &gt;= len(labelers)</code>&mdash;then <code>draw_pcoa</code> treats
+that column as if its labeler were the identity function. </p>
+<p>Each <code>labeler</code> element operates on a value from a single column and returns
+a label for that value in that column. The <code>make_group_label</code> function operates
+on an iterable of labels for all of the columns in <code>group_by</code> and returns one
+final label to use for the group with those individual column
+labels. By default, the value for <code>make_group_label</code> is the
+<code>default_group_label_maker</code>, which returns the individual labels, joined by
+commas and spaces.</p>
+<h3 id="colors">colors</h3>
+<p>The simplest way of specifying how values of the <code>group_by</code> columns should be
+encoded via visual variables is by using the <code>colors</code> parameter. As the name
+suggests, <code>colors</code> only allows assigning colors to groups, but it provides a
+convenient and flexible way of doing so. <code>colors</code> can be a
+<code>matplotlib.colors.ListedColormap</code>, a sequence of RGB tuples, or a mapping from
+tuples of <code>group_by</code> column values to RGB tuples. In the first two cases,
+<code>group_by</code> values are assigned colors sequentially. The first value for the
+<code>group_by</code> columns gets the first color. The second value gets the second color,
+and so on. In the third case, <code>group_by</code> column values are assigned explicitly
+to specific colors via the mapping.</p>
+<h3 id="index_to_kwargs-group_to_kwargs-and-index_group_to_kwargs">index_to_kwargs, group_to_kwargs, and index_group_to_kwargs</h3>
+<p>A more flexible (but more cumbersome) way of assigning visual encodings to
+<code>group_by</code> values is provided by the <code>index_to_kwargs</code>, <code>group_to_kwargs</code>, and
+<code>index_group_to_kwargs</code> parameters. Each of these parameters is a function that
+takes some parameter(s) identifying the <code>group_by</code> column values and returns
+keyword arguments to pass to <code>matplotlib</code>'s <code>scatter</code> function for the samples
+in that group. <code>index_to_kwargs</code>, <code>group_to_kwargs</code>, and <code>index_group_to_kwargs</code>
+differ in what parameters they should accept.</p>
+<p><code>index_to_kwargs</code> should accept the index of the <code>group_by</code> column value as its
+only parameter. <code>index_to_kwargs</code> allows for sequential mappings like those that
+are possible by providing the <code>colors</code> parameter with a <code>ListedColormap</code>. For
+example, <code>index_to_kwargs</code> might map the first value (index <code>0</code>) to 
+<code>{"color": "blue", "marker": "o"}</code> and map the second value (index <code>1</code>) to 
+<code>{"color": "red", "marker": "s"}</code> to make the first value blue circles and the
+second value red squares.</p>
+<p><code>group_to_kwargs</code> should accept the <em>value</em> of the <code>group_by</code> column itself as
+its only parameter. <code>group_to_kwargs</code> allows for explicit mappings like those
+that are possible by providing the <code>colors</code> parameter with a <code>Mapping</code>. For
+example, <code>group_to_kwargs</code> might map <code>("location1", "chemotype2")</code> to 
+<code>{"color": "blue", "marker": "^"}</code>, map <code>("location2", "chemotype1")</code> to
+<code>{"color": "red", "marker": "s"}</code>, and map anything else to 
+<code>{"color": "gray", "marker": "o"}</code>.</p>
+<p>Finally, <code>index_group_to_kwargs</code> should accept both the index and the value of
+the <code>group_by</code> column value as its two parameters, in that
+order. <code>index_group_to_kwargs</code> is useful when some visual encodings need to be
+specified explicitly, but others can be specified by a simple sequences. For
+example, you could map <code>("location1",)</code> and <code>("location2",)</code> to 
+<code>{"color": "red"}</code> and <code>{"color": "blue"}</code>, respectively, and have all other
+values map to colors corresponding to their index in a <code>ListedColormap</code>.</p>
+<h3 id="order_by-and-sort_key">order_by and sort_key</h3>
+<p>When <code>legend_factors</code> in not specified, entries in the legend produced by
+<code>draw_pcoa</code> appear in the order in which they were drawn on the scatter plot. By
+default, this order is the sorted order of the <code>group_by</code> values, but the order
+can be changed by providing the <code>order_by</code> parameter to <code>draw_pcoa</code>. When
+<code>order_by</code> is provided, all samples are sorted by <code>order_by</code> before drawing,
+causing the entries to appear in the order in which their <code>group_by</code> values
+appear in the sorted DataFrame.  In addition to the columns from the sample
+metadata, <code>order_by</code> can be used with the PCoA coordinates of samples. This
+feature can be used, for example, to ensure that groups that appear in the
+legend in the same vertical order they appear in the plot.</p>
+<p>In some cases, it is useful to sort the dataframe by values that do not appear
+in the columns of the sample metadata but can be computed from one or more
+columns. In that case, the <code>sort_key</code> parameter can be provided. <code>sort_key</code>
+should be a function taking the <code>order_by</code> columns and returning a new Pandas
+Series object that will be used to sort the samples.</p>
+<h3 id="ellipsoids-and-make_ellipsoid">ellipsoids and make_ellipsoid</h3>
+<p>In some cases, it is desirable to draw an ellipsoid for each <code>group_by</code>
+group. This behavior can be enabled by providing <code>True</code> to the <code>ellipsoids</code>
+parameter. By default, when <code>ellipsoids=True</code>, <code>draw_pcoa</code> will draw a 95%
+confidence ellipsoid for the population mean of each group of samples, assuming
+the population distribution is multivariate normal. Different ellipsoids can be
+drawn by providing a value to the <code>make_ellipsoid</code> parameter. <code>make_ellipsoid</code>
+should be a function that accepts a data matrix in which rows represent
+individual samples (observations), and columns represent the principal component
+dimensions. The function should return an <code>Ellipsoid</code> from the
+<code>confidence_ellipsoid.py</code> module, which is defined by its center and vectors
+representing its axes (one for each dimension). The <code>confidence_ellipsoid</code>
+module also contains some functions for creating such <code>make_ellipsoid</code>
+functions, including <code>get_multivariate_normal_density_ellipsoid</code>, which returns
+an ellipsoid containing the specific probability density, and
+<code>get_multivariate_normal_confidence_ellipsoid</code>, which returns a confidence
+ellipsoid at the given level for the population mean.</p>
+<h3 id="contribution">contribution</h3>
+<p>When <code>contribution</code> is specified, the relative contribution of each principal
+component axis is shown on its axis label. The relative contribution of an axis
+is computed as the eigenvalue of that axis divided by the sum of eigenvalues of
+all possible axes (including ones greater than the number of dimensions).</p>
+<h3 id="annotate-and-adjust">annotate and adjust</h3>
+<p>When the <code>annotate</code> parameter is specified, individual samples will be labeled
+with their names from the <code>sample_name_column</code>. Initially, each label is placed
+exactly on the point to which it refers, but since this can cause labels to
+overlap, the text positions might need to be adjusted. Such adjust takes place
+automatically via <a href="https://github.com/Phlya/adjustText"><code>adjustText</code></a> when the
+<code>adjust</code> parameter is <code>True</code> (the default); setting <code>adjust=False</code> keeps the
+original positions.</p>
+<h3 id="legend_factors-and-default_legend_marker">legend_factors and default_legend_marker</h3>
+<p>In some cases, encodings of column might be independent in the sense that the
+value of one <code>group_by</code> column completely determines one variable of the visual
+encoding, and vice versa, and another column completely determines another
+variable, and vice versa. For example, consider the <code>group_by</code> values have the
+mapping shown in the table below,</p>
+<table>
+<thead>
+<tr>
+<th><code>group_by</code> value</th>
+<th>Marker keyword arguments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>('a', '1')</code></td>
+<td><code>{"color": "red", "shape": "o"}</code></td>
+</tr>
+<tr>
+<td><code>('b', '2')</code></td>
+<td><code>{"color": "blue", "shape": "s"}</code></td>
+</tr>
+<tr>
+<td><code>('c', '1')</code></td>
+<td><code>{"color": "yellow", "shape": "o"}</code></td>
+</tr>
+<tr>
+<td><code>('a', '2')</code></td>
+<td><code>{"color": "red", "shape": "s")</code></td>
+</tr>
+<tr>
+<td><code>('b', '1')</code></td>
+<td><code>{"color": "blue", "shape": "o"}</code></td>
+</tr>
+<tr>
+<td><code>{'c', '2'}</code></td>
+<td><code>{"color": "yellow", "shape": "s"}</code></td>
+</tr>
+</tbody>
+</table>
+<p>In the example above, the value for the first <code>group_by</code> column determines the
+color. When the value is <code>'a'</code>, the color is red. When the value is <code>'b'</code>, the
+color is blue, and when the value is <code>'c'</code>, the color is yellow. The value of
+the second variable has no impact on the color. Likewise, when the value of the
+second variable is <code>'1'</code>, the shape is a circle, and when the value is <code>'2'</code>,
+the shape is a square. The value of the first variable has no impact on shape.</p>
+<p>By default, <code>draw_pcoa</code> would make a legend entry for each of the six
+combinations of color and shape seen among the samples, but, in this case,
+because we have variables that are encoded independently, we express the legend
+more succinctly with just five entries. The five entries would should that red
+corresponds to <code>'a'</code>, blue to <code>'b'</code>, and yellow to <code>'c'</code>, and that circle
+corresponds to <code>'1</code>' and square to <code>'2'</code>. </p>
+<p><code>draw_pcoa</code> can try to detect such independent variables when the
+<code>legend_factors</code> parameter is set to a list of tuples or strings or to <code>True</code>
+(equivalent to <code>legend_factors</code> being set to <code>group_by</code>). <code>draw_pcoa</code> will then
+display each visual variable's mapping separately. This is accomplished by first
+computing what keyword arguments are common to all samples that share values for
+each of the provided tuples of columns in <code>legend_factors</code>. For the example
+above, if the columns were named <code>alpha</code> and <code>beta</code>, and <code>legend_factors</code> was
+set to <code>[('alpha',), ('beta',)]</code>, then <code>draw_pcoa</code> would recognize that all
+cases where <code>alpha = 'a'</code> are cases where <code>color</code> is mapped to red, 
+<code>alpha = 'b'</code>, blue, and <code>alpha = 'c'</code>, yellow. Likewise, it would recognize
+that all cases where <code>beta = '1'</code> are cases where <code>shape</code> is mapped to <code>o</code>, and
+all cases where <code>beta = '2'</code> are cases where <code>shape</code> is mapped to <code>s</code>.</p>
+<p>The legend is then drawn one set of columns in <code>legend_factors</code> at a time; each
+value for each set of columns is shown next to a marker using the shared set of
+keyword arguments common to all samples with that value for that set of
+columns. For the example above, <code>'a'</code> would be shown next to a red marker, <code>'b'</code>
+next to blue, and <code>'c'</code> next to yellow. Then, <code>'1</code>' would be shown next to a
+circle, and <code>'2'</code> would be shown next to a square.</p>
+<p>Since a marker must have some value for the unspecified visual variables,
+default values for those variables can be specified via
+<code>default_legend_marker</code>. For example, the red marker shown in the example above
+could not simply be a red marker&mdash;it would also have to have a shape,
+opacity, etc. <code>default_legend_marker</code> allows you to specify those default
+variables.</p>
+<p>Since <code>draw_pcoa</code>'s behavior when <code>legend_factors=True</code> is simply based on
+analyzing the provided mappings from <code>group_by</code> values to <code>scatter</code> keyword
+arguments, it may sometimes give unexpected results, splitting variables that
+are only coincidentally independent, or failing to split variables when certain
+combinations of values are always observed together.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pcoa</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_pcoa</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Create a PCoA plot ...</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">res</span><span class="p">:</span> <span class="n">skbio</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ordination</span><span class="o">.</span><span class="n">OrdinationResults</span> <span class="o">=</span> <span class="n">draw_pcoa</span><span class="p">(</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   <span class="n">sim</span><span class="o">.</span><span class="n">get_dissimilarity_df</span><span class="p">(),</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   <span class="n">sample_metadata</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   <span class="c1"># Group samples by location and chemotype.</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>   <span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;chemotype&quot;</span><span class="p">],</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>   <span class="s2">&quot;sample_name&quot;</span><span class="p">,</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>   <span class="c1"># Samples in place1 with chemotype lolC- should be red. Everything else just</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>   <span class="c1"># gets its color from the tab10 colormap.</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>   <span class="n">index_group_to_kwargs</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>           <span class="p">(</span><span class="s2">&quot;place1&quot;</span><span class="p">,</span> <span class="s2">&quot;lolC-&quot;</span><span class="p">):</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">}</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>   <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        <span class="n">x</span><span class="p">,</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colormaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tab10&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">]}</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>   <span class="p">),</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>   <span class="c1"># Draw 95% confidence ellipsoids for population mean.</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>   <span class="n">ellipsoids</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>A real example of using <code>draw_pcoa</code> can also be found at
+<a href="docs/tutorials/reads2tree/make_pcoa.py"><code>docs/tutorials/reads2tree/make_pcoa.py</code></a>.</p>
+<h2 id="phylograms">Phylograms</h2>
+<p>RNA-clique provides functions for drawing phylograms in the <code>phylo_utils.py</code>
+module. Unlike the functions for heatmaps and PCoA plots, the functions for
+phylograms expect to be given a BioPython Tree instead of a distance
+matrix. Such trees can be constructed using BioPython or some other Python
+libraries. </p>
+<p><img alt="A phylogram with six leaves representing the samples analyzed in the
+end-to-end &quot;From RNA-seq reads to a phylogenetic tree with RNA-clique&quot;
+tutorial. Clades containing all samples of a given genotype and only samples of
+that genotype are color coded and labeled with calipers on the right side of the
+figure. CTE46, CTE27, NTE, and FATG4 are in orange, blue, red, and green,
+respectively." src="../../images/nj_tree.svg" /></p>
+<p>The main function for drawing phylograms is the <code>draw_tree</code> function in the
+<code>phylo_utils.py</code> module. The parameters that the function accepts are described
+in the table below.</p>
+<table>
+<thead>
+<tr>
+<th>Formal parameter</th>
+<th>Description</th>
+<th>Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tree</code></td>
+<td>The phylogenetic tree for which to draw a phylogram.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>blank_nonterminals</code></td>
+<td>Whether to set non-terminal labels to empty string.</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>clades</code></td>
+<td>Mapping from values to clades to be colored.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>colors</code></td>
+<td>Sequence or mapping specifying colors of clades.</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>ax</code></td>
+<td>Axes on which to draw.</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+<p>The least straightforward of these parameters are <code>clades</code> and
+<code>colors</code>. Together, the two parameters allow you to define how certain clades
+should be colored. <code>clades</code> should map some values identifying clades (clade
+names, for example) to the clades they identify.</p>
+<p><code>colors</code> can either be a <code>matplotlib.colors.ListedColormap</code>, a sequence of RGB
+values, or a mapping to RGB values. In the first two cases, the clades will
+simply be assigned values from the colormap or the sequence in the order they
+appear in the <code>clades</code> <code>dict</code>. In the last case, each key-value pair specifies
+that the clade associated with the same key in the <code>clades</code> <code>dict</code> should be
+colored as specified by the value in the <code>colors</code> <code>dict</code>.</p>
+<h3 id="get_clades">get_clades</h3>
+<p>It is sometimes desirable to color clades such that only maximal clades such
+that all samples in the clade have some metadata value, <em>and</em> all samples that
+have that metadata value fall in that clade. To find such clades to be colored,
+you can use the <code>get_clades</code> function from the <code>phylo_utils.py</code> module. </p>
+<p><code>get_clades</code> returns the axes on which the tree was drawn. The parameters
+accepted by <code>get_clades</code> are described below.</p>
+<table>
+<thead>
+<tr>
+<th>Formal parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tree</code></td>
+<td>The tree in which to find clades.</td>
+</tr>
+<tr>
+<td><code>sample_metadata</code></td>
+<td>The metadata associated with the samples (nonterminals).</td>
+</tr>
+<tr>
+<td><code>sample_name_column</code></td>
+<td>Column of <code>sample_metadata</code> containing sample names.</td>
+</tr>
+<tr>
+<td><code>group_by</code></td>
+<td>Columns of metadata for which to find clades.</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">Bio.Phylo</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">Bio.Phylo</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Phylo.TreeConstruction</span><span class="w"> </span><span class="kn">import</span> <span class="n">DistanceTreeConstructor</span><span class="p">,</span> <span class="n">DistanceMatrix</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">phylo_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">tril_jagged</span><span class="p">,</span> <span class="n">draw_tree</span><span class="p">,</span> <span class="n">get_clades</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">path_to_sample</span><span class="w"> </span><span class="kn">import</span> <span class="n">path_to_sample</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Convert RNA-clique distance matrix to a </span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Bio.Phylo.TreeConstruction.DistanceMatrix.</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">phylo_dis_mat</span> <span class="o">=</span> <span class="n">DistanceMatrix</span><span class="p">(</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="p">[</span><span class="n">path_to_sample</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">samples</span><span class="p">],</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">tril_jagged</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">get_dissimilarity_matrix</span><span class="p">())</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">)</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Build a tree from the distance matrix using neighbor-joining algorithm.</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">constructor</span> <span class="o">=</span> <span class="n">DistanceTreeConstructor</span><span class="p">()</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="n">tree</span> <span class="o">=</span> <span class="n">constructor</span><span class="o">.</span><span class="n">nj</span><span class="p">(</span><span class="n">phylo_dis_mat</span><span class="p">)</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Get clades by population.</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="n">clades</span> <span class="o">=</span> <span class="n">get_clades</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">sample_metadata</span><span class="p">,</span> <span class="s2">&quot;sample_name&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;population&quot;</span><span class="p">])</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Draw the tree, coloring maximal clades containingly only and all samples from</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># a given population.</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="n">ax</span> <span class="o">=</span> <span class="n">draw_tree</span><span class="p">(</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="n">tree</span><span class="p">,</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>    <span class="n">clades</span><span class="o">=</span><span class="n">clades</span><span class="p">,</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    <span class="n">colors</span><span class="o">=</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">colormaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tab10&quot;</span><span class="p">)</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="draw_clade_labels">draw_clade_labels</h3>
+<p>BioPython can draw clade labels directly on nonterminals of the tree when the
+nonterminal is labeled via its <code>name</code> attribute, but the author of RNA-clique
+has found that labels are often better shown using "calipers"/"braces" on the
+side of the plot. To draw clade labels with calipers, you can use the
+<code>draw_clade_labels</code> function in the <code>phylo_utils.py</code> module.</p>
+<p>The parameters accepted by <code>draw_clade_labels</code> are shown below.</p>
+<table>
+<thead>
+<tr>
+<th>Formal parameter</th>
+<th>Description</th>
+<th>Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ax</code></td>
+<td><code>matplotlib.axes.Axes</code> on which to draw the labels.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>clades</code></td>
+<td>Clades for which to draw labels.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>colors</code></td>
+<td>Sequence or mapping specifying how to color clade labels.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>line_padding</code></td>
+<td>Horizontal padding for calipers.</td>
+<td><code>0.036</code></td>
+</tr>
+<tr>
+<td><code>cap_width</code></td>
+<td>Width of horizontal "caps" on calipers.</td>
+<td><code>0.02</code></td>
+</tr>
+<tr>
+<td><code>text_padding</code></td>
+<td>Horizontal padding on text labels next to calipers.</td>
+<td><code>0.023</code></td>
+</tr>
+<tr>
+<td><code>make_label</code></td>
+<td>Function to make clade label from key in <code>clades</code>.</td>
+<td><code>id_</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>clades</code> and <code>colors</code> work as they do in <code>draw_tree</code>. <code>clades</code> maps some keys
+identifying clades to the clades themselves, and <code>colors</code> maps those same keys
+to the colors of the clades.</p>
+<p>If you don't want the key in the <code>clades</code> <code>dict</code> to be the label shown on the
+plot for that clade, use the <code>make_label</code> parameter. By default, the
+<code>make_label</code> parameter is set to an identity function, so the displayed labels
+are exactly the keys in the <code>clades</code> <code>dict</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">phylo_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_clade_labels</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Make clade labels using the same clades and colors passed to draw_tree.</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Labels should be in all caps.</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">make_clade_labels</span><span class="p">(</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">ax</span><span class="p">,</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">clades</span><span class="p">,</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">colors</span><span class="p">,</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">make_label</span><span class="o">=</span><span class="nb">str</span><span class="o">.</span><span class="n">upper</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="mi">1</span><span class="p">)</span>
+</span></code></pre></div>
+<p>A real example of using <code>draw_tree</code> can also be found at
+<a href="docs/tutorials/reads2tree/make_tree.py"><code>docs/tutorials/reads2tree/make_tree.py</code></a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
