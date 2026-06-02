@@ -48,10 +48,12 @@ jobs:
       - uses: actions/checkout@v6
       - name: Install and test installation
         run: bash tests/test_install/ubuntu.sh "$GITHUB_REF_NAME"
+      - name: Make tutorial dir
+        run: mkdir /home/runner/tutorial        
       - uses: actions/download-artifact@v8
         with:
           name: reads2tree-tutorial
-          path: /home/runner
+          path: /home/runner/tutorial
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}          
@@ -75,10 +77,12 @@ jobs:
       - uses: actions/checkout@v6
       - name: Install and test installation
         run: bash tests/test_install/ubuntu.sh "$GITHUB_REF_NAME"
+      - name: Make tutorial dir
+        run: mkdir /home/runner/tutorial        
       - uses: actions/download-artifact@v8
         with:
           name: subsets-tutorial
-          path: /home/runner
+          path: /home/runner/tutorial
       - name: Run export and serch tutorial.
         run: >
           cd && bash -x rna_clique/tests/test_tutorial/test_export_and_search.sh
@@ -93,10 +97,12 @@ jobs:
       - uses: actions/checkout@v6
       - name: Install and test installation
         run: bash tests/test_install/ubuntu.sh "$GITHUB_REF_NAME"
+      - name: Make tutorial dir
+        run: mkdir /home/runner/tutorial        
       - uses: actions/download-artifact@v8
         with:
           name: subsets-tutorial
-          path: /home/runner
+          path: /home/runner/tutorial
       - name: Run nonspades tutorial.
         run: >
           bash -x rna_clique/tests/test_tutorial/test_nonspades.sh
