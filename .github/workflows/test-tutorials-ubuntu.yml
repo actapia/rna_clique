@@ -25,7 +25,7 @@ jobs:
         run: sudo apt install unzip
       - name: Download assemblies
         run: "cd; mkdir transcripts; cd transcripts; wget \
-        'http://rna-clique-data.\s3-website.us-east-2.amazonaws.com/\
+        'http://rna-clique-data.s3-website.us-east-2.amazonaws.com/\
         transcripts.zip'; unzip transcripts.zip; cd .."
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
