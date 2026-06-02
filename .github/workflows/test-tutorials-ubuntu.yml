@@ -24,21 +24,21 @@ jobs:
       - name: Install unzip
         run: sudo apt install unzip
       - name: Download assemblies
-        run: "mkdir transcripts; cd transcripts; wget 'http://rna-clique-data.\
-        s3-website.us-east-2.amazonaws.com/transcripts.zip'; unzip \
-        transcripts.zip; cd .."
+        run: "cd; mkdir transcripts; cd transcripts; wget \
+        'http://rna-clique-data.\s3-website.us-east-2.amazonaws.com/\
+        transcripts.zip'; unzip transcripts.zip; cd .."
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}        
       - name: Run reads2tree test.
         run: >
-          bash -x rna_clique/tests/test_tutorial/test_reads2tree.sh -a
+          cd && bash -x rna_clique/tests/test_tutorial/test_reads2tree.sh -a
           transcripts
       - uses: actions/upload-artifact@v7
         with:
           overwrite: true
           name: reads2tree-tutorial
-          path: tutorial
+          path: /home/runner/tutorial
           retention-days: 1
   test-subset:
     name: Test subsetting tutorial
@@ -54,14 +54,15 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: reads2tree-tutorial
+          path: /home/runner
       - name: Run subsets tutorial.
         run: >
-          bash -x rna_clique/tests/test_tutorial/test_subsets.sh
+          cd && bash -x rna_clique/tests/test_tutorial/test_subsets.sh
       - uses: actions/upload-artifact@v7
         with:
           overwrite: true
           name: subsets-tutorial
-          path: tutorial
+          path: /home/runner/tutorial
           retention-days: 1
   test-export-and-search:
     name: Test export and search tutorial
@@ -77,9 +78,10 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: subsets-tutorial
+          path: /home/runner
       - name: Run export and serch tutorial.
         run: >
-          bash -x rna_clique/tests/test_tutorial/test_export_and_search.sh
+          cd && bash -x rna_clique/tests/test_tutorial/test_export_and_search.sh
   test-nonspades:
     name: Test nonspades tutorial
     strategy:
@@ -94,6 +96,7 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: subsets-tutorial
+          path: /home/runner
       - name: Run nonspades tutorial.
         run: >
           bash -x rna_clique/tests/test_tutorial/test_nonspades.sh
