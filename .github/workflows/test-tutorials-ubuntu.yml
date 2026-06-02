@@ -54,9 +54,6 @@ jobs:
         with:
           name: reads2tree-tutorial
           path: /home/runner/tutorial
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}          
       - name: Run subsets tutorial.
         run: >
           cd && bash -x rna_clique/tests/test_tutorial/test_subsets.sh
@@ -90,7 +87,7 @@ jobs:
     name: Test nonspades tutorial
     strategy:
       matrix:
-        os: [ubuntu-26.04, ubuntu-24.04, ubuntu-22.04]
+        os: [ubuntu-24.04, ubuntu-22.04]
     runs-on: ${{ matrix.os }}
     needs: test-subset
     steps:
@@ -105,7 +102,7 @@ jobs:
           path: /home/runner/tutorial
       - name: Run nonspades tutorial.
         run: >
-          bash -x rna_clique/tests/test_tutorial/test_nonspades.sh
+          cd && bash -x rna_clique/tests/test_tutorial/test_nonspades.sh
 
           
 
