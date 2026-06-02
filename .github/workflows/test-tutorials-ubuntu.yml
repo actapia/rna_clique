@@ -1,0 +1,94 @@
+name: test-install-ubuntu
+
+on:
+  - workflow_dispatch
+
+jobs:
+  test-reads2tree:
+    name: Test reads2tree tutorial
+    strategy:
+      matrix:
+        os: [ubuntu-26.04, ubuntu-24.04, ubuntu-22.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install and test installation
+        run: bash tests/test_install/ubuntu.sh "$GITHUB_REF_NAME"
+      - name: Install unzip
+        run: sudo apt install unzip
+      - name: Download assemblies
+        run: "mkdir transcripts; cd transcripts; wget 'http://rna-clique-data.\
+        s3-website.us-east-2.amazonaws.com/transcripts.zip'; unzip \
+        transcripts.fasta; cd .."
+      - name: Run reads2tree test.
+        run: >
+          bash -x rna_clique/tests/test_tutorial/test_reads2tree.sh -a
+          transcripts
+      - uses: actions/upload-artifact@v7
+        with:
+          overwrite: true
+          name: reads2tree-tutorial
+          path: tutorial
+          retention-days: 1
+  test-subset:
+    name: Test subsetting tutorial
+    strategy:
+      matrix:
+        os: [ubuntu-26.04, ubuntu-24.04, ubuntu-22.04]
+    runs-on: ${{ matrix.os }}
+    needs: test-reads2tree
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install and test installation
+        run: bash tests/test_install/ubuntu.sh "$GITHUB_REF_NAME"
+      - uses: actions/download-artifact@v8
+        with:
+          name: reads2tree-tutorial
+      - name: Run subsets tutorial.
+        run: >
+          bash -x rna_clique/tests/test_tutorial/test_subsets.sh
+      - uses: actions/upload-artifact@v7
+        with:
+          overwrite: true
+          name: subsets-tutorial
+          path: tutorial
+          retention-days: 1
+  test-export-and-search:
+    name: Test export and search tutorial
+    strategy:
+      matrix:
+        os: [ubuntu-26.04, ubuntu-24.04, ubuntu-22.04]
+    runs-on: ${{ matrix.os }}
+    needs: test-subset
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install and test installation
+        run: bash tests/test_install/ubuntu.sh "$GITHUB_REF_NAME"
+      - uses: actions/download-artifact@v8
+        with:
+          name: subsets-tutorial
+      - name: Run export and serch tutorial.
+        run: >
+          bash -x rna_clique/tests/test_tutorial/test_export_and_search.sh
+  test-nonspades:
+    name: Test nonspades tutorial
+    strategy:
+      matrix:
+        os: [ubuntu-26.04, ubuntu-24.04, ubuntu-22.04]
+    runs-on: ${{ matrix.os }}
+    needs: test-subset
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install and test installation
+        run: bash tests/test_install/ubuntu.sh "$GITHUB_REF_NAME"
+      - uses: actions/download-artifact@v8
+        with:
+          name: subsets-tutorial
+      - name: Run nonspades tutorial.
+        run: >
+          bash -x rna_clique/tests/test_tutorial/test_nonspades.sh
+
+          
+
+
+    
