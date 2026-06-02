@@ -27,9 +27,6 @@ jobs:
         run: "cd; mkdir transcripts; cd transcripts; wget \
         'http://rna-clique-data.s3-website.us-east-2.amazonaws.com/\
         transcripts.zip'; unzip transcripts.zip; rm transcripts.zip; cd .."
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}        
       - name: Run reads2tree test.
         run: >
           cd && bash -x rna_clique/tests/test_tutorial/test_reads2tree.sh -a
@@ -55,6 +52,9 @@ jobs:
         with:
           name: reads2tree-tutorial
           path: /home/runner
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}          
       - name: Run subsets tutorial.
         run: >
           cd && bash -x rna_clique/tests/test_tutorial/test_subsets.sh
