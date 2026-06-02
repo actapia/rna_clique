@@ -117,7 +117,7 @@ else
 	Linux)
 	    wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz"
 	    ;;
-	macOS)
+	Darwin)
 	    curl -L -O "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz"
 	    ;;
 	*)
