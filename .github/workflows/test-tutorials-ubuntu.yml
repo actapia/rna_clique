@@ -1,7 +1,14 @@
 name: test-tutorials-ubuntu
 
 on:
-  - workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
+
 
 jobs:
   test-reads2tree:
@@ -20,6 +27,9 @@ jobs:
         run: "mkdir transcripts; cd transcripts; wget 'http://rna-clique-data.\
         s3-website.us-east-2.amazonaws.com/transcripts.zip'; unzip \
         transcripts.zip; cd .."
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}        
       - name: Run reads2tree test.
         run: >
           bash -x rna_clique/tests/test_tutorial/test_reads2tree.sh -a
