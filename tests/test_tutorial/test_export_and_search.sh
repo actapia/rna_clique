@@ -83,7 +83,7 @@ set +o pipefail
 (
     while read -u 5 -r line; do
 	cat "$TUTORIAL_DIR/full_ec_search_out/rna_clique_out/export/$line.fasta"
-    done <<< "$components"
+    done 5<<< "$components"
 ) > "$TUTORIAL_DIR"/matching_components.fastas
 # TODO: Add IGV-related tests
 if [ "$search" = true ]; then
