@@ -95,7 +95,7 @@ print(sim.get_dissimilarity_df())
 ```
 
 For information on finer-grained control via RNA-clique's Python API, see the
-<!--{{doc_link("docs/api", "API Guide", False) | command_surround}}{{empty("-->
+<!--{{doc_link("docs/api", "API Guide", False) | comment_surround}}{{empty("-->
 [API guide](https://actapia.github.io/rna_clique/dev/api).
 <!--")}}-->
 
