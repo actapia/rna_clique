@@ -12,7 +12,7 @@ containing pairwise distances ranging from 0 to 1.
 This software is written in Python. The software additionally requires NCBI
 BLAST+ and several Python libraries. [Guides](#installation-guides) are provided
 for installation on specific systems. Alternatively, you can see the
-<!--{{doc_link("requiremends.md", "requirements", False) | comment_surround}}{{empty="-->
+<!--{{doc_link("requirements.md", "requirements", False) | comment_surround}}{{empty("-->
 [requirements](https://actapia.github.io/rna_clique/dev/requirements)<!--"}}-->
 for installing on other systems.
 
