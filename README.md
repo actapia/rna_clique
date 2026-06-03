@@ -12,8 +12,7 @@ containing pairwise distances ranging from 0 to 1.
 This software is written in Python. The software additionally requires NCBI
 BLAST+ and several Python libraries. [Guides](#installation-guides) are provided
 for installation on specific systems. Alternatively, you can see the
-<!--{{doc_link("requirements.md", "requirements", False) | comment_surround}}{{empty("-->[requirements](https://actapia.github.io/rna_clique/dev/requirements)<!--")}}-->
-for installing on other systems.
+<!--{{doc_link("requirements.md", "requirements", False) | comment_surround}}{{empty("-->[requirements](https://actapia.github.io/rna_clique/dev/requirements)<!--")}}--> for installing on other systems.
 
 ### Installation guides
 
@@ -89,8 +88,7 @@ sim, path_to_sample = rna_clique(
 print(sim.get_dissimilarity_df())
 ```
 
-For information on finer-grained control via RNA-clique's Python API, see the
-<!--{{doc_link("api/README.md", "API Guide", False) | comment_surround}}{{empty("-->[API guide](https://actapia.github.io/rna_clique/dev/api).<!--")}}-->
+For information on finer-grained control via RNA-clique's Python API, see the <!--{{doc_link("api/README.md", "API Guide", False) | comment_surround}}{{empty("-->[API guide](https://actapia.github.io/rna_clique/dev/api).<!--")}}-->
 
 ## License
 
@@ -126,9 +124,5 @@ data"](https://doi.org/10.1186/s12859-024-05811-9).
 
 ## Additional documentation
 
-<!--{{doc_link("usage.md", "Command-line usage guide", False) | comment_surround}}{{empty("-->
-* [Command-line usage guide](https://actapia.github.io/rna_clique/dev/usage)
-<!--")}}-->
-<!--{{doc_link("tutorials/reads2tree/README.md", "Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique", False) | comment_surround}}{{empty("-->
-* [Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](https://actapia.github.io/rna_clique/dev/tutorials/reads2tree)
-<!--")}}-->
+* <!--{{doc_link("usage.md", "Command-line usage guide", False) | comment_surround}}{{empty("-->[Command-line usage guide](https://actapia.github.io/rna_clique/dev/usage)<!--")}}-->
+* <!--{{doc_link("tutorials/reads2tree/README.md", "Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique", False) | comment_surround}}{{empty("-->[Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](https://actapia.github.io/rna_clique/dev/tutorials/reads2tree)<!--")}}-->
