@@ -12,26 +12,19 @@ containing pairwise distances ranging from 0 to 1.
 This software is written in Python. The software additionally requires NCBI
 BLAST+ and several Python libraries. [Guides](#installation-guides) are provided
 for installation on specific systems. Alternatively, you can see the
-<!--{{doc_link("requirements.md", "requirements", False) | comment_surround}}{{empty("-->
-[requirements](https://actapia.github.io/rna_clique/dev/requirements)<!--")}}-->
+<!--{{doc_link("requirements.md", "requirements", False) | comment_surround}}{{empty("-->[requirements](https://actapia.github.io/rna_clique/dev/requirements)<!--")}}-->
 for installing on other systems.
 
 ### Installation guides
 
-<!--{{doc_link("installation_guides/ubuntu.md", "Ubuntu", False) | comment_surround}}{{empty("-->
-* [Ubuntu](https://actapia.github.io/rna_clique/dev/installation_guides/ubuntu)
-<!--")}}-->
-<!--{{doc_link("installation_guides/macos.md", "macOS", False) | comment_surround}}{{empty("-->
-* [macOS](https://actapia.github.io/rna_clique/dev/installation_guides/macos)
-<!--")}}-->
+* <!--{{doc_link("installation_guides/ubuntu.md", "Ubuntu", False) | comment_surround}}{{empty("-->
+[Ubuntu](https://actapia.github.io/rna_clique/dev/installation_guides/ubuntu)<!--")}}-->
+* <!--{{doc_link("installation_guides/macos.md", "macOS", False) | comment_surround}}{{empty("-->[macOS](https://actapia.github.io/rna_clique/dev/installation_guides/macos)<!--")}}-->
 
 ### Basic usage
 
 To run RNA-clique on your assembled transcriptomes, first make sure that your
-data are in a <!--{{doc_link("formats.md#transcriptomes", "format understood by
-RNA-clique", False) | comment_surround}}{{empty("-->
-[format understood by RNA-clique](https://actapia.github.io/rna_clique/dev/formats.md#transcriptomes).
-<!--")}}-->
+data are in a <!--{{doc_link("formats.md#transcriptomes", "format understood by RNA-clique", False) | comment_surround}}{{empty("-->[format understood by RNA-clique](https://actapia.github.io/rna_clique/dev/formats.md#transcriptomes).<!--")}}-->
 
 Then, run `rna_clique.py` from the root of this repository with the directories
 containing your transcriptomes, an output directory, and a setting for the
@@ -97,9 +90,7 @@ print(sim.get_dissimilarity_df())
 ```
 
 For information on finer-grained control via RNA-clique's Python API, see the
-<!--{{doc_link("api/README.md", "API Guide", False) | comment_surround}}{{empty("-->
-[API guide](https://actapia.github.io/rna_clique/dev/api).
-<!--")}}-->
+<!--{{doc_link("api/README.md", "API Guide", False) | comment_surround}}{{empty("-->[API guide](https://actapia.github.io/rna_clique/dev/api).<!--")}}-->
 
 ## License
 
