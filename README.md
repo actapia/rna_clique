@@ -113,6 +113,7 @@ If you use RNA-clique for your work, please cite ["RNA-clique: a method for
 compmuting genetic distances from RNA-seq
 data"](https://doi.org/10.1186/s12859-024-05811-9).
 
+<!-- {% raw % }{{ -->
 ```tex
 @article{tapia2024rna,
   title={{RNA-clique: a method for computing genetic distances from RNA-seq data}},
@@ -124,6 +125,7 @@ data"](https://doi.org/10.1186/s12859-024-05811-9).
   keywords={pub}
 }
 ```
+<!-- }}{% endraw % } -->
 
 ## Additional documentation
 
