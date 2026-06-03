@@ -27,7 +27,7 @@ for installation on specific systems. Alternatively, you can see the
 
 To run RNA-clique on your assembled transcriptomes, first make sure that your
 data are in a <!--{{doc_link("docs/formats.md#transcriptomes", "format understood by
-RNA-clique", False) | command_surround}}{{empty("-->
+RNA-clique", False) | comment_surround}}{{empty("-->
 [format understood by RNA-clique](https://actapia.github.io/rna_clique/dev/formats.md#transcriptomes).
 <!--")}}-->
 

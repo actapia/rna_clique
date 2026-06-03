@@ -142,7 +142,7 @@ draw_heatmap(
 ```
 
 A real example of using `draw_heatmap` can also be found at
-[`docs/tutorials/reads2tree/make_heatmap.py`](..tutorials/reads2tree/make_heatmap.py).
+[`docs/tutorials/reads2tree/make_heatmap.py`](../tutorials/reads2tree/make_heatmap.py).
 
 ## PCoA plots
 
@@ -420,7 +420,7 @@ res: skbio.stats.ordination.OrdinationResults = draw_pcoa(
 ```
 
 A real example of using `draw_pcoa` can also be found at
-[`../tutorials/reads2tree/make_pcoa.py`](docs/tutorials/reads2tree/make_pcoa.py).
+[`../tutorials/reads2tree/make_pcoa.py`](../tutorials/reads2tree/make_pcoa.py).
 
 ## Phylograms
 
@@ -550,4 +550,4 @@ make_clade_labels(
 ```
 
 A real example of using `draw_tree` can also be found at
-[`../tutorials/reads2tree/make_tree.py`](docs/tutorials/reads2tree/make_tree.py).
+[`../tutorials/reads2tree/make_tree.py`](../tutorials/reads2tree/make_tree.py).

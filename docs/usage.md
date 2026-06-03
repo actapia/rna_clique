@@ -78,7 +78,7 @@ The inputs for this script are [configuration files](config.md) (representing
 RNA-clique analyses) and query nucleotide sequences in [FASTA
 format](https://blast.ncbi.nlm.nih.gov/doc/blast-topics/#fasta). Each
 configuration file must provide the [`graph`](config.md#graph) and
-[`tables_dir`](config.md#tables-dir) for the analysis.
+[`tables_dir`](config.md#tables_dir) for the analysis.
 
 ### Output format
 
@@ -117,7 +117,7 @@ about these presets.
 The file format for the exported orthologs is described in the output format
 section for [`export_orthologs.py`](#export_orthologspy), and the file format
 for the search results is described in the output format section for
-[`search_ideal_components.py`](#search-ideal-componentspy).
+[`search_ideal_components.py`](#search_ideal_componentspy).
 
 In some cases, parameters that can be provided to `export_orthologs.py` or
 `search_ideal_components.py` affect the output format but are preset in
@@ -1228,7 +1228,7 @@ the transcript belongs. To enable this behavior, provide the
 
 If you would like to both export orthologs and search their sequences at once
 with typical settings, you may prefer to use
-[`export_and_search.py`](#export-and-searchpy) instead.
+[`export_and_search.py`](#export_and_searchpy) instead.
 
 ### Options
 
@@ -1260,7 +1260,7 @@ with typical settings, you may prefer to use
 This script expects as its input a single [FASTA
 file](https://blast.ncbi.nlm.nih.gov/doc/blast-topics/#fasta) containing all
 exported transcripts from ideal components. Since
-[`export_orthologs.py`](#export-orthologspy) ordinarily separates exported
+[`export_orthologs.py`](#export_orthologspy) ordinarily separates exported
 transcripts into multiple files, it is necessary to provide the `--all`/`-a`
 command-line option to combine the output files into an `all_ideal.fasta`
 file.
