@@ -1,0 +1,110 @@
+name: test-tutorials-macos
+
+on:
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
+
+
+jobs:
+  test-reads2tree:
+    name: Test reads2tree tutorial
+    strategy:
+      matrix:
+        os: [macos-15, macos-26]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install and test installation
+        run: zsh tests/test_install/macos.sh "$GITHUB_REF_NAME"
+      - name: Download assemblies
+        run: "cd; mkdir transcripts; cd transcripts; wget \
+        'http://rna-clique-data.s3-website.us-east-2.amazonaws.com/\
+        transcripts.zip'; unzip transcripts.zip; rm transcripts.zip; cd .."
+      - name: Run reads2tree test.
+        run: >
+          cd && zsh -x rna_clique/tests/test_tutorial/test_reads2tree.sh -a
+          transcripts
+      - name: Print working directory
+        run: pwd
+      - uses: actions/upload-artifact@v7
+        with:
+          overwrite: true
+          name: reads2tree-tutorial
+          path: $HOME/tutorial
+          retention-days: 1
+  test-subset:
+    name: Test subsetting tutorial
+    strategy:
+      matrix:
+        os: [macos-15, macos-26]
+    runs-on: ${{ matrix.os }}
+    needs: test-reads2tree
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install and test installation
+        run: zsh tests/test_install/macos.sh "$GITHUB_REF_NAME"
+      - name: Make tutorial dir
+        run: mkdir $HOME/tutorial        
+      - uses: actions/download-artifact@v8
+        with:
+          name: reads2tree-tutorial
+          path: $HOME/tutorial
+      - name: Run subsets tutorial.
+        run: >
+          cd && zsh -x rna_clique/tests/test_tutorial/test_subsets.sh
+      - uses: actions/upload-artifact@v7
+        with:
+          overwrite: true
+          name: subsets-tutorial
+          path: $HOME/tutorial
+          retention-days: 1
+  test-export-and-search:
+    name: Test export and search tutorial
+    strategy:
+      matrix:
+        os: [macos-15, macos-26]
+    runs-on: ${{ matrix.os }}
+    needs: test-subset
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install and test installation
+        run: zsh tests/test_install/macos.sh "$GITHUB_REF_NAME"
+      - name: Make tutorial dir
+        run: mkdir $HOME/tutorial        
+      - uses: actions/download-artifact@v8
+        with:
+          name: subsets-tutorial
+          path: $HOME/tutorial
+      - name: Run export and serch tutorial.
+        run: >
+          cd && zsh -x rna_clique/tests/test_tutorial/test_export_and_search.sh
+  test-nonspades:
+    name: Test nonspades tutorial
+    strategy:
+      matrix:
+        os: [macos-15, macos-26]
+    runs-on: ${{ matrix.os }}
+    needs: test-subset
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install and test installation
+        run: zsh tests/test_install/macos.sh "$GITHUB_REF_NAME"
+      - name: Make tutorial dir
+        run: mkdir $HOME/tutorial        
+      - uses: actions/download-artifact@v8
+        with:
+          name: subsets-tutorial
+          path: $HOMEr/tutorial
+      - name: Run nonspades tutorial.
+        run: >
+          cd && zsh -x rna_clique/tests/test_tutorial/test_nonspades.sh
+
+          
+
+
+    
