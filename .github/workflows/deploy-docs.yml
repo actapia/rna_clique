@@ -27,6 +27,8 @@ jobs:
         run: pip install properdocs mkdocs-material mike mkdocs-macros-plugin
       - name: Set default version
         run: mike set-default --allow-undefined latest
+      - name: Try build with strict
+        run: properdocs build --strict
       - name: Deploy development
         run: mike deploy --push dev
         if: ${{ github.event_name == 'push' }}
