@@ -35,7 +35,7 @@ jobs:
         with:
           overwrite: true
           name: reads2tree-tutorial
-          path: $HOME/tutorial
+          path: /Users/runner/tutorial
           retention-days: 1
   test-subset:
     name: Test subsetting tutorial
@@ -49,11 +49,11 @@ jobs:
       - name: Install and test installation
         run: zsh tests/test_install/macos.sh "$GITHUB_REF_NAME"
       - name: Make tutorial dir
-        run: mkdir $HOME/tutorial        
+        run: mkdir /Users/runner/tutorial        
       - uses: actions/download-artifact@v8
         with:
           name: reads2tree-tutorial
-          path: $HOME/tutorial
+          path: /Users/runner/tutorial
       - name: Run subsets tutorial.
         run: >
           cd && zsh -x rna_clique/tests/test_tutorial/test_subsets.sh
@@ -61,7 +61,7 @@ jobs:
         with:
           overwrite: true
           name: subsets-tutorial
-          path: $HOME/tutorial
+          path: /Users/runner/tutorial
           retention-days: 1
   test-export-and-search:
     name: Test export and search tutorial
@@ -75,11 +75,11 @@ jobs:
       - name: Install and test installation
         run: zsh tests/test_install/macos.sh "$GITHUB_REF_NAME"
       - name: Make tutorial dir
-        run: mkdir $HOME/tutorial        
+        run: mkdir /Users/runner/tutorial        
       - uses: actions/download-artifact@v8
         with:
           name: subsets-tutorial
-          path: $HOME/tutorial
+          path: /Users/runner/tutorial
       - name: Run export and serch tutorial.
         run: >
           cd && zsh -x rna_clique/tests/test_tutorial/test_export_and_search.sh
@@ -95,11 +95,11 @@ jobs:
       - name: Install and test installation
         run: zsh tests/test_install/macos.sh "$GITHUB_REF_NAME"
       - name: Make tutorial dir
-        run: mkdir $HOME/tutorial        
+        run: mkdir /Users/runner/tutorial        
       - uses: actions/download-artifact@v8
         with:
           name: subsets-tutorial
-          path: $HOMEr/tutorial
+          path: /Users/runner/tutorial
       - name: Run nonspades tutorial.
         run: >
           cd && zsh -x rna_clique/tests/test_tutorial/test_nonspades.sh
