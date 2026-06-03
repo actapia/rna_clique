@@ -3,11 +3,20 @@ repo_url: https://github.com/actapia/rna_clique
 nav:
     - Home: index.md
     - Command-line usage: usage.md
+    - File formats: format.md
     - Installation guides:
         - Ubuntu: installation_guides/ubuntu.md
         - macOS: installation_guides/macos.md
     - Tutorials:
         - tutorials/reads2tree/README.md
+        - tutorials/subsets/README.md
+        - tutorials/export_and_search/README.md
+        - Non-SPAdes data:
+            - tutorials/nonspades/README.md
+            - tutorials/nonspades/trinity_assembly.md
+    - API:
+        - api.md
+        - visualization.md        
 plugins:
   - mike:
       canonical_version: 'latest'

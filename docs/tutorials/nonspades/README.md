@@ -13,7 +13,7 @@ RNA-clique.
 
 ## Structure of input data for RNA-clique
 
-The [formats guide](#../../formats.md#transcriptomes) explains that the overall
+The [formats guide](../../formats.md#transcriptomes) explains that the overall
 inputs to RNA-clique are a number of "transcriptomes" that have been organized
 into directories in a specific way that will shortly be reiterated here. In this
 context, a transcriptome is a FASTA file containing sequences, contigs,

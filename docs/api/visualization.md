@@ -8,7 +8,7 @@ API.
 
 Examples for using these visualization functions are also provided as part of
 the end-to-end ["From RNA-seq reads to a phylogenetic tree with
-RNA-clique"](tutorials/reads2tree/README.md) tutorial. Sample code from these
+RNA-clique"](../tutorials/reads2tree/README.md) tutorial. Sample code from these
 tutorials is linked in the subsections covering individual visualizations below.
 
 ## Sample metadata
@@ -142,7 +142,7 @@ draw_heatmap(
 ```
 
 A real example of using `draw_heatmap` can also be found at
-[`docs/tutorials/reads2tree/make_heatmap.py`](docs/tutorials/reads2tree/make_heatmap.py).
+[`docs/tutorials/reads2tree/make_heatmap.py`](..tutorials/reads2tree/make_heatmap.py).
 
 ## PCoA plots
 
@@ -420,7 +420,7 @@ res: skbio.stats.ordination.OrdinationResults = draw_pcoa(
 ```
 
 A real example of using `draw_pcoa` can also be found at
-[`docs/tutorials/reads2tree/make_pcoa.py`](docs/tutorials/reads2tree/make_pcoa.py).
+[`../tutorials/reads2tree/make_pcoa.py`](docs/tutorials/reads2tree/make_pcoa.py).
 
 ## Phylograms
 
@@ -550,4 +550,4 @@ make_clade_labels(
 ```
 
 A real example of using `draw_tree` can also be found at
-[`docs/tutorials/reads2tree/make_tree.py`](docs/tutorials/reads2tree/make_tree.py).
+[`../tutorials/reads2tree/make_tree.py`](docs/tutorials/reads2tree/make_tree.py).

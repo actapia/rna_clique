@@ -351,7 +351,7 @@ should see alignments like the ones below:
 ![Two segments of an Epichloë coenophiala genome shown aligned to a transcript
 from an assembled transcriptome for tall fescue. The two alignments are visually
 very similar, though they differ in some gap and insertion locations. Both
-alignments span the majority of the transcript.](igv_snapshot.svg)
+alignments span the majority of the transcript.](images/igv_snapshot.svg)
 
 You should see the alignments span most of the transcript, and if you look at
 the other transcripts from the same ideal component, you should see the same

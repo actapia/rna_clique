@@ -78,7 +78,7 @@ The inputs for this script are [configuration files](config.md) (representing
 RNA-clique analyses) and query nucleotide sequences in [FASTA
 format](https://blast.ncbi.nlm.nih.gov/doc/blast-topics/#fasta). Each
 configuration file must provide the [`graph`](config.md#graph) and
-[`tables_dir`](config#tables-dir) for the analysis.
+[`tables_dir`](config.md#tables-dir) for the analysis.
 
 ### Output format
 
@@ -98,13 +98,13 @@ option can be provided.
 
 Exported orthologs for an analysis are placed in a directory named `export`
 within the analysis's directory under the `--export-output-dir` directory. See
-the output format section for [`export_orthologs.py`](#export-orthologspy) for a
+the output format section for [`export_orthologs.py`](#export_orthologspy) for a
 more detailed description of the structure out these `export` directories.
 
 BLAST results and statistics for each provided query FASTA file are placed in
 separate subdirectories beginning with `search_` under the analysis's
 directory. The structure of these directories is described in the output format
-section for [`search_ideal_compoenents.py`](#search-ideal-componentspy).
+section for [`search_ideal_compoenents.py`](#search_ideal_componentspy).
 
 In some cases, parameters that can be provided to `export_orthologs.py` or
 `search_ideal_components.py` affect the output directory structure but are
@@ -115,7 +115,7 @@ about these presets.
 #### File format
 
 The file format for the exported orthologs is described in the output format
-section for [`export_orthologs.py`](#export-orthologspy), and the file format
+section for [`export_orthologs.py`](#export_orthologspy), and the file format
 for the search results is described in the output format section for
 [`search_ideal_components.py`](#search-ideal-componentspy).
 
@@ -522,7 +522,7 @@ command-line options.
 
 If you wish to export orthologs for multiple analyses with typical settings or
 would like to search exported orthologs using typical settings, you may prefer
-to use [`export_and_search.py`](#export-and-searchpy).
+to use [`export_and_search.py`](#export_and_searchpy).
 
 ### Options
 
@@ -870,7 +870,7 @@ This script computes a genetic similarity for a single pair of samples. By
 default, it also reports best matching pairs of genes between the two samples.
 
 **Warning: This script should not be used if you are analyzing more than two
-samples total! Use [`rna_clique.py`](#rna-cliquepy) instead!**
+samples total! Use [`rna_clique.py`](#rna_cliquepy) instead!**
 
 ### Positional arguments
 
@@ -1358,7 +1358,7 @@ standard output.
 ## select\_top\_genes\_all.py
 
 Select $n$ top genes by $k$-mer coverage for each of multiple samples, in
-parallel. See the section on [`select_top_genes.py`](#select-top-genespy) for an
+parallel. See the section on [`select_top_genes.py`](#select_top_genespy) for an
 explanation of how selection is performed.
 
 ### Positional arguments
@@ -1397,7 +1397,7 @@ standard output.
 ## unfiltered\_distance.py
 
 Compute pairwise distasnces from gene matches tables alone. This script behaves
-similarly to [`filtered_distance.py`](#filtered-distancepy) but does not use a
+similarly to [`filtered_distance.py`](#filtered_distancepy) but does not use a
 gene matches graph to filter the gene matches tables to include only genes
 having orthologs in all samples. 
 

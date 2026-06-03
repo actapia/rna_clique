@@ -301,12 +301,12 @@ serialized in Python's binary [Pickle
 format](https://docs.python.org/3/library/pickle.html), which is neither
 human-readable nor compatible with other programming languages. To export gene
 matches graphs to other representations, use
-[`export_graph.py`](usage.md#export-graphpy).
+[`export_graph.py`](usage.md#export_graphpy).
 
 #### Example
 
 The image below is a visualization in SVG format produced from a gene matches
-graph by exporting to GraphML with [`export_graph.py`](usage.md#export-graphpy)
+graph by exporting to GraphML with [`export_graph.py`](usage.md#export_graphpy)
 and importing into [Cytoscape](https://cytoscape.org/). Only a few components
 are shown.
 
@@ -353,7 +353,7 @@ Since HDF5 is a binary format, the output distance matrix file is not
 human-readable, and since the HDF5 store contains a dataframe serialized in a
 Pandas-specific format, the file is not likely to be usable with other software
 not based on Pandas. To export a distance matrix for use with other software,
-use [`export_matrix.py`](usage.md#export-matrixpy).
+use [`export_matrix.py`](usage.md#export_matrixpy).
 
 #### Example
 

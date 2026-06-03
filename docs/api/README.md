@@ -2,7 +2,7 @@
 
 This document describes some options for using RNA-clique in your own Python
 code. Most scripts included in RNA-clique (described in the [Command-line usage
-guide](usage.md)) have corresponding functions that can be called to perform the
+guide](../usage.md)) have corresponding functions that can be called to perform the
 same operations of the script from Python code. Just as different scripts offer
 finer-grained control of the RNA-clique analysis, the corresponding functions
 allow for customized analyses from within custom Python code.
@@ -383,17 +383,17 @@ distances = MultisetKeyDict((k, 1 - v) for (k, v) in similarities)
 ## Working with transcript IDs
 
 RNA-clique expects to be able to read various metadata about transcripts in
-[transcriptomes](formats.md#transcriptomes) from the transcripts' FASTA headers
-(also sometimes called "transcript IDs" in this guide). In order to retrieve
-such metadata from a transcript FASTA header, RNA-clique must be able to
-**parse** the transcript IDs.
+[transcriptomes](../formats.md#transcriptomes) from the transcripts' FASTA
+headers (also sometimes called "transcript IDs" in this guide). In order to
+retrieve such metadata from a transcript FASTA header, RNA-clique must be able
+to **parse** the transcript IDs.
 
 RNA-clique was originally designed with rnaSPAdes assemblies in mind, and
 although the defaults in both the command line and Python API reflect this
 original design, RNA-clique is flexible enough to allow custom parsing for
 non-SPAdes assemblies. At the command-line, RNA-clique provides this flexibility
 by allowing the user to provide a [custom regular
-expression](config.md#transcript_id_regex) for parsing transcript IDs. In its
+expression](../config.md#transcript_id_regex) for parsing transcript IDs. In its
 Python API, RNA-clique provides even more flexibility via functional
 programming.
 
@@ -435,8 +435,8 @@ print(parsed) # TranscriptID(coverage=12.0, gene=13, isoform=14)
 
 ## Loading gene matches tables
 
-An individual [gene matches table](formats.md#gene-matches-tables) file can be
-loaded using the `read_table` function from
+An individual [gene matches table](../formats.md#gene-matches-tables) file can
+be loaded using the `read_table` function from
 `gene_matches_tables.py`. `read_table` requires at least one argument, the path
 to the gene matches table to load, and it returns a Pandas DataFrame
 representing the loaded gene matches table.
@@ -571,8 +571,8 @@ fast_result: SearchResult = search(
 
 ## Working with configuration objects
 
-RNA-clique supports configuration via [YAML configuration files](config.md) as
-well as via a command-line interface. Additionally, some RNA-clique programs
+RNA-clique supports configuration via [YAML configuration files](../config.md)
+as well as via a command-line interface. Additionally, some RNA-clique programs
 will automatically produce a configuration file for reproducing an
 analysis. Althoug using RNA-clique configuration files in not necessary to use
 the Python API, it can sometimes be convenient to be able to read or create
@@ -590,7 +590,7 @@ config = config_module.RNACliqueConfig.yaml_load(Path("path/to/config.yaml"))
 ```
 
 The attributes of configuration objects are documented in the [Configuration
-guide](config.md). To save an `RNACliqueConfig` object, use the `yaml_save`
+guide](../config.md). To save an `RNACliqueConfig` object, use the `yaml_save`
 method. `yaml_save` takes one argument, the output path.
 
 ```python
@@ -614,7 +614,7 @@ Each of these parameters requires some further explanation.
 
 First, the `matches` parameter is a predicate&mdash;i.e., a function that
 returns a `bool`. It should take the `Path` to a [top
-genes](formats.md#top-genes) file and return `True` if the `Path` should be
+genes](../formats.md#top-genes) file and return `True` if the `Path` should be
 included in the subset, or `False` otherwise. The accepted `matches` parameter
 is a function to provide maximum flexibility, but some other functions
 (discussed below) are also provided to make creating such functions easier.
@@ -683,4 +683,4 @@ subsetter = SubsetAnalysisCreator.from_paths(
 
 Although visualization is not one of the primary features of RNA-clique,
 RNA-clique nevertheless provides some code designed for visualization. The API
-for those function is described [in a separate document](docs/visualization.md).
+for those function is described [in a separate document](visualization.md).

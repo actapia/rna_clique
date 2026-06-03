@@ -1,9 +1,10 @@
 # Quickly computing subsets of existing analyses
 
 This tutorial explains how (and why) to use the
-[`make_subset.py`](usage.md#make_subsetpy) script to create subsets of existing
-RNA-clique analyses. This guide should be useful to anyone who wishes to analyze
-a subset of the samples analyzed in a previously completed RNA-clique analysis.
+[`make_subset.py`](../../usage.md#make_subsetpy) script to create subsets of
+existing RNA-clique analyses. This guide should be useful to anyone who wishes
+to analyze a subset of the samples analyzed in a previously completed RNA-clique
+analysis.
 
 This tutorial will assume that the user is starting from the end of the
 end-to-end ["From RNA-seq reads to a phylogenetic tree with

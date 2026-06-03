@@ -16,18 +16,20 @@ for installation on specific systems. Alternatively, you can see the
 
 ### Installation guides
 
-<!--{{doc_link("installation_guides/ubuntu", "Ubuntu", False) | comment_surround}}{{empty("-->
+<!--{{doc_link("installation_guides/ubuntu.md", "Ubuntu", False) | comment_surround}}{{empty("-->
 * [Ubuntu](https://actapia.github.io/rna_clique/dev/installation_guides/ubuntu)
 <!--")}}-->
-<!--{{doc_link("installation_guides/macos", "macOS", False) | comment_surround}}{{empty("-->
+<!--{{doc_link("installation_guides/macos.md", "macOS", False) | comment_surround}}{{empty("-->
 * [macOS](https://actapia.github.io/rna_clique/dev/installation_guides/macos)
 <!--")}}-->
 
 ### Basic usage
 
 To run RNA-clique on your assembled transcriptomes, first make sure that your
-data are in a [format understood by
-RNA-clique](docs/formats.md#transcriptomes). 
+data are in a <!--{{doc_link("docs/formats.md#transcriptomes", "format understood by
+RNA-clique", False) | command_surround}}{{empty("-->
+[format understood by RNA-clique](https://actapia.github.io/rna_clique/dev/formats.md#transcriptomes).
+<!--")}}-->
 
 Then, run `rna_clique.py` from the root of this repository with the directories
 containing your transcriptomes, an output directory, and a setting for the
@@ -93,7 +95,9 @@ print(sim.get_dissimilarity_df())
 ```
 
 For information on finer-grained control via RNA-clique's Python API, see the
-[API guide](docs/api.md).
+<!--{{doc_link("docs/api", "API Guide", False) | command_surround}}{{empty("-->
+[API guide](https://actapia.github.io/rna_clique/dev/api).
+<!--")}}-->
 
 ## License
 
@@ -110,7 +114,7 @@ A machine-readable copyright file in Debian format may also be found at
 ## Citation
 
 If you use RNA-clique for your work, please cite ["RNA-clique: a method for
-compmuting genetic distances from RNA-seq
+computing genetic distances from RNA-seq
 data"](https://doi.org/10.1186/s12859-024-05811-9).
 
 <!-- {% raw %}{{ -->
@@ -132,6 +136,6 @@ data"](https://doi.org/10.1186/s12859-024-05811-9).
 <!--{{doc_link("usage", "Command-line usage guide", False) | comment_surround}}{{empty("-->
 * [Command-line usage guide](https://actapia.github.io/rna_clique/dev/usage)
 <!--")}}-->
-<!--{{doc_link("tutorials/reads2tree", "Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique", False) | comment_surround}}{{empty("-->
+<!--{{doc_link("tutorials/reads2tree.md", "Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique", False) | comment_surround}}{{empty("-->
 * [Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](https://actapia.github.io/rna_clique/dev/tutorials/reads2tree)
 <!--")}}-->

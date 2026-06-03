@@ -30,7 +30,7 @@ almost no differences in their genomes.
 Some of the individuals possess an endosymbiotic fungus, *Epichloë coenophiala*,
 while others were treated to remove the fungus. The endophyte statuses of the
 individuals, which are relevant for later tutorials such as the "[Quickly
-computing subsets of existing analyses](../susbsets/README.md)" tutorial, are
+computing subsets of existing analyses](../subsets/README.md)" tutorial, are
 also shown in the metadata table below.
 
 | SRA Accession                                                                                 | Genotype | Endophyte |
@@ -386,7 +386,7 @@ for our analysis.
 ### Viewing the distance matrix
 
 To simply view the distance matrix, use the [`export_matrix.py`
-script](../usage.md#export_matrixpy).
+script](../../usage.md#export_matrixpy).
 
 ```python
 python export_matrix.py -O "$TUTORIAL_DIR/rna_clique_out"
