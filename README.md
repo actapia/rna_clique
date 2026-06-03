@@ -13,7 +13,7 @@ This software is written in Python. The software additionally requires NCBI
 BLAST+ and several Python libraries. [Guides](#installation-guides) are provided
 for installation on specific systems. Alternatively, you can see the
 <!--{{doc_link("requirements.md", "requirements", False) | comment_surround}}{{empty("-->
-[requirements](https://actapia.github.io/rna_clique/dev/requirements)<!--"}}-->
+[requirements](https://actapia.github.io/rna_clique/dev/requirements)<!--")}}-->
 for installing on other systems.
 
 ### Installation guides
