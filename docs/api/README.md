@@ -9,7 +9,8 @@ allow for customized analyses from within custom Python code.
 
 ## Running a full RNA-clique analysis
 
-The `rna_clique` function in the [`rna_clique.py` script](/rna_clique.py)
+The `rna_clique` function in the 
+{{file_link("`rna_clique.py` script", "rna_clique.py")}}
 provides a way to perform a full RNA-clique analysis from Python code.
 
 Unlike the `rna_clique.py` script, the `rna_clique` function must be provided

@@ -29,6 +29,14 @@ def define_env(env):
     @env.macro
     def git_branch():
         return os.environ.get("GITHUB_REF_NAME", "main")
+
+    @env.macro
+    def file_link(text, f):
+        return "[{}](https://github.com/actapia/rna_clique/blob/{}/{})".format(
+            text,
+            git_branch(),
+            f
+        )   
     
     @env.macro
     def clone_command(branch):

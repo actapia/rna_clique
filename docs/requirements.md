@@ -5,7 +5,9 @@ RNA-clique. Dependencies are divided by type in the following sections.
 
 ## Python dependencies
 
-The [environment.yml](/environment.yml) file provides a list of dependencies
+The 
+{{file_link("`environment.yml`", "environment.yml")}} 
+file provides a list of dependencies
 written in a format usable by the conda package manager, but the format uses
 YAML and is human-readable. The list is reproduced below.
 

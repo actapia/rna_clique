@@ -415,7 +415,9 @@ python export_matrix.py --format table \
 ### Getting a tree
 
 If you want a tree, you can create one using RNA-clique and Biopython. The code
-below, also found in `docs/tutorials/reads2tree/make_tree.py`, loads the
+below, also found in 
+{{file_link("`docs/tutorials/reads2tree/make_tree.py`", "docs/tutorials/reads2tree/make_tree.py")}},
+loads the
 distance matrix from `distance_matrix.h5` and constructs a tree using the
 neighbor-joining algorithm. The tree is also rooted at its midpoint. The tree is
 saved to `nj_tree.tree`, and a visualization is saved to `nj_tree.svg` in the
@@ -452,7 +454,7 @@ stored at `$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv`.
 The code below draws a 3D and 2D PCoA plot and stores the results as SVG files
 in the `rna_clique_out` directory as `pcoa_3d.svg` and `pcoa_2d.svg`,
 respectively. The code can also be found at
-`docs/tutorials/reads2tree/make_pcoa.py`.
+{{file_link("`docs/tutorials/reads2tree/make_pcoa.py`", "docs/tutorials/reads2tree/make_pcoa.py")}}.
 
 ```python
 --8<-- "docs/tutorials/reads2tree/make_pcoa.py"
@@ -492,7 +494,9 @@ distance matrix as a heatmap. The function uses the Seaborn `heatmap` function
 behind the scenes, and arbitrary arguments given to `draw_heatmap` will be
 passed to Seaborn.
 
-The code below is also found in `docs/tutorials/reads2tree/make_heatmap.py`. It
+The code below is also found in 
+{{file_link("`docs/tutorials/reads2tree/make_heatmap.py`", "docs/tutorials/reads2tree/make_heatmap.py")}}.
+It
 draws a heatmap and saves the resulting figure in the `rna_clique_out` directory
 as `distance_heatmap.svg`. 
 
