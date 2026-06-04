@@ -43,7 +43,7 @@ in a human-readable format, use `export_matrix.py`.
 python export_matrix -m my_rna_clique_out/matrix.h5 
 ```
 
-More details about the usage of RNA-clique can be found in the <!--{{doc_link("usage.md", "Command-line usage guide", False) | comment_surround}}{{empty("-->[Command-line usage guide](https://actapia.github.io/rna_clique/dev/usage)<!--")}}-->.
+More details about the usage of RNA-clique can be found in the <!--{{doc_link("usage.md", "Command-line usage guide", False) | comment_surround}}{{empty("-->[Command-line usage guide](https://actapia.github.io/rna_clique/dev/usage)<!--")}}-->
 
 
 ### Downstream analyses
@@ -88,7 +88,7 @@ sim, path_to_sample = rna_clique(
 print(sim.get_dissimilarity_df())
 ```
 
-For information on finer-grained control via RNA-clique's Python API, see the <!--{{doc_link("api/README.md", "API Guide", False) | comment_surround}}{{empty("-->[API guide](https://actapia.github.io/rna_clique/dev/api).<!--")}}-->.
+For information on finer-grained control via RNA-clique's Python API, see the <!--{{doc_link("api/README.md", "API Guide", False) | comment_surround}}{{empty("-->[API guide](https://actapia.github.io/rna_clique/dev/api).<!--")}}-->
 
 ## License
 
