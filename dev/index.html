@@ -1193,15 +1193,30 @@ containing pairwise distances ranging from 0 to 1.</p>
 <h2 id="installation">Installation</h2>
 <p>This software is written in Python. The software additionally requires NCBI
 BLAST+ and several Python libraries. <a href="#installation-guides">Guides</a> are provided
-for installation on specific systems. Alternatively, you can see the <!----><a href="requirements/">requirements</a> <!----> for installing on other systems.</p>
+for installation on specific systems. Alternatively, you can see the <!---->
+<a href="requirements/">requirements</a>
+ <!----></p>
+<p>for installing on other systems.</p>
 <h3 id="installation-guides">Installation guides</h3>
 <ul>
-<li><!----><a href="installation_guides/ubuntu/">Ubuntu</a> <!----></li>
-<li><!----><a href="installation_guides/macos/">macOS</a> <!----></li>
+<li>
+<p><!---->
+<a href="installation_guides/ubuntu/">Ubuntu</a>
+ <!----></p>
+</li>
+<li>
+<p><!---->
+<a href="installation_guides/macos/">macOS</a>
+ <!---->
+</p>
+</li>
 </ul>
 <h3 id="basic-usage">Basic usage</h3>
 <p>To run RNA-clique on your assembled transcriptomes, first make sure that your
-data are in a <!----><a href="formats/#transcriptomes">format understood by RNA-clique</a> <!----></p>
+data are in a <!---->
+<a href="formats/#transcriptomes">format understood by RNA-clique</a>
+ <!---->
+</p>
 <p>Then, run <code>rna_clique.py</code> from the root of this repository with the directories
 containing your transcriptomes, an output directory, and a setting for the
 number of top genes to select.</p>
@@ -1214,7 +1229,10 @@ number of top genes to select.</p>
 in a human-readable format, use <code>export_matrix.py</code>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>export_matrix<span class="w"> </span>-m<span class="w"> </span>my_rna_clique_out/matrix.h5<span class="w"> </span>
 </span></code></pre></div>
-<p>More details about the usage of RNA-clique can be found in the <!----><a href="usage/">Command-line usage guide</a> <!---->.</p>
+<p>More details about the usage of RNA-clique can be found in the <!---->
+<a href="usage/">Command-line usage guide</a>
+ <!----></p>
+<p>.</p>
 <h3 id="downstream-analyses">Downstream analyses</h3>
 <p>The <code>export_matrix.py</code> script prints the calculated matrix to the standard
 output, so you can use redirection or pipes to save the results to a file. You
@@ -1248,7 +1266,10 @@ load the matrix in R using the following code:</p>
 </span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="p">)</span>
 </span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">get_dissimilarity_df</span><span class="p">())</span>
 </span></code></pre></div>
-<p>For information on finer-grained control via RNA-clique's Python API, see the <!----><a href="api/">API Guide</a> <!---->.</p>
+<p>For information on finer-grained control via RNA-clique's Python API, see the <!---->
+<a href="api/">API Guide</a>
+ <!----></p>
+<p>.</p>
 <h2 id="license">License</h2>
 <p>All code except tests/test_install/macos.sh is licensed under the MIT license,
 which may be found at LICENSE.MIT at the root of this repository.</p>
@@ -1276,8 +1297,17 @@ data"</a>.</p>
 
 <h2 id="additional-documentation">Additional documentation</h2>
 <ul>
-<li><!----><a href="usage/">Command-line usage guide</a> <!----></li>
-<li><!----><a href="tutorials/reads2tree/">Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique</a> <!----></li>
+<li>
+<p><!---->
+<a href="usage/">Command-line usage guide</a>
+ <!----></p>
+</li>
+<li>
+<p><!---->
+<a href="tutorials/reads2tree/">Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique</a>
+ <!---->
+</p>
+</li>
 </ul>
 
 
