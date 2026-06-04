@@ -1768,7 +1768,9 @@ and columns, provide the <code>--format table</code> and <code>--header</code> o
 </span></code></pre></div>
 <h3 id="getting-a-tree">Getting a tree</h3>
 <p>If you want a tree, you can create one using RNA-clique and Biopython. The code
-below, also found in <code>docs/tutorials/reads2tree/make_tree.py</code>, loads the
+below, also found in 
+<a href="https://github.com/actapia/rna_clique/blob/mkdocs/docs/tutorials/reads2tree/make_tree.py"><code>docs/tutorials/reads2tree/make_tree.py</code></a>,
+loads the
 distance matrix from <code>distance_matrix.h5</code> and constructs a tree using the
 neighbor-joining algorithm. The tree is also rooted at its midpoint. The tree is
 saved to <code>nj_tree.tree</code>, and a visualization is saved to <code>nj_tree.svg</code> in the
@@ -1837,7 +1839,7 @@ stored at <code>$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv</code
 <p>The code below draws a 3D and 2D PCoA plot and stores the results as SVG files
 in the <code>rna_clique_out</code> directory as <code>pcoa_3d.svg</code> and <code>pcoa_2d.svg</code>,
 respectively. The code can also be found at
-<code>docs/tutorials/reads2tree/make_pcoa.py</code>.</p>
+<a href="https://github.com/actapia/rna_clique/blob/mkdocs/docs/tutorials/reads2tree/make_pcoa.py"><code>docs/tutorials/reads2tree/make_pcoa.py</code></a>.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 </span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 </span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
@@ -1911,7 +1913,9 @@ distance matrix." src="../../images/pcoa_3d.svg" /></p>
 distance matrix as a heatmap. The function uses the Seaborn <code>heatmap</code> function
 behind the scenes, and arbitrary arguments given to <code>draw_heatmap</code> will be
 passed to Seaborn.</p>
-<p>The code below is also found in <code>docs/tutorials/reads2tree/make_heatmap.py</code>. It
+<p>The code below is also found in 
+<a href="https://github.com/actapia/rna_clique/blob/mkdocs/docs/tutorials/reads2tree/make_heatmap.py"><code>docs/tutorials/reads2tree/make_heatmap.py</code></a>.
+It
 draws a heatmap and saves the resulting figure in the <code>rna_clique_out</code> directory
 as <code>distance_heatmap.svg</code>. </p>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
