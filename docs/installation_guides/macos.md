@@ -4,10 +4,9 @@ This guide will walk you through installing RNA-clique on macOS. Since
 RNA-clique currently has no graphical interface, basic command-line skills are
 needed for both installation and use of the software.
 
-This guide is designed for macOS Sequoia 15 on Intel Mac, but the steps in this
-guide have also been tested on macOS Ventura 13 on Intel and macOS Sonoma 14 on
-Apple Silicon via GitHub Actions runners. The guide likely works on other recent
-versions of macOS, but such configurations are untested.
+This guide is designed for macOS 26 Tahoe and has also been tested on macOS 15
+Sequoia via GitHub Actions runners. Newer versions of macOS will likely work,
+but older versions probably will not.
 
 ## Installing command line developer tools
 
@@ -21,7 +20,7 @@ xcode-select --install
 
 If the command line developer tools have not been installed already, you should
 see a graphical dialog prompting you to confirm installation. Click "Install" 
-and agree to the license agreement to begin installation .Wait for the install
+and agree to the license agreement to begin installation. Wait for the install
 to complete before continuing.
 
 ## Download RNA-clique
@@ -56,17 +55,11 @@ add Homebrew to your `PATH`, and the restart your shell.
 
 ## Installing Bash and BLAST
 
-We will install a couple of packages using Homebrew.
-
-First, we will install **Bash**, which is a Unix shell. The version of Bash that
-comes installed on macOS is very out of date, but RNA-clique requires some new
-features of Bash.
-
-Second, we will install **NCBI BLAST+**, a popular implementation of the BLAST
-local sequence alignment software.
+We will use `brew` to install **NCBI BLAST+**, a popular implementation of the
+BLAST local sequence alignment software.
 
 ```zsh
-brew install bash blast
+brew install blast
 ```
 
 ## Installing Miniconda

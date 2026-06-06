@@ -122,12 +122,14 @@ coverage among the gene's isoforms.
 
 ### Directory structure
 
-Unlike the input transcriptomes, the top genes are all organized in a
-single directory. Unless the top genes directory is specified manually using the
+Unlike the input transcriptomes, the top genes are all organized in a single
+directory. Unless the top genes directory is specified manually using the
 `top_genes_dir` config option or `--top-genes-dir`/`-O1` command line argument,
 the directory containing the top genes is `od1` underneath the analysis
-root. The top genes for sample `SAMPLE_NAME` are found in
-`SAMPLE_NAME_top.fasta`.
+root. The top genes for sample `SAMPLE_NAME` are usually found in
+`SAMPLE_NAME_top.fasta`, but RNA-clique can also be pointed to custom paths for
+each sample via the [`path_to_sample`](config.md#path_to_sample) configuration
+option.
 
 #### Example structure
 

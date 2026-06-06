@@ -18,10 +18,10 @@ these pre-assembled transcriptomes will already be included with the software.
 
 The RNA-seq data used in this tutorial are from plants derived from the
 "Kentucky 31" tall fescue (*Lolium arundinaceum*) cultivar and were originally
-used in gene expression studies described in [*Transcriptome analysis and
+used in gene expression studies described in "[Transcriptome analysis and
 differential expression in tall fescue harboring different endophyte strains in
 response to water
-deficit*](https://doi.org/10.3835/plantgenome2018.09.0071). Each set of RNA-seq 
+deficit](https://doi.org/10.3835/plantgenome2018.09.0071)". Each set of RNA-seq
 reads comes from a different individual, and although we will be using RNA-seq
 reads for six individuals, the individuals have only four distinct
 genotypes. Individuals with the same genotype are clones, and should thus have
@@ -57,7 +57,7 @@ but this is optional.
 ### Software for getting sequence data
 
 !!! note
-    If you are using pre-assembled transcriptomes, you can skip installing this
+    If you are using pre-assembled transcriptomes, you can skip installing the
     software in this section.
 
 In addition to RNA-clique, this tutorial requires the following software for
@@ -88,7 +88,7 @@ Download the appropriate `sratoolkit` binaries for your system.
     curl -L -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac64.tar.gz
     ```
 === "macOS (Apple Silicon)"
-    ```
+    ```zsh
     curl -L -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac-arm64.tar.gz
     ```
 
@@ -238,7 +238,7 @@ samples are a subset of the sixteen used in the paper *RNA-clique: A method for
 computing genetic distances from RNA-seq data*. The sample metadata shown
 previously in the [Background](#background) section is also present in the file
 [`tall_fescue_accs.csv`](./tall_fescue_accs.csv). We can easily download all of
-the RNA-seq data we need using the `tall_fescue_accs.svg` file and the
+the RNA-seq data we need using the `tall_fescue_accs.csv` file and the
 `download_sra` tool.
 
 First, change to your `TUTORIAL_DIR`.
@@ -316,8 +316,8 @@ safely.
     done
     ```
 
-The assembled transcriptomes will be located at `transcripts.fasta` in
-directories corresponding to their samples names under the `out` directory.
+Each assembled transcriptomes will be located at `transcripts.fasta` in
+a directory corresponding to its sample name under the `out` directory.
 
 ## Running RNA-clique
 
@@ -345,15 +345,16 @@ ls "$TUTORIAL_DIR/rna_clique_out/distance_matrix.h5"
 ## Results
 
 Once RNA-clique has completed, you will likely want to [count the ideal
-components](#counting-ideal-components),[see the distance
+components](#counting-ideal-components), [see the distance
 matrix](#viewing-the-distance-matrix), and possibly use the matrix as input to
-downstream analyses, such as construction of a phylogenetic tree or a PCoA plot,
-or a more direct visualization of the matrix like a heatmap. Although RNA-clique
-does *not* seek to integrate code for every possible downstream analysis that
-could be performed on a distance matrix, and it is assumed that many users of
-RNA-clique will prefer to export the matrix and use other software for these
-analyses, RNA-clique nevertheless does provide a handful of Python functions
-that are useful for creating trees, PCoA plots, and heatmaps.
+downstream analyses, such as [construction of a phylogenetic
+tree](#getting-a-tree) or a [PCoA plot](#getting-a-pcoa-plot), or a more direct
+visualization of the matrix like a [heatmap](#getting-a-heatmap). Although
+RNA-clique does not seek to integrate code for every possible downstream
+analysis that could be performed on a distance matrix, and it is assumed that
+many users of RNA-clique will prefer to export the matrix and use other software
+for these analyses, RNA-clique nevertheless does provide a handful of Python
+functions that are useful for creating trees, PCoA plots, and heatmaps.
 
 Since RNA-clique's downstream analysis utility functions rely on metadata about
 the samples, and metadata could be expressed in a variety of formats, RNA-clique
@@ -434,7 +435,7 @@ so you can run it as follows:
 PYTHONPATH='.' python docs/tutorials/reads2tree/make_tree.py
 ```
 
-The script create a file called `nj_tree.svg` in the
+The script creates a file called `nj_tree.svg` in the
 `$TUTORIAL_DIR/rna_clique_out` directory. The result should look something like
 this:
 

@@ -1,5 +1,84 @@
 # Command-line usage guide
 
+## rna\_clique.py
+
+`rna_clique.py` is the main script of RNA-clique. Given some input
+transcriptomes, `rna_clique.py` gets a genetic distance matrix quantifying
+differences in the genomes of the provided samples.
+
+### Positional arguments
+
+|   Position | Config option                        | Description                                        | Argument count   | Type                 |
+|-----------:|:-------------------------------------|:---------------------------------------------------|:-----------------|:---------------------|
+|          0 | [`input_dirs`](config.md#input_dirs) | Directories containing the transcript FASTA files. | $\ge 0$          | `list[pathlib.Path]` |
+
+### Options
+
+| Config option                                          | Long name               | Short name | Description                                            | Argument count | Type           | Choices                              | Default value                                     | Default value (flag only) | Required |
+|:-------------------------------------------------------|:------------------------|:-----------|:-------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:--------------------------------------------------|:--------------------------|:---------|
+|                                                        | `--input-config`        | `-c`       | File from which to load configuration settings.        | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
+|                                                        | `--show-config`         |            | Display the computed configuration or arguments.       | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`              | No       |
+|                                                        | `--show-config-format`  |            | Format for displaying computed config or arguments.    | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                           | No       |
+|                                                        | `--help`                | `-h`       | Display a help message and exit.                       | $0$            |                |                                      |                                                   |                           | No       |
+| [`top_genes`](config.md#top_genes)                     | `--top-genes`           | `-n`       | Number of top genes by k-mer coverate to select.       | $1$            | `int`          |                                      |                                                   |                           | Yes      |
+| [`top_matches`](config.md#top_matches)                 | `--top-matches`         | `-N`       | Threshold for counting a match between two genes.      | $1$            | `int`          |                                      | $1$                                               |                           | Yes      |
+| [`transcripts_name`](config.md#transcripts_name)       | `--transcripts-name`    | `-t`       | Name of transcripts files in input directories.        | $1$            | `str`          |                                      | `transcripts.fasta`                               |                           | Yes      |
+| [`top_genes_dir`](config.md#top_genes_dir)             | `--top-genes-dir`       | `-O1`      | Directory containing top n genes by coverage.          | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od1`                                  |                           | Yes      |
+| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`          | `-O2`      | Directory containing gene matches tables.              | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                                  |                           | Yes      |
+| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`       | Python regex to use for parsing transcript IDs.        | $1$            | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                           | Yes      |
+| `evalue`                                               | `--evalue`              | `-e`       | e-value threshold to use for BLASTn searches.          | $1$            | `float`        |                                      | $1 \times 10^{-99}$                               |                           | Yes      |
+| `jobs`                                                 | `--jobs`                | `-j`       | Number of parallel jobs to use.                        | $1$            | `int`          |                                      | `THREADS - 1`                                     |                           | Yes      |
+| [`cache_dir`](config.md#cache_dir)                     | `--cache-dir`           | `-C`       | Directory containing BLAST DB caches.                  | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/db_cache`                             |                           | Yes      |
+| [`graph`](config.md#graph)                             | `--graph`               | `-g`       | Gene matches graph.                                    | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`                            |                           | Yes      |
+| [`output_dir`](config.md#output_dir)                   | `--output-dir`          | `-O`       | RNA-clique analysis output root directory.             | $1$            | `pathlib.Path` |                                      |                                                   |                           | No       |
+| `title`                                                | `--title`               | `-T`       | Name to assign to the analysis.                        | $1$            | `str`          |                                      | `OUTPUT_DIR.name`                                 |                           | No       |
+| [`keep_all`](config.md#keep_all)                       | `--no-keep-all`         |            | Do not keep all matches in case of a tie.              | $0$            | `bool`         |                                      | `True`                                            | `False`                   | No       |
+|                                                        | `--output-config`       | `-c2`      | File in which to store computed config after analysis. | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
+| [`matrix`](config.md#matrix)                           | `--matrix`              | `-m`       | Output distance matrix location.                       | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/distance_matrix.h5`                   |                           | No       |
+| `verbose`                                              | `--verbose`             | `-v`       | Print more output than usual.                          | $0$            | `bool`         |                                      | `False`                                           | `True`                    | No       |
+
+### Input format
+
+This script's inputs are the [transcriptomes](formats.md#transcriptomes) to
+analyze.
+
+### Output format
+
+The main output of this script is the [distance
+matrix](formats.md#distance-matrix). In the process of obtaining the distance
+matrix, `rna_clique.py` also produces the [top genes
+files](formats.md#top-genes), [gene matches
+tables](formats.md#gene-matches-tables), and [gene matches
+graph](formats.md#gene-matches-graph).
+
+### Examples
+
+Run RNA-clique on the transcriptomes at `sample1`, `sample2`, and
+`sample3`. RNA-clique expects that the transcriptome FASTA files for these
+samples are located at `sample1/transcripts.fasta`, `sample2/transcripts.fasta`,
+and `sample3/transcripts.fasta`, respectively. Select only the top $5000$ genes
+by $k$-mer coverage for each sample. Write output under `rna_clique_out`.
+
+```bash
+python rna_clique.py sample1 sample2 sample3 -n 50000 -O rna_clique_out
+```
+
+Run RNA-clique on the transcriptomes at `sample1`, `sample2`, `sample3`, and
+`sample4`. Expect that the transcriptome FASTA files for these samples will be
+at `sample1/genes.fasta`, `sample2/genes.fasta`, `sample3/genes.fasta`, and
+`sample4/genes.fasta`, respectively. Use an $e$-value cutoff of $1 \times
+10^{-90}$. Dont' keep all matches in the case of ties when computing the gene
+matches tables; split ties arbitrarily. Select the top $10000$ genens by $k$-mer
+coverage. Write the output gene matches graph to `gene_matches_graph.pkl`. Write
+the output distance matrix to `matrix.h5`. Write the remaining output under
+`other_out`.
+
+```bash
+python rna_clique.py sample1 sample2 sample3 sample4 \
+                     -t genes.fasta --no-keep-all -n 10000 -O other_out \
+					 -g gene_matches_graph.pkl -m matrix.h5
+```
+
 ## build\_graph.py
 
 Build the gene matches graph from the gene matches tables.
@@ -57,20 +136,21 @@ can be specified via their config files using the `-C` option.
 
 ### Options
 
-| Long name                  | Short name  | Description                                                  | Argument count                | Type                                      | Choices                   | Default value                                                    | Default value (flag only) | Required |    |
-|:---------------------------|:------------|:-------------------------------------------------------------|:------------------------------|:------------------------------------------|:--------------------------|:-----------------------------------------------------------------|:--------------------------|:---------|----|
-| `--show-args`              |             | Display the computed or original parsed arguments.           | $\ge 0$                       | `list[str]`                               | `original_args` or `args` |                                                                  | `['args']`                | No       |    |
-| `--show-args-format`       |             | Format for displaying computed or original parsed arguments. | $1$                           | `str`                                     | `dict`, `yaml`, or `json` | Depends on `--show-args`                                         |                           | No       |    |
-| `--help`                   | `-h`        | Display a help message and exit.                             | $0$                           |                                           |                           |                                                                  |                           | No       |    |
-| `--configs`                | `-C`        | RNA-clique configs for which to export and search orthologs. | $\ge 1$                       | `list[pathlib.Path]`                      |                           |                                                                  |                           | Yes      |    |
-| `--resolve-name-conflicts` | `-r`        | Resolve conflicting output filenames automatically.          | $0$                           |                                           |                           |                                                                  | `True`                    | No       |    |
-| `--export-output-dir`      | `-X`        | Output directory for exported sequences.                     | $1$                           | `pathlib.Path`                            |                           |                                                                  |                           | Yes      |    |
-| `--jobs`                   | `-j`        | Number of parallel jobs to use.                              | $1$                           | `int`                                     |                           |                                                                  |                           | No       |    |
-| `--export-only`            | `-x`        | Only export the orthologs; don't search.                     | $0$                           |                                           |                           |                                                                  | `True`                    | No       |    |
-| `--queries`                | `-Q`        | FASTA files containing sequences to search in orthologs.     | $\ge 1$                       | `list[pathlib.Path]`                      |                           |                                                                  |                           | No       |    |
-| `--transcript-id-regex`    | `-p`        | Python regex for parsing sequence IDs                        | $1$                           | `re.<function compile at 0x7893728eb2e0>` |                           | `re.compile('^.*cov_([0-9]+(?:\\.[0-9]+))_g([0-9]+)_i([0-9]+)')` |                           | No       |    |
-| `verbose`                  | `--verbose` | `-v`                                                         | Print more output than usual. | $0$                                       | `bool`                    |                                                                  | `False`                   | `True`   | No |
-
+| Long name                  | Short name   | Description                                                  | Argument count   | Type                                      | Choices                   | Default value                                                    | Default value (flag only)   | Required   |
+|:---------------------------|:-------------|:-------------------------------------------------------------|:-----------------|:------------------------------------------|:--------------------------|:-----------------------------------------------------------------|:----------------------------|:-----------|
+| `--show-args`              |              | Display the computed or original parsed arguments.           | $\ge 0$          | `list[str]`                               | `original_args` or `args` |                                                                  | `['args']`                  | No         |
+| `--show-args-format`       |              | Format for displaying computed or original parsed arguments. | $1$              | `str`                                     | `dict`, `yaml`, or `json` | Depends on `--show-args`                                         |                             | No         |
+| `--help`                   | `-h`         | Display a help message and exit.                             | $0$              |                                           |                           |                                                                  |                             | No         |
+| `--configs`                | `-C`         | RNA-clique configs for which to export and search orthologs. | $\ge 1$          | `list[pathlib.Path]`                      |                           |                                                                  |                             | Yes        |
+| `--resolve-name-conflicts` | `-r`         | Resolve conflicting output filenames automatically.          | $0$              |                                           |                           |                                                                  | `True`                      | No         |
+| `--export-output-dir`      | `-X`         | Output directory for exported sequences.                     | $1$              | `pathlib.Path`                            |                           |                                                                  |                             | Yes        |
+| `--jobs`                   | `-j`         | Number of parallel jobs to use.                              | $1$              | `int`                                     |                           |                                                                  |                             | No         |
+| `--export-only`            | `-x`         | Only export the orthologs; don't search.                     | $0$              |                                           |                           |                                                                  | `True`                      | No         |
+| `--queries`                | `-Q`         | FASTA files containing sequences to search in orthologs.     | $\ge 1$          | `list[pathlib.Path]`                      |                           |                                                                  |                             | No         |
+| `--transcript-id-regex`    | `-p`         | Python regex for parsing sequence IDs                        | $1$              | `re.<function compile at 0x76cbc12eb2e0>` |                           | `re.compile('^.*cov_([0-9]+(?:\\.[0-9]+))_g([0-9]+)_i([0-9]+)')` |                             | No         |
+| `--extended-search-evalue` | `-E`         | Search other isoforms of a gene that produces a hit.         | $0--1$           | `float`                                   |                           |                                                                  | $1 \times 10^{-20}$         | No         |
+| `--search-evalue`          | `-e`         | e-value cutoff to use for initial searches.                  | $1$              | `float`                                   |                           | $1 \times 10^{-50}$                                              |                             | No         |
+| `--verbose`                | `-v`         | Print more output than ususal.                               | $0$              |                                           |                           |                                                                  | `True`                      | No         |
 
 ### Input format
 
@@ -140,22 +220,14 @@ based method if the naive approach fails (behaving as though
 `--allow-inconsistent` were provided).
 
 `export_and_search.py` appends the original sequence name *after* the ideal
-component ID (like `--concat-id-order after`) and does *not* remove ideal
-components where there are no differences (the default behavior for
-`export_orthologs.py`).
+component ID (like `--concat-id-order after`) and *always* removes ideal
+components where there are no differences (like ``--remove-non-contributing`).
 
 `export_and_search.py` creates the combined `all_ideal.fasta` file with all
 sequences from ideal components (similar to the `--all` option of
 `export_orthologs.py`) only when a search is to be performed. If `--export-only`
 has been specified, no search is performed, and, thus, the program does not
 create `all_ideal.fasta`.
-
-`export_and_search.py` *always* performs an "extended search," behaving as
-though the `--extended-search` option were provided to
-`search_ideal_components.py`. This means that if a query sequence matches to one
-isoform of a gene with the initial low BLAST e-value threshold, a second search
-is performed with a higher e-value threshold to align the query sequence with
-other isoforms of the same gene.
 
 Additionally, `export_and_search.py` *always* merges SAM files for alignments
 beloning to different isoforms of the same gene into a single SAM file, behaving
@@ -361,8 +433,8 @@ instead using the `--export-out` option.
 Currently, this script supports exporting to the following formats:
 
 * [Matrix](#matrix)
-# [Table](#table)
-# [CSV](#csv)
+* [Table](#table)
+* [CSV](#csv)
 * [hdf](#hdf)
 * [pickle](#pickle)
 
@@ -397,12 +469,12 @@ provided, the matrix is written to a file at the given path instead.
 
 #### Matrix
 
-The `matrix` format produces a 2D space-separated array of floating-point. The
-orders of samples in the rows and columns are the same, but neither rows nor
-columns are labeled in the `matrix` format. To get labels on the rows and
-columns, use the [`table`](#table) format instead.
+The `matrix` format produces a 2D space-separated array of floating-point
+values. The orders of samples in the rows and columns are the same, but neither
+rows nor columns are labeled in the `matrix` format. To get labels on the rows
+and columns, use the [`table`](#table) format instead.
 
-##### Example
+###### Example
 
 ```text
 0.0 0.005388803504220092 0.0054305311443104045 0.005459213437854515 0.005512249049959638 0.005736910464039689 0.00747255775698311 0.007539593449521158 0.007182140678310776 0.007276675683252087 0.007248347134681538 0.007283538806219465 0.00762743569213341 0.00743863245673041 0.007230214862207701 0.0073832767780768254
@@ -432,7 +504,7 @@ provide the `--header` flag.
 
 To omit labels altogether, use the [`matrix`](#matrix) format instead.
 
-#### Example
+##### Example
 
 ```text
 rnac_out/od1/SRR2321383_top.fasta 0.0 0.005388803504220092 0.0054305311443104045 0.005459213437854515 0.005512249049959638 0.005736910464039689 0.00747255775698311 0.007539593449521158 0.007182140678310776 0.007276675683252087 0.007248347134681538 0.007283538806219465 0.00762743569213341 0.00743863245673041 0.007230214862207701 0.0073832767780768254
@@ -594,7 +666,7 @@ TTGAAGTGCCTGTTACGTGGATTTCCATCAGAGTACACTTCTAGCAACAATACTCTTCTT
 ...
 ```
 
-### input format
+### Input format
 
 The inputs to this script are the [gene matches
 tables](formats.md#gene-matches-tables) and [gene matches
@@ -605,7 +677,7 @@ graph](formats.md#gene-matches-graph).
 #### Directory structure
 
 `export_orthologs.py` organizes the output transcripts into multiple files; how
-the output files are organized is specified using the `--by` parameter. 
+the output files are organized is specified using the `--by` parameter.
 Optionally, when `--all` is specified, this script will also produce an
 `all_ideal.fasta` file containing all of the output transcripts from the other
 files. Such a file is useful for searching with BLAST. The `all_ideal.fasta`
@@ -614,7 +686,7 @@ differs from the file that would be produced by simply concatenating all of the
 other exported FASTA files in that the `all_ideal.fasta` file appends
 identifiers to each transcript's FASTA sequence header indicating in which file
 the sequence was originally found. For example, where an individual ideal
-component file would have a sequence with FASTA header
+component file `ideal_component_0.fasta` would have a sequence with FASTA header
 `NODE_1_length_15383_cov_32.255511_g0_i0:SRR2321385`, the same sequence would
 have the FASTA header
 `NODE_1_length_15383_cov_32.255511_g0_i0:SRR2321385:ideal_component_0` in the
@@ -662,10 +734,7 @@ python export_orthologs.py -O my_analysis -X export2 -b sample -N -a
 
 ## filtered\_distance.py
 
-Compute pairwise distances from gene matches tables and graph. This script
-executes the second phase of RNA-seq, in which pairwise similarities or
-dissimilarities (distances) are computed from the gene matches tables and gene
-matches graph.
+Compute pairwise distances from gene matches tables and graph. 
 
 ### Options
 
@@ -702,9 +771,6 @@ occur:
    of samples in both directions. (That is, for samples $a$ and $b$, we BLAST
    both $a$ vs. $b$ and $b$ vs. $a$.)
 3. The gene matches graph is constructed from the gene matches tables.
-
-This script offers many command line options for controlling the behavior of
-RNA-clique.
 
 ### Positional arguments
 
@@ -1018,14 +1084,14 @@ Despite its name, `plot_component_sizes.py` offers a variety of features useful
 for working with gene matches graphs:
 
 * [Visualizations](#visualizations)
-  * [Component size histogram](#component-size-histogram)
-  * [Represented sample count histogram](#represented-sample-count-histogram)
-  * [Sample count to component size ratio KDE plot](#sample-count-to-component-size-ratio-kde-plot)
-  * [Component density KDE plot](#component-density-kde-plot)
+    * [Component size histogram](#component-size-histogram)
+    * [Represented sample count histogram](#represented-sample-count-histogram)
+    * [Sample count to component size ratio KDE plot](#sample-count-to-component-size-ratio-kde-plot)
+    * [Component density KDE plot](#component-density-kde-plot)
 * Statistics
-  * Ideal components
-  * Large components
-  * Total components
+    * Ideal components
+    * Large components
+    * Total components
 
 ### Options
 
@@ -1048,7 +1114,7 @@ for working with gene matches graphs:
 
 ### Visualizations
 
-`plot_component_sizes.py` can produce several different plots relating to
+`plot_component_sizes.py` can produce several different plots related to
 components of the gene matches graph.
 
 #### Component size histogram
@@ -1074,11 +1140,11 @@ samples in the analysis.
 This plot shows the distribution of number of represented samples among
 connected components in the gene matches graph.
 
-For represented sample counts , the bar in the histogram is drawn in blue. For
-the case where the represented sample count is exactly the number of samples,
-the bar is drawn in orange. Since a gene must match some other gene in another
-sample to be included in the gene matches graph, no bar is shown for the case
-where the represented sample count is 1.
+For represented sample counts less than the number of samples , the bar in the
+histogram is drawn in blue. For the case where the represented sample count is
+exactly the number of samples, the bar is drawn in orange. Since a gene must
+match some other gene in another sample to be included in the gene matches
+graph, no bar is shown for the case where the represented sample count is 1.
 
 ![A represented sample count histogram for the set of 16 tall fescue samples
 used in the RNA-clique methods paper.](./images/sample_plot.svg)
@@ -1115,7 +1181,7 @@ extension.
 When statistics are enabled, the statistics printed are, in order,
 
 1. Number of samples
-2. Count total connected components
+2. Count of total connected components
 3. Count of large components (those with at least as many vertices as there are
    samples)
 4. Count of ideal components
@@ -1126,10 +1192,10 @@ separated by spaces.
 
 ### Examples
 
-Create plots of component size frequency, represent sample count frequency,
+Create plots of component size frequency, represented sample count frequency,
 ratio of sample count to component size frequency, and component density
 frequency at `size.svg`, `sample_count.svg`, `ratio.svg`, and `density.svg`,
-respectively for the analysis rooted at `my_analysis`. Report statistics in
+respectively, for the analysis rooted at `my_analysis`. Report statistics in
 human-readable format.
 
 ```bash
@@ -1151,56 +1217,6 @@ python plot_component_sizes.py -O1 top_genes \
 							   -d density.png \
 							   --statistics m
 ```
-
-## rna\_clique.py
-
-This script gets genetic distance matrices from some input transcriptomes; it
-performs the full RNA-clique method (both phases 1 and 2) on the input data.
-
-### Positional arguments
-
-|   Position | Config option                        | Description                                        | Argument count   | Type                 |
-|-----------:|:-------------------------------------|:---------------------------------------------------|:-----------------|:---------------------|
-|          0 | [`input_dirs`](config.md#input_dirs) | Directories containing the transcript FASTA files. | $\ge 0$          | `list[pathlib.Path]` |
-
-### Options
-
-| Config option                                          | Long name               | Short name | Description                                            | Argument count | Type           | Choices                              | Default value                                     | Default value (flag only) | Required |
-|:-------------------------------------------------------|:------------------------|:-----------|:-------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:--------------------------------------------------|:--------------------------|:---------|
-|                                                        | `--input-config`        | `-c`       | File from which to load configuration settings.        | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-|                                                        | `--show-config`         |            | Display the computed configuration or arguments.       | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`              | No       |
-|                                                        | `--show-config-format`  |            | Format for displaying computed config or arguments.    | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                           | No       |
-|                                                        | `--help`                | `-h`       | Display a help message and exit.                       | $0$            |                |                                      |                                                   |                           | No       |
-| [`top_genes`](config.md#top_genes)                     | `--top-genes`           | `-n`       | Number of top genes by k-mer coverate to select.       | $1$            | `int`          |                                      |                                                   |                           | Yes      |
-| [`top_matches`](config.md#top_matches)                 | `--top-matches`         | `-N`       | Threshold for counting a match between two genes.      | $1$            | `int`          |                                      | $1$                                               |                           | Yes      |
-| [`transcripts_name`](config.md#transcripts_name)       | `--transcripts-name`    | `-t`       | Name of transcripts files in input directories.        | $1$            | `str`          |                                      | `transcripts.fasta`                               |                           | Yes      |
-| [`top_genes_dir`](config.md#top_genes_dir)             | `--top-genes-dir`       | `-O1`      | Directory containing top n genes by coverage.          | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od1`                                  |                           | Yes      |
-| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`          | `-O2`      | Directory containing gene matches tables.              | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                                  |                           | Yes      |
-| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`       | Python regex to use for parsing transcript IDs.        | $1$            | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                           | Yes      |
-| `evalue`                                               | `--evalue`              | `-e`       | e-value threshold to use for BLASTn searches.          | $1$            | `float`        |                                      | $1 \times 10^{-99}$                               |                           | Yes      |
-| `jobs`                                                 | `--jobs`                | `-j`       | Number of parallel jobs to use.                        | $1$            | `int`          |                                      | `THREADS - 1`                                     |                           | Yes      |
-| [`cache_dir`](config.md#cache_dir)                     | `--cache-dir`           | `-C`       | Directory containing BLAST DB caches.                  | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/db_cache`                             |                           | Yes      |
-| [`graph`](config.md#graph)                             | `--graph`               | `-g`       | Gene matches graph.                                    | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`                            |                           | Yes      |
-| [`output_dir`](config.md#output_dir)                   | `--output-dir`          | `-O`       | RNA-clique analysis output root directory.             | $1$            | `pathlib.Path` |                                      |                                                   |                           | No       |
-| `title`                                                | `--title`               | `-T`       | Name to assign to the analysis.                        | $1$            | `str`          |                                      | `OUTPUT_DIR.name`                                 |                           | No       |
-| [`keep_all`](config.md#keep_all)                       | `--no-keep-all`         |            | Do not keep all matches in case of a tie.              | $0$            | `bool`         |                                      | `True`                                            | `False`                   | No       |
-|                                                        | `--output-config`       | `-c2`      | File in which to store computed config after analysis. | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-| [`matrix`](config.md#matrix)                           | `--matrix`              | `-m`       | Output distance matrix location.                       | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/distance_matrix.h5`                   |                           | No       |
-| `verbose`                                              | `--verbose`             | `-v`       | Print more output than usual.                          | $0$            | `bool`         |                                      | `False`                                           | `True`                    | No       |
-
-### Input format
-
-This script's inputs are the [transcriptomes](formats.md#transcriptomes) to
-analyze.
-
-### Output format
-
-The main output of this script is the [distance
-matrix](formats.md#distance-matrix). In the process of obtaining the distance
-matrix, `rna_clique.py` also produces the [top genes
-files](formats.md#top-genes), [gene matches
-tables](formats.md#gene-matches-tables), and [gene matches
-graph](formats.md#gene-matches-graph).
 
 ## search\_ideal\_components.py
 
@@ -1262,15 +1278,15 @@ file](https://blast.ncbi.nlm.nih.gov/doc/blast-topics/#fasta) containing all
 exported transcripts from ideal components. Since
 [`export_orthologs.py`](#export_orthologspy) ordinarily separates exported
 transcripts into multiple files, it is necessary to provide the `--all`/`-a`
-command-line option to combine the output files into an `all_ideal.fasta`
-file.
+command-line option to `export_orthologs.py` to combine the output files into an
+`all_ideal.fasta` file.
 
 ### Output format
 
 #### Directory structure
 
 `search_ideal_components.py` places all of its output directly under a directory
-provided via the `--search-output-dir`/``-S` command-line option.
+provided via the `--search-output-dir`/`-S` command-line option.
 
 BLAST alignments for the initial search are saved as `queries.sam`. If an
 extended search is performed, the alignments of the query sequences against the
@@ -1285,8 +1301,8 @@ The full sequences of all matching isoforms (extracted from the input
 
 If `--export-components`/`-x` was provided, then all subgraphs of the
 orientation graph corresponding to ideal components where matches were found are
-written to the directory. The orientation graph subgraph corresponding to ideal
-component `INDEX` is written to `ideal_component_INDEX.graphml`.
+written to the output directory. The orientation graph subgraph corresponding to
+ideal component `INDEX` is written to `ideal_component_INDEX.graphml`.
 
 #### File format
 
@@ -1296,12 +1312,41 @@ the produced SAM files, the `QNAME` field values are names of input query
 sequences, and `RNAME` field values are names of transcripts from the input
 `--all-ideal`/`-a` FASTA file.
 
-The `subjects.fasta` are sequences of transcripts sourced from the input
+The `subjects.fasta` file contains sequences of transcripts sourced from the input
 `--all-ideal`/`-a` FASTA file, and `subjects.fasta` is likewise in [FASTA
 format](https://blast.ncbi.nlm.nih.gov/doc/blast-topics/#fasta).
 
 The exported ideal components with `.graphml` file extensions are in [GraphML
 format](http://graphml.graphdrawing.org/).
+
+### Examples
+
+Search orthologs for the analysis `rna_clique_out`, exported at at
+`export/all_ideal.fasta`, for sequences in `queries.fasta`. Write results under
+`search_out`.
+
+```bash
+python search_ideal_components.py -A rna_clique_out \
+                                  -X export \
+								  -q queries.fasta \
+								  -S search_out
+```
+
+Perform an extended search for queries at `queries.fasta` in the orthologs
+exported from the analysis with gene matches graph `graph.pkl` and gene matches
+tables in `tables_dir`. Use the combined exported orthologs at `combined.fasta`,
+and put the BLAST DB cache for the search under `db_cache`. Perform an extended
+search. Merge results from extended searches into one file. Export the matches
+ideal components. Write the results under `search_out`. 
+
+```bash
+python search_ideal_components.py -q queries.fasta \
+                                  -g graph.pkl \
+								  -O2 tables_dir \
+								  -a combined.fasta \
+								  -D db_cache \
+								  -e -m -S search_out
+```
 
 ## select\_top\_genes.py
 
@@ -1355,11 +1400,31 @@ transcriptome can be provided via standard input.
 The output of the script is a [top genes](formats.md#top-genes) file, written to
 standard output.
 
+### Examples
+
+Select the top $1000$ genes by $k$-mer coverage in the file `transcripts.fasta`,
+using the default regex for parsing FASTA headers. Write the results to standard
+output. 
+
+```bash
+python select_top_genes.py transcripts.fasta -n 1000
+```
+
+Select the top $20000$ genes by $k$-mer coverage from `genes.fasta.gz`. Use the
+regular expression `foo([^_]*)_bar([^_]*)_baz([^_]*)` to parse the transcript
+IDs in `genes.fasta.gz`.
+
+```bash
+zcat genes.fasta.gz | python select_top_Genes.py -n 20000 \
+                             -p 'foo([^_]*)_bar([^_]*)_baz([^_]*)'
+```
+
 ## select\_top\_genes\_all.py
 
 Select $n$ top genes by $k$-mer coverage for each of multiple samples, in
 parallel. See the section on [`select_top_genes.py`](#select_top_genespy) for an
 explanation of how selection is performed.
+
 
 ### Positional arguments
 
@@ -1391,8 +1456,28 @@ The inputs to the script are [transcriptomes](formats.md#transcriptomes).
 
 ### Output format
 
-The output of the script is a [top genes](formats.md#top-genes) file, written to
-standard output.
+The outputs of the script are the [top genes](formats.md#top-genes) files.
+
+### Examples
+
+Select top $50000$ genes for the transcriptomes located at `input1`, `input2`,
+and `input3`. Write the output to `rna_clique_out/od1`.
+
+```bash
+python select_top_genes_all.py input1 input2 input3 -O rna_clique_out -n 50000
+```
+
+Select the top $1000$ genes for the transcriptomes located at `input1`,
+`input2`, `input3`, and `input4`. Assume that the transcript FASTA files are all
+named `genes.fasta`. Use the regular expression
+`foo([^_]*)_bar([^_]*)_baz([^_]*)` to parse the transcript IDs in each
+file. Write the output under `top_genes`.
+
+```bash
+python select_top_genes_all.py input1 input2 input3 input4 \
+                               -p 'foo([^_]*)_bar([^_]*)_baz([^_]*)' \
+							   -O1 top_genes
+```
 
 ## unfiltered\_distance.py
 
@@ -1429,3 +1514,26 @@ tables](formats.md#gene-matches-tables).
 ### Output format
 
 The output of this script is the [distance matrix](formats.md#distance-matrix).
+
+### Examples
+
+Compute an unfiltered distance matrix using gene matches tables at
+`rna_clique_out/od2`. Write the output matrix to
+`rna_clique_out/distance_matrix.h5`. 
+
+```python
+python unfiltered_distance.py -O rna_clique_out
+```
+
+Compute an unfiltered distance matrix using gene matches tables at
+`tables_dir`. Write the output matrix to `matrix.h5`.
+
+```python
+python unfiltered_distance.py -O2 tables_dir -m matrix.h5
+```
+
+## typical\_filtering\_step.sh
+
+`typical_filtering_step.sh` is deprecated and is now a simple shell script that
+forward its arguments to `rna_clique.py`. It is recommended to use
+[`rna_clique.py`](#rna_cliquepy) directly instead.

@@ -60,20 +60,20 @@ expect to see anything interesting among the infected samples specifically, but
 this subset selection is good for a tutorial and will be useful for a later
 tutorial, "[Exporting and searching ideal
 components](../export_and_search/README.md)"). Of course, we could just take the
-rows and columns corresponding to the infected samples from of the distance
-matrix from our full analysis. In general, this approach is not the best option
-because we can often obtain more ideal components with smaller subsets of
-samples, and simply taking the distances directly from the existing distance
-matrix forces us to use the ideal components from the full (supserset)
-analysis. With more ideal components, we generally expect more precise
-results. Additionally, very distant pairs of samples might also makes distances
-between very closely related pairs of samples less accurate. This kind of
-problem is most pronounced when the full analysis consists of two or more tight
-clusters that are distant from each other, and the subset analysis considers
-only one of these clusters. For example, if the full analysis considers two
-species simultaneously, we might expect two distant species clusters, and simply
-taking the distances for one species out of the full analysis's distance matrix
-might give relatively imprecise distances.
+rows and columns corresponding to the infected samples from the distance matrix
+from our full analysis. In general, this approach is not the best option because
+we can often obtain more ideal components with smaller subsets of samples, and
+simply taking the distances directly from the existing distance matrix forces us
+to use the ideal components from the full (supserset) analysis. With more ideal
+components, we generally expect more precise results. Additionally, very distant
+pairs of samples might also make distances between very closely related pairs of
+samples less accurate. This kind of problem is most pronounced when the full
+analysis consists of two or more tight clusters that are distant from each
+other, and the subset analysis considers only one of these clusters. For
+example, if the full analysis considers two species simultaneously, we might
+expect two distant species clusters, and simply taking the distances for one
+species out of the full analysis's distance matrix might give relatively
+imprecise distances.
 
 Actually, for this particular case, obtaining the infected-only distance matrix
 directly from the full distance matrix might be a reasonable option. We have

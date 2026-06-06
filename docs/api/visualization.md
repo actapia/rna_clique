@@ -22,13 +22,14 @@ might include information about which population a sample comes from, or what
 the sample's chemotype is.
 
 It must be possible to map each sample to its corresponding metadata by the ID
-of the sample in the distance matrix. To make this possible, one column should
-contain these IDs. Which column to use can usually be specified to visualization
-function via the `sample_name_column` keyword argument. Note that, by default,
-`SampleSimilarity` gives distance matrices with rows and columns labeled with
-the paths to the top genes for the sample rather than the sample name itself. If
-your metadata uses the names of the samples, it may be necessary to rename the
-rows and columns of the distance matrix to use the actual names of the samples.
+of the sample in the distance matrix. To make this possible, one column in the
+sample metadata should contain these IDs. Which column to use can usually be
+specified to a visualization function via the `sample_name_column` keyword
+argument. Note that, by default, `SampleSimilarity` gives distance matrices with
+rows and columns labeled with the paths to the top genes for the sample rather
+than the sample name itself. If your metadata uses the names of the samples, it
+may be necessary to rename the rows and columns of the distance matrix to use
+the actual names of the samples.
 
 ## Heatmaps
 
@@ -98,8 +99,9 @@ Vertical and horizontal lines separate groups on the axes of the heatmap. When
 the labels say can be controlled via the `make_group_label`
 function. `make_group_label` should take the value(s) for a particular group and
 return a string to be used as the label for that group. By default, the group
-label is simply the values (converted to strings) and joined with commas and
-spaces.
+label is simply the value. If there are multiple `group_by` columns, the then
+the value's elements are converted to strings joined with commas and spaces to
+get the default group label.
 
 As a supplement to the colormapping, it is sometimes helpful to display digits
 of the actual value of a matrix element on top of the heatmap cell for that
@@ -216,7 +218,7 @@ caller to specify arbitrary labels for each `group_by` columns value,
 `draw_pcoa` allows the caller to specify `make_group_label` and `labelers`.
 
 The `labelers` are functions such that `labelers[i]` is used to create the label
-for the value of column `i` of `group_by`. Each element of `labelers` should
+for the value of column `i` of `group_by`. Each element `labelers[i]` should
 accept a value of column `i` of `group_by` and should return a string, the label
 to use for that value. If a labeler doesn't exist for column `i`&mdash;i.e., if
 a labeler is `None`, or if `i >= len(labelers)`&mdash;then `draw_pcoa` treats
@@ -292,9 +294,13 @@ legend in the same vertical order they appear in the plot.
 
 In some cases, it is useful to sort the dataframe by values that do not appear
 in the columns of the sample metadata but can be computed from one or more
-columns. In that case, the `sort_key` parameter can be provided. `sort_key`
-should be a function taking the `order_by` columns and returning a new Pandas
-Series object that will be used to sort the samples.
+columns. In that case, the `sort_key` parameter can be provided. When `order_by`
+is just a single column, `sort_key` should be a function taking the `order_by`
+column (as a Pandas Series) and returning a new Pandas Series object that will
+be used to sort the samples. When `order_by` is a sequence of multiple columns,
+`sort_key` should be a sequence of functions such that `sort_key[i]` takes
+column `order_by[i]` and returns a new transformed Series. The dataframe will be
+sorted by the transformed Series objects in the order specified by `order_by`.
 
 ### ellipsoids and make\_ellipsoid
 
@@ -327,9 +333,9 @@ all possible axes (including ones greater than the number of dimensions).
 When the `annotate` parameter is specified, individual samples will be labeled
 with their names from the `sample_name_column`. Initially, each label is placed
 exactly on the point to which it refers, but since this can cause labels to
-overlap, the text positions might need to be adjusted. Such adjust takes place
-automatically via [`adjustText`](https://github.com/Phlya/adjustText) when the
-`adjust` parameter is `True` (the default); setting `adjust=False` keeps the
+overlap, the text positions might need to be adjusted. Such adjustment takes
+place automatically via [`adjustText`](https://github.com/Phlya/adjustText) when
+the `adjust` parameter is `True` (the default); setting `adjust=False` keeps the
 original positions.
 
 ### legend\_factors and default\_legend\_marker
@@ -358,18 +364,18 @@ the shape is a square. The value of the first variable has no impact on shape.
 
 By default, `draw_pcoa` would make a legend entry for each of the six
 combinations of color and shape seen among the samples, but, in this case,
-because we have variables that are encoded independently, we express the legend
-more succinctly with just five entries. The five entries would should that red
-corresponds to `'a'`, blue to `'b'`, and yellow to `'c'`, and that circle
-corresponds to `'1`' and square to `'2'`. 
+because we have variables that are encoded independently, we can express the
+legend more succinctly with just five entries. The five entries would should
+that red corresponds to `'a'`, blue to `'b'`, and yellow to `'c'`, and that
+circle corresponds to `'1`' and square to `'2'`.
 
 `draw_pcoa` can try to detect such independent variables when the
-`legend_factors` parameter is set to a list of tuples or strings or to `True`
+`legend_factors` parameter is set to a list of tuples of strings or to `True`
 (equivalent to `legend_factors` being set to `group_by`). `draw_pcoa` will then
 display each visual variable's mapping separately. This is accomplished by first
 computing what keyword arguments are common to all samples that share values for
 each of the provided tuples of columns in `legend_factors`. For the example
-above, if the columns were named `alpha` and `beta`, and `legend_factors` was
+above, if the columns were named `alpha` and `beta`, and `legend_factors` were
 set to `[('alpha',), ('beta',)]`, then `draw_pcoa` would recognize that all
 cases where `alpha = 'a'` are cases where `color` is mapped to red, 
 `alpha = 'b'`, blue, and `alpha = 'c'`, yellow. Likewise, it would recognize
@@ -464,10 +470,10 @@ colored as specified by the value in the `colors` `dict`.
 
 ### get\_clades
 
-It is sometimes desirable to color clades such that only maximal clades such
-that all samples in the clade have some metadata value, *and* all samples that
-have that metadata value fall in that clade. To find such clades to be colored,
-you can use the `get_clades` function from the `phylo_utils.py` module. 
+It is sometimes desirable to find and color maximal clades such that all samples
+in the clade have some metadata value, *and* all samples that have that metadata
+value fall in that clade. To find such clades to be colored, you can use the
+`get_clades` function from the `phylo_utils.py` module.
 
 `get_clades` returns the axes on which the tree was drawn. The parameters
 accepted by `get_clades` are described below.
@@ -497,7 +503,7 @@ constructor = DistanceTreeConstructor()
 tree = constructor.nj(phylo_dis_mat)
 # Get clades by population.
 clades = get_clades(tree, sample_metadata, "sample_name", ["population"])
-# Draw the tree, coloring maximal clades containingly only and all samples from
+# Draw the tree, coloring maximal clades containing only and all samples from
 # a given population.
 ax = draw_tree(
     tree,

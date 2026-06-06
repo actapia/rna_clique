@@ -14,19 +14,24 @@ The `rna_clique` function in the
 provides a way to perform a full RNA-clique analysis from Python code.
 
 Unlike the `rna_clique.py` script, the `rna_clique` function must be provided
-with explicit paths for the outputs. The paths to provide are summarized in the
-table below.
+with explicit paths for the outputs. The parameters accepted by RNA-clique are
+summarized in the table below.
 
-| Formal parameter | Description                                                                                                           |
-|------------------|-----------------------------------------------------------------------------------------------------------------------|
-| `out_dir_1`      | Directory for the top $n$ genes of each transcriptome.                                                                |
-| `out_dir_2`      | Directory for gene matches tables.                                                                                    |
-| `cache_dir`      | Directory for the `simple_blast` [BLAST database caches](https://github.com/actapia/simple_blast/README.md#db-caches) |
-| `output_graph`   | Output gene matches graph.                                                                                            |
-| `output_matrix`  | Output distance matrix.                                                                                               |
-
-The caller must also provide the number of top genes to use via the `top_genes`
-parameter.
+| Formal parameter | Description                                                                                                           | Default                           |
+|------------------|-----------------------------------------------------------------------------------------------------------------------|-----------------------------------|
+| `dirs`           | Paths to the [transcriptomes](../formats.md#transcriptomes).                                                          |                                   |
+| `out_dir_1`      | Directory for the top $n$ genes of each transcriptome.                                                                |                                   |
+| `out_dir_2`      | Directory for gene matches tables.                                                                                    |                                   |
+| `cache_dir`      | Directory for the `simple_blast` [BLAST database caches](https://github.com/actapia/simple_blast/README.md#db-caches) |                                   |
+| `output_graph`   | Output gene matches graph.                                                                                            |                                   |
+| `output_matrix`  | Output distance matrix.                                                                                               |                                   |
+| `top_genes`      | Number of top genes to select by $k$-mer coverage.                                                                    |                                   |
+| `top_matches`    | Count a match if a gene pair is among this many top pairs in both directions.                                         | `1`                               |
+| `id_parser`      | Function for [parsing transcript IDs](#working-with-transcript-ids).                                                  | `default_parser`                  |
+| `evalue`         | e-value cutoff to use for BLAST searches.                                                                             | `1e-99`                           |
+| `keep_all`       | Whether to keep all gene pairs in the case of a tie by bitscore.                                                      | `True`                            |
+| `store_dfs`      | Whether to store the computed dataframes in memory.                                                                   | `False`                           |
+| `jobs`           | Number of parallel jobs to use.                                                                                       | `multiprocessing.cpu_count() - 1` |
 
 ```python
 from rna_clique import rna_clique
@@ -56,7 +61,9 @@ The `rna_clique` function returns two values. The first value is a
 `SampleSimilarity` object that can be used to get the "dissimilarity" (distance)
 matrix as a [Pandas
 DataFrame](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html)
-using the `get_similarity_df` method as in the example above. 
+using the `get_dissimilarity_df` method as in the example above. The second
+value is a dictioanry mapping paths to the top genes for each sample to its
+sample name.
 
 `SampleSimilarity` objects can also provide other information about the
 filtering process.
@@ -132,13 +139,13 @@ top_genes_file, sample_name = select_top_genes_and_save(
 ```
 
 If you don't wish to save the selected top genes, you can also use the
-`TopGeneSelector `class from the `select_top_genes.py` module. `TopGeneSelector`
-can work on genes that are not read from a file; to accomplish this, it requires
-as the first argument to its constructor a nullary function that produces an
-iterator of `Bio.SeqRecord` objects from which to select top genes. If you would
-rather simply pass `TopGeneSelector` a FASTA file from which to select top
-genes, use the `from_path` classmethod instead of the constructor. `from_path`
-requires at least two arguments.
+`TopGeneSelector ` class from the `select_top_genes.py`
+module. `TopGeneSelector` can work on genes that are not read from a file; to
+accomplish this, it requires as the first argument to its constructor a nullary
+function that produces an iterator of `Bio.SeqRecord` objects from which to
+select top genes. If you would rather simply pass `TopGeneSelector` a FASTA file
+from which to select top genes, use the `from_path` classmethod instead of the
+constructor. `from_path` requires at least two arguments.
 
 | Formal parameter      | Description                                                          | Default          |
 |-----------------------|----------------------------------------------------------------------|------------------|
@@ -148,13 +155,12 @@ requires at least two arguments.
 
 ```python
 from select_top_genes import TopGeneSelector
+
 selector = TopGeneSelector.from_path(
     Path("path/to/transcriptome1/transcripts.fasta"),
 	50000
 )
 ```
-
-Like `select_top_genes_and_save`
 
 To get the top genes, use the `get_top_gene_seqs` method.
 
@@ -250,7 +256,7 @@ tables_iter, paths_iter, count = find_all_pairs(
     ]
 )
 
-# Get one gene matches table with find_hommologs_and_save.
+# Get one gene matches table with find_homologs_and_save.
 from find_all_pairs import find_homologs_and_save
 
 table = find_homologs_and_save(
@@ -293,6 +299,7 @@ section.
 
 ```python
 from build_graph import build_graph
+
 graph = build_graph(tables)
 ```
 
@@ -361,23 +368,31 @@ table = filtered_tables[
 
 ### Getting a genetic distance
 
-You can obtain *similarities* from filtered gene matches tables using the
-`similarities_from_dfs` function from the `similarity_computer.py`
-module. `similarities_from_dfs` accepts just one argument&mdash;an iterable of
-pairs. The first element of each pair should be an unordered pair of samples
-that the filtered table is for. The second element of each pair should be the
-table itself.
+If you have a `SampleSimilarity` object, getting the genetic distance is as
+simple as calling the `get_dissimilarity_df()` method.
+
+```python
+dist: pd.DataFrame = sim.get_dissimilarity_df()
+```
+
+You can also obtain *similarities* from arbitrary (filtered or unfiltered) gene
+matches tables using the `similarities_from_dfs` function from the
+`similarity_computer.py` module. `similarities_from_dfs` accepts just one
+argument&mdash;an iterable of pairs. The first element of each pair should be an
+unordered pair of samples that the table is for. The second element of each pair
+should be the table itself.
 
 ```python
 from similarity_computer import similarities_from_dfs
 
-similarities = similarities_from_dfs(filtered_tables)
+similarities = similarities_from_dfs(tables)
 ```
 
 Each distance can then be computed as `1 - similarity`.
 
 ```python
 from multiset_key_dict import MultisetKeyDict
+
 distances = MultisetKeyDict((k, 1 - v) for (k, v) in similarities)
 ```
 
@@ -476,7 +491,7 @@ constructor are summarized in the table below.
 | `debug`               | Whether to enable debug behavior.                                               | `False`       |
 
 After construction, calling an `OrthologExporter` object's `by_component` or
-`by_sample` method with export the orthologs, organizing them into files by
+`by_sample` method will export the orthologs, organizing them into files by
 component or by sample, respectively. The `by_sample` and `by_component` methods
 also accept a few different options. These options are summarized in the table
 below.
@@ -494,8 +509,8 @@ the ortholog sequences](#searching-ideal-components-exported-orthologs) because
 the `search` function requires a path to the combined file with all the
 exported orthologs. 
 
-`by_sample` and `by_component` both return dictionaries mapping each groups by
-which the orthologs were organized to the paths to the file in which the
+`by_sample` and `by_component` both return dictionaries mapping each group by
+which the orthologs were organized to the path to the file in which the
 orthologs in that group were saved. For `by_sample`, the `dict` maps each sample
 name to the file in which orthologs from that sample are stored. For
 `by_component`, the `dict` maps each ideal component ID (expressed as an
@@ -526,7 +541,7 @@ the table below.
 | `parse_transcript_id` | Function for [parsing transcript IDs](#working-with-transcript-ids).                                                   | `default_parser` |
 | `path_to_sample`      | Function retrieving sample names from top gene paths.                                                                  | `path_to_sample` |
 | `extended_evalue`     | e-value cutoff for extended search. `None` disables extended search.                                                   | `None`           |
-| `export_components`   | Whether to export components in which matchse are found.                                                               | `True`           |
+| `export_components`   | Whether to export components in which matches are found.                                                               | `True`           |
 | `merge_sams`          | Whether to merge extended searach results into one SAM file.                                                           | `False`          |
 | `strand_graph`        | Orientation graph (strand graph) to use. Will be created if not provided.                                              | `False`          |
 | `node_to_ccc`         | Mapping from gene ID, isoform ID pairs to components in the meta-strand graph. Will be created if not provided.        | `None`           |
@@ -651,6 +666,7 @@ subsetter = SubsetAnalysisCreator(
 	parent_config,
 	child_config
 )
+subsetter.make()
 ```
 
 Since creating a child analysis `RNACliqueConfig` just to provide it to
@@ -678,6 +694,7 @@ subsetter = SubsetAnalysisCreator.from_paths(
     Path("subset/tables_dir"),
 	Path("subset/graph.pkl"),	
 )
+subsetter.make()
 ```
 
 ## Visualization

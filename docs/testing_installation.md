@@ -26,5 +26,7 @@ installation was succesful. Otherwise, you will need to investigate the output
 of the test script to see what failed and why.
 
 If the test script fails despite having a correct installation, you should
-submit a bug report on GitHub at https://github.com/actapia/rna_clique/issues .
+submit a bug report on GitHub at
+[https://github.com/actapia/rna_clique/issues](https://github.com/actapia/rna_clique/issues)
+.
 

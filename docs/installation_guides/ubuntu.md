@@ -34,8 +34,7 @@ sudo apt install git wget ncbi-blast+ ncbi-blast+-legacy g++
 
 The conda package and environment manager will be useful for setting up the
 Python dependencies of RNA-clique. If you already have a conda installation, you
-can skip to the next step, [Installing the rna-clique conda
-environment](#installing-the-rna-clique-conda-environment) First, download the
+can skip to the next step, [Downloading RNA-clique](#downloading-rna-clique) First, download the
 Miniconda installer:
 
 ```bash

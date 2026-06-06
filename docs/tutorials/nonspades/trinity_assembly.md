@@ -93,7 +93,6 @@ RAM. You will need to change the parameters to fit your own system.
 parallel -j 6 Trinity --seqType fq --max_memory 48G --single {} --CPU 2 \
          --output trinity_{/.} ::: *.fastq
 ```
-
 === "Without Parallel"
 ```bash
 for f in *.fastq; do

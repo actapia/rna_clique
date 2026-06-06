@@ -142,7 +142,7 @@ all possible settings. Values missing from the configuration can be provided
 [via command-line arguments](#interaction-with-command-line-arguments) or
 [derived from the provided values automatically](#derived-settings), and an
 RNA-clique program will not fail if settings it does not need are missing. The
-[Command line usage guide](usage.md) documents which settings must be present
+[Command-line usage guide](usage.md) documents which settings must be present
 (from any source) in the "Required" column of each script's "Options" table.
 
 ## File paths
@@ -270,9 +270,9 @@ using the `transcripts_name` setting.
 
 ### top\_matches
 
-When comparing sample $A$ and sample $V$, we BLAST $A$ against $B$ and $B$
-against $A$. Ordinarily, we keep a pair of genes $g$ (from $a$) and $h$ (from
-$b$) when merging the results from the two directions if and only if $g$ is
+When comparing sample $A$ and sample $B$, we BLAST $A$ against $B$ and $B$
+against $A$. Ordinarily, we keep a pair of genes $g$ (from $A$) and $h$ (from
+$B$) when merging the results from the two directions if and only if $g$ is
 among the best matches for $h$ in $A$, *and* $h$ is among the best matches for
 $g$ in $B$, according to bitscore. (We allow ties, so $h$ may not be the *only*
 best match for $g$ in $B$, and, likewise, $g$ may not be the *only* best match
@@ -357,11 +357,11 @@ for a sample 1 gene in the case of ties.
 ### path\_to\_sample
 
 The `path_to_sample` setting should be a `dict` (YAML mapping) mapping [top
-genes](formats.md#top-genes) files to the names of the sames they represent. By
-default, RNA-clique assumes that each sample are named after the directory in
-which its traanscripts FASTA file is found. This default behavior is reflected
-in output YAML files produced by RNA-clique, but the mapping can be changed
-manually to assign different names to samples.
+genes](formats.md#top-genes) files to the names of the samples they
+represent. By default, RNA-clique assumes that each sample is named after the
+directory in which its transcripts FASTA file is found. This default behavior
+is reflected in output YAML files produced by RNA-clique, but the mapping can be
+changed manually to assign different names to samples.
 
 #### Examples
 
@@ -393,22 +393,22 @@ In the example below, the samples have been renamed to reflect their genotypes.
 
 ```yaml
 path_to_sample:
-  f16_rna_clique_out/od1/SRR2321383_top.fasta: SRR2321383
-  f16_rna_clique_out/od1/SRR2321384_top.fasta: SRR2321384
-  f16_rna_clique_out/od1/SRR2321385_top.fasta: SRR2321385
-  f16_rna_clique_out/od1/SRR2321386_top.fasta: SRR2321386
-  f16_rna_clique_out/od1/SRR2321387_top.fasta: SRR2321387
-  f16_rna_clique_out/od1/SRR2321388_top.fasta: SRR2321388
-  f16_rna_clique_out/od1/SRR7990321_top.fasta: SRR7990321
-  f16_rna_clique_out/od1/SRR7990322_top.fasta: SRR7990322
-  f16_rna_clique_out/od1/SRR8003736_top.fasta: SRR8003736
-  f16_rna_clique_out/od1/SRR8003737_top.fasta: SRR8003737
-  f16_rna_clique_out/od1/SRR8003753_top.fasta: SRR8003753
-  f16_rna_clique_out/od1/SRR8003754_top.fasta: SRR8003754
-  f16_rna_clique_out/od1/SRR8003755_top.fasta: SRR8003755
-  f16_rna_clique_out/od1/SRR8003756_top.fasta: SRR8003756
-  f16_rna_clique_out/od1/SRR8003761_top.fasta: SRR8003761
-  f16_rna_clique_out/od1/SRR8003762_top.fasta: SRR8003762
+  f16_rna_clique_out/od1/SRR2321383_top.fasta: CTE46_1
+  f16_rna_clique_out/od1/SRR2321384_top.fasta: CTE46_2
+  f16_rna_clique_out/od1/SRR2321385_top.fasta: CTE46_3
+  f16_rna_clique_out/od1/SRR2321386_top.fasta: CTE46_4
+  f16_rna_clique_out/od1/SRR2321387_top.fasta: CTE46_5
+  f16_rna_clique_out/od1/SRR2321388_top.fasta: CTE46_6
+  f16_rna_clique_out/od1/SRR7990321_top.fasta: FATG4_1
+  f16_rna_clique_out/od1/SRR7990322_top.fasta: FATG4_2
+  f16_rna_clique_out/od1/SRR8003736_top.fasta: NTE_1
+  f16_rna_clique_out/od1/SRR8003737_top.fasta: NTE_2
+  f16_rna_clique_out/od1/SRR8003753_top.fasta: CTE27_1
+  f16_rna_clique_out/od1/SRR8003754_top.fasta: CTE27_2
+  f16_rna_clique_out/od1/SRR8003755_top.fasta: CTE27_3
+  f16_rna_clique_out/od1/SRR8003756_top.fasta: CTE27_4
+  f16_rna_clique_out/od1/SRR8003761_top.fasta: CTE27_5
+  f16_rna_clique_out/od1/SRR8003762_top.fasta: CTE27_6
 ```
 
 ### matrix

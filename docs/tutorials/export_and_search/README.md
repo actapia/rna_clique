@@ -9,7 +9,7 @@ search the detected orthologs, RNA-clique can optionally export and search
 orthologous genes in ideal components via the `export_and_search.py`
 script. This tutorial describes how to use the `export_and_search.py` script to
 export orthologous gene sequences from ideal components and search those genes
-for a sequence of interest.
+for sequences of interest.
 
 The first part of this tutorial assumes that the user has completed the
 end-to-end ["From RNA-seq reads to a phylogenetic tree with
@@ -78,6 +78,15 @@ end-to-end tutorial.
 
 ## Download Epichloë genome assemblies
 
+!!! note
+    If you downloaded this software from Zenodo, you already have the *Epichloë
+    coenophiala* genomes at `test_data/ec_genomes`. Instead of downloading them
+	again, you can skip this step and simply move them to the intended location
+	
+	```bash
+	mv "$RNA_CLIQUE/test_data/ec_genomes" "$TUTORIAL_DIR"
+	```
+
 We will download two genome assemblies of *Epichloë coenophiala* to use as query
 sequences for searching the exported ideal components in both the original and
 the infected subset RNA-clique analyses. First, create a directory for the
@@ -90,7 +99,7 @@ mkdir "$TUTORIAL_DIR"/ec_genomes
 Change to the new directory.
 
 ```bash
-"$TUTORIAL_DIR"/ec_genomes
+cd "$TUTORIAL_DIR"/ec_genomes
 ```
 
 To download the genomes, run
@@ -151,7 +160,7 @@ The exported ideal components should be under the
 `$TUTORIAL_DIR/full_ec_search_out/rna_clique_out/export` directory. If you list
 the contents of the `export` directory, you should see many FASTA files
 corresponding to the ideal components identified by RNA-clique. If you open one
-of these file, you will see that the FASTA headers differ from those in the
+of these files, you will see that the FASTA headers differ from those in the
 original input transcriptome files. For example, a sequence might have the FASTA
 header `>-NODE_1_length_14835_cov_23.346544_g0_i0:SRR7990321`. In this modified
 header, the leading `-` denotes that the sequence is the reverse complement of
@@ -167,8 +176,8 @@ exactly as it did in the input transcriptome; it has not be reoriented.
 Under the `export` directory is also a file called `all_ideal.fasta`, which
 contains all sequences from the exported ideal components. `all_ideal.fasta` is
 akin to a concatenation of all of the `ideal_component` FASTA files, but
-sequence headers in the `all_ideal.fasta` are further modified to indicate from
-which ideal components they come. The ideal component to which a sequence
+sequence headers in the `all_ideal.fasta` file are further modified to indicate
+from which ideal components they come. The ideal component to which a sequence
 belongs is indicated by a suffix appended to the sequence header. For example,
 the header
 `>NODE_1_length_15383_cov_32.255511_g0_i0:SRR2321385:ideal_component_0` comes
@@ -193,7 +202,7 @@ see the Command-line usage guide entry for
 The `stats` file provides statistics for the search results in JSON format. Each
 `stats` file should have three JSON keys&mdash;`hits`, `seqs`, and
 `components`. `hits` is the number of BLAST HSPs found in the search. `seqs` in
-the number of distinct transcripts matches in the search, and `components` is
+the number of distinct transcripts matched in the search, and `components` is
 the number of ideal components in which at least one transcript matched.
 
 For `search_e19_scaffolds-JAFEMN000000000` directory, the `stats` file should
@@ -244,9 +253,9 @@ among ideal components could possibly be explained by transcriptome assembly
 errors. Specifically, it is possible that RNA-seq reads from the endophyte were
 erroneously incorporated into plant transcripts, creating spurious *in silico*
 hybrid transcripts. If that were the case, then we would expect all hits to
-occur in E+ sample where such endophyte reads would be present.
+occur in E+ samples where such endophyte reads would be present.
 
-We use the sequence headers in `subjects.fasta` to check whether matches all
+We can use the sequence headers in `subjects.fasta` to check whether matches all
 come from E+ samples.
 
 ```bash
@@ -306,10 +315,11 @@ IGV, and make sure you can find these files on your system.
 
 #### Downloading, installing, and launching IGV
 
-IGV can be installed from https://igv.org/doc/desktop/#DownloadPage/ . Select
-the download most appropriate for your system. In most cases, you will want to
-install a version with Java included. (Otherwise, IGV will try to use the system
-Java installation, which may not be compatible.)
+IGV can be installed from
+[https://igv.org/doc/desktop/#DownloadPage/](https://igv.org/doc/desktop/#DownloadPage/)
+. Select the download most appropriate for your system. In most cases, you will
+want to install a version with Java included. (Otherwise, IGV will try to use
+the system Java installation, which may not be compatible.)
 
 On Windows, run and complete the installer. You should be able to find IGV in
 your start menu.
@@ -359,7 +369,7 @@ thing for the other alignments. This is true even for the E&minus; samples, such
 as SRR2321385, and the alignments clearly span much more than the length of a
 single read.
 
-#### Searching the Nucleotide database for matches transcripts
+#### Searching the Nucleotide database for matched transcripts
 
 One other possible explanation for the alignments we see is that the genome
 assemblies could inadvertently have included some sequences from the host
@@ -371,7 +381,7 @@ which might help explain the matches to the E&minus; samples.
 
 First, let's concatenate the exported transcripts from the ideal components
 where all samples had matching transcripts. For this run, we want ideal
-components $6249$ $6777$, but beck the results you got at the end of the
+components $6249$ and $6777$, but check the results you got at the end of the
 ["Checking represented samples in matching
 component"](#checking-represented-samples-in-matching-components) section to
 make sure you are using the right ideal component IDs here.
@@ -395,12 +405,11 @@ blastn -query "$TUTORIAL_DIR"/matching_components.fasta -evalue 1e-99 -remote \
 If you view the subject sequence IDs in the resulting `remote_results` file and
 search for them within the
 [Nucleotide](https://www.ncbi.nlm.nih.gov/nucleotide/) database, you should find
-that 
-
-Actually, further investigation of the sequences we found reveals that they code
-for highly conserved proteins, and we are getting matches to both a plant and
-the fungal homolog of the gene. This explains why we get matches for the
-endophyte sequence even in E&minus; samples.
+that the sequences match arious fungal sequences closely. Further investigation
+of the sequences we found reveals that they code for highly conserved proteins,
+and we are likely getting matches to both a plant and the fungal homolog of the
+gene. This explains why we get matches for the endophyte sequence even in
+E&minus; samples.
 
 ## Export and search ideal components in the subset analysis
 

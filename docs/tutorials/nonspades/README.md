@@ -71,8 +71,8 @@ representation of some real value. The coverage can have a non-integer part, but
 the same is not true for the gene and isoform IDs. Both the gene and isoform IDs
 must be non-negative integers.
 
-The second thing to note is that that RNA-clique expects the each pair of gene
-and isoform IDs to be unique within a file. For example, it's okay to have two
+The second thing to note is that that RNA-clique expects each pair of gene and
+isoform IDs to be unique within a file. For example, it's okay to have two
 transcripts with the pairs (15, 0) and (15, 1), or two transcripts with the
 pairs (15, 0) and (16, 0), but it's *not* okay to have two transcripts both with
 the pair (15, 0).
@@ -200,12 +200,12 @@ cd trinity_assemblies
 
 Download the Trinity assemblies into that directory and untar them.
 
-=== Ubuntu
+=== "Ubuntu"
 	```bash
 	wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz"
 	tar xJvf trinity_assemblies.tar.xz
-	```
-=== macOS
+	```	
+=== "macOS"
     ```zsh
 	curl -L -O "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz"
 	tar xJvf trinity_assemblies.tar.xz
@@ -281,7 +281,8 @@ Before we change the transcripts' FASTA headers, we need to use the original
 FASTA headers to add TPM information from the `quant.sf` files. This would be
 tricky to do with common command-line tools, so we will use a Python script
 instead. The script is shown below and can also be found at
-`docs/tutorial/nonspades/add_tpm.py` under the root of the repository.
+{{file_link("`docs/tutorials/nonspades/add_tpm.py`", "docs/tutorials/nonspades/add_tpm.py")}}
+under the root of the repository.
 
 ```py
 --8<-- "docs/tutorials/nonspades/add_tpm.py"
@@ -319,7 +320,8 @@ performing this process using standard Unix command-line tools would be
 difficult, so we opt to use a Python script.
 
 The script, also shown below, can be found at
-`docs/tutorial/nonspades/assign_gene_ids.py` under the root of the repository.
+{{file_link("`docs/tutorial/nonspades/assign_gene_ids.py`", "docs/tutorial/nonspades/assign_gene_ids.py")}}
+under the root of the repository.
 
 ```py
 --8<-- "docs/tutorials/nonspades/assign_gene_ids.py"
