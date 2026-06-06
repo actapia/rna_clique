@@ -175,12 +175,12 @@ than one logical core ("thread").
 
 === "Ubuntu"
     ```bash
-	sudo apt install parallel
-	```
+    sudo apt install parallel
+    ```
 === "macOS"
-	```zsh
-	brew install parallel
-	```
+    ```zsh
+    brew install parallel
+    ```
 
 
 ## Creating a directory for our work
@@ -214,12 +214,12 @@ export TUTORIAL_DIR=$PWD
     If you downloaded this software from Zenodo, you already have the SRA files
     in the `test_data/sra` of the repository. Instead of completing this step,
     you can extract the provided data by running
-	
-	```bash
-	for f in "$RNA_CLIQUE/test_data/sra/*"; do
-	    fasterq-dump "$f"
-	done
-	```
+    
+    ```bash
+    for f in "$RNA_CLIQUE/test_data/sra/*"; do
+        fasterq-dump "$f"
+    done
+    ```
 
 !!! note
     Before proceeding, check that your environment variables are set to the 
@@ -268,28 +268,28 @@ ls SRR*.fastq
     If you downloaded this software from Zenodo, you already have the assembled
     transcriptomes in the `test_data/assemblies/` directory in the root of the
     repository and can simply move them instead of running SPAdes
-	
-	```bash
-	mv "$RNA_CLIQUE/test_data/assemblies" out
-	```
-	
+    
+    ```bash
+    mv "$RNA_CLIQUE/test_data/assemblies" out
+    ```
+    
 !!! note
     Assembling the transcriptomes requires at least 16 GB of memory. If you have
     insufficient memory or otherwise need to skip this step, you can download
     the assemblies instead:
-	
-	=== "Ubuntu"
-	```bash
-	wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.tar.gz"
-	mkdir out
-	tar xzvf transcripts.tar.gz -d out
-	```
+    
+    === "Ubuntu"
+        ```bash
+        wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.tar.gz"
+        mkdir out
+        tar xzvf transcripts.tar.gz -d out
+	    ```
     === "macOS"
-	```bash
-	curl -L -O "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.tar.gz"
-	mkdir out
-	tar xzvf transcripts.tar.gz -d out
-	```
+	    ```bash
+	    curl -L -O "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.tar.gz"
+	    mkdir out
+	    tar xzvf transcripts.tar.gz -d out
+	    ```
 
 
 Ordinarily, we would need a quality control step before proceeding to assembly,
