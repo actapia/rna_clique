@@ -26,6 +26,11 @@ def define_env(env):
 {x}
 ```
 """
+
+    @env.filter
+    def bullet(x):
+        return f"* {x}"
+    
     @env.macro
     def git_branch():
         return os.environ.get("GITHUB_REF_NAME", "main")

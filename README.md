@@ -16,10 +16,10 @@ systems, you can see the <!--{{doc_link("requirements.md", "requirements", False
 
 ### Installation guides
 
-<!--{{doc_link("installation_guides/ubuntu.md", "Ubuntu", False) | comment_surround}}{{empty("-->
+<!--{{doc_link("installation_guides/ubuntu.md", "Ubuntu", False) | bullet | comment_surround}}{{empty("-->
 * [Ubuntu](https://actapia.github.io/rna_clique/dev/installation_guides/ubuntu)
 <!--")}}-->
-<!--{{doc_link("installation_guides/macos.md", "macOS", False) | comment_surround}}{{empty("-->
+<!--{{doc_link("installation_guides/macos.md", "macOS", False) | bullet | comment_surround}}{{empty("-->
 * [macOS](https://actapia.github.io/rna_clique/dev/installation_guides/macos)
 <!--")}}-->
 
@@ -130,9 +130,9 @@ data"](https://doi.org/10.1186/s12859-024-05811-9).
 
 ## Additional documentation
 
-<!--{{doc_link("usage.md", "Command-line usage guide", False) | comment_surround}}{{empty("-->
+<!--{{doc_link("usage.md", "Command-line usage guide", False) | bullet | comment_surround}}{{empty("-->
 * [Command-line usage guide](https://actapia.github.io/rna_clique/dev/usage)
 <!--")}}-->
-<!--{{doc_link("tutorials/reads2tree/README.md", "Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique", False) | comment_surround}}{{empty("-->
+<!--{{doc_link("tutorials/reads2tree/README.md", "Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique", False) | bullet | comment_surround}}{{empty("-->
 * [Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](https://actapia.github.io/rna_clique/dev/tutorials/reads2tree)
 <!--")}}-->
