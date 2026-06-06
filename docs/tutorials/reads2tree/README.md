@@ -278,11 +278,19 @@ ls SRR*.fastq
     insufficient memory or otherwise need to skip this step, you can download
     the assemblies instead:
 	
+	=== "Ubuntu"
 	```bash
-	wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.zip"
+	wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.tar.gz"
 	mkdir out
-	unzip transcripts.zip -d out
+	tar xzvf transcripts.tar.gz -d out
 	```
+    === "macOS"
+	```bash
+	curl -L -O "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.tar.gz"
+	mkdir out
+	tar xzvf transcripts.tar.gz -d out
+	```
+
 
 Ordinarily, we would need a quality control step before proceeding to assembly,
 but we will skip that for this tutorial.

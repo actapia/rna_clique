@@ -133,6 +133,24 @@ data"](https://doi.org/10.1186/s12859-024-05811-9).
 <!--{{doc_link("usage.md", "Command-line usage guide", False) | bullet | comment_surround}}{{empty("-->
 * [Command-line usage guide](https://actapia.github.io/rna_clique/dev/usage)
 <!--")}}-->
+<!--{{doc_link("config.md", "Configuration file guide", False) | bullet | comment_surround}}{{empty("-->
+* [Configuration file guide](https://actapia.github.io/rna_clique/dev/config)
+<!--")}}-->
+<!--{{doc_link("formats.md", "File formats guide", False) | bullet | comment_surround}}{{empty("-->
+* [File formats guide](https://actapia.github.io/rna_clique/dev/formats)
+<!--")}}-->
+<!--{{doc_link("api/README.md", "Python API Documentation", False) | bullet | comment_surround}}{{empty("-->
+* [Python API Documentation](https://actapia.github.io/rna_clique/dev/api)
+<!--")}}-->
 <!--{{doc_link("tutorials/reads2tree/README.md", "Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique", False) | bullet | comment_surround}}{{empty("-->
 * [Tutorial: From RNA-seq reads to a phylogenetic tree with RNA-clique](https://actapia.github.io/rna_clique/dev/tutorials/reads2tree)
+<!--")}}-->
+<!--{{doc_link("tutorials/subsets/README.md", "Tutorial: Quickly computing subsets of existing analyses", False) | bullet | comment_surround}}{{empty("-->
+* [Tutorial: Quickly computing subsets of existing analyses](https://actapia.github.io/rna_clique/dev/tutorials/subsets)
+<!--")}}-->
+<!--{{doc_link("tutorials/export_and_search/README.md", "Tutorial: Exporting and searching ideal components", False) | bullet | comment_surround}}{{empty("-->
+* [Tutorial: Exporting and searching ideal components](https://actapia.github.io/rna_clique/dev/tutorials/export_and_search)
+<!--")}}-->
+<!--{{doc_link("tutorials/nonspades/README.md", "Tutorial: Using RNA-clique with non-SPAdes data", False) | bullet | comment_surround}}{{empty("-->
+* [Tutorial: Using RNA-clique with non-SPAdes data](https://actapia.github.io/rna_clique/dev/tutorials/nonspades)
 <!--")}}-->
