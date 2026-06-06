@@ -902,10 +902,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#searching-the-nucleotide-database-for-matches-transcripts" class="md-nav__link">
+  <a href="#searching-the-nucleotide-database-for-matched-transcripts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Searching the Nucleotide database for matches transcripts
+        Searching the Nucleotide database for matched transcripts
       
     </span>
   </a>
@@ -1392,10 +1392,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#searching-the-nucleotide-database-for-matches-transcripts" class="md-nav__link">
+  <a href="#searching-the-nucleotide-database-for-matched-transcripts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Searching the Nucleotide database for matches transcripts
+        Searching the Nucleotide database for matched transcripts
       
     </span>
   </a>
@@ -1464,7 +1464,7 @@ search the detected orthologs, RNA-clique can optionally export and search
 orthologous genes in ideal components via the <code>export_and_search.py</code>
 script. This tutorial describes how to use the <code>export_and_search.py</code> script to
 export orthologous gene sequences from ideal components and search those genes
-for a sequence of interest.</p>
+for sequences of interest.</p>
 <p>The first part of this tutorial assumes that the user has completed the
 end-to-end <a href="../reads2tree/">"From RNA-seq reads to a phylogenetic tree with
 RNA-clique"</a> tutorial, and the second part assumes that
@@ -1552,48 +1552,56 @@ values described in the <a href="../reads2tree/#creating-a-directory-for-our-wor
 work"</a> section of the
 end-to-end tutorial.</p>
 <h2 id="download-epichloe-genome-assemblies">Download Epichloë genome assemblies</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you downloaded this software from Zenodo, you already have the <em>Epichloë
+coenophiala</em> genomes at <code>test_data/ec_genomes</code>. Instead of downloading them
+again, you can skip this step and simply move them to the intended location</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">/test_data/ec_genomes&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>
+</span></code></pre></div>
+</div>
 <p>We will download two genome assemblies of <em>Epichloë coenophiala</em> to use as query
 sequences for searching the exported ideal components in both the original and
 the infected subset RNA-clique analyses. First, create a directory for the
 genomes</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mkdir<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/ec_genomes
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mkdir<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/ec_genomes
 </span></code></pre></div>
 <p>Change to the new directory.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/ec_genomes
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/ec_genomes
 </span></code></pre></div>
 <p>To download the genomes, run</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Ubuntu</label><label for="__tabbed_1_2">macOS</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>wget<span class="w"> </span>https://cs.uky.edu/~acta225/rna_clique/ec_genomes.tar.xz
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>wget<span class="w"> </span>https://cs.uky.edu/~acta225/rna_clique/ec_genomes.tar.xz
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-L<span class="w"> </span>-O<span class="w"> </span>https://cs.uky.edu/~acta225/rna_clique/ec_genomes.tar.xz
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-L<span class="w"> </span>-O<span class="w"> </span>https://cs.uky.edu/~acta225/rna_clique/ec_genomes.tar.xz
 </span></code></pre></div>
 </div>
 </div>
 </div>
 <p>Then, extract the genomes with <code>tar</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>tar<span class="w"> </span>xJvf<span class="w"> </span>ec_genomes.tar.xz
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>tar<span class="w"> </span>xJvf<span class="w"> </span>ec_genomes.tar.xz
 </span></code></pre></div>
 <p>Verify that the genomes have been extracted to <code>$TUTORIAL_DIR/ec_genomes</code>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ls
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ls
 </span></code></pre></div>
 <p>You should see three files: <code>ec_genomes.tar.xz</code>,
 <code>e19_scaffolds-JAFEMN000000000.fasta</code>, and
 <code>e4305_Mas339_20200623_Ref_Scaffolds_CLS.fasta</code>.</p>
 <h2 id="export-and-search-ideal-components-in-the-original-analysis">Export and search ideal components in the original analysis</h2>
 <p>First, change back to your RNA-clique directory.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">&quot;</span>
 </span></code></pre></div>
 <p>To export and search the orthologous genes in ideal components at once, run the
 <code>export_and_search.py</code> script. We'll use a low e-value threshold, <code>1e-99</code>, to
 ensure that we only get very close matches.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python<span class="w"> </span>export_and_search.py<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/rna_clique_out/config.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">                            </span>-Q<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/ec_genomes/*.fasta<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">                            </span>-X<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/full_ec_search_out<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">                            </span>-e<span class="w"> </span>1e-99
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>python<span class="w"> </span>export_and_search.py<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/rna_clique_out/config.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">                            </span>-Q<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/ec_genomes/*.fasta<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">                            </span>-X<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/full_ec_search_out<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">                            </span>-e<span class="w"> </span>1e-99
 </span></code></pre></div>
 <p>The results should be written to
 <code>$TUTORIAL_DIR/full_ec_search_out/rna_clique_out</code>. (If we had provided
@@ -1605,7 +1613,7 @@ directories under <code>$TUTORIAL_DIR/full_ec_search_out/</code>.) </p>
 <code>$TUTORIAL_DIR/full_ec_search_out/rna_clique_out/export</code> directory. If you list
 the contents of the <code>export</code> directory, you should see many FASTA files
 corresponding to the ideal components identified by RNA-clique. If you open one
-of these file, you will see that the FASTA headers differ from those in the
+of these files, you will see that the FASTA headers differ from those in the
 original input transcriptome files. For example, a sequence might have the FASTA
 header <code>&gt;-NODE_1_length_14835_cov_23.346544_g0_i0:SRR7990321</code>. In this modified
 header, the leading <code>-</code> denotes that the sequence is the reverse complement of
@@ -1619,8 +1627,8 @@ exactly as it did in the input transcriptome; it has not be reoriented.</p>
 <p>Under the <code>export</code> directory is also a file called <code>all_ideal.fasta</code>, which
 contains all sequences from the exported ideal components. <code>all_ideal.fasta</code> is
 akin to a concatenation of all of the <code>ideal_component</code> FASTA files, but
-sequence headers in the <code>all_ideal.fasta</code> are further modified to indicate from
-which ideal components they come. The ideal component to which a sequence
+sequence headers in the <code>all_ideal.fasta</code> file are further modified to indicate
+from which ideal components they come. The ideal component to which a sequence
 belongs is indicated by a suffix appended to the sequence header. For example,
 the header
 <code>&gt;NODE_1_length_15383_cov_32.255511_g0_i0:SRR2321385:ideal_component_0</code> comes
@@ -1641,15 +1649,15 @@ see the Command-line usage guide entry for
 <p>The <code>stats</code> file provides statistics for the search results in JSON format. Each
 <code>stats</code> file should have three JSON keys&mdash;<code>hits</code>, <code>seqs</code>, and
 <code>components</code>. <code>hits</code> is the number of BLAST HSPs found in the search. <code>seqs</code> in
-the number of distinct transcripts matches in the search, and <code>components</code> is
+the number of distinct transcripts matched in the search, and <code>components</code> is
 the number of ideal components in which at least one transcript matched.</p>
 <p>For <code>search_e19_scaffolds-JAFEMN000000000</code> directory, the <code>stats</code> file should
 look something like this:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span><span class="nt">&quot;hits&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;seqs&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">43</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;components&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span><span class="nt">&quot;hits&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;seqs&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">43</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;components&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">}</span>
 </span></code></pre></div>
 <p>For the <code>search_e4305_Mas339_20200623_Ref_Scaffolds_CLS</code> directory, the <code>stats</code>
 file should look something like this:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span><span class="nt">&quot;hits&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;seqs&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;components&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span><span class="nt">&quot;hits&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;seqs&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;components&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">}</span>
 </span></code></pre></div>
 <p>Surprisingly, in both cases, several components contained matching sequences,
 even though some of the input samples possessed no endophyte. It's possible,
@@ -1678,42 +1686,42 @@ among ideal components could possibly be explained by transcriptome assembly
 errors. Specifically, it is possible that RNA-seq reads from the endophyte were
 erroneously incorporated into plant transcripts, creating spurious <em>in silico</em>
 hybrid transcripts. If that were the case, then we would expect all hits to
-occur in E+ sample where such endophyte reads would be present.</p>
-<p>We use the sequence headers in <code>subjects.fasta</code> to check whether matches all
+occur in E+ samples where such endophyte reads would be present.</p>
+<p>We can use the sequence headers in <code>subjects.fasta</code> to check whether matches all
 come from E+ samples.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>grep<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/full_ec_search_out/*/search_*/subjects.fasta<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">     </span>-e<span class="w"> </span><span class="s1">&#39;&gt;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;[^:]*:[^:]*$&#39;</span><span class="w"> </span>-o<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t:<span class="w"> </span>-k2
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>grep<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/full_ec_search_out/*/search_*/subjects.fasta<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">     </span>-e<span class="w"> </span><span class="s1">&#39;&gt;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;[^:]*:[^:]*$&#39;</span><span class="w"> </span>-o<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t:<span class="w"> </span>-k2
 </span></code></pre></div>
 <p>The command above gets the sample name and ideal component from every FASTA
 header in <code>subjects.fasta</code>. <code>sort</code> is then used twice to get the unique
 sample-ideal component pairs and then sort them by ideal component.</p>
 <p>You should see something like this:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>SRR7990321:ideal_component_1127
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>SRR8003761:ideal_component_1331
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>SRR8003761:ideal_component_1459
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>SRR2321388:ideal_component_2366
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>SRR2321388:ideal_component_3289
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>SRR8003761:ideal_component_3939
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>SRR2321388:ideal_component_4110
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>SRR8003761:ideal_component_511
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>SRR8003761:ideal_component_6114
-</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>SRR2321385:ideal_component_6249
-</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>SRR2321388:ideal_component_6249
-</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>SRR7990321:ideal_component_6249
-</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>SRR8003736:ideal_component_6249
-</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>SRR8003761:ideal_component_6249
-</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>SRR8003762:ideal_component_6249
-</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>SRR8003761:ideal_component_667
-</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>SRR2321385:ideal_component_6777
-</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>SRR2321388:ideal_component_6777
-</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>SRR7990321:ideal_component_6777
-</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>SRR8003736:ideal_component_6777
-</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>SRR8003761:ideal_component_6777
-</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>SRR8003762:ideal_component_6777
-</span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>SRR7990321:ideal_component_7010
-</span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>SRR8003761:ideal_component_7855
-</span><span id="__span-12-25"><a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>SRR2321388:ideal_component_793
-</span><span id="__span-12-26"><a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>SRR7990321:ideal_component_8416
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>SRR7990321:ideal_component_1127
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>SRR8003761:ideal_component_1331
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>SRR8003761:ideal_component_1459
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>SRR2321388:ideal_component_2366
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>SRR2321388:ideal_component_3289
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>SRR8003761:ideal_component_3939
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>SRR2321388:ideal_component_4110
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>SRR8003761:ideal_component_511
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>SRR8003761:ideal_component_6114
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>SRR2321385:ideal_component_6249
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>SRR2321388:ideal_component_6249
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>SRR7990321:ideal_component_6249
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>SRR8003736:ideal_component_6249
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>SRR8003761:ideal_component_6249
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>SRR8003762:ideal_component_6249
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>SRR8003761:ideal_component_667
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>SRR2321385:ideal_component_6777
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>SRR2321388:ideal_component_6777
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>SRR7990321:ideal_component_6777
+</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>SRR8003736:ideal_component_6777
+</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>SRR8003761:ideal_component_6777
+</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>SRR8003762:ideal_component_6777
+</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>SRR7990321:ideal_component_7010
+</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>SRR8003761:ideal_component_7855
+</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>SRR2321388:ideal_component_793
+</span><span id="__span-13-26"><a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>SRR7990321:ideal_component_8416
 </span></code></pre></div>
 <p>Notice that transcripts from SRR2321385 in ideal components <span class="arithmatex">\(6249\)</span> and <span class="arithmatex">\(6777\)</span>
 matched the endophyte assemblies. We can conclude that the hits are not merely a
@@ -1727,10 +1735,11 @@ alignments using <a href="https://igv.org/doc/desktop/">Integrative Genomics Vie
 <code>subjects.fasta</code> and <code>queries.sam</code> files on the computer that will be running
 IGV, and make sure you can find these files on your system.</p>
 <h4 id="downloading-installing-and-launching-igv">Downloading, installing, and launching IGV</h4>
-<p>IGV can be installed from https://igv.org/doc/desktop/#DownloadPage/ . Select
-the download most appropriate for your system. In most cases, you will want to
-install a version with Java included. (Otherwise, IGV will try to use the system
-Java installation, which may not be compatible.)</p>
+<p>IGV can be installed from
+<a href="https://igv.org/doc/desktop/#DownloadPage/">https://igv.org/doc/desktop/#DownloadPage/</a>
+. Select the download most appropriate for your system. In most cases, you will
+want to install a version with Java included. (Otherwise, IGV will try to use
+the system Java installation, which may not be compatible.)</p>
 <p>On Windows, run and complete the installer. You should be able to find IGV in
 your start menu.</p>
 <p>On macOS, open the <code>.zip</code> file you downloaded and move the app within to your
@@ -1765,7 +1774,7 @@ the other transcripts from the same ideal component, you should see the same
 thing for the other alignments. This is true even for the E&minus; samples, such
 as SRR2321385, and the alignments clearly span much more than the length of a
 single read.</p>
-<h4 id="searching-the-nucleotide-database-for-matches-transcripts">Searching the Nucleotide database for matches transcripts</h4>
+<h4 id="searching-the-nucleotide-database-for-matched-transcripts">Searching the Nucleotide database for matched transcripts</h4>
 <p>One other possible explanation for the alignments we see is that the genome
 assemblies could inadvertently have included some sequences from the host
 plant. We can check if this is true by BLASTing the transcripts in the matched
@@ -1775,37 +1784,37 @@ get hits. We will also learn more about the identity of the matching sequences,
 which might help explain the matches to the E&minus; samples. </p>
 <p>First, let's concatenate the exported transcripts from the ideal components
 where all samples had matching transcripts. For this run, we want ideal
-components <span class="arithmatex">\(6249\)</span> <span class="arithmatex">\(6777\)</span>, but beck the results you got at the end of the
+components <span class="arithmatex">\(6249\)</span> and <span class="arithmatex">\(6777\)</span>, but check the results you got at the end of the
 <a href="#checking-represented-samples-in-matching-components">"Checking represented samples in matching
 component"</a> section to
 make sure you are using the right ideal component IDs here.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/full_ec_search_out/*/export/ideal_component_6249.fasta<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/full_ec_search_out/*/export/ideal_component_6777.fasta<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/matching_components.fasta
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/full_ec_search_out/*/export/ideal_component_6249.fasta<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/full_ec_search_out/*/export/ideal_component_6777.fasta<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/matching_components.fasta
 </span></code></pre></div>
 <p>Now, we will search the created <code>matching_components.fasta</code> against the NCBI
 Nucleotide database. (You may prefer to do this step in the web BLAST interface
 to avoid rate limits.)</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>blastn<span class="w"> </span>-query<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/matching_components.fasta<span class="w"> </span>-evalue<span class="w"> </span>1e-99<span class="w"> </span>-remote<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">       </span>-db<span class="w"> </span>nr<span class="w"> </span>-outfmt<span class="w"> </span><span class="m">6</span><span class="w"> </span>-out<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/remote_results
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>blastn<span class="w"> </span>-query<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/matching_components.fasta<span class="w"> </span>-evalue<span class="w"> </span>1e-99<span class="w"> </span>-remote<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">       </span>-db<span class="w"> </span>nr<span class="w"> </span>-outfmt<span class="w"> </span><span class="m">6</span><span class="w"> </span>-out<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/remote_results
 </span></code></pre></div>
 <p>If you view the subject sequence IDs in the resulting <code>remote_results</code> file and
 search for them within the
 <a href="https://www.ncbi.nlm.nih.gov/nucleotide/">Nucleotide</a> database, you should find
-that </p>
-<p>Actually, further investigation of the sequences we found reveals that they code
-for highly conserved proteins, and we are getting matches to both a plant and
-the fungal homolog of the gene. This explains why we get matches for the
-endophyte sequence even in E&minus; samples.</p>
+that the sequences match arious fungal sequences closely. Further investigation
+of the sequences we found reveals that they code for highly conserved proteins,
+and we are likely getting matches to both a plant and the fungal homolog of the
+gene. This explains why we get matches for the endophyte sequence even in
+E&minus; samples.</p>
 <h2 id="export-and-search-ideal-components-in-the-subset-analysis">Export and search ideal components in the subset analysis</h2>
 <p>Now that we've looked at the results for the full analysis, we will see how our
 results differ for the subset analysis that included only E&minus; samples. Run
 <code>export_and_search.py</code> again but provide it with the configuration file for the
 subset analysis and a different output directory.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>python<span class="w"> </span>export_and_search.py<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/infected_subset_out/config.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">                            </span>-Q<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/ec_genomes/*.fasta<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">                            </span>-X<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/subset_ec_search_out<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">                            </span>-e<span class="w"> </span>1e-99
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>python<span class="w"> </span>export_and_search.py<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/infected_subset_out/config.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">                            </span>-Q<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/ec_genomes/*.fasta<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">                            </span>-X<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/subset_ec_search_out<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">                            </span>-e<span class="w"> </span>1e-99
 </span></code></pre></div>
 <h2 id="examining-results-for-the-subset-analysis">Examining results for the subset analysis</h2>
 <p>The output export and search files should be located at

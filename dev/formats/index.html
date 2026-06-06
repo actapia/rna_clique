@@ -1756,12 +1756,14 @@ should contain the top <span class="arithmatex">\(n\)</span> genes from the tran
 gene's <span class="arithmatex">\(k\)</span>-mer coverage is defined as the transcript with maximum <span class="arithmatex">\(k\)</span>-mer
 coverage among the gene's isoforms.</p>
 <h3 id="directory-structure_1">Directory structure</h3>
-<p>Unlike the input transcriptomes, the top genes are all organized in a
-single directory. Unless the top genes directory is specified manually using the
+<p>Unlike the input transcriptomes, the top genes are all organized in a single
+directory. Unless the top genes directory is specified manually using the
 <code>top_genes_dir</code> config option or <code>--top-genes-dir</code>/<code>-O1</code> command line argument,
 the directory containing the top genes is <code>od1</code> underneath the analysis
-root. The top genes for sample <code>SAMPLE_NAME</code> are found in
-<code>SAMPLE_NAME_top.fasta</code>.</p>
+root. The top genes for sample <code>SAMPLE_NAME</code> are usually found in
+<code>SAMPLE_NAME_top.fasta</code>, but RNA-clique can also be pointed to custom paths for
+each sample via the <a href="../config/#path_to_sample"><code>path_to_sample</code></a> configuration
+option.</p>
 <h4 id="example-structure_1">Example structure</h4>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>.
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>└── od1

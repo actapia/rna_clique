@@ -1371,13 +1371,14 @@ should give some information about the sample. For example, sample metadata
 might include information about which population a sample comes from, or what
 the sample's chemotype is.</p>
 <p>It must be possible to map each sample to its corresponding metadata by the ID
-of the sample in the distance matrix. To make this possible, one column should
-contain these IDs. Which column to use can usually be specified to visualization
-function via the <code>sample_name_column</code> keyword argument. Note that, by default,
-<code>SampleSimilarity</code> gives distance matrices with rows and columns labeled with
-the paths to the top genes for the sample rather than the sample name itself. If
-your metadata uses the names of the samples, it may be necessary to rename the
-rows and columns of the distance matrix to use the actual names of the samples.</p>
+of the sample in the distance matrix. To make this possible, one column in the
+sample metadata should contain these IDs. Which column to use can usually be
+specified to a visualization function via the <code>sample_name_column</code> keyword
+argument. Note that, by default, <code>SampleSimilarity</code> gives distance matrices with
+rows and columns labeled with the paths to the top genes for the sample rather
+than the sample name itself. If your metadata uses the names of the samples, it
+may be necessary to rename the rows and columns of the distance matrix to use
+the actual names of the samples.</p>
 <h2 id="heatmaps">Heatmaps</h2>
 <p>A distance matrix can be visualized in a straightforward fashion via a
 heatmap. In a heatmap, the elements of the distance matrix are represented by
@@ -1509,8 +1510,9 @@ is not, then <code>group_by</code> will be set automatically to <code>order_by</
 the labels say can be controlled via the <code>make_group_label</code>
 function. <code>make_group_label</code> should take the value(s) for a particular group and
 return a string to be used as the label for that group. By default, the group
-label is simply the values (converted to strings) and joined with commas and
-spaces.</p>
+label is simply the value. If there are multiple <code>group_by</code> columns, the then
+the value's elements are converted to strings joined with commas and spaces to
+get the default group label.</p>
 <p>As a supplement to the colormapping, it is sometimes helpful to display digits
 of the actual value of a matrix element on top of the heatmap cell for that
 element. Since distance values do not typically have short decimal
@@ -1720,7 +1722,7 @@ displayed in the legend entries corresponding to those values. To allow the
 caller to specify arbitrary labels for each <code>group_by</code> columns value,
 <code>draw_pcoa</code> allows the caller to specify <code>make_group_label</code> and <code>labelers</code>.</p>
 <p>The <code>labelers</code> are functions such that <code>labelers[i]</code> is used to create the label
-for the value of column <code>i</code> of <code>group_by</code>. Each element of <code>labelers</code> should
+for the value of column <code>i</code> of <code>group_by</code>. Each element <code>labelers[i]</code> should
 accept a value of column <code>i</code> of <code>group_by</code> and should return a string, the label
 to use for that value. If a labeler doesn't exist for column <code>i</code>&mdash;i.e., if
 a labeler is <code>None</code>, or if <code>i &gt;= len(labelers)</code>&mdash;then <code>draw_pcoa</code> treats
@@ -1785,9 +1787,13 @@ feature can be used, for example, to ensure that groups that appear in the
 legend in the same vertical order they appear in the plot.</p>
 <p>In some cases, it is useful to sort the dataframe by values that do not appear
 in the columns of the sample metadata but can be computed from one or more
-columns. In that case, the <code>sort_key</code> parameter can be provided. <code>sort_key</code>
-should be a function taking the <code>order_by</code> columns and returning a new Pandas
-Series object that will be used to sort the samples.</p>
+columns. In that case, the <code>sort_key</code> parameter can be provided. When <code>order_by</code>
+is just a single column, <code>sort_key</code> should be a function taking the <code>order_by</code>
+column (as a Pandas Series) and returning a new Pandas Series object that will
+be used to sort the samples. When <code>order_by</code> is a sequence of multiple columns,
+<code>sort_key</code> should be a sequence of functions such that <code>sort_key[i]</code> takes
+column <code>order_by[i]</code> and returns a new transformed Series. The dataframe will be
+sorted by the transformed Series objects in the order specified by <code>order_by</code>.</p>
 <h3 id="ellipsoids-and-make_ellipsoid">ellipsoids and make_ellipsoid</h3>
 <p>In some cases, it is desirable to draw an ellipsoid for each <code>group_by</code>
 group. This behavior can be enabled by providing <code>True</code> to the <code>ellipsoids</code>
@@ -1814,9 +1820,9 @@ all possible axes (including ones greater than the number of dimensions).</p>
 <p>When the <code>annotate</code> parameter is specified, individual samples will be labeled
 with their names from the <code>sample_name_column</code>. Initially, each label is placed
 exactly on the point to which it refers, but since this can cause labels to
-overlap, the text positions might need to be adjusted. Such adjust takes place
-automatically via <a href="https://github.com/Phlya/adjustText"><code>adjustText</code></a> when the
-<code>adjust</code> parameter is <code>True</code> (the default); setting <code>adjust=False</code> keeps the
+overlap, the text positions might need to be adjusted. Such adjustment takes
+place automatically via <a href="https://github.com/Phlya/adjustText"><code>adjustText</code></a> when
+the <code>adjust</code> parameter is <code>True</code> (the default); setting <code>adjust=False</code> keeps the
 original positions.</p>
 <h3 id="legend_factors-and-default_legend_marker">legend_factors and default_legend_marker</h3>
 <p>In some cases, encodings of column might be independent in the sense that the
@@ -1866,17 +1872,17 @@ second variable is <code>'1'</code>, the shape is a circle, and when the value i
 the shape is a square. The value of the first variable has no impact on shape.</p>
 <p>By default, <code>draw_pcoa</code> would make a legend entry for each of the six
 combinations of color and shape seen among the samples, but, in this case,
-because we have variables that are encoded independently, we express the legend
-more succinctly with just five entries. The five entries would should that red
-corresponds to <code>'a'</code>, blue to <code>'b'</code>, and yellow to <code>'c'</code>, and that circle
-corresponds to <code>'1</code>' and square to <code>'2'</code>. </p>
+because we have variables that are encoded independently, we can express the
+legend more succinctly with just five entries. The five entries would should
+that red corresponds to <code>'a'</code>, blue to <code>'b'</code>, and yellow to <code>'c'</code>, and that
+circle corresponds to <code>'1</code>' and square to <code>'2'</code>.</p>
 <p><code>draw_pcoa</code> can try to detect such independent variables when the
-<code>legend_factors</code> parameter is set to a list of tuples or strings or to <code>True</code>
+<code>legend_factors</code> parameter is set to a list of tuples of strings or to <code>True</code>
 (equivalent to <code>legend_factors</code> being set to <code>group_by</code>). <code>draw_pcoa</code> will then
 display each visual variable's mapping separately. This is accomplished by first
 computing what keyword arguments are common to all samples that share values for
 each of the provided tuples of columns in <code>legend_factors</code>. For the example
-above, if the columns were named <code>alpha</code> and <code>beta</code>, and <code>legend_factors</code> was
+above, if the columns were named <code>alpha</code> and <code>beta</code>, and <code>legend_factors</code> were
 set to <code>[('alpha',), ('beta',)]</code>, then <code>draw_pcoa</code> would recognize that all
 cases where <code>alpha = 'a'</code> are cases where <code>color</code> is mapped to red, 
 <code>alpha = 'b'</code>, blue, and <code>alpha = 'c'</code>, yellow. Likewise, it would recognize
@@ -1984,10 +1990,10 @@ appear in the <code>clades</code> <code>dict</code>. In the last case, each key-
 that the clade associated with the same key in the <code>clades</code> <code>dict</code> should be
 colored as specified by the value in the <code>colors</code> <code>dict</code>.</p>
 <h3 id="get_clades">get_clades</h3>
-<p>It is sometimes desirable to color clades such that only maximal clades such
-that all samples in the clade have some metadata value, <em>and</em> all samples that
-have that metadata value fall in that clade. To find such clades to be colored,
-you can use the <code>get_clades</code> function from the <code>phylo_utils.py</code> module. </p>
+<p>It is sometimes desirable to find and color maximal clades such that all samples
+in the clade have some metadata value, <em>and</em> all samples that have that metadata
+value fall in that clade. To find such clades to be colored, you can use the
+<code>get_clades</code> function from the <code>phylo_utils.py</code> module.</p>
 <p><code>get_clades</code> returns the axes on which the tree was drawn. The parameters
 accepted by <code>get_clades</code> are described below.</p>
 <table>
@@ -2033,7 +2039,7 @@ accepted by <code>get_clades</code> are described below.</p>
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="n">tree</span> <span class="o">=</span> <span class="n">constructor</span><span class="o">.</span><span class="n">nj</span><span class="p">(</span><span class="n">phylo_dis_mat</span><span class="p">)</span>
 </span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Get clades by population.</span>
 </span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="n">clades</span> <span class="o">=</span> <span class="n">get_clades</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">sample_metadata</span><span class="p">,</span> <span class="s2">&quot;sample_name&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;population&quot;</span><span class="p">])</span>
-</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Draw the tree, coloring maximal clades containingly only and all samples from</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Draw the tree, coloring maximal clades containing only and all samples from</span>
 </span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># a given population.</span>
 </span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="n">ax</span> <span class="o">=</span> <span class="n">draw_tree</span><span class="p">(</span>
 </span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="n">tree</span><span class="p">,</span>

@@ -1425,10 +1425,10 @@ these pre-assembled transcriptomes will already be included with the software.</
 <h2 id="background">Background</h2>
 <p>The RNA-seq data used in this tutorial are from plants derived from the
 "Kentucky 31" tall fescue (<em>Lolium arundinaceum</em>) cultivar and were originally
-used in gene expression studies described in <a href="https://doi.org/10.3835/plantgenome2018.09.0071"><em>Transcriptome analysis and
+used in gene expression studies described in "<a href="https://doi.org/10.3835/plantgenome2018.09.0071">Transcriptome analysis and
 differential expression in tall fescue harboring different endophyte strains in
 response to water
-deficit</em></a>. Each set of RNA-seq 
+deficit</a>". Each set of RNA-seq
 reads comes from a different individual, and although we will be using RNA-seq
 reads for six individuals, the individuals have only four distinct
 genotypes. Individuals with the same genotype are clones, and should thus have
@@ -1491,7 +1491,7 @@ but this is optional.</p>
 <h3 id="software-for-getting-sequence-data">Software for getting sequence data</h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If you are using pre-assembled transcriptomes, you can skip installing this
+<p>If you are using pre-assembled transcriptomes, you can skip installing the
 software in this section.</p>
 </div>
 <p>In addition to RNA-clique, this tutorial requires the following software for
@@ -1520,7 +1520,7 @@ RNA-clique git repository. For example, you may wish to put the software in your
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl -L -O https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac-arm64.tar.gz
+<div class="language-zsh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-L<span class="w"> </span>-O<span class="w"> </span>https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-mac-arm64.tar.gz
 </span></code></pre></div>
 </div>
 </div>
@@ -1637,7 +1637,7 @@ samples are a subset of the sixteen used in the paper <em>RNA-clique: A method f
 computing genetic distances from RNA-seq data</em>. The sample metadata shown
 previously in the <a href="#background">Background</a> section is also present in the file
 <a href="tall_fescue_accs.csv"><code>tall_fescue_accs.csv</code></a>. We can easily download all of
-the RNA-seq data we need using the <code>tall_fescue_accs.svg</code> file and the
+the RNA-seq data we need using the <code>tall_fescue_accs.csv</code> file and the
 <code>download_sra</code> tool.</p>
 <p>First, change to your <code>TUTORIAL_DIR</code>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>
@@ -1700,8 +1700,8 @@ safely.</p>
 </div>
 </div>
 </div>
-<p>The assembled transcriptomes will be located at <code>transcripts.fasta</code> in
-directories corresponding to their samples names under the <code>out</code> directory.</p>
+<p>Each assembled transcriptomes will be located at <code>transcripts.fasta</code> in
+a directory corresponding to its sample name under the <code>out</code> directory.</p>
 <h2 id="running-rna-clique">Running RNA-clique</h2>
 <p>First, return to the RNA-clique repository root.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">&quot;</span>
@@ -1717,15 +1717,16 @@ will use that value.</p>
 </span></code></pre></div>
 <h2 id="results">Results</h2>
 <p>Once RNA-clique has completed, you will likely want to <a href="#counting-ideal-components">count the ideal
-components</a>,<a href="#viewing-the-distance-matrix">see the distance
+components</a>, <a href="#viewing-the-distance-matrix">see the distance
 matrix</a>, and possibly use the matrix as input to
-downstream analyses, such as construction of a phylogenetic tree or a PCoA plot,
-or a more direct visualization of the matrix like a heatmap. Although RNA-clique
-does <em>not</em> seek to integrate code for every possible downstream analysis that
-could be performed on a distance matrix, and it is assumed that many users of
-RNA-clique will prefer to export the matrix and use other software for these
-analyses, RNA-clique nevertheless does provide a handful of Python functions
-that are useful for creating trees, PCoA plots, and heatmaps.</p>
+downstream analyses, such as <a href="#getting-a-tree">construction of a phylogenetic
+tree</a> or a <a href="#getting-a-pcoa-plot">PCoA plot</a>, or a more direct
+visualization of the matrix like a <a href="#getting-a-heatmap">heatmap</a>. Although
+RNA-clique does not seek to integrate code for every possible downstream
+analysis that could be performed on a distance matrix, and it is assumed that
+many users of RNA-clique will prefer to export the matrix and use other software
+for these analyses, RNA-clique nevertheless does provide a handful of Python
+functions that are useful for creating trees, PCoA plots, and heatmaps.</p>
 <p>Since RNA-clique's downstream analysis utility functions rely on metadata about
 the samples, and metadata could be expressed in a variety of formats, RNA-clique
 currently does not expose the downstream analysis functions via a command-line
@@ -1823,7 +1824,7 @@ saved to <code>nj_tree.tree</code>, and a visualization is saved to <code>nj_tre
 so you can run it as follows:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="w"> </span>python<span class="w"> </span>docs/tutorials/reads2tree/make_tree.py
 </span></code></pre></div>
-<p>The script create a file called <code>nj_tree.svg</code> in the
+<p>The script creates a file called <code>nj_tree.svg</code> in the
 <code>$TUTORIAL_DIR/rna_clique_out</code> directory. The result should look something like
 this:</p>
 <p><img alt="A phylogram with six leaves representing the samples analyzed in this

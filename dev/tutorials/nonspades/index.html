@@ -1315,8 +1315,8 @@ here. The coverage value must be a floating-point number, a decimal
 representation of some real value. The coverage can have a non-integer part, but
 the same is not true for the gene and isoform IDs. Both the gene and isoform IDs
 must be non-negative integers.</p>
-<p>The second thing to note is that that RNA-clique expects the each pair of gene
-and isoform IDs to be unique within a file. For example, it's okay to have two
+<p>The second thing to note is that that RNA-clique expects each pair of gene and
+isoform IDs to be unique within a file. For example, it's okay to have two
 transcripts with the pairs (15, 0) and (15, 1), or two transcripts with the
 pairs (15, 0) and (16, 0), but it's <em>not</em> okay to have two transcripts both with
 the pair (15, 0).</p>
@@ -1451,14 +1451,20 @@ directory.</p>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">cd</span><span class="w"> </span>trinity_assemblies
 </span></code></pre></div>
 <p>Download the Trinity assemblies into that directory and untar them.</p>
-<p>=== Ubuntu
-    <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>wget<span class="w"> </span><span class="s2">&quot;http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz&quot;</span>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Ubuntu</label><label for="__tabbed_1_2">macOS</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>wget<span class="w"> </span><span class="s2">&quot;http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz&quot;</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>tar<span class="w"> </span>xJvf<span class="w"> </span>trinity_assemblies.tar.xz
 </span></code></pre></div>
-=== macOS
-    <div class="language-zsh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-L<span class="w"> </span>-O<span class="w"> </span><span class="s2">&quot;http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz&quot;</span>
+</div>
+<div class="tabbed-block">
+<div class="language-zsh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-L<span class="w"> </span>-O<span class="w"> </span><span class="s2">&quot;http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz&quot;</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>tar<span class="w"> </span>xJvf<span class="w"> </span>trinity_assemblies.tar.xz
-</span></code></pre></div></p>
+</span></code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="examining-the-trinity-assemblies">Examining the Trinity assemblies</h2>
 <p>If you now list the contents of your current directory, you should see
 immediately that the layout of the data does not match what RNA-clique expects,
@@ -1519,7 +1525,8 @@ actions must be taken to format the data to be usable with RNA-clique:</p>
 FASTA headers to add TPM information from the <code>quant.sf</code> files. This would be
 tricky to do with common command-line tools, so we will use a Python script
 instead. The script is shown below and can also be found at
-<code>docs/tutorial/nonspades/add_tpm.py</code> under the root of the repository.</p>
+<a href="https://github.com/actapia/rna_clique/blob/mkdocs/docs/tutorials/nonspades/add_tpm.py"><code>docs/tutorials/nonspades/add_tpm.py</code></a>
+under the root of the repository.</p>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
@@ -1573,7 +1580,8 @@ IDs for each of the genes and add those integer IDs to the sequence IDs. Again,
 performing this process using standard Unix command-line tools would be
 difficult, so we opt to use a Python script.</p>
 <p>The script, also shown below, can be found at
-<code>docs/tutorial/nonspades/assign_gene_ids.py</code> under the root of the repository.</p>
+<a href="https://github.com/actapia/rna_clique/blob/mkdocs/docs/tutorial/nonspades/assign_gene_ids.py"><code>docs/tutorial/nonspades/assign_gene_ids.py</code></a>
+under the root of the repository.</p>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>

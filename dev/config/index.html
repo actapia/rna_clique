@@ -1690,7 +1690,7 @@ all possible settings. Values missing from the configuration can be provided
 <a href="#interaction-with-command-line-arguments">via command-line arguments</a> or
 <a href="#derived-settings">derived from the provided values automatically</a>, and an
 RNA-clique program will not fail if settings it does not need are missing. The
-<a href="../usage/">Command line usage guide</a> documents which settings must be present
+<a href="../usage/">Command-line usage guide</a> documents which settings must be present
 (from any source) in the "Required" column of each script's "Options" table.</p>
 <h2 id="file-paths">File paths</h2>
 <p>When a setting is assigned a relative file path, the file path is interpreted as
@@ -1906,9 +1906,9 @@ named <code>transcripts.fasta</code> since this is the default output filename f
 <a href="https://github.com/ablab/spades">rnaSPAdes</a>, but this name can be customized
 using the <code>transcripts_name</code> setting.</p>
 <h3 id="top_matches">top_matches</h3>
-<p>When comparing sample <span class="arithmatex">\(A\)</span> and sample <span class="arithmatex">\(V\)</span>, we BLAST <span class="arithmatex">\(A\)</span> against <span class="arithmatex">\(B\)</span> and <span class="arithmatex">\(B\)</span>
-against <span class="arithmatex">\(A\)</span>. Ordinarily, we keep a pair of genes <span class="arithmatex">\(g\)</span> (from <span class="arithmatex">\(a\)</span>) and <span class="arithmatex">\(h\)</span> (from
-<span class="arithmatex">\(b\)</span>) when merging the results from the two directions if and only if <span class="arithmatex">\(g\)</span> is
+<p>When comparing sample <span class="arithmatex">\(A\)</span> and sample <span class="arithmatex">\(B\)</span>, we BLAST <span class="arithmatex">\(A\)</span> against <span class="arithmatex">\(B\)</span> and <span class="arithmatex">\(B\)</span>
+against <span class="arithmatex">\(A\)</span>. Ordinarily, we keep a pair of genes <span class="arithmatex">\(g\)</span> (from <span class="arithmatex">\(A\)</span>) and <span class="arithmatex">\(h\)</span> (from
+<span class="arithmatex">\(B\)</span>) when merging the results from the two directions if and only if <span class="arithmatex">\(g\)</span> is
 among the best matches for <span class="arithmatex">\(h\)</span> in <span class="arithmatex">\(A\)</span>, <em>and</em> <span class="arithmatex">\(h\)</span> is among the best matches for
 <span class="arithmatex">\(g\)</span> in <span class="arithmatex">\(B\)</span>, according to bitscore. (We allow ties, so <span class="arithmatex">\(h\)</span> may not be the <em>only</em>
 best match for <span class="arithmatex">\(g\)</span> in <span class="arithmatex">\(B\)</span>, and, likewise, <span class="arithmatex">\(g\)</span> may not be the <em>only</em> best match
@@ -1989,11 +1989,11 @@ broken arbitrarily by keeping only the row that comes first in the table.</p>
 for a sample 1 gene in the case of ties.</p>
 <h3 id="path_to_sample">path_to_sample</h3>
 <p>The <code>path_to_sample</code> setting should be a <code>dict</code> (YAML mapping) mapping <a href="../formats/#top-genes">top
-genes</a> files to the names of the sames they represent. By
-default, RNA-clique assumes that each sample are named after the directory in
-which its traanscripts FASTA file is found. This default behavior is reflected
-in output YAML files produced by RNA-clique, but the mapping can be changed
-manually to assign different names to samples.</p>
+genes</a> files to the names of the samples they
+represent. By default, RNA-clique assumes that each sample is named after the
+directory in which its transcripts FASTA file is found. This default behavior
+is reflected in output YAML files produced by RNA-clique, but the mapping can be
+changed manually to assign different names to samples.</p>
 <h4 id="examples_1">Examples</h4>
 <p>The example below uses the set of 16 tall fescue samples analyzed in the
 original RNA-clique paper. All top genes files here are mapped to their default
@@ -2018,22 +2018,22 @@ sample names.</p>
 </span></code></pre></div>
 <p>In the example below, the samples have been renamed to reflect their genotypes.</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">path_to_sample</span><span class="p">:</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321383_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR2321383</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321384_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR2321384</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321385_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR2321385</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321386_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR2321386</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321387_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR2321387</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321388_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR2321388</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR7990321_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR7990321</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR7990322_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR7990322</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003736_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003736</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003737_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003737</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003753_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003753</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003754_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003754</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003755_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003755</span>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003756_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003756</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003761_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003761</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003762_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003762</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321383_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE46_1</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321384_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE46_2</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321385_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE46_3</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321386_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE46_4</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321387_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE46_5</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321388_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE46_6</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR7990321_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FATG4_1</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR7990322_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FATG4_2</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003736_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NTE_1</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003737_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NTE_2</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003753_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE27_1</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003754_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE27_2</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003755_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE27_3</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003756_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE27_4</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003761_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE27_5</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003762_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE27_6</span>
 </span></code></pre></div>
 <h3 id="matrix">matrix</h3>
 <p>The <code>matrix</code> setting is a path to the <a href="../formats/#distance-matrix">distance

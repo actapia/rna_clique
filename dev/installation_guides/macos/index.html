@@ -1148,10 +1148,9 @@
 <p>This guide will walk you through installing RNA-clique on macOS. Since
 RNA-clique currently has no graphical interface, basic command-line skills are
 needed for both installation and use of the software.</p>
-<p>This guide is designed for macOS Sequoia 15 on Intel Mac, but the steps in this
-guide have also been tested on macOS Ventura 13 on Intel and macOS Sonoma 14 on
-Apple Silicon via GitHub Actions runners. The guide likely works on other recent
-versions of macOS, but such configurations are untested.</p>
+<p>This guide is designed for macOS 26 Tahoe and has also been tested on macOS 15
+Sequoia via GitHub Actions runners. Newer versions of macOS will likely work,
+but older versions probably will not.</p>
 <h2 id="installing-command-line-developer-tools">Installing command line developer tools</h2>
 <p>Installation requires some commands (e.g., <code>git</code>) that are part of the macOS 
 command line developer tools, which are not installed by default. To install
@@ -1160,7 +1159,7 @@ them, run the following in the Terminal.</p>
 </span></code></pre></div>
 <p>If the command line developer tools have not been installed already, you should
 see a graphical dialog prompting you to confirm installation. Click "Install" 
-and agree to the license agreement to begin installation .Wait for the install
+and agree to the license agreement to begin installation. Wait for the install
 to complete before continuing.</p>
 <h2 id="download-rna-clique">Download RNA-clique</h2>
 <p>You can download RNA-clique by cloning its GitHub repository. (Alternatively,
@@ -1184,13 +1183,9 @@ needed software.</p>
 <p>After the install has finished, run the commands that the installer suggests to
 add Homebrew to your <code>PATH</code>, and the restart your shell.</p>
 <h2 id="installing-bash-and-blast">Installing Bash and BLAST</h2>
-<p>We will install a couple of packages using Homebrew.</p>
-<p>First, we will install <strong>Bash</strong>, which is a Unix shell. The version of Bash that
-comes installed on macOS is very out of date, but RNA-clique requires some new
-features of Bash.</p>
-<p>Second, we will install <strong>NCBI BLAST+</strong>, a popular implementation of the BLAST
-local sequence alignment software.</p>
-<div class="language-zsh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>brew<span class="w"> </span>install<span class="w"> </span>bash<span class="w"> </span>blast
+<p>We will use <code>brew</code> to install <strong>NCBI BLAST+</strong>, a popular implementation of the
+BLAST local sequence alignment software.</p>
+<div class="language-zsh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>brew<span class="w"> </span>install<span class="w"> </span>blast
 </span></code></pre></div>
 <h2 id="installing-miniconda">Installing Miniconda</h2>
 <p>The conda package and environment manager will be useful for setting up the
