@@ -1667,24 +1667,22 @@ repository and can simply move them instead of running SPAdes</p>
 <p>Assembling the transcriptomes requires at least 16 GB of memory. If you have
 insufficient memory or otherwise need to skip this step, you can download
 the assemblies instead:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Ubuntu</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Ubuntu</label><label for="__tabbed_4_2">macOS</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
+<div class="tabbed-block">
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>wget<span class="w"> </span><span class="s2">&quot;http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.tar.gz&quot;</span>
 </span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>mkdir<span class="w"> </span>out
 </span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>tar<span class="w"> </span>xzvf<span class="w"> </span>transcripts.tar.gz<span class="w"> </span>-d<span class="w"> </span>out
 </span></code></pre></div>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:1"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">macOS</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block"></div>
 </div>
-</div>
+<div class="tabbed-block">
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>curl<span class="w"> </span>-L<span class="w"> </span>-O<span class="w"> </span><span class="s2">&quot;http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.tar.gz&quot;</span>
 </span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>mkdir<span class="w"> </span>out
 </span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>tar<span class="w"> </span>xzvf<span class="w"> </span>transcripts.tar.gz<span class="w"> </span>-d<span class="w"> </span>out
 </span></code></pre></div>
+</div>
+</div>
+</div>
 </div>
 <p>Ordinarily, we would need a quality control step before proceeding to assembly,
 but we will skip that for this tutorial.</p>
@@ -1700,7 +1698,7 @@ trial and error; you may need to simply guess how many are appropriate for your
 computer and retry if you run out of memory.</p>
 <p>On a computer with over 120 GB of memory, we can run 6 jobs with 3 threads
 safely.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">With parallel</label><label for="__tabbed_6_2">Without parallel</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">With parallel</label><label for="__tabbed_5_2">Without parallel</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>parallel<span class="w"> </span>--jobs<span class="w"> </span><span class="m">6</span><span class="w"> </span>spades.py<span class="w"> </span>--rna<span class="w"> </span>-o<span class="w"> </span>out/<span class="o">{</span>/.<span class="o">}</span><span class="w"> </span>-s<span class="w"> </span><span class="o">{}</span><span class="w"> </span>-t<span class="w"> </span><span class="m">3</span><span class="w"> </span>-m<span class="w"> </span><span class="m">120</span><span class="w"> </span>:::<span class="w"> </span>*.fastq
