@@ -12,8 +12,7 @@ containing pairwise distances ranging from 0 to 1.
 This software is written in Python. The software additionally requires NCBI
 BLAST+ and several Python libraries. [Guides](#installation-guides) are provided
 for installation on specific systems. Alternatively, for installing on other
-systems, you can see the
-<!--{{doc_link("requirements.md", "requirements", False) | comment_surround}}{{empty("-->
+systems, you can see the <!--{{doc_link("requirements.md", "requirements", False) | comment_surround}}{{empty("-->
 [requirements](https://actapia.github.io/rna_clique/dev/requirements)<!--")}}-->
 
 ### Installation guides
@@ -96,10 +95,8 @@ sim, path_to_sample = rna_clique(
 print(sim.get_dissimilarity_df())
 ```
 
-For information on finer-grained control via RNA-clique's Python API, see the
-<!--{{doc_link("api/README.md", "API Guide", False) | comment_surround}}{{empty("-->
-[API guide](https://actapia.github.io/rna_clique/dev/api).
-<!--")}}-->
+For information on finer-grained control via RNA-clique's Python API, see the<!--{{doc_link("api/README.md", "API Guide", False) | comment_surround}}{{empty("-->
+[API guide](https://actapia.github.io/rna_clique/dev/api).<!--")}}-->
 
 ## License
 
