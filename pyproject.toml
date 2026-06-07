@@ -45,6 +45,9 @@ license = "MIT AND CC-BY-SA-2.0"
 "Homepage" = "https://github.com/actapia/rna_clique"
 "Bug Tracker" = "https://github.com/actapia/rna_clique"
 
+[project.scripts]
+rna-clique = "rna_clique.rna_clique:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["rna_clique", "rna_clique.docs", "rna_clique.viz"]
