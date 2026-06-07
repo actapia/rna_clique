@@ -19,7 +19,7 @@ dependencies = [
     "matplotlib",
     "seaborn",
     "scikit-bio",
-    "pytables",
+    "tables",
     "biopython",
     "more-itertools",
     "dendropy",
