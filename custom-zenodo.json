@@ -13,7 +13,6 @@
 	    "custom": {
 		"code:programmingLanguage": [
 		    {"id": "python", "title": {"en": "Python"}},
-		    {"id": "perl", "title": {"en": "Perl"}},
 		    {"id": "shell", "title": {"en": "Shell"}}
 		],
 		"code:developmentStatus": {
