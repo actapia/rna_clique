@@ -35,7 +35,7 @@ We will also install a new version of Python since macOS comes pre-installed
 with a version that is too old to work with RNA-clique.
 
 ```zsh
-brew install blast python@3.14
+brew install blast python@3.13
 ```
 
 ## Creating a virutal environment
@@ -46,7 +46,7 @@ when we have the virtual environment "activated," so it won't clutter or
 conflict with the other software installed on the system. 
 
 ```zsh
-python3.14 -m venv rna_clique_env
+python3.13 -m venv rna_clique_env
 ```
 
 Then, activate the environment with the virtual environment's `activate` script.
