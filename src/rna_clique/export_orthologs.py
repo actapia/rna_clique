@@ -14,8 +14,6 @@ import Bio.Align
 import networkx as nx
 import numpy as np
 
-import config as config_module
-import app
 
 from collections import defaultdict
 from contextlib import ExitStack
@@ -27,23 +25,25 @@ from simple_blast import TabularBlastnSearch
 from tqdm import tqdm
 from joblib import Parallel, delayed
 
-from find_homologs import highest_bitscores
-from filtered_distance import (
+from . import config as config_module
+from . import app
+from .find_homologs import highest_bitscores
+from .filtered_distance import (
     SampleSimilarity,
     get_ideal_components,
     NoIdealComponentsError
 )
-from path_to_sample import (
+from .path_to_sample import (
     path_to_sample,
     sample_re,
     PathToSampleError,
     dict_path_to_sample
 )
-from graph import component_subgraphs
-from strand_sat import sat_assign_strands
-from transcripts import TranscriptID, TranscriptIDParseError
-from gene_matches_tables import get_table_files
-from app import set_except_hook, eprint
+from .graph import component_subgraphs
+from .strand_sat import sat_assign_strands
+from .transcripts import TranscriptID, TranscriptIDParseError
+from .gene_matches_tables import get_table_files
+from .app import set_except_hook, eprint
 
 default_gene_re = re.compile("^.*g([0-9]+)_i([0-9]+)")
 

@@ -28,12 +28,12 @@ try:
 except ImportError:
     from yaml import Loader, Dumper
 
-from marshalling_dataclass import (
+from .marshalling_dataclass import (
     marshalling_dataclass,
     marshalling_field,
     MarshallingDataclassBase,
 )
-from transcripts import default_gene_re
+from .transcripts import default_gene_re
 
 def get_version():
     version = None

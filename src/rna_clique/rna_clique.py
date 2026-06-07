@@ -1,22 +1,22 @@
 import multiprocessing
 import sys
 
-import config as config_module
-
-import filtered_distance
-import filtering_step
-import app
-
 from pathlib import Path
 from typing import Callable, Iterable, Optional
 
 from multiset_key_dict import MultisetKeyDict
 
-from transcripts import TranscriptID, TranscriptIDParseError
-from filtered_distance import SampleSimilarity, NoIdealComponentsError
-from similarity_computer import ComparisonSimilarityComputer
-from transcripts import default_gene_re
-from app import eprint, validate_input_dirs, set_except_hook
+from . import config as config_module
+from . import filtering_step
+from . import app
+from .transcripts import (
+    TranscriptID,
+    TranscriptIDParseError,
+    default_gene_re
+)
+from .filtered_distance import SampleSimilarity, NoIdealComponentsError
+from .similarity_computer import ComparisonSimilarityComputer
+from .app import eprint, validate_input_dirs, set_except_hook
 
 def build_parser():
     parser = filtering_step.build_parser()

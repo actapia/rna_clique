@@ -1,13 +1,13 @@
 import functools
 import operator
 import pickle
+
 import config as config_module
-import app
-from app import eprint, set_except_hook
-from gene_matches_tables import get_table_files, read_table
+
+from .app import eprint, set_except_hook
+from .gene_matches_tables import get_table_files, read_table
 
 from collections.abc import Iterable
-from pathlib import Path
 
 import pandas as pd
 import networkx as nx

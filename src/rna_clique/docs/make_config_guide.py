@@ -2,13 +2,12 @@ import typing
 
 import pandas as pd
 
-import config as config_module
-
 from pathlib import Path
 
-from markdown import MarkdownDocument
-from docs import unoptional, get_type_name, column_to_text
-from identity import id_
+from .. import config as config_module
+from .markdown import MarkdownDocument
+from .docs import unoptional, get_type_name, column_to_text
+from ..identity import id_
 
 def build_parser():
     parser = config_module.ArgumentManager()

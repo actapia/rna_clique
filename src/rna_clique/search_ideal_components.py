@@ -5,9 +5,6 @@ import pysam
 import Bio.Align
 import networkx as nx
 
-import config as config_module
-import app
-
 from typing import Optional, Callable
 from pathlib import Path
 from collections import defaultdict, deque, namedtuple
@@ -15,20 +12,22 @@ from collections import defaultdict, deque, namedtuple
 from simple_blast import BlastDBCache, MultiformatBlastnSearch
 from tqdm import tqdm
 
-from gene_matches_tables import get_table_files
-from filtered_distance import (
+from . import config as config_module
+from . import app
+from .gene_matches_tables import get_table_files
+from .filtered_distance import (
     SampleSimilarity,
     get_ideal_components,
 )
-from export_orthologs import build_strand_graph, get_sample_gene_to_component
-from path_to_sample import (
+from .export_orthologs import build_strand_graph, get_sample_gene_to_component
+from .path_to_sample import (
     path_to_sample,
     sample_re,
     PathToSampleError,
     dict_path_to_sample
 )
-from transcripts import default_parser, TranscriptID, TranscriptIDParseError
-from app import set_except_hook, eprint
+from .transcripts import default_parser, TranscriptID, TranscriptIDParseError
+from .app import set_except_hook, eprint
 
 #default_gene_re = re.compile("^.*g([0-9]+)_i([0-9]+)")
 default_search_evalue = 1e-50

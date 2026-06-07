@@ -4,14 +4,13 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-import config as config_module
-
 from pathlib import Path
 from typing import Optional
 
-from graph import component_subgraphs
-from gene_matches_tables import read_table, get_table_files
-from app import set_except_hook, eprint
+from . import config as config_module
+from .graph import component_subgraphs
+from .gene_matches_tables import read_table, get_table_files
+from .app import set_except_hook, eprint
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(

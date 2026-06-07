@@ -13,8 +13,8 @@ from collections.abc import Sequence, Mapping
 
 from matplotlib import pyplot as plt
 
-from plots import _transform_ax, BasicCompositeTransform
-from identity import id_
+from .plots import _transform_ax, BasicCompositeTransform
+from ..identity import id_
 
 def tril_jagged(mat: np.ndarray) -> list[list[Number]]:
     """Get lower triangle of a matrix as a jagged 2-dimensional list."""

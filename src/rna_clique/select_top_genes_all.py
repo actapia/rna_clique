@@ -1,14 +1,13 @@
 import Bio.SeqIO
 
-import config as config_module
-import app
-
 from pathlib import Path
 from joblib import Parallel, delayed
 
-from select_top_genes import TopGeneSelector
-from transcripts import TranscriptID, TranscriptIDParseError
-from app import set_except_hook, validate_input_dirs
+from . import config as config_module
+from . import app
+from .select_top_genes import TopGeneSelector
+from .transcripts import TranscriptID, TranscriptIDParseError
+from .app import set_except_hook, validate_input_dirs
 
 def select_top_and_save(
         out_dir: Path,

@@ -4,16 +4,15 @@ import sys
 import Bio
 import Bio.SeqIO
 
-import config as config_module
-import app
-
 from pathlib import Path
 from collections import defaultdict
 from collections.abc import Collection
 from typing import Iterator, Callable
 
-from transcripts import TranscriptID, default_parser, TranscriptIDParseError
-from app import set_except_hook
+from . import config as config_module
+from . import app
+from .transcripts import TranscriptID, default_parser, TranscriptIDParseError
+from .app import set_except_hook
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(

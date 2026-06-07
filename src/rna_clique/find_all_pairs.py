@@ -8,9 +8,6 @@ import sys
 
 import pandas as pd
 
-import config as config_module
-import app
-
 from typing import Optional, Any, Callable, Iterator
 from collections.abc import Iterable, Mapping
 from pathlib import Path
@@ -20,11 +17,13 @@ from simple_blast import BlastDBCache
 from joblib import Parallel, delayed
 from tqdm import tqdm
 
-from find_homologs import HomologFinder
-from app import eprint, set_except_hook
-from gene_matches_tables import write_table
-from transcripts import TranscriptID, TranscriptIDParseError
-from path_to_sample import PathToSampleError, dict_path_to_sample
+from . import app
+from . import config as config_module
+from .find_homologs import HomologFinder
+from .app import eprint, set_except_hook
+from .gene_matches_tables import write_table
+from .transcripts import TranscriptID, TranscriptIDParseError
+from .path_to_sample import PathToSampleError, dict_path_to_sample
 
 default_sample_regex = re.compile(os.environ.get("SAMPLE_RE", "^(.*?)_.*$"))
 

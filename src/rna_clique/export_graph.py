@@ -5,13 +5,13 @@ import pickle
 
 import networkx as nx
 
-import config as config_module
-import app
 
 from pathlib import Path
 from contextlib import ExitStack
 
-from app import set_except_hook, eprint, get_format_from_extension
+from . import config as config_module
+from . import app
+from .app import set_except_hook, eprint, get_format_from_extension
 
 def write_cytoscape(graph: nx.Graph, out_file: io.TextIOBase):
     """Export the given graph as a Cytoscape.js JSON file.

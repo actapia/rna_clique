@@ -1,8 +1,6 @@
 import multiprocessing
 import itertools
 import pickle
-import config as config_module
-import app
 
 from typing import Iterable
 
@@ -15,12 +13,14 @@ from typing import Callable
 from joblib import Parallel, delayed
 from tqdm import tqdm
 
-from transcripts import default_gene_re, TranscriptID, TranscriptIDParseError
-from select_top_genes_all import select_top_and_save
-from find_all_pairs import find_all_pairs
-from build_graph import build_graph
-from similarity_computer import ComparisonSimilarityComputer
-from app import set_except_hook, validate_input_dirs
+from . import app
+from . import config as config_module
+from .transcripts import default_gene_re, TranscriptID, TranscriptIDParseError
+from .select_top_genes_all import select_top_and_save
+from .find_all_pairs import find_all_pairs
+from .build_graph import build_graph
+from .similarity_computer import ComparisonSimilarityComputer
+from .app import set_except_hook, validate_input_dirs
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(

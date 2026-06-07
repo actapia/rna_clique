@@ -12,11 +12,9 @@ from collections.abc import Iterable, Sequence, Mapping
 from matplotlib import pyplot as plt
 from adjustText import adjust_text
 
-from plots import default_group_label_maker, _keyed_multi_sort
-from confidence_ellipsoid import Ellipsoid, draw_ellipsoid, conf_ellipsoid
-
-from plots import as_tuple
-from identity import id_
+from .plots import default_group_label_maker, _keyed_multi_sort, as_tuple
+from .confidence_ellipsoid import Ellipsoid, draw_ellipsoid, conf_ellipsoid
+from ..identity import id_
 
 def empty_dict(*args, **kwargs) -> dict:
     """Return an empty dict, ignoring any arguments."""

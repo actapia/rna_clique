@@ -1,14 +1,6 @@
-import argparse
 import json
 import sys
 import re
-import app
-
-import search_ideal_components
-import export_orthologs
-import config as config_module
-
-from name_conflict_resolver import NameConflictResolver
 
 from collections import Counter
 from collections.abc import Iterable
@@ -16,12 +8,17 @@ from typing import Optional, Callable
 from pathlib import Path
 
 from tqdm import tqdm
+from name_conflict_resolver import NameConflictResolver
 
-from filtered_distance import SampleSimilarity, NoIdealComponentsError
-from gene_matches_tables import get_table_files
-from transcripts import default_gene_re, TranscriptID, TranscriptIDParseError
-from app import set_except_hook, eprint
-from path_to_sample import (
+from . import search_ideal_components
+from . import export_orthologs
+from . import config as config_module
+from . import app
+from .filtered_distance import SampleSimilarity, NoIdealComponentsError
+from .gene_matches_tables import get_table_files
+from .transcripts import default_gene_re, TranscriptID, TranscriptIDParseError
+from .app import set_except_hook, eprint
+from .path_to_sample import (
     path_to_sample,
     dict_path_to_sample,
     sample_re,

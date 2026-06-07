@@ -13,9 +13,9 @@ from fractions import Fraction
 
 from more_itertools import consume
 
-from gene_matches_tables import read_table
-from multiset_key_dict import MultisetKeyDict
-from identity import id_
+from .gene_matches_tables import read_table
+from .multiset_key_dict import MultisetKeyDict
+from .identity import id_
 
 def similarities_from_dfs(
     tables: Iterable[tuple[frozenset[str], pd.DataFrame]]

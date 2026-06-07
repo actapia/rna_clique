@@ -3,22 +3,21 @@ import pickle
 import sys
 import copy
 
-import config as config_module
-
 from pathlib import Path
 from typing import Callable
 
 from tqdm import tqdm
 
-from subset_comparisons import (
+from . import config as config_module
+from .subset_comparisons import (
     handle_filters,
     matcher,
     make_subset_comparisons,
 )
-from build_graph import build_graph
-from find_homologs import eprint
-from gene_matches_tables import get_table_files
-from app import set_except_hook
+from .build_graph import build_graph
+from .find_homologs import eprint
+from .gene_matches_tables import get_table_files
+from .app import set_except_hook
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(

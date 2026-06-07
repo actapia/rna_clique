@@ -1,4 +1,3 @@
-import sys
 import re
 import numbers
 import functools
@@ -6,17 +5,16 @@ import functools
 import numpy as np
 import pandas as pd
 
-import config as config_module
-import app
-
 from fractions import Fraction
 from pathlib import Path
 from typing import Callable, Optional
 
 from simple_blast.blasting import TabularBlastnSearch
 
-from transcripts import TranscriptID, TranscriptIDParseError
-from app import eprint, set_except_hook
+from . import config as config_module
+from . import app
+from .transcripts import TranscriptID, TranscriptIDParseError
+from .app import eprint, set_except_hook
 
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(

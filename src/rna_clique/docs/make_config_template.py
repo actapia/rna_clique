@@ -1,9 +1,9 @@
 import io
 import sys
 
-from config import RNACliqueConfig
-
 from ruamel.yaml import YAML
+
+from ..config import RNACliqueConfig
 
 def deep_dict_to_CommentedMap(yaml, d):
     # This might be slow, but it's concise and reliable.

@@ -7,7 +7,7 @@ from functools import reduce
 from typing import Any, Optional, TypeVar, Callable, Iterator
 from collections.abc import Hashable, Iterable
 
-from plots import as_tuple
+from .plots import as_tuple
 
 import matplotlib as mpl
 import pandas as pd

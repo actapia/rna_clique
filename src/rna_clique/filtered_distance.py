@@ -5,22 +5,22 @@ import sys
 import pandas as pd
 import networkx as nx
 
-import config as config_module
-
 from functools import cached_property
 from fractions import Fraction
 from pathlib import Path
 from typing import Optional, Any
 from collections.abc import Iterable, Iterator
 
-from graph import component_subgraphs
 from multiset_key_dict import FrozenMultiset
-from gene_matches_tables import get_table_files
-from similarity_computer import (
+
+from . import config as config_module
+from .graph import component_subgraphs
+from .gene_matches_tables import get_table_files
+from .similarity_computer import (
     ComparisonSimilarityComputer,
     similarities_from_dfs
 )
-from app import eprint, set_except_hook
+from .app import eprint, set_except_hook
 
 def is_complete(g : nx.Graph) -> bool:
     """Returns whether g is a complete (sub)graph."""

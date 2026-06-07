@@ -6,7 +6,7 @@ import platform
 from contextlib import contextmanager
 from pathlib import Path
 
-import config as config_module
+from . import config as config_module
 
 eprint = functools.partial(print, file=sys.stderr)
 

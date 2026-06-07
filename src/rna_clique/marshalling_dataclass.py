@@ -18,7 +18,7 @@ except ImportError:
     from dataclasses import _recursive_repr as recursive_repr 
 from typing import Callable, Any, Optional, TypeVar
 
-from identity import id_
+from .identity import id_
 
 S = TypeVar("S")
 T = TypeVar("T")

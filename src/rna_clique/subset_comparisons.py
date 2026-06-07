@@ -8,7 +8,7 @@ import pandas as pd
 from typing import Optional, Callable, Iterator
 from collections.abc import Container, Iterable
 
-from gene_matches_tables import read_table
+from .gene_matches_tables import read_table
 
 default_filter_regex = re.compile("(.*)")
 

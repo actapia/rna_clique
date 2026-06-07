@@ -13,7 +13,7 @@ from collections.abc import Iterable
 
 from matplotlib import pyplot as plt
 
-from plots import (
+from .plots import (
     default_group_label_maker,
     _keyed_multi_sort,
     BasicCompositeTransform,

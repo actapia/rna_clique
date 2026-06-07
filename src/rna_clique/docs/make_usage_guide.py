@@ -3,21 +3,19 @@ import importlib.util
 import sys
 import functools
 import re
-import typing
 import numbers
 
 import pandas as pd
-
-import config as config_module
 
 from pathlib import Path
 from typing import Optional
 
 from IPython import embed
 
-from find_homologs import eprint
-from markdown import MarkdownDocument
-from docs import unoptional, get_type_name, column_to_text
+from .. import config as config_module
+from ..app import eprint
+from .markdown import MarkdownDocument
+from .docs import unoptional, get_type_name, column_to_text
 
 checks = ["missing-argument-description", "missing-program-description"]
 

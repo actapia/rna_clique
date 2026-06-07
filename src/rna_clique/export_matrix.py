@@ -5,13 +5,13 @@ import sys
 
 import pandas as pd
 
-import config as config_module
 
 from pathlib import Path
 from typing import Callable
 from collections.abc import Iterable
 
-from app import set_except_hook
+from . import config as config_module
+from .app import set_except_hook
 
 def write_hdf(df: pd.DataFrame, f: io.BytesIO, key: str = "matrix"):
     """Write the dataframe in HD5 format to the file-like object.

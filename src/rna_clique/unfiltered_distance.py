@@ -1,11 +1,10 @@
-import config as config_module
-
-from similarity_computer import (
+from . import config as config_module
+from .similarity_computer import (
     ComparisonSimilarityComputer,
     similarities_from_dfs
 )
-from gene_matches_tables import get_table_files
-from app import set_except_hook, eprint
+from .gene_matches_tables import get_table_files
+from .app import set_except_hook, eprint
 
 class UnfilteredSimilarity(ComparisonSimilarityComputer):
     def _similarity_helper(self):
