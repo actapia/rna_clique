@@ -13,8 +13,9 @@ from fractions import Fraction
 
 from more_itertools import consume
 
+from multiset_key_dict import MultisetKeyDict
+
 from .gene_matches_tables import read_table
-from .multiset_key_dict import MultisetKeyDict
 from .identity import id_
 
 def similarities_from_dfs(

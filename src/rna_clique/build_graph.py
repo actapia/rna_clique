@@ -2,8 +2,8 @@ import functools
 import operator
 import pickle
 
-import config as config_module
 
+from . import config as config_module
 from .app import eprint, set_except_hook
 from .gene_matches_tables import get_table_files, read_table
 
