@@ -23,5 +23,5 @@ git clone -b "$branch" --recurse-submodules https://github.com/actapia/rna_cliqu
 cd rna_clique
 python -m pip install build
 python -m build
-python -m install dist/*.whl
+python -m pip install dist/*.whl
 bash tests/verify_install/test_install.sh
