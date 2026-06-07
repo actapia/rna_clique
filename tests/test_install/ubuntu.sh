@@ -15,16 +15,13 @@ fi
 set -e
 cd
 sudo apt update
-sudo NEEDRESTART_MODE=a apt install -y git wget ncbi-blast+ ncbi-blast+-legacy \
+sudo NEEDRESTART_MODE=a apt install -y git ncbi-blast+ ncbi-blast+-legacy \
      g++
-wget --no-verbose https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash ./Miniconda3-latest-Linux-x86_64.sh -b -f
-"$HOME/miniconda3/bin/conda" init bash
-eval "$("$HOME/miniconda3/bin/conda" shell.bash hook)"
+python -m venv rna_clique_venv
+. venv/bin/activate
 git clone -b "$branch" --recurse-submodules https://github.com/actapia/rna_clique
 cd rna_clique
-conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
-conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
-conda env create -y -f environment.yml --name rna-clique
-conda activate rna-clique
+python -m pip install build
+python -m build
+python -m install dist/*.whl
 bash tests/verify_install/test_install.sh

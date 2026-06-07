@@ -2,12 +2,15 @@
 
 This guide will walk you through installing RNA-clique on Ubuntu. The guide
 assumes you have some basic familiarity working with Ubuntu using the command
-line. The guide is designed for Ubuntu 26.04; it likely works on other recent
-versions of Ubuntu as well, but such configurations are untested.
+line. The guide is designed for Ubuntu 26.04 and has also been tested on Ubuntu
+24.04 via GitHub Actions runners.
 
 ## Installing dependencies via APT
 
-We will install some dependencies using Ubuntu's default package manager, APT.
+RNA-clique requires that NCBI BLAST+, a popular implementation of the BLAST
+sequence alignment algorithm, be installed. Some Python packages we will install
+also need a C++ compiler, so we will install the common `g++` compiler. We can
+install both using Ubuntu's default package manager, APT.
 
 First, update the package lists.
 
@@ -15,84 +18,42 @@ First, update the package lists.
 sudo apt update
 ```
 
-Then, install the first set of packages. The table below describes what we will
-install.
-
-| Software    | Description                                                                            |
-|-------------|----------------------------------------------------------------------------------------|
-| Git         | Version control system used by RNA-clique (usually installed by default)               |
-| wget        | Command-line utility for downloading files from the web (usually installed by default) |
-| NCBI BLAST+ | Popular implementation of the BLAST local sequence alignment algorithm                 |
-| g++         | Popular C++ compiler needed for building some Python extensions                        |
-
+Then, install NCBI BLAST+ and `g++`.
 
 ```bash
-sudo apt install git wget ncbi-blast+ ncbi-blast+-legacy g++
+sudo apt install ncbi-blast+ ncbi-blast+-legacy g++
 ```
 
-## Installing Miniconda
+## Creating a virutal environment
 
-The conda package and environment manager will be useful for setting up the
-Python dependencies of RNA-clique. If you already have a conda installation, you
-can skip to the next step, [Downloading RNA-clique](#downloading-rna-clique) First, download the
-Miniconda installer:
+It is good practice to install our software to a separate Python virtual
+environment. Software installed in the virtual environment will only be usable
+when we have the virtual environment "activated," so it won't clutter or
+conflict with the other software installed on the system. 
 
 ```bash
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+python3 -m venv rna_clique_env
 ```
 
-Then, run the installer.
+Then, activate the environment with the virtual environment's `activate` script.
 
 ```bash
-bash Miniconda3-latest-Linux-x86_64.sh
+. rna_clique_env/bin/activate
 ```
 
-Accept the terms of the license agreement when prompted.
+You should see that `(rna_clique_env)` appears at the beginning of your prompt,
+letting you know.
 
-Unless you have a reason to install somewhere else, you can install to the
-default locaton Miniconda suggests.
+## Installing RNA-clique
 
-When asked about initializing Miniconda for the current shell, say yes.
+You can install RNA-clique from the Python Package Index using
+`pip`. Alternatively, you can [build the package yourself](../building.md) from
+the Git repository.
 
-When the installation has finished, you will need to restart your shell.
-
-## Downloading RNA-clique
-
-You can download RNA-clique by cloning its GitHub repository. (Alternatively,
-you can extract the release zip or tarball, but be mindful that the repository
-root will have a different name than the one presented here.)
-
-<!--{{clone_command(git_branch()) | code_fence("bash") | comment_surround}}{{empty("-->
-```bash
-git clone --recurse-submodules https://github.com/actapia/rna_clique
-```
-<!--")}}-->
-
-## Installing the rna-clique conda environment
-
-Make sure you are in the `rna_clique` repository that you cloned with `git`.
-
-```bash
-cd rna_clique
+```python
+python -m pip install rna-clique
 ```
 
-Then, create a `conda` environment from the `environment.yml` file in the root
-of the repository.
-
-```bash
-conda env create -f environment.yml --name rna-clique
-```
-
-If you are following this tutorial exactly, this will be the first time you've
-installed packages from conda repositories, and you must accept the Terms of
-Service of each repository before you can install packages. When prompted,
-accept the Terms of Service for each repository.
-
-When asked to confirm that you want to install the dependencies, say yes.
-
-When creation of the new environment has finished, you can activate the
-environment to ensure you are running Python with the needed dependencies:
-
-```bash
-conda activate rna-clique
-```
+!!! note
+    When you log out and log back into your shell, you will need to reactivate
+    the virtual environment using the `activate` script.
