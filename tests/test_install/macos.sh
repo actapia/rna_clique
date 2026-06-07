@@ -13,7 +13,7 @@ CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/insta
 eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 brew install blast python@3.14
 python3.14 -m venv rna_clique_venv
-. venv/bin/activate
+. rna_clique_venv/bin/activate
 git clone -b "$branch" --recurse-submodules https://github.com/actapia/rna_clique
 cd rna_clique
 python -m pip install build
