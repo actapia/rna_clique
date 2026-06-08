@@ -28,12 +28,12 @@ values described in the ["Creating a directory for our
 work"](../reads2tree/README.md#creating-a-directory-for-our-work) section of the
 end-to-end tutorial.
 
-Also, check that you are in the `rna-clique` Conda environment. You should see
-`(rna-clique)` at the beginning of your prompt. If not, try activating the
-environment with
+Also, check that you are in the `rna_clique_venv` virtual environment. You
+should see `(rna_clique_venv)` at the beginning of your prompt. If not, try
+activating the environment with
 
 ```bash
-conda activate rna-clique
+. rna_clique_venv/bin/activate
 ```
 
 ## Goal and rationale
@@ -85,7 +85,6 @@ samples. Although the recomputation may not be necessary, it would be
 interesting to see how many more ideal components we obtain when analyzing only
 the infected samples.
 
-
 A naive way of recomputing a distance matrix for just the infected samples would
 be to re-run the command in the ["Running
 RNA-clique"](../reads2tree/README.md#running-rna-clique) section while replacing
@@ -103,44 +102,43 @@ In the superset analysis, however, RNA-clique also selected the top $n$ genes
 from the infected samples (along with all of the other samples) and computed the
 gene matches tables for every pair of infected samples (and every other pair of
 samples). The idea behind the "fast subsetting" feature provided by the
-`make_subset.py` script is to reuse the existing gene matches tables and top
-genes files for the new subset analysis. From the gene matches tables for just
-the pairs of infected samples, `make_subset.py` can build a new gene matches
-graph, filter the gene matches tables, and compute new pairwise distances, and
-these steps take little time compared to the full RNA-clique method.
+`make_subset` module is to reuse the existing gene matches tables and top genes
+files for the new subset analysis. From the gene matches tables for just the
+pairs of infected samples, `make_subset` can build a new gene matches graph,
+filter the gene matches tables, and compute new pairwise distances, and these
+steps take little time compared to the full RNA-clique method.
 
 ## Creating a subset analysis
 
-We will use the `make_subset.py` script to create a subset of the previous
-analysis. `make_subset.py` allows the user to select a subset by specifying
-criteria for samples to include or exclude from the subset. `make_subset.py`
-allows exclusion criteria to be specified via a list of samples to exclude,
-which may be given as arguments in the command line invocation of
-`make_subset.py` or in a file provided to `make_subset.py`. Inclusion criteria
-can be specified via a list of samples to include, likewise provided as either
-arguments in the command line invocation or in a specified file, but inclusion
-criteria can also be specified using a regular expression that matches only
-samples to include. For this example, we'll specify the infected samples
-directly on the command line.
+We will use the `make_subset` module to create a subset of the previous
+analysis. `make_subset` allows the user to select a subset by specifying
+criteria for samples to include or exclude from the subset. `make_subset` allows
+exclusion criteria to be specified via a list of samples to exclude, which may
+be given as arguments in the command line invocation of `make_subset` or in a
+file provided to `make_subset`. Inclusion criteria can be specified via a list
+of samples to include, likewise provided as either arguments in the command line
+invocation or in a specified file, but inclusion criteria can also be specified
+using a regular expression that matches only samples to include. For this
+example, we'll specify the infected samples directly on the command line.
 
-In the `make_subset.py` command, we must also tell the script which analysis we
-are subsetting, specified via a path to the configuration file for the analysis,
-and the output directory in which the subset analysis files will reside.
+In the `make_subset` command, we must also tell the script which analysis we are
+subsetting, specified via a path to the configuration file for the analysis, and
+the output directory in which the subset analysis files will reside.
 
 ```bash
-python make_subset.py -I "$TUTORIAL_DIR"/rna_clique_out/config.yaml \
-                      -O "$TUTORIAL_DIR"/infected_subset_out \
-                      -y SRR2321388 SRR8003761 SRR7990321 SRR8003736
+python -m rna_clique.make_subset -I "$TUTORIAL_DIR"/rna_clique_out/config.yaml \
+                                 -O "$TUTORIAL_DIR"/infected_subset_out \
+                                 -y SRR2321388 SRR8003761 SRR7990321 SRR8003736
 ```
 
 You should find that the above command completes *much* more quickly than a full
 RNA-clique run would, but if you check the subset output directory at
 `"$TUTORIAL_DIR"/infected_subset_out`, you'll see that we don't have a distance
-matrix yet. To get the distance matrix, we also need to run
-`filtered_distance.py` on the subset analysis.
+matrix yet. To get the distance matrix, we also need to run `filtered_distance`
+on the subset analysis.
 
 ```bash
-python filtered_distance.py -O "$TUTORIAL_DIR"/infected_subset_out
+python -m rna_clique.filtered_distance -O "$TUTORIAL_DIR"/infected_subset_out
 ```
 
 If you check `"$TUTORIAL_DIR"/infected_subset_out` again, you should now see a
@@ -149,8 +147,8 @@ If you check `"$TUTORIAL_DIR"/infected_subset_out` again, you should now see a
 We can also check the number of ideal components.
 
 ```bash
-python plot_component_sizes.py --statistics \
-                               -A "$TUTORIAL_DIR"/infected_subset_out
+python -m rna_clique.plot_component_sizes --statistics \
+                                          -A "$TUTORIAL_DIR"/infected_subset_out
 ```
 
 You should see that we have more ideal components (around $12676$) with just the

@@ -552,7 +552,7 @@ To generate a heatmap using this code, you can run the Python script as follows:
 python "$RNA_CLIQUE/docs/tutorials/reads2tree/make_heatmap.py"
 ```
 
-The resulting heatmap will be saved ata `$TUTORIAL_DIR/distance_heatmap.svg` and
+The resulting heatmap will be saved at `$TUTORIAL_DIR/distance_heatmap.svg` and
 should look something like this:
 
 ![A heatmap showing distances for the six samples analyzed in this tutorial. The
