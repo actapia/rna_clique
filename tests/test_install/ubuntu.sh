@@ -17,7 +17,7 @@ cd
 sudo apt update
 sudo NEEDRESTART_MODE=a apt install -y git ncbi-blast+ ncbi-blast+-legacy \
      g++
-python -m venv rna_clique_venv
+python3 -m venv rna_clique_venv
 . rna_clique_venv/bin/activate
 git clone -b "$branch" --recurse-submodules https://github.com/actapia/rna_clique
 cd rna_clique
