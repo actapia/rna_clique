@@ -6,6 +6,7 @@ cd ..
 [ -d "tutorial" ]
 cd tutorial
 export TUTORIAL_DIR="$PWD"
+cd ..
 . rna_clique_venv/bin/activate
 python -m rna_clique.make_subset -I "$TUTORIAL_DIR"/rna_clique_out/config.yaml \
                                  -O "$TUTORIAL_DIR"/infected_subset_out \
