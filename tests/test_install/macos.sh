@@ -9,6 +9,7 @@ if [ "$#" -eq 1 ]; then
 fi
 set -e
 cd
+sudo -v
 CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 brew install blast python@3.14
