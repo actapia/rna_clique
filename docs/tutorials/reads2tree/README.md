@@ -53,7 +53,7 @@ This tutorial expects the reader to have a POSIX-compatible shell like
 `tail`, `cut`, and `basename`. Some commands can also be run via GNU Parallel,
 but this is optional.
 
-### Software for getting sequence data
+### Installing additional tools
 
 !!! note
     If you are using pre-assembled transcriptomes, you can skip installing the
@@ -70,8 +70,7 @@ We also need `git` to download various repositories and `wget` or
 `curl` to download software and data.
 
 This section provides brief installation instructions for each piece of
-software. More detailed instructions may be found at each program's GitHub
-repository.
+software.
 
 It is recommended that the software be downloaded somewhere outside the
 RNA-clique git repository. For example, you may wish to put the software in your

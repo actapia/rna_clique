@@ -124,13 +124,13 @@ python -m rna_clique.export_matrix -O "$TUTORIAL_DIR/rna_clique_out"
 python -m rna_clique.export_matrix --format table \
                                    --header \
 			           -O "$TUTORIAL_DIR/rna_clique_out"
-python docs/tutorials/reads2tree/make_tree.py
+python "$RNA_CLIQUE/docs/tutorials/reads2tree/make_tree.py"
 [ -f "$out_dir/nj_tree.svg" ]
 [ -f "$out_dir/nj_tree.tree" ]
-python docs/tutorials/reads2tree/make_pcoa.py \
+python "$RNA_CLIQUE/docs/tutorials/reads2tree/make_pcoa.py" \
 	  "$TUTORIAL_DIR/rna_clique_out"
 [ -f "$out_dir/pcoa_2d.svg" ]
 [ -f "$out_dir/pcoa_3d.svg" ]
-python docs/tutorials/reads2tree/make_heatmap.py
+python "$RNA_CLIQUE/docs/tutorials/reads2tree/make_heatmap.py"
 [ -f "$out_dir/distance_heatmap.svg" ]
 
