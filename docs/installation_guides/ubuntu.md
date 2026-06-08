@@ -11,9 +11,10 @@ RNA-clique requires that NCBI BLAST+, a popular implementation of the BLAST
 sequence alignment algorithm, be installed. 
 
 For Python, we also need to be able to create virtual environments, so we will
-need to install `venv`. Some Python packages we will install also need a C++
-compiler, so we will install the common `g++` compiler. We can install both
-using Ubuntu's default package manager, APT.
+need to install `venv`. Some Python packages we will install also need to be
+built using a C++ compiler, so we will install the common `g++` compiler and the
+Python development headers. We can install all of these using Ubuntu's default
+package manager, APT.
 
 First, update the package lists.
 
@@ -24,7 +25,7 @@ sudo apt update
 Then, install NCBI BLAST+ and `g++`.
 
 ```bash
-sudo apt install ncbi-blast+ ncbi-blast+-legacy g++ python3-venv
+sudo apt install ncbi-blast+ ncbi-blast+-legacy g++ python3-venv libpython3-dev
 ```
 
 ## Creating a virutal environment
