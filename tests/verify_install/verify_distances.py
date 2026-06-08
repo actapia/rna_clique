@@ -9,9 +9,9 @@ from pathlib import Path
 from Bio.Phylo.TreeConstruction import DistanceTreeConstructor, DistanceMatrix
 from dendropy.calculate.treecompare import symmetric_difference
 from tqdm import tqdm
-from filtered_distance import SampleSimilarity
-from phylo_utils import tril_jagged
-from make_subset import get_table_files
+from rna_clique.filtered_distance import SampleSimilarity
+from rna_clique.viz.phylo_utils import tril_jagged
+from rna_clique.make_subset import get_table_files
 
 def phylo_to_dendropy(tree, ns=None):
     sio = StringIO()
