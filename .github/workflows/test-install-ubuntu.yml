@@ -11,8 +11,6 @@ on:
       - '.github/workflows/test-install-ubuntu.yml'
       - '!test_install/**'
       - 'tests/test_install/ubuntu.sh'
-      - '!parameter_testing/**'
-      - '!property_testing/**'
       - '!*.md'
       - '!custom-zenodo.json'
 jobs:
