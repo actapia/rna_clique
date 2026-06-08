@@ -36,36 +36,7 @@ from .marshalling_dataclass import (
 from .transcripts import default_gene_re
 
 def get_version():
-    version = None
-    try:
-        import git
-        try:
-            repo = git.Repo(
-                Path(__file__).parent,
-                search_parent_directories=True
-            )
-            version = repo.head.object.hexsha
-            changed= [i.a_path for i in repo.index.diff(None)]
-            if changed:
-                version += "+dev"
-        except git.InvalidGitRepositoryError:
-            pass
-    except ImportError:
-        pass
-    if version is None:
-        try:
-            rnac = importlib.import_module(__package__)
-            files = {
-                str(Path(rnac.__file__).parent / f)
-
-                for f in importlib.metadata.files(rnac.__name__)
-            }
-            if __file__ in files:
-                version = importlib.metadata.version(__package__)
-        except ValueError:
-            pass
-    if version is None:
-        version = "dev"
+    version = importlib.metadata.version(__package__)
     return version
 
 
