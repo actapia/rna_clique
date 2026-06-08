@@ -4,8 +4,8 @@ from pathlib import Path
 import pandas as pd
 from matplotlib import pyplot as plt
 
-from heatmap import draw_heatmap
-from config import RNACliqueConfig
+from rna_clique.viz.heatmap import draw_heatmap
+from rna_clique.config import RNACliqueConfig
 
 tutorial_doc_dir = Path(os.environ["RNA_CLIQUE"]) / "docs/tutorials/reads2tree"
 rna_clique_out_dir = Path(os.environ["TUTORIAL_DIR"]) / "rna_clique_out"
