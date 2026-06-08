@@ -32,9 +32,12 @@ cd
 set -e
 case "$(uname)" in
     Linux)
-	if [ "$parallel" = true ] && [ "$install" = true ]; then
+	if [ "$install" = true ]; then
 	    sudo apt update
-	    sudo NEEDRESTART_MODE=a apt -y install parallel
+	    if [ "$parallel" = true ]; then
+		sudo NEEDRESTART_MODE=a apt -y install parallel
+	    fi
+	    sudo NEEDRESTART_MODE=a apt -y install wget git
 	fi
 	wget --no-verbose https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz
 	;;
@@ -62,9 +65,8 @@ case "$(uname)" in
 esac
 tar xzvf sratoolkit.current-*.tar.gz
 export PATH="$PATH:$(realpath sratoolkit*/bin)"
-eval "$("$HOME/miniconda3/bin/conda" shell.bash hook)"
-conda activate rna-clique
-conda install -y lxml requests
+. rna_clique_venv/bin/activate
+python -m pip install lxml requests
 git clone https://github.com/actapia/download_sra
 export PATH="$PATH:$PWD/download_sra"
 case "$(uname)" in
@@ -108,28 +110,27 @@ fi
 for f in out/*; do
     [ -f "$f/transcripts.fasta" ]
 done
-cd "$RNA_CLIQUE"
 out_dir="$TUTORIAL_DIR/rna_clique_out/"
-python rna_clique.py -O "$out_dir" \
-     -n 50000 \
-     "$TUTORIAL_DIR"/out/*
+rna-clique -O "$out_dir" \
+           -n 50000 \
+           "$TUTORIAL_DIR"/out/*
 [ -d "$out_dir" ]
 [ -f "$out_dir/distance_matrix.h5" ]
 [ -f "$out_dir/graph.pkl" ]
-components="$(python plot_component_sizes.py --statistics m \
-		     -A "$TUTORIAL_DIR/rna_clique_out" | cut -d' ' -f4)"
+components="$(python -m rna_clique.plot_component_sizes --statistics m \
+		        -A "$TUTORIAL_DIR/rna_clique_out" | cut -d' ' -f4)"
 [ "$components" -gt 8000 ]
-python export_matrix.py -O "$TUTORIAL_DIR/rna_clique_out"
-python export_matrix.py --format table \
-                        --header \
-			-O "$TUTORIAL_DIR/rna_clique_out"
-PYTHONPATH='.' python docs/tutorials/reads2tree/make_tree.py
+python -m rna_clique.export_matrix -O "$TUTORIAL_DIR/rna_clique_out"
+python -m rna_clique.export_matrix --format table \
+                                   --header \
+			           -O "$TUTORIAL_DIR/rna_clique_out"
+python docs/tutorials/reads2tree/make_tree.py
 [ -f "$out_dir/nj_tree.svg" ]
 [ -f "$out_dir/nj_tree.tree" ]
-PYTHONPATH="." python docs/tutorials/reads2tree/make_pcoa.py \
+python docs/tutorials/reads2tree/make_pcoa.py \
 	  "$TUTORIAL_DIR/rna_clique_out"
 [ -f "$out_dir/pcoa_2d.svg" ]
 [ -f "$out_dir/pcoa_3d.svg" ]
-PYTHONPATH="." python docs/tutorials/reads2tree/make_heatmap.py
+python docs/tutorials/reads2tree/make_heatmap.py
 [ -f "$out_dir/distance_heatmap.svg" ]
 

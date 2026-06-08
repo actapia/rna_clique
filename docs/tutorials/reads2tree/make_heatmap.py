@@ -17,7 +17,7 @@ def main():
     dis_df = pd.read_hdf(config.matrix).rename(
         index=path_to_sample.__getitem__,
         columns=path_to_sample.__getitem__,
-    )    
+    )
     draw_heatmap(
         dis_df,
         sample_metadata=sample_metadata,

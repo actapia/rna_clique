@@ -4,8 +4,7 @@ This tutorial explains how to obtain a distance matrix and phylogenetic tree for
 a set of samples for which we have RNA-seq reads. The purpose of this guide is
 to show a typical workflow using RNA-clique.
 
-The tutorial assumes that RNA-clique has already been downloaded and that its
-dependencies and conda environment have already been installed.
+The tutorial assumes that RNA-clique has already been installed.
 
 The most resource-consuming part of this tutorial is downloading and assembling
 the RNA-seq reads. If you would rather skip this step, you can instead download
@@ -67,6 +66,9 @@ obtaining and assembling the sequence reads:
 * [download_sra](https://github.com/actapia/download_sra)
 * [SPAdes](https://github.com/ablab/spades)
 
+We also need `git` to download various repositories and `wget` or
+`curl` to download software and data.
+
 This section provides brief installation instructions for each piece of
 software. More detailed instructions may be found at each program's GitHub
 repository.
@@ -74,6 +76,30 @@ repository.
 It is recommended that the software be downloaded somewhere outside the
 RNA-clique git repository. For example, you may wish to put the software in your
 `~/Documents` directory.
+
+#### git
+
+Git is installable via most systems' package managers. If you have `brew`
+installed on macOS, you should already have `git`.
+
+If you need to install `git` on Ubuntu, you can use APT:
+
+
+```bash
+sudo apt update
+sudo apt install git
+```
+
+#### wget/cURL
+
+`wget` and `curl` are also available from most systems' package managers. On
+Ubuntu, you can use APT to install `wget`. On macOS, `curl` should already be
+installed.
+
+```bash
+sudo apt update
+sudo apt install wget
+```
 
 #### sratoolkit
 
@@ -111,17 +137,11 @@ export PATH="$PATH:$(realpath sratoolkit*/bin)"
     included in the software release zip. If you don't want to download them
     yourself, you don't need `download_sra` and can skip this step.
 
-Make sure the `rna-clique` Conda environment created during the RNA-clique
-installation is activated.
+Make sure the `rna-clique` environment created during the RNA-clique
+installation is activated. Then, install dependencies for `download_sra`.
 
 ```bash
-conda activate rna-clique
-```
-
-Install dependencies for `download_sra`.
-
-```bash
-conda install lxml requests
+python -m pip install lxml requests
 ```
 
 Clone the `download_sra` Git repository.
@@ -182,26 +202,40 @@ than one logical core ("thread").
     brew install parallel
     ```
 
+## Downloading the RNA-clique repository
+
+Although we've already installed the RNA-clique software, a few additional files
+from RNA-clique's repository will be needed for this tutorial. If you don't
+already have a copy of the RNA-clique source code, clone the GitHub repository
+WITH `git`.
+
+<!--{{clone_command(git_branch()) | code_fence("zsh") | comment_surround}}{{empty("-->
+```bash
+git clone --recurse-submodules https://github.com/actapia/rna_clique
+```
+<!--")}}-->
+
+We will want to keep track of the root of the RNA-clique repository in a
+variable. To do this easily, change to the RNA-clique directory and then set
+`RNA_CLIQUE` to `$PWD`. Note that the name of the RNA-clique directory might
+differ if you obtained RNA-clique by some other method than the one described
+above.
+
+```bash
+cd rna_clique
+export RNA_CLIQUE="$PWD"
+cd ..
+```
+
 
 ## Creating a directory for our work
 
-We will organize our files for this tutorial nicely into a single directory, but
-first, we want to keep track of the location of RNA-clique. For this tutorial,
-we will assume that RNA-clique is located at the path specified in the
-`RNA_CLIQUE` environment variable. To set this variable easily, you can `cd`
-into the Git repository and run
+We will organize our files for this tutorial nicely into a single
+directory. Make sure you are in the directory where you want to put the tutorial
+directory, and then run the commands below to create the tutorial directory and
+keep track of its path in the `TUTORIAL_DIR` environment variable.
 
 ```bash
-export RNA_CLIQUE=$PWD
-```
-
-We recommend putting the directory for this tutorial *outside* of the RNA-clique
-Git repository. For the rest of this tutorial, we will assume that the tutorial
-directory is at the path in the `TUTORIAL_DIR` environment variable. If you are
-in the root of the Git repository, you could run 
-
-```bash
-cd ..
 mkdir tutorial
 cd tutorial
 export TUTORIAL_DIR=$PWD
@@ -241,7 +275,7 @@ previously in the [Background](#background) section is also present in the file
 the RNA-seq data we need using the `tall_fescue_accs.csv` file and the
 `download_sra` tool.
 
-First, change to your `TUTORIAL_DIR`.
+First, change to your `$TUTORIAL_DIR`.
 
 ```bash
 cd "$TUTORIAL_DIR"
@@ -280,16 +314,22 @@ ls SRR*.fastq
     
     === "Ubuntu"
         ```bash
-        wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.tar.gz"
         mkdir out
-        tar xzvf transcripts.tar.gz -d out
-	    ```
+        cd out
+        wget "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.tar.gz"
+        tar xzvf transcripts.tar.gz
+        rm transcripts.tar.gz
+        cd ..
+        ```
     === "macOS"
-	    ```bash
-	    curl -L -O "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.tar.gz"
-	    mkdir out
-	    tar xzvf transcripts.tar.gz -d out
-	    ```
+        ```bash
+        mkdir out
+        cd out
+        curl -L -O "http://rna-clique-data.s3-website.us-east-2.amazonaws.com/transcripts.tar.gz"
+        tar xzvf transcripts.tar.gz 
+        rm transcripts.tar.gz
+        cd ..
+        ```
 
 
 Ordinarily, we would need a quality control step before proceeding to assembly,
@@ -329,19 +369,13 @@ a directory corresponding to its sample name under the `out` directory.
 
 ## Running RNA-clique
 
-First, return to the RNA-clique repository root.
-
-```bash
-cd "$RNA_CLIQUE"
-```
-
 Previous tests with this data revealed that $n = 50000$ is a good setting, so we
 will use that value.
 
 ```bash
-python rna_clique.py -O "$TUTORIAL_DIR/rna_clique_out" \
-                     -n 50000 \
-                     "$TUTORIAL_DIR"/out/*
+rna-clique -O "$TUTORIAL_DIR/rna_clique_out" \
+           -n 50000 \
+           "$TUTORIAL_DIR"/out/*
 ```
 
 Verify that the `distance_matrix.h5` file was created in the output directory.
@@ -386,7 +420,8 @@ To check the number of ideal components, use the
 can report statistics about gene matches graph components, among other things.
 
 ```bash
-python plot_component_sizes.py --statistics -A "$TUTORIAL_DIR/rna_clique_out"
+python -m rna_clique.plot_component_size --statistics \
+                                         -A "$TUTORIAL_DIR/rna_clique_out"
 ```
 
 You should see that we obtained around $9848$ ideal components, which is plenty
@@ -398,7 +433,7 @@ To simply view the distance matrix, use the [`export_matrix.py`
 script](../../usage.md#export_matrixpy).
 
 ```python
-python export_matrix.py -O "$TUTORIAL_DIR/rna_clique_out"
+python -m rna_clique.export_matrix -O "$TUTORIAL_DIR/rna_clique_out"
 ```
 
 The distance matrix should look something like this:
@@ -416,9 +451,9 @@ Note that the rows and columns are not labeled. To get labels for both the rows
 and columns, provide the `--format table` and `--header` options.
 
 ```python
-python export_matrix.py --format table \
-                        --header \
-						-O "$TUTORIAL_DIR/rna_clique_out"
+python -m rna_clique.export_matrix --format table \
+                                   --header \
+                                   -O "$TUTORIAL_DIR/rna_clique_out"
 ```
 
 ### Getting a tree
@@ -436,11 +471,10 @@ saved to `nj_tree.tree`, and a visualization is saved to `nj_tree.svg` in the
 --8<-- "docs/tutorials/reads2tree/make_tree.py"
 ```
 
-The script requires some modules found in the root of the RNA-clique repository,
-so you can run it as follows:
+You can run the script as follows:
 
 ```bash
-PYTHONPATH='.' python docs/tutorials/reads2tree/make_tree.py
+python "$RNA_CLIQUE/docs/tutorials/reads2tree/make_tree.py"
 ```
 
 The script creates a file called `nj_tree.svg` in the
@@ -469,11 +503,11 @@ respectively. The code can also be found at
 --8<-- "docs/tutorials/reads2tree/make_pcoa.py"
 ```
 
-The example can be run as follows from the root of the RNA-clique repository.
+The example can be run as follows:
 
 ```bash
-PYTHONPATH="." python docs/tutorials/reads2tree/make_pcoa.py \
-                      "$TUTORIAL_DIR"/rna_clique_out
+python "$RNA_CLIQUE/docs/tutorials/reads2tree/make_pcoa.py" \
+       "$TUTORIAL_DIR"/rna_clique_out
 ```
 
 The two-dimensional PCoA plot should look something like this:
@@ -513,11 +547,10 @@ as `distance_heatmap.svg`.
 --8<-- "docs/tutorials/reads2tree/make_heatmap.py"
 ```
 
-To generate a heatmap using this code, you can run the Python script as follows
-from the RNA-clique repository root.
+To generate a heatmap using this code, you can run the Python script as follows:
 
 ```bash
-PYTHONPATH="." python docs/tutorials/reads2tree/make_heatmap.py
+python "$RNA_CLIQUE/docs/tutorials/reads2tree/make_heatmap.py"
 ```
 
 The resulting heatmap will be saved ata `$TUTORIAL_DIR/distance_heatmap.svg` and
