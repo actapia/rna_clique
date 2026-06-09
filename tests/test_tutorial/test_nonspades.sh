@@ -132,7 +132,7 @@ fi
 cd "$TUTORIAL_DIR/trinity_assemblies"
 for f in trinity_*/; do
     [ -f "$f/salmon_outdir/quant.sf" ]
-    head -n1 "$f" | grep -e 'TPM'
+    head -n1 "$f/salmon_outdir/quant.sf" | grep -e 'TPM'
 done
 mkdir with_tpm
 for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
