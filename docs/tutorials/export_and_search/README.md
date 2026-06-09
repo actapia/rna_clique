@@ -6,10 +6,10 @@ alignments among these identified orthologs as the basis for its distance
 computation without specifically selecting and writing the ortholog sequences to
 the disk, but since it is sometimes useful to be able to manually inspect or
 search the detected orthologs, RNA-clique can optionally export and search
-orthologous genes in ideal components via the `export_and_search.py`
-script. This tutorial describes how to use the `export_and_search.py` script to
-export orthologous gene sequences from ideal components and search those genes
-for sequences of interest.
+orthologous genes in ideal components via the `export_and_search` module. This
+tutorial describes how to use `export_and_search` to export orthologous gene
+sequences from ideal components and search those genes for sequences of
+interest.
 
 The first part of this tutorial assumes that the user has completed the
 end-to-end ["From RNA-seq reads to a phylogenetic tree with
@@ -76,12 +76,20 @@ values described in the ["Creating a directory for our
 work"](../reads2tree/README.md#creating-a-directory-for-our-work) section of the
 end-to-end tutorial.
 
+Also, make sure that you are in your `rna_clique_venv` virtual environment. You
+should see `(rna_clique_venv)` at the beginning of your prompt. If not, source
+the `activate` script to activate the environment.
+
+```bash
+. rna_clique_venv/bin/activate
+```
+
 ## Download Epichloë genome assemblies
 
 !!! note
     If you downloaded this software from Zenodo, you already have the *Epichloë
     coenophiala* genomes at `test_data/ec_genomes`. Instead of downloading them
-	again, you can skip this step and simply move them to the intended location
+	again, you can skip this step and simply move them to the intended location.
 	
 	```bash
 	mv "$RNA_CLIQUE/test_data/ec_genomes" "$TUTORIAL_DIR"
@@ -130,27 +138,22 @@ You should see three files: `ec_genomes.tar.xz`,
 
 ## Export and search ideal components in the original analysis
 
-First, change back to your RNA-clique directory.
-
-```bash
-cd "$RNA_CLIQUE"
-```
-
 To export and search the orthologous genes in ideal components at once, run the
-`export_and_search.py` script. We'll use a low e-value threshold, `1e-99`, to
+`export_and_search` module. We'll use a low e-value threshold, `1e-99`, to
 ensure that we only get very close matches.
 
 ```bash
-python export_and_search.py -C "$TUTORIAL_DIR"/rna_clique_out/config.yaml \
-                            -Q "$TUTORIAL_DIR"/ec_genomes/*.fasta \
-                            -X "$TUTORIAL_DIR"/full_ec_search_out \
-                            -e 1e-99
+python -m rna_clique.export_and_search \
+          -C "$TUTORIAL_DIR"/rna_clique_out/config.yaml \
+          -Q "$TUTORIAL_DIR"/ec_genomes/*.fasta \
+          -X "$TUTORIAL_DIR"/full_ec_search_out \
+          -e 1e-99
 ```
 
 The results should be written to
 `$TUTORIAL_DIR/full_ec_search_out/rna_clique_out`. (If we had provided
-`export_and_search.py` multiple configuration files, there would be multiple
-directories under `$TUTORIAL_DIR/full_ec_search_out/`.) 
+`export_and_search` multiple configuration files, there would be multiple
+directories under `$TUTORIAL_DIR/full_ec_search_out/`.)
 
 ## Examining and interpreting results
 
@@ -168,7 +171,7 @@ the original sequence in the input transcriptome. The sequence was reoriented to
 ensure that all sequences in the same file are in the same orientation. The
 trailing `:SRR7990321` indicates that the original sequence comes from the
 transcriptome of sample `SRR7990321`. Everything between the leading `-` and
-trailing `:` is the original FASTA sequence header from the input transcriptome.
+final `:` is the original FASTA sequence header from the input transcriptome.
 
 Other FASTA headers may lack the leading `-`. In that case, the sequence appears
 exactly as it did in the input transcriptome; it has not be reoriented.
@@ -195,13 +198,13 @@ were already low e-value matches, we should only see three files in each of
 these two directories&mdash;`queries.sam`, `stats`, and `subjects.fasta`. (For
 an explanation of the extended search and the files produced in such a search,
 see the Command-line usage guide entry for
-[`search_deail_components.py`](../../usage.md#search_ideal_componentspy).)
+[`search_ideal_components`](../../usage.md#search_ideal_components).)
 
 #### stats
 
 The `stats` file provides statistics for the search results in JSON format. Each
 `stats` file should have three JSON keys&mdash;`hits`, `seqs`, and
-`components`. `hits` is the number of BLAST HSPs found in the search. `seqs` in
+`components`. `hits` is the number of BLAST HSPs found in the search. `seqs` is
 the number of distinct transcripts matched in the search, and `components` is
 the number of ideal components in which at least one transcript matched.
 
@@ -302,9 +305,9 @@ Notice that transcripts from SRR2321385 in ideal components $6249$ and $6777$
 matched the endophyte assemblies. We can conclude that the hits are not merely a
 result of assembly errors incorporating endophyte reads into plant sequences.
 
-### Visualizing alignments produced by export\_and\_search.py
+### Visualizing alignments produced by export\_and\_search
 
-Since `export_and_search.py` produces alignments in SAM format, we can use a
+Since `export_and_search` produces alignments in SAM format, we can use a
 standard genome browser to view the alignments. In this example, I will show the
 alignments using [Integrative Genomics Viewer](https://igv.org/doc/desktop/)
 (IGV).
@@ -363,11 +366,14 @@ from an assembled transcriptome for tall fescue. The two alignments are visually
 very similar, though they differ in some gap and insertion locations. Both
 alignments span the majority of the transcript.](images/igv_snapshot.svg)
 
-You should see the alignments span most of the transcript, and if you look at
-the other transcripts from the same ideal component, you should see the same
-thing for the other alignments. This is true even for the E&minus; samples, such
-as SRR2321385, and the alignments clearly span much more than the length of a
-single read.
+You can repeat these steps for the `subjects.fasta` and `queries.sam` from the
+`e4305_Mas339_20200623_Ref_Scaffolds_CLS` search. In both cases, you should see
+should see the alignments span most of the transcript, and if you look at the
+other transcripts from the same ideal component, you should see the same thing
+for the other alignments. This is true even for the E&minus; samples, such as
+SRR2321385, and the alignments clearly span much more than the length of a
+single read. Thus, it is unlikely that misassembled transcripts explain the hits
+matching the E&minus;samples.
 
 #### Searching the Nucleotide database for matched transcripts
 
@@ -405,7 +411,7 @@ blastn -query "$TUTORIAL_DIR"/matching_components.fasta -evalue 1e-99 -remote \
 If you view the subject sequence IDs in the resulting `remote_results` file and
 search for them within the
 [Nucleotide](https://www.ncbi.nlm.nih.gov/nucleotide/) database, you should find
-that the sequences match arious fungal sequences closely. Further investigation
+that the sequences match various fungal sequences closely. Further investigation
 of the sequences we found reveals that they code for highly conserved proteins,
 and we are likely getting matches to both a plant and the fungal homolog of the
 gene. This explains why we get matches for the endophyte sequence even in
@@ -415,14 +421,15 @@ E&minus; samples.
 
 Now that we've looked at the results for the full analysis, we will see how our
 results differ for the subset analysis that included only E&minus; samples. Run
-`export_and_search.py` again but provide it with the configuration file for the
+`export_and_search` again but provide it with the configuration file for the
 subset analysis and a different output directory.
 
 ```bash
-python export_and_search.py -C "$TUTORIAL_DIR"/infected_subset_out/config.yaml \
-                            -Q "$TUTORIAL_DIR"/ec_genomes/*.fasta \
-                            -X "$TUTORIAL_DIR"/subset_ec_search_out \
-                            -e 1e-99
+python -m rna_clique.export_and_search
+          -C "$TUTORIAL_DIR"/infected_subset_out/config.yaml \
+          -Q "$TUTORIAL_DIR"/ec_genomes/*.fasta \
+          -X "$TUTORIAL_DIR"/subset_ec_search_out \
+          -e 1e-99
 ```
 
 ## Examining results for the subset analysis
