@@ -166,9 +166,9 @@ rna-clique "$TUTORIAL_DIR"/trinity_assemblies/SRR* -n 50000 \
            -O "$TUTORIAL_DIR/trinity_rna_clique_out" \
            -p '^.*tpm([0-9]+(?:\.[0-9]+)).*gid([0-9]+)_i([0-9]+)'
 
-python rna_clique.export_matrix --format table \
-       --header \
-       -O "$TUTORIAL_DIR/trinity_rna_clique_out"
+python -m rna_clique.export_matrix --format table \
+          --header \
+          -O "$TUTORIAL_DIR/trinity_rna_clique_out"
 python "$RNA_CLIQUE"/docs/tutorials/reads2tree/make_pcoa.py \
        "$TUTORIAL_DIR"/trinity_rna_clique_out
 [ -f "$TUTORIAL_DIR"/trinity_rna_clique_out/pcoa_2d.svg ]
