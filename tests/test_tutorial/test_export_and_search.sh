@@ -52,7 +52,7 @@ esac
 tar xJvf ec_genomes.tar.xz
 [ -f "e19_scaffolds-JAFEMN000000000.fasta" ]
 [ -f "e4305_Mas339_20200623_Ref_Scaffolds_CLS.fasta" ]
-python -m rna_clique.export_and_search
+python -m rna_clique.export_and_search \
           -C "$TUTORIAL_DIR"/rna_clique_out/config.yaml \
           -Q "$TUTORIAL_DIR"/ec_genomes/*.fasta \
           -X "$TUTORIAL_DIR"/full_ec_search_out \
@@ -91,7 +91,7 @@ if [ "$search" = true ]; then
     [ -F "$TUTORIAL_DIR"/remote_results ]
 fi
 # Subset analysis
-python -m rna_clique.export_and_search
+python -m rna_clique.export_and_search \
           -C "$TUTORIAL_DIR"/infected_subset_out/config.yaml \
           -Q "$TUTORIAL_DIR"/ec_genomes/*.fasta \
           -X "$TUTORIAL_DIR"/subset_ec_search_out \
