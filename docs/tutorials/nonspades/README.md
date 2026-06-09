@@ -139,12 +139,12 @@ values described in the ["Creating a directory for our
 work"](../reads2tree/README.md#creating-a-directory-for-our-work) section of the
 end-to-end tutorial.
 
-Also, check that you are in the `rna-clique` Conda environment. You should see
-`(rna-clique)` at the beginning of your prompt. If not, try activating the
-environment with
+Also, check that you are in the `rna_clique_venv` virtual environment. You
+should see `(rna_clique_venv)` at the beginning of your prompt. If not, try
+activating the environment with
 
 ```bash
-conda activate rna-clique
+. rna_clique_venv/bin/activate
 ```
 
 ## Downloading custom transcriptome data
@@ -182,7 +182,7 @@ Rather than have you assemble the transcriptomes yourself, we will have you
 download pre-assembled transcriptomes here. For an explanation of how to
 assemble the transcriptomes with Trinity, see the supplemental [Trinity assembly
 guide](trinity_assembly.md). If you choose to follow that tutorial, you can skip
-the next section.
+to the next section.
 
 First, make sure you are in your `$TUTORIAL_DIR`
 
@@ -262,6 +262,11 @@ sample to which the TPM values refer. Since we ordinarily use coverage to
 recognize the transcripts best supported by the input reads, we might be able to
 use TPM as a surrogate for $k$-mer coverage.
 
+If you examine the structure of one of the `quant.sf` files, you will see that
+each `quant.sf` file maps the sample's transcript FASTA IDs to various metrics,
+including TPM. We could use these `quant.sf` to map each transcript to a TPM
+value and add that information to the transcript's ID.
+
 ## Transforming transcriptomes to a usable format
 
 The problems identified in the previous section suggest that the following
@@ -302,7 +307,7 @@ after their samples in the `with_tpm` directory.
 for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 SRR8003761 SRR8003762; do
     python "$RNA_CLIQUE/docs/tutorials/nonspades/add_tpm.py" \
 	       "trinity_$f.Trinity.fasta" \
-	       "trinity_$f/salmon_outdir/quant.sf" > "with_tpm/$f.fasta"
+	       "trinity_$f/salmon_outdir/quant.sf" > "with_tpm/$f.fasta";
 done
 ```
 
@@ -340,7 +345,7 @@ Then, use the script to add integer gene IDs for each of the files in
 ```bash
 for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 SRR8003761 SRR8003762; do
     python "$RNA_CLIQUE/docs/tutorials/nonspades/assign_gene_ids.py" \
-	    < "with_tpm/$f.fasta" > "integer_ids/$f.fasta"
+	    < "with_tpm/$f.fasta" > "integer_ids/$f.fasta";
 done
 ```
 
@@ -381,12 +386,6 @@ rmdir integer_ids
 Now that we have put the Trinity transcriptomes in a format that RNA-clique will
 understand, we can try running RNA-clique on our new `transcripts.fasta` files.
 
-First, change back to the `$RNA_CLIQUE` directory.
-
-```bash
-cd "$RNA_CLIQUE"
-```
-
 Although we've put the transcriptomes into a format that RNA-clique should be
 able to read, our FASTA headers are still not exactly the same as those produced
 by SPAdes. To account for the difference, we will provide RNA-clique with a
@@ -402,12 +401,12 @@ floating-point number immediately after `tpm`, the integer immediately after
     explain a regex like the one given above. Make sure the tester you are using
     supports Python-flavor regexes.
 
-Then, run RNA-clique on the transformed data.
+Run RNA-clique on the transformed data.
 
 ```bash
-python rna_clique.py "$TUTORIAL_DIR"/trinity_assemblies/SRR* -n 50000 \
-                     -O "$TUTORIAL_DIR/trinity_rna_clique_out" \
-                     -p '^.*tpm([0-9]+(?:\.[0-9]+)).*gid([0-9]+)_i([0-9]+)'
+rna-clique "$TUTORIAL_DIR"/trinity_assemblies/SRR* -n 50000 \
+           -O "$TUTORIAL_DIR/trinity_rna_clique_out" \
+           -p '^.*tpm([0-9]+(?:\.[0-9]+)).*gid([0-9]+)_i([0-9]+)'
 ```
 
 ## Viewing results
@@ -415,9 +414,9 @@ python rna_clique.py "$TUTORIAL_DIR"/trinity_assemblies/SRR* -n 50000 \
 As always, we can get a distance matrix with the `export_matrix.py` script.
 
 ```bash
-python export_matrix.py --format table \
-                        --header \
-						-O "$TUTORIAL_DIR/trinity_rna_clique_out"
+python -m rna_clique.export_matrix --format table \
+                                   --header \
+						           -O "$TUTORIAL_DIR/trinity_rna_clique_out"
 ```
 
 Since we are using the same samples (with the same names) from the end-to-end
@@ -426,8 +425,8 @@ script](../reads2tree/README.md#getting-a-pcoa-plot) from that tutorial to get a
 PCoA plot for the matrix based on the Trinity transcriptomes.
 
 ```bash
-PYTHONPATH="." python docs/tutorials/reads2tree/make_pcoa.py \
-                      "$TUTORIAL_DIR"/trinity_rna_clique_out
+python "$RNA_CLIQUE"/docs/tutorials/reads2tree/make_pcoa.py \
+       "$TUTORIAL_DIR"/trinity_rna_clique_out
 ```
 
 As in the end-to-end tutorial, the PCoA plots are written to the RNA-clique

@@ -39,9 +39,8 @@ cd ..
 [ -d "tutorial" ]
 cd tutorial
 export TUTORIAL_DIR="$PWD"
-eval "$("$HOME/miniconda3/bin/conda" shell.bash hook)"
-conda activate rna-clique
 cd ..
+. rna_clique_venv/bin/activate
 if [ "$assemble" = true ]; then
     case "$(uname)" in
 	Linux)
@@ -86,7 +85,7 @@ if [ "$assemble" = true ]; then
     glob_exists . "sratoolkit.current-*.tar.gz"
     tar xzvf sratoolkit.current-*.tar.gz
     export PATH="$PATH:$(realpath sratoolkit*/bin)"    
-    conda install -y lxml requests
+    python -m pip install lxml requests
     if ! [ -d "download_sra" ]; then
 	git clone https://github.com/actapia/download_sra
     fi
@@ -110,7 +109,7 @@ if [ "$assemble" = true ]; then
 	done 6< <(tail -n+2 "$RNA_CLIQUE/docs/tutorials/reads2tree/tall_fescue_accs.csv" | cut -d, -f1)
     fi
 else
-    cd "$TUTORIAL_DIR"    
+    cd "$TUTORIAL_DIR" 
     mkdir trinity_assemblies
     cd trinity_assemblies
     case "$(uname)" in
@@ -133,6 +132,7 @@ fi
 cd "$TUTORIAL_DIR/trinity_assemblies"
 for f in trinity_*/; do
     [ -f "$f/salmon_outdir/quant.sf" ]
+    head -n1 "$f" | grep -e 'TPM'
 done
 mkdir with_tpm
 for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
@@ -162,16 +162,15 @@ for f in SRR2321385 SRR2321388 SRR7990321 SRR8003736 \
     mv "integer_ids/$f.fasta" "$f"/transcripts.fasta
 done
 rmdir integer_ids
-cd "$RNA_CLIQUE"
-python rna_clique.py "$TUTORIAL_DIR"/trinity_assemblies/SRR* -n 50000 \
-       -O "$TUTORIAL_DIR/trinity_rna_clique_out" \
-       -p '^.*tpm([0-9]+(?:\.[0-9]+)).*gid([0-9]+)_i([0-9]+)'
+rna-clique "$TUTORIAL_DIR"/trinity_assemblies/SRR* -n 50000 \
+           -O "$TUTORIAL_DIR/trinity_rna_clique_out" \
+           -p '^.*tpm([0-9]+(?:\.[0-9]+)).*gid([0-9]+)_i([0-9]+)'
 
-python export_matrix.py --format table \
+python rna_clique.export_matrix --format table \
        --header \
        -O "$TUTORIAL_DIR/trinity_rna_clique_out"
-PYTHONPATH="." python docs/tutorials/reads2tree/make_pcoa.py \
-                      "$TUTORIAL_DIR"/trinity_rna_clique_out
+python "$RNA_CLIQUE"/docs/tutorials/reads2tree/make_pcoa.py \
+       "$TUTORIAL_DIR"/trinity_rna_clique_out
 [ -f "$TUTORIAL_DIR"/trinity_rna_clique_out/pcoa_2d.svg ]
 [ -f "$TUTORIAL_DIR"/trinity_rna_clique_out/pcoa_3d.svg ]
 
