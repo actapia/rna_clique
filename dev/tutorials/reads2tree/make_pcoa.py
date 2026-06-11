@@ -5,13 +5,12 @@ import functools
 import pandas as pd
 import matplotlib as mpl
 
-import pcoa
-
 from pathlib import Path
 
 from matplotlib import pyplot as plt
 
-from config import RNACliqueConfig
+from rna_clique.viz import pcoa
+from rna_clique.config import RNACliqueConfig
 
 tutorial_doc_dir = Path(os.environ["RNA_CLIQUE"]) / "docs/tutorials/reads2tree"
 

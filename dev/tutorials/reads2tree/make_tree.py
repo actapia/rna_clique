@@ -11,8 +11,13 @@ from Bio.Phylo.TreeConstruction import DistanceTreeConstructor, DistanceMatrix
 from matplotlib import pyplot as plt
 from nice_colorsys import rgb
 
-from phylo_utils import tril_jagged, draw_tree, get_clades, draw_clade_labels
-from config import RNACliqueConfig
+from rna_clique.viz.phylo_utils import (
+    tril_jagged,
+    draw_tree,
+    get_clades,
+    draw_clade_labels
+)
+from rna_clique.config import RNACliqueConfig
 
 tutorial_doc_dir = Path(os.environ["RNA_CLIQUE"]) / "docs/tutorials/reads2tree"
 rna_clique_out_dir = Path(os.environ["TUTORIAL_DIR"]) / "rna_clique_out"
