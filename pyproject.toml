@@ -39,7 +39,7 @@ dependencies = [
 classifiers = [
     "Programming Language :: Python :: 3",
 ]
-license = "MIT AND CC-BY-SA-2.0"
+license = "MIT"
 
 [project.urls]
 "Homepage" = "https://github.com/actapia/rna_clique"
