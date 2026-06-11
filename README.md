@@ -31,22 +31,21 @@ RNA-clique", False) | comment_surround}}{{empty("-->
 [format understood by RNA-clique](https://actapia.github.io/rna_clique/dev/formats.md#transcriptomes).
 <!--")}}-->
 
-Then, run `rna_clique.py` from the root of this repository with the directories
-containing your transcriptomes, an output directory, and a setting for the
-number of top genes to select.
+Then, run `rna-clique` with the directories containing your transcriptomes, an
+output directory, and a setting for the number of top genes to select.
 
 ```bash
-python rna_clique.py -O my_rna_clique_out -n 50000 \
-                     path/to/transcriptome1_dir \
-                     path/to/transcriptome2_dir \
-					 path/to/transcriptome3_dir ...
+rna-clique -O my_rna_clique_out -n 50000 \
+           path/to/transcriptome1_dir \
+           path/to/transcriptome2_dir \
+		   path/to/transcriptome3_dir ...
 ```
 
 RNA-clique produces an output matrix at `my_rna_clique_out/matrix.h5`. To see it
-in a human-readable format, use `export_matrix.py`.
+in a human-readable format, use `export_matrix`.
 
 ```bash
-python export_matrix -m my_rna_clique_out/matrix.h5 
+python -m rna_clique.export_matrix -m my_rna_clique_out/matrix.h5 
 ```
 
 More details about the usage of RNA-clique can be found in the <!--{{doc_link("usage.md", "Command-line usage guide", False) | comment_surround}}{{empty("-->[Command-line usage guide](https://actapia.github.io/rna_clique/dev/usage)<!--")}}-->
@@ -54,7 +53,7 @@ More details about the usage of RNA-clique can be found in the <!--{{doc_link("u
 
 ### Downstream analyses
 
-The `export_matrix.py` script prints the calculated matrix to the standard
+The `export_matrix` program prints the calculated matrix to the standard
 output, so you can use redirection or pipes to save the results to a file. You
 could then use the matrix in any downstream application capable of loading
 arbitrary matrices from files.
@@ -71,7 +70,7 @@ dis <- as.matrix(read.table("distances", sep=" "))
 You can use RNA-clique directly from your Python code. For example,
 
 ```python
-from rna_clique import rna_clique
+from rna_clique.rna_clique import rna_clique
 from pathlib import Path
 
 out_dir = Path("rna_clique_out")

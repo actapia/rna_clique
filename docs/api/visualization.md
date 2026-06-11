@@ -52,8 +52,8 @@ ten-thousandths.](../images/distance_heatmap.svg).
 
 
 RNA-clique offers a `draw_heatmap` function, which can be found in the
-`heatmap.py` module. The arguments accepted by `draw_heatmap` are summarized in
-the table below.
+`rna_clique.viz.heatmap` module. The arguments accepted by `draw_heatmap` are
+summarized in the table below.
 
 | Formal parameter     | Description                                                          | Default value               |
 |----------------------|----------------------------------------------------------------------|-----------------------------|
@@ -122,8 +122,8 @@ that maps the `order_by` columns in `sample_metadata` to other columns to be
 used for sorting.
 
 ```python
-from heatmap import draw_heatmap
-from path_to_sample import path_to_sample
+from rna_clique.viz.heatmap import draw_heatmap
+from rna_clique.path_to_sample import path_to_sample
 
 sample_metadata: pd.DataFrame = pd.read_csv("my_metadata.csv")
 distances: pd.DataFrame = sim.get_dissimilarity_df().rename(
@@ -162,8 +162,8 @@ measured as the percentage of the sum of eigenvalues of the distance
 matrix.](../images/pcoa_2d.svg)
 
 RNA-clique provides the `draw_pcoa` function for drawing PCoA plots in two or
-three dimensions. `draw_pcoa` is in the `pcoa.py` module and returns a
-[`scikit-bio`](https://scikit.bio/) `skbio.stats.ordination.OrdinationResults`
+three dimensions. `draw_pcoa` is in the `rna_clique.viz.pcoa` module and returns
+a [`scikit-bio`](https://scikit.bio/) `skbio.stats.ordination.OrdinationResults`
 object representing the results of the PCoA analysis. The parameters accepted by
 `draw_pcoa` are summarized in the table below.
 
@@ -312,12 +312,13 @@ the population distribution is multivariate normal. Different ellipsoids can be
 drawn by providing a value to the `make_ellipsoid` parameter. `make_ellipsoid`
 should be a function that accepts a data matrix in which rows represent
 individual samples (observations), and columns represent the principal component
-dimensions. The function should return an `Ellipsoid` from the
-`confidence_ellipsoid.py` module, which is defined by its center and vectors
-representing its axes (one for each dimension). The `confidence_ellipsoid`
-module also contains some functions for creating such `make_ellipsoid`
-functions, including `get_multivariate_normal_density_ellipsoid`, which returns
-an ellipsoid containing the specific probability density, and
+dimensions. The function should return an
+`rna_clique.viz.confidence_ellipsoid.Ellipsoid`, which is defined by its center
+and vectors representing its axes (one for each dimension). The
+`rna_clique.viz.confidence_ellipsoid` module also contains some functions for
+creating such `make_ellipsoid` functions, including
+`get_multivariate_normal_density_ellipsoid`, which returns an ellipsoid
+containing the specific probability density, and
 `get_multivariate_normal_confidence_ellipsoid`, which returns a confidence
 ellipsoid at the given level for the population mean.
 
@@ -403,7 +404,7 @@ are only coincidentally independent, or failing to split variables when certain
 combinations of values are always observed together.
 
 ```python
-from pcoa import draw_pcoa
+from rna_clique.viz.pcoa import draw_pcoa
 
 # Create a PCoA plot ...
 res: skbio.stats.ordination.OrdinationResults = draw_pcoa(
@@ -430,11 +431,11 @@ A real example of using `draw_pcoa` can also be found at
 
 ## Phylograms
 
-RNA-clique provides functions for drawing phylograms in the `phylo_utils.py`
-module. Unlike the functions for heatmaps and PCoA plots, the functions for
-phylograms expect to be given a BioPython Tree instead of a distance
-matrix. Such trees can be constructed using BioPython or some other Python
-libraries. 
+RNA-clique provides functions for drawing phylograms in the
+`rna_clique.viz.phylo_utils` module. Unlike the functions for heatmaps and PCoA
+plots, the functions for phylograms expect to be given a BioPython Tree instead
+of a distance matrix. Such trees can be constructed using BioPython or some
+other Python libraries.
 
 ![A phylogram with six leaves representing the samples analyzed in the
 end-to-end "From RNA-seq reads to a phylogenetic tree with RNA-clique"
@@ -445,8 +446,8 @@ respectively.](../images/nj_tree.svg)
 
 
 The main function for drawing phylograms is the `draw_tree` function in the
-`phylo_utils.py` module. The parameters that the function accepts are described
-in the table below.
+`rna_clique.viz.phylo_utils` module. The parameters that the function accepts
+are described in the table below.
 
 | Formal parameter     | Description                                          | Default value |
 |----------------------|------------------------------------------------------|---------------|
@@ -473,7 +474,7 @@ colored as specified by the value in the `colors` `dict`.
 It is sometimes desirable to find and color maximal clades such that all samples
 in the clade have some metadata value, *and* all samples that have that metadata
 value fall in that clade. To find such clades to be colored, you can use the
-`get_clades` function from the `phylo_utils.py` module.
+`get_clades` function from the `rna_clique.viz.phylo_utils` module.
 
 `get_clades` returns the axes on which the tree was drawn. The parameters
 accepted by `get_clades` are described below.
@@ -489,8 +490,8 @@ accepted by `get_clades` are described below.
 import Bio.Phylo
 import Bio.Phylo
 from Bio.Phylo.TreeConstruction import DistanceTreeConstructor, DistanceMatrix
-from phylo_utils import tril_jagged, draw_tree, get_clades
-from path_to_sample import path_to_sample
+from rna_clique.viz.phylo_utils import tril_jagged, draw_tree, get_clades
+from rna_clique.path_to_sample import path_to_sample
 
 # Convert RNA-clique distance matrix to a 
 # Bio.Phylo.TreeConstruction.DistanceMatrix.
@@ -518,7 +519,7 @@ BioPython can draw clade labels directly on nonterminals of the tree when the
 nonterminal is labeled via its `name` attribute, but the author of RNA-clique
 has found that labels are often better shown using "calipers"/"braces" on the
 side of the plot. To draw clade labels with calipers, you can use the
-`draw_clade_labels` function in the `phylo_utils.py` module.
+`draw_clade_labels` function in the `rna_clique.viz.phylo_utils` module.
 
 The parameters accepted by `draw_clade_labels` are shown below.
 
@@ -543,7 +544,7 @@ are exactly the keys in the `clades` `dict`.
 
 ```python
 from matplotlib import pyplot as plt
-from phylo_utils import make_clade_labels
+from rna_clique.viz.phylo_utils import make_clade_labels
 
 # Make clade labels using the same clades and colors passed to draw_tree.
 # Labels should be in all caps.

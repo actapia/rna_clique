@@ -30,6 +30,7 @@ if ! which sudo; then
 fi
 cd
 set -e
+. rna_clique_venv/bin/activate
 case "$(uname)" in
     Linux)
 	if [ "$install" = true ]; then
@@ -65,7 +66,6 @@ case "$(uname)" in
 esac
 tar xzvf sratoolkit.current-*.tar.gz
 export PATH="$PATH:$(realpath sratoolkit*/bin)"
-. rna_clique_venv/bin/activate
 python -m pip install lxml requests
 git clone https://github.com/actapia/download_sra
 export PATH="$PATH:$PWD/download_sra"

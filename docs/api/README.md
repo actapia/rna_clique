@@ -1,19 +1,19 @@
 # RNA-clique Python API
 
 This document describes some options for using RNA-clique in your own Python
-code. Most scripts included in RNA-clique (described in the [Command-line usage
-guide](../usage.md)) have corresponding functions that can be called to perform the
-same operations of the script from Python code. Just as different scripts offer
-finer-grained control of the RNA-clique analysis, the corresponding functions
-allow for customized analyses from within custom Python code.
+code. Most programs included in RNA-clique (described in the [Command-line usage
+guide](../usage.md)) have corresponding functions that can be called to perform
+the same operations of the program from Python code. Just as different programs
+offer finer-grained control of the RNA-clique analysis, the corresponding
+functions allow for customized analyses from within custom Python code.
 
 ## Running a full RNA-clique analysis
 
 The `rna_clique` function in the 
-{{file_link("`rna_clique.py` script", "rna_clique.py")}}
+{{file_link("`rna_clique` module", "src/rna_clique/rna_clique.py")}}
 provides a way to perform a full RNA-clique analysis from Python code.
 
-Unlike the `rna_clique.py` script, the `rna_clique` function must be provided
+Unlike the `rna-clique` program, the `rna_clique` function must be provided
 with explicit paths for the outputs. The parameters accepted by RNA-clique are
 summarized in the table below.
 
@@ -34,7 +34,7 @@ summarized in the table below.
 | `jobs`           | Number of parallel jobs to use.                                                                                       | `multiprocessing.cpu_count() - 1` |
 
 ```python
-from rna_clique import rna_clique
+from rna_clique.rna_clique import rna_clique
 from pathlib import Path
 
 out_dir = Path("rna_clique_out")
@@ -58,12 +58,11 @@ print(sim.get_dissimilarity_df())
 ```
 
 The `rna_clique` function returns two values. The first value is a
-`SampleSimilarity` object that can be used to get the "dissimilarity" (distance)
-matrix as a [Pandas
+`rna_clique.filtered_distance.SampleSimilarity` object that can be used to get
+the "dissimilarity" (distance) matrix as a [Pandas
 DataFrame](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html)
 using the `get_dissimilarity_df` method as in the example above. The second
-value is a dictioanry mapping paths to the top genes for each sample to its
-sample name.
+value is a dictionary mapping each sample's top genes path to its sample name.
 
 `SampleSimilarity` objects can also provide other information about the
 filtering process.
@@ -107,9 +106,9 @@ through its Python API.
 
 You can select top $n$ genes by $k$-mer coverage and save the results for a
 single transcriptome using the `select_top_and_save` function of the
-`select_top_genes_all.py` module. `select_top_genes_and_save` takes at least
-four parameters and returns the name of the output file and the inferred sample
-name.
+`rna_clique.select_top_genes_all` module. `select_top_genes_and_save` takes at
+least four parameters and returns the name of the output file and the inferred
+sample name.
 
 | Formal parameter      | Description                                                          | Default          |
 |-----------------------|----------------------------------------------------------------------|------------------|
@@ -119,14 +118,14 @@ name.
 | `top`                 | Number of top genes to select.                                       |                  |
 | `parse_transcript_id` | Function for [parsing transcript IDs](#working-with-transcript-ids). | `default_parser` |
 
-`default_parser` in the table above is `transcripts.default_parser`, a function
-that uses the default regular expression designed for rnaSPAdes assemblies,
-`^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)`. For more information about
-functions for parsing transcript IDs, see the ["Working with transcript
-IDs"](#working-with-transcript-ids) section.
+`default_parser` in the table above is `rna_clique.transcripts.default_parser`,
+a function that uses the default regular expression designed for rnaSPAdes
+assemblies, `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)`. For more
+information about functions for parsing transcript IDs, see the ["Working with
+transcript IDs"](#working-with-transcript-ids) section.
 
 ```python
-from select_top_genes_all import select_top_and_save
+from rna_clique.select_top_genes_all import select_top_and_save
 
 # Select top genes for "path/to/transcriptome1/transcripts.fasta" and save to
 # "top_genes_dir"
@@ -139,7 +138,7 @@ top_genes_file, sample_name = select_top_genes_and_save(
 ```
 
 If you don't wish to save the selected top genes, you can also use the
-`TopGeneSelector ` class from the `select_top_genes.py`
+`TopGeneSelector ` class from the `rna_clique.select_top_genes`
 module. `TopGeneSelector` can work on genes that are not read from a file; to
 accomplish this, it requires as the first argument to its constructor a nullary
 function that produces an iterator of `Bio.SeqRecord` objects from which to
@@ -154,7 +153,7 @@ constructor. `from_path` requires at least two arguments.
 | `parse_transcript_id` | Function for [parsing transcript IDs](#working-with-transcript-ids). | `default_parser` |
 
 ```python
-from select_top_genes import TopGeneSelector
+from rna_clique.select_top_genes import TopGeneSelector
 
 selector = TopGeneSelector.from_path(
     Path("path/to/transcriptome1/transcripts.fasta"),
@@ -178,11 +177,11 @@ top_gene_ids: list[int] = list(select.get_top_genes())
 ### Getting gene matches tables
 
 You can obtain gene matches tables for all pairs of some set of samples via the
-`find_all_pairs` function from the `find_all_pairs.py` module. `find_all_pairs`
-requires at least four arguments and returns an iterator over the gene matches
-tables, an iterator over the paths to the gene matches tables, and the total
-number of gene matches tables computed. The arguments to `find_all_pairs` are
-summarized in the table below.
+`find_all_pairs` function from the `rna_clique.find_all_pairs`
+module. `find_all_pairs` requires at least four arguments and returns an
+iterator over the gene matches tables, an iterator over the paths to the gene
+matches tables, and the total number of gene matches tables computed. The
+arguments to `find_all_pairs` are summarized in the table below.
 
 | Formal parameter | Description                                                                                                           | Default value                     |
 |------------------|-----------------------------------------------------------------------------------------------------------------------|-----------------------------------|
@@ -207,10 +206,10 @@ saved. The arguments for `find_homologs_and_save` are summarized below.
 | `hf_kwargs`      | Keyword arguments to pass to `HomologFilter`. | `None`        |
 
 In turn, `find_homologs_and_save` uses the `HomologFinder` class from the
-`find_homologs.py` module. `HomologFinder` can find the gene matches table for a
-pair of samples without saving it to a file. Many of `HomologFinder`'s
-constructor's arguments are relevant to the BLAST search used for getting a gene
-matches table. The constructor arguments are described below.
+`rna_clique.find_homologs` module. `HomologFinder` can find the gene matches
+table for a pair of samples without saving it to a file. Many of
+`HomologFinder`'s constructor's arguments are relevant to the BLAST search used
+for getting a gene matches table. The constructor arguments are described below.
 
 | Formal parameter      | Description                                                          | Default value |
 |-----------------------|----------------------------------------------------------------------|---------------|
@@ -229,10 +228,10 @@ used to find the gene matches table for two sets of top $n$ genes. The paths to
 these top $n$ genes are the parameters to the `get_match_table` method.
 
 ```python
-from transcripts import default_parser
+from rna_clique.transcripts import default_parser
 
 # Get all gene matches tables with find_all_pairs.
-from find_all_pairs import find_all_pairs
+from rna_clique.find_all_pairs import find_all_pairs
 
 tables_iter, paths_iter, count = find_all_pairs(
     [
@@ -242,7 +241,7 @@ tables_iter, paths_iter, count = find_all_pairs(
 	],
 	Path("gene_matches_tables"),
 	Path("db_cache"),
-	# Could also use just path_to_sample from path_to_sample.py here.
+	# Could also just use rna_clique.path_to_sample.path_to_sample here.
 	path_to_sample={
         Path("top/transcriptome1_top.fasta"): "transcriptome1",
         Path("top/transcriptome2_top.fasta"): "transcriptome2",
@@ -257,7 +256,7 @@ tables_iter, paths_iter, count = find_all_pairs(
 )
 
 # Get one gene matches table with find_homologs_and_save.
-from find_all_pairs import find_homologs_and_save
+from rna_clique.find_all_pairs import find_homologs_and_save
 
 table = find_homologs_and_save(
     Path("top/transcriptome1_top.fasta"),
@@ -272,7 +271,7 @@ table = find_homologs_and_save(
 )
 
 # Get one gene matches table with FindHomologs.
-from find_homologs import HomologFinder
+from rna_clique.find_homologs import HomologFinder
 
 finder = HomologFinder(
     default_parser,
@@ -289,16 +288,16 @@ tble = finder.get_match_table(
 ### Getting a gene matches graph
 
 A gene matches graph can be constructed from gene matches tables using the
-`build_graph` function in the `build_graph.py` module. `build_graph` takes only
-one argument&mdash;an iterable of Pandas DataFrames representing the gene
-matches tables.
+`build_graph` function in the `rna_clique.build_graph` module. `build_graph`
+takes only one argument&mdash;an iterable of Pandas DataFrames representing the
+gene matches tables.
 
 For information on loading gene matches tables that have already been saved to
 disk, see the ["Loading gene matches tables"](#loading-gene-matches-tables)
 section.
 
 ```python
-from build_graph import build_graph
+from rna_clique.build_graph import build_graph
 
 graph = build_graph(tables)
 ```
@@ -306,7 +305,7 @@ graph = build_graph(tables)
 ### Getting ideal components
 
 You can obtain the ideal components from a gene matches graph using the
-`get_ideal_components` function in the `filtered_distance.py` module. 
+`get_ideal_components` function in the `rna_clique.filtered_distance` module. 
 
 `get_ideal_components` requires two arguments and returns a list of NetworkX
 `Graph` objects representing the ideal components. The arguments required by
@@ -319,7 +318,7 @@ You can obtain the ideal components from a gene matches graph using the
 
 
 ```python
-from filtered_distance import get_ideal_components
+from rna_clique.filtered_distance import get_ideal_components
 
 ideal_components: list[nx.Graph] = get_ideal_components(
     graph,
@@ -330,8 +329,8 @@ ideal_components: list[nx.Graph] = get_ideal_components(
 ### Filtering gene matches tables
 
 Gene matches tables are most easily filtered to include only genes from ideal
-components using the `SampleSimilarity` class from the `filtered_distance.py`
-module. `SampleSimilarity`'s constructor arguments are summarized below.
+components using the `rna_clique.filtered_distance.SampleSimilarity` class.
+`SampleSimilarity`'s constructor arguments are summarized below.
 
 | Formal parameter | Description                        |        |
 |------------------|------------------------------------|--------|
@@ -351,7 +350,7 @@ constructor to get a mapping from pairs of samples to filtered gene matches
 tables.
 
 ```python
-from filtered_distance import SampleSimilarity
+from rna_clique.filtered_distance import SampleSimilarity
 from multiset_key_dict import MultisetKeyDict
 
 sim = SampleSimilarity(graph, tables)
@@ -368,8 +367,9 @@ table = filtered_tables[
 
 ### Getting a genetic distance
 
-If you have a `SampleSimilarity` object, getting the genetic distance is as
-simple as calling the `get_dissimilarity_df()` method.
+If you have an `rna_clique.filtered_distance.SampleSimilarity` object, getting
+the genetic distance is as simple as calling the `get_dissimilarity_df()`
+method.
 
 ```python
 dist: pd.DataFrame = sim.get_dissimilarity_df()
@@ -377,13 +377,13 @@ dist: pd.DataFrame = sim.get_dissimilarity_df()
 
 You can also obtain *similarities* from arbitrary (filtered or unfiltered) gene
 matches tables using the `similarities_from_dfs` function from the
-`similarity_computer.py` module. `similarities_from_dfs` accepts just one
-argument&mdash;an iterable of pairs. The first element of each pair should be an
-unordered pair of samples that the table is for. The second element of each pair
-should be the table itself.
+`rna_clique.similarity_computer` module. `similarities_from_dfs` accepts just
+one argument&mdash;an iterable of pairs. The first element of each pair should
+be an unordered pair of samples that the table is for. The second element of
+each pair should be the table itself.
 
 ```python
-from similarity_computer import similarities_from_dfs
+from rna_clique.similarity_computer import similarities_from_dfs
 
 similarities = similarities_from_dfs(tables)
 ```
@@ -414,8 +414,8 @@ Python API, RNA-clique provides even more flexibility via functional
 programming.
 
 A transcript ID parser is a unary function that maps a transcript's FASTA ID to
-a `TranscriptID` object. A `TranscriptID` object is a kind of `namedtuple` with
-three fields, summarized in the table below.
+an `rna_clique.transcripts.TranscriptID` object. A `TranscriptID` object is a
+kind of `namedtuple` with three fields, summarized in the table below.
 
 | Position | Type    | Name     | Description                                            |
 |----------|---------|----------|--------------------------------------------------------|
@@ -431,15 +431,15 @@ For example, a function that simply splits the FASTA ID by colons (`:`) and
 takes the last three elements as the transcript ID is shown below.
 
 ```python
-from transcripts import TranscriptID
+from rna_clique.transcripts import TranscriptID
 
 def custom_transcript_id_parser(x):
     return TranscriptID(*x.split(":")[-3:])
 ```
 
 You can also create a parser from a regular expression in the same fashion as
-the command-line interface using the `TranscriptID.parser_from_re`
-classmethod. For example,
+the command-line interface using the `TranscriptID.parser_from_re` classmethod.
+For example,
 
 ```python
 import re
@@ -452,13 +452,13 @@ print(parsed) # TranscriptID(coverage=12.0, gene=13, isoform=14)
 ## Loading gene matches tables
 
 An individual [gene matches table](../formats.md#gene-matches-tables) file can
-be loaded using the `read_table` function from
-`gene_matches_tables.py`. `read_table` requires at least one argument, the path
-to the gene matches table to load, and it returns a Pandas DataFrame
-representing the loaded gene matches table.
+be loaded using the `read_table` function from the
+`rna_clique.gene_matches_tables` module. `read_table` requires at least one
+argument, the path to the gene matches table to load, and it returns a Pandas
+DataFrame representing the loaded gene matches table.
 
 ```python
-from gene_matches_tables import read_table
+from rna_clique.gene_matches_tables import read_table
 
 table = read_table(Path("od2/transcriptome1--transcriptome2.h5"))
 ```
@@ -467,7 +467,7 @@ To get a list of gene matches tables in a directory, use `get_table_files` from
 the same module.
 
 ```python
-from gene_matches_tables import get_table_files
+from rna_clique.gene_matches_tables import get_table_files
 
 table_files = get_table_files(Path("od2"))
 tables = [read_table(t) for t in table_files]
@@ -476,8 +476,8 @@ tables = [read_table(t) for t in table_files]
 ## Exporting orthologs (ideal components)
 
 You can export orthologs from Python code using the `OrthologExporter` class
-found in the `export_orthologs.py` module. The `OrthologExporter` class requires
-at least two arguments for construction. The parameters accepted by the
+found in the `rna_clique.export_orthologs` module. The `OrthologExporter` class
+requires at least two arguments for construction. The parameters accepted by the
 constructor are summarized in the table below.
 
 | Formal parameter      | Description                                                                     | Default value |
@@ -517,8 +517,8 @@ name to the file in which orthologs from that sample are stored. For
 integer) to the file in which orthologs from that ideal component are stored.
 
 ```python
-from export_orthologs import OrthologExporter
-from transcripts import default_parser
+from rna_clique.export_orthologs import OrthologExporter
+from rna_clique.transcripts import default_parser
 
 exporter = OrthologExporter(sim, default_parser)
 component_to_path = exporter.by_component(Path("exported_orthologs"))
@@ -527,9 +527,9 @@ component_to_path = exporter.by_component(Path("exported_orthologs"))
 ## Searching ideal components (exported orthologs)
 
 Exported orthologs can be searched using the `search` function from the
-`search_ideal_components.py` module. `search` requires at least five arguments
-but can accept many optional arguments. The possible parameters are described in
-the table below.
+`rna_clique.search_ideal_components` module. `search` requires at least five
+arguments but can accept many optional arguments. The possible parameters are
+described in the table below.
 
 | Formal parameter      | Description                                                                                                            | Default value    |
 |-----------------------|------------------------------------------------------------------------------------------------------------------------|------------------|
@@ -554,13 +554,14 @@ it with the `OrthologExporter`'s `strand_graph` and
 `node_to_component_component` attributes for its `strand_graph` and
 `node_to_ccc` parameters, respectively,
 
-`search` returns a `SearchResult` object, which is a `namedtuple` containing
-attributes `hits`, `seqs`, and `components`. `hits` is the number of BLAST
-HSPs to the ideal components. `seqs` is the number of transcripts producing
-HSPs. `components` is the number of components producing HSPs.
+`search` returns a `rna_clique.search_ideal_components.SearchResult` object,
+which is a `namedtuple` containing attributes `hits`, `seqs`, and
+`components`. `hits` is the number of BLAST HSPs to the ideal components. `seqs`
+is the number of transcripts producing HSPs. `components` is the number of
+components producing HSPs.
 
 ```python
-from search_ideal_components import search, SearchResult
+from rna_clique.search_ideal_components import search, SearchResult
 
 result: SearchResult = search(
     sim,
@@ -594,10 +595,10 @@ analysis. Althoug using RNA-clique configuration files in not necessary to use
 the Python API, it can sometimes be convenient to be able to read or create
 configuration files from your own Python code.
 
-To load an RNA-clique configuration file, use the `RNACliqueConfig.yaml_load`
-classmethod from the `config.py` module. `yaml_load` takes just one
-argument&mdash;the path to the configuration file&mdash;and loads and returns
-the configuration at that path.
+To load an RNA-clique configuration file, use the
+`rna_clique.config.RNACliqueConfig.yaml_load` classmethod. `yaml_load` takes
+just one argument&mdash;the path to the configuration file&mdash;and loads and
+returns the configuration at that path.
 
 ```python
 import config as config_module
@@ -616,9 +617,8 @@ config.yaml_save(Path("path/to/config.yaml"))
 ## Making subsets
 
 To create a subset of an existing analysis from Python code, you can use the
-`SubsetAnalysisCreator` class from the `make_subset.py`
-module. `SubsetAnalysisCreator`'s constructor requires three arguments, which
-are summarized in the table below.
+`rna_clique.make_subset.SubsetAnalysisCreator` class. `SubsetAnalysisCreator`'s
+constructor requires three arguments, which are summarized in the table below.
 
 | Formal parameter | Description                                                                                            |
 |------------------|--------------------------------------------------------------------------------------------------------|
@@ -655,7 +655,8 @@ instance will be a complete `RNACliqueConfig` for the subset analysis.
 
 
 ```python
-from make_subset import SubsetAnalysisCreator
+from rna_clique.make_subset import SubsetAnalysisCreator
+from rna_clique.config import RNACliqueConfig
 
 child_config = RNACliqueConfig()
 child_config.tables_dir = Path("subset/tables_dir")
@@ -685,7 +686,7 @@ described in the table below.
 
 
 ```python
-from make_subset import SubsetAnalysisCreator
+from rna_clique.make_subset import SubsetAnalysisCreator
 
 subsetter = SubsetAnalysisCreator.from_paths(
     # Exclude samples that start with the letter "B".

@@ -46,8 +46,8 @@ RNA-seq reads using a transcriptome assembler such as
 
 RNA-clique expects as its input some number of assembled transcriptomes, each
 belonging to a different *sample*. All transcriptomes should have the same
-filename. By default, `rna_clique.py` assumes that the transcriptomes are all
-named `transcripts.fasta`, but this can be changed with the `transcripts_name`
+filename. By default, `rna-clique` assumes that the transcriptomes are all named
+`transcripts.fasta`, but this can be changed with the `transcripts_name`
 configuration option or the `--transcripts-name`/`-t` command-line option. Since
 all transcriptomes must have the same filename, they cannot all be in the same
 directory. Instead, RNA-clique expects each sample's transcriptome to be in its
@@ -303,12 +303,12 @@ serialized in Python's binary [Pickle
 format](https://docs.python.org/3/library/pickle.html), which is neither
 human-readable nor compatible with other programming languages. To export gene
 matches graphs to other representations, use
-[`export_graph.py`](usage.md#export_graphpy).
+[`export_graph`](usage.md#export_graph).
 
 #### Example
 
 The image below is a visualization in SVG format produced from a gene matches
-graph by exporting to GraphML with [`export_graph.py`](usage.md#export_graphpy)
+graph by exporting to GraphML with [`export_graph`](usage.md#export_graph)
 and importing into [Cytoscape](https://cytoscape.org/). Only a few components
 are shown.
 
@@ -355,12 +355,12 @@ Since HDF5 is a binary format, the output distance matrix file is not
 human-readable, and since the HDF5 store contains a dataframe serialized in a
 Pandas-specific format, the file is not likely to be usable with other software
 not based on Pandas. To export a distance matrix for use with other software,
-use [`export_matrix.py`](usage.md#export_matrixpy).
+use [`export_matrix`](usage.md#export_matrix).
 
 #### Example
 
 The following example is a distance matrix converted to CSV format using the
-`csv` format option of `export_matrix.py`. Samples are labeled on the rows;
+`csv` format option of `export_matrix`. Samples are labeled on the rows;
 since the matrix is symmetric, column labels have been omitted.
 
 ```text
@@ -381,22 +381,3 @@ rnac_out/od1/SRR8003756_top.fasta,0.00743863245673041,0.0073262905661900446,0.00
 rnac_out/od1/SRR8003761_top.fasta,0.007230214862207701,0.007408281261711856,0.007461249801562505,0.007431485603066781,0.007327216346131236,0.007358340294100507,0.00723491884565872,0.007302255769002343,0.007345516049973433,0.007282014518250357,0.005801252770533637,0.005388058635962769,0.00607229411236707,0.005699313542929577,0.0,0.005664813883747902
 rnac_out/od1/SRR8003762_top.fasta,0.0073832767780768254,0.007638552765508823,0.007582443616558755,0.007506446547060221,0.007692388221551249,0.007776166721858891,0.007607016896798138,0.007709591684544236,0.007336003543873897,0.007465439374296728,0.005964403443675155,0.005730100739785911,0.005964136017753867,0.005701078777889641,0.005664813883747902,0.0
 ```
-
-<!-- ## Exported orthologs -->
-
-<!-- [`export_orthologs.py`](usage.md#export-orthologspy) and -->
-<!-- [`export_and_search.py`](usage.md#export-and-searchpy) can export the sequences -->
-<!-- of orthologous genes detected by RNA-clique. The sequences for these genes are -->
-<!-- derived from the [top genes](#top-genes) files, which, in turn, are derived from -->
-<!-- the input [transcriptomes](#transcriptomes).  When either script is used, -->
-<!-- RNA-clique outputs *all* isoforms of identified orthologous genes&mdash;not just -->
-<!-- those that actually appear in the gene matches tables. -->
-
-<!-- Both `export_orthologs.py` and `export_and_search.py` organize transcripts into -->
-<!-- multiple output files to facilitate manual inspection. `export_orthologs.py` can -->
-<!-- organize by either `sample` or `component`, while `export_and_search.py` always -->
-<!-- organizes by component. The organization used affects both the directory -->
-<!-- structure and the file format structure in a predictable way. -->
-
-<!-- ### Directory structure -->
-

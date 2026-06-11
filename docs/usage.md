@@ -1,9 +1,9 @@
 # Command-line usage guide
 
-## rna\_clique.py
+## rna-clique
 
-`rna_clique.py` is the main script of RNA-clique. Given some input
-transcriptomes, `rna_clique.py` gets a genetic distance matrix quantifying
+`rna-clique` is the main executable of RNA-clique. Given some input
+transcriptomes, `rna-clique` gets a genetic distance matrix quantifying
 differences in the genomes of the provided samples.
 
 ### Positional arguments
@@ -46,9 +46,8 @@ analyze.
 
 The main output of this script is the [distance
 matrix](formats.md#distance-matrix). In the process of obtaining the distance
-matrix, `rna_clique.py` also produces the [top genes
-files](formats.md#top-genes), [gene matches
-tables](formats.md#gene-matches-tables), and [gene matches
+matrix, `rna-clique` also produces the [top genes files](formats.md#top-genes),
+[gene matches tables](formats.md#gene-matches-tables), and [gene matches
 graph](formats.md#gene-matches-graph).
 
 ### Examples
@@ -60,7 +59,7 @@ and `sample3/transcripts.fasta`, respectively. Select only the top $5000$ genes
 by $k$-mer coverage for each sample. Write output under `rna_clique_out`.
 
 ```bash
-python rna_clique.py sample1 sample2 sample3 -n 50000 -O rna_clique_out
+rna-clique sample1 sample2 sample3 -n 50000 -O rna_clique_out
 ```
 
 Run RNA-clique on the transcriptomes at `sample1`, `sample2`, `sample3`, and
@@ -74,12 +73,12 @@ the output distance matrix to `matrix.h5`. Write the remaining output under
 `other_out`.
 
 ```bash
-python rna_clique.py sample1 sample2 sample3 sample4 \
-                     -t genes.fasta --no-keep-all -n 10000 -O other_out \
-					 -g gene_matches_graph.pkl -m matrix.h5
+rna-clique sample1 sample2 sample3 sample4 \
+           -t genes.fasta --no-keep-all -n 10000 -O other_out \
+		   -g gene_matches_graph.pkl -m matrix.h5
 ```
 
-## build\_graph.py
+## build\_graph
 
 Build the gene matches graph from the gene matches tables.
 
@@ -115,24 +114,25 @@ Tables are expected to be under `rna_clique_out/od2`. The output graph will be
 at `rna_clique_out/graph.pkl`.
 
 ```bash
-python build_graph.py -O rna_clique_out
+python -m rna_clique.build_graph -O rna_clique_out
 ```
 
 Specify a directory containing tables and output graph destination explicitly:
 
 ```bash
-python build_graph.py --tables-dir tables/ --graph gene_matches_graph.pkl
+python -m rna_clique.build_graph --tables-dir tables/ \
+                                 --graph gene_matches_graph.pkl
 ```
 
-## export\_and\_search.py
+## export\_and\_search
 
 Export orthologs from ideal components and search their sequences with BLAST.
 
-This script combines functionality from [`export_graph.py`](#export_graphpy) and
-[`search_ideal_components.py`](#search_ideal_componentspy), but unlike those
-scripts, this script can operate on multiple RNA-clique analyses and multiple
-queries at once. The analyses for which to export and search ideal components
-can be specified via their config files using the `-C` option.
+This script combines functionality from [`export_graph`](#export_graph) and
+[`search_ideal_components`](#search_ideal_components), but unlike those scripts,
+this script can operate on multiple RNA-clique analyses and multiple queries at
+once. The analyses for which to export and search ideal components can be
+specified via their config files using the `-C` option.
 
 ### Options
 
@@ -169,7 +169,7 @@ a subdirectory of the provided export output directory
 (`--export-output-dir`). This subdirectory is ordinarily named after title of
 the analysis (`title`), or else the name of the analysis root directory
 (`out_dir`). If a config file specifies neither a `title` nor an `out_dir`,
-`export_and_search.py` will fail.
+`export_and_search` will fail.
 
 In the case that multiple analyses have the same name, the script will fail with
 an error message by default. To have the script instead rename the outputs
@@ -178,67 +178,66 @@ option can be provided.
 
 Exported orthologs for an analysis are placed in a directory named `export`
 within the analysis's directory under the `--export-output-dir` directory. See
-the output format section for [`export_orthologs.py`](#export_orthologspy) for a
-more detailed description of the structure out these `export` directories.
+the output format section for [`export_orthologs`](#export_orthologs) for a more
+detailed description of the structure out these `export` directories.
 
 BLAST results and statistics for each provided query FASTA file are placed in
 separate subdirectories beginning with `search_` under the analysis's
 directory. The structure of these directories is described in the output format
-section for [`search_ideal_compoenents.py`](#search_ideal_componentspy).
+section for [`search_ideal_compoenents`](#search_ideal_components).
 
-In some cases, parameters that can be provided to `export_orthologs.py` or
-`search_ideal_components.py` affect the output directory structure but are
-preset in `export_and_search.py`. See the [Settings for export and search
+In some cases, parameters that can be provided to `export_orthologs` or
+`search_ideal_components` affect the output directory structure but are preset
+in `export_and_search`. See the [Settings for export and search
 parameters](#settings-for-export-and-search-parameters) section for details
 about these presets.
 
 #### File format
 
 The file format for the exported orthologs is described in the output format
-section for [`export_orthologs.py`](#export_orthologspy), and the file format
-for the search results is described in the output format section for
-[`search_ideal_components.py`](#search_ideal_componentspy).
+section for [`export_orthologs`](#export_orthologs), and the file format for the
+search results is described in the output format section for
+[`search_ideal_components`](#search_ideal_components).
 
-In some cases, parameters that can be provided to `export_orthologs.py` or
-`search_ideal_components.py` affect the output format but are preset in
-`export_and_search.py`. See the [Settings for export and search
+In some cases, parameters that can be provided to `export_orthologs` or
+`search_ideal_components` affect the output format but are preset in
+`export_and_search`. See the [Settings for export and search
 parameters](#settings-for-export-and-search-parameters) section for details
 about these presets.
 
 ### Settings for export and search parameters
 
-To simplify its usage, `export_and_search.py` does not support some options
-accepted by `export_orthologs.py` and
-`search_ideal_components.py`. Importantly, `export_and_search.py` does not
-allow the user to specify how orthologs should be grouped into files (normally
-specified using the `--by` option to `export_orthologs.py`);
-`export_and_search.py` always groups by ideal component. `export_and_search.py`
-also always tries to put all transcripts belonging to genes in an ideal
-component in the same orientation (the default behavior for
-`export_orthologs.py`) and will attempt to fix orthologs using an inexact MaxSAT
-based method if the naive approach fails (behaving as though
+To simplify its usage, `export_and_search` does not support some options
+accepted by `export_orthologs` and `search_ideal_components`. Importantly,
+`export_and_search` does not allow the user to specify how orthologs should be
+grouped into files (normally specified using the `--by` option to
+`export_orthologs`); `export_and_search` always groups by ideal
+component. `export_and_search` also always tries to put all transcripts
+belonging to genes in an ideal component in the same orientation (the default
+behavior for `export_orthologs`) and will attempt to fix orthologs using an
+inexact MaxSAT based method if the naive approach fails (behaving as though
 `--allow-inconsistent` were provided).
 
-`export_and_search.py` appends the original sequence name *after* the ideal
+`export_and_search` appends the original sequence name *after* the ideal
 component ID (like `--concat-id-order after`) and *always* removes ideal
 components where there are no differences (like ``--remove-non-contributing`).
 
-`export_and_search.py` creates the combined `all_ideal.fasta` file with all
+`export_and_search` creates the combined `all_ideal.fasta` file with all
 sequences from ideal components (similar to the `--all` option of
-`export_orthologs.py`) only when a search is to be performed. If `--export-only`
+`export_orthologs`) only when a search is to be performed. If `--export-only`
 has been specified, no search is performed, and, thus, the program does not
 create `all_ideal.fasta`.
 
-Additionally, `export_and_search.py` *always* merges SAM files for alignments
+Additionally, `export_and_search` *always* merges SAM files for alignments
 beloning to different isoforms of the same gene into a single SAM file, behaving
-as if `--merge-sams` were provided to `search_ideal_components.py`.
+as if `--merge-sams` were provided to `search_ideal_components`.
 
-Unlike `search_ideal_components.py`, `export_and_search.py` does *not* support
+Unlike `search_ideal_components`, `export_and_search` does *not* support
 deleting the BLAST databases created for exported orthologs via a `--clean`
 option. If the BLAST databases created under `export/db_cache` are no longer
 valid (for example, because the export RNA-clique analysis was redone with
 different parameters since the databases were created), the directory must be
-deleted before running `export_and_search.py`.
+deleted before running `export_and_search`.
 
 ### Examples
 
@@ -247,10 +246,10 @@ Export orthologs from the analyses specified in `analysis1/config.yml`,
 will be in `export_out/analysisA` and `export_out/analysisB`.
 
 ```bash
-python export_and_search.py --export-only \
-                            -c analysis1/config.yml \
-							   analysis2/config.yml \
-							-X export_out
+python -m rna_clique.export_and_search --export-only \
+                                       -c analysis1/config.yml \
+                                       analysis2/config.yml \
+                                       -X export_out
 ```
 
 Export orthologs from the analysis specified in `analysis/config.yml`, named
@@ -259,14 +258,14 @@ Export orthologs from the analysis specified in `analysis/config.yml`, named
 `export_out/myAnalysis`.
 
 ```bash
-python export_and_search.py -c analysis/config.yml \
-							   analysis2/config.yml \
-						    -Q to_search1.fasta \
-							   to_search2.fasta \
-							-X export_out
+python -m rna_clique.export_and_search -c analysis/config.yml \
+            					       analysis2/config.yml \
+						               -Q to_search1.fasta \
+							           to_search2.fasta \
+							           -X export_out
 ```
 
-## export\_graph.py
+## export\_graph
 
 Export a gene matches graph to another format.
 
@@ -414,17 +413,19 @@ Export the gene matches graph from an analysis at `my_analysis` to GraphML and
 write the result to standard output.
 
 ```bash
-python export_graph.py -O my_analysis -f graphml
+python -m rna_clique.export_graph -O my_analysis -f graphml
 ```
 
 Export a graph located at `analysis1/graph.pkl` to Cytoscape JSON at
 `export.json`.
 
 ```bash
-python export_graph.py -g analysis1/graph.pkl -f cytoscape -x export.json
+python -m rna_clique.export_graph -g analysis1/graph.pkl \
+                                  -f cytoscape \
+								  -x export.json
 ```
 
-## export\_matrix.py
+## export\_matrix
 
 Export a computed dissimilarity matrix to another format. By default, the matrix
 is exported to the standard output, but the matrix can be exported to a file
@@ -454,9 +455,9 @@ Currently, this script supports exporting to the following formats:
 | `verbose`                            | `--verbose`            | `-v`       | Print more output than usual.                       | $0$            | `bool`         |                                              | `False`                         | `True`                    | No       |
 
 The `--format` option defaults to `matrix` when writing to standard output. When
-`--export-out` is provided, `export_matrix.py` tries to determine the output
-format from the output file's file extension. If the file extension is not
-recongized by `export_matrix.py`, the format again defaults to `matrix`.
+`--export-out` is provided, `export_matrix` tries to determine the output format
+from the output file's file extension. If the file extension is not recongized
+by `export_matrix`, the format again defaults to `matrix`.
 
 ### Input format
 
@@ -573,17 +574,19 @@ space-separated table with labels for both rows and columns, writing to standard
 output. 
 
 ```bash
-python export_matrix.py -O my_analysis -f table --header
+python -m rna_clique.export_matrix -O my_analysis -f table --header
 ```
 
 Export the distance matrix located at `analysis1/matrix.h5` to a Python pickle
 file saved at `matrix.pkl`.
 
 ```bash
-python export_matrix.py -m analysis1/matrix.h5 -f pickle -x matrix.pkl
+python -m rna_clique.export_matrix -m analysis1/matrix.h5 \
+                                   -f pickle \
+								   -x matrix.pkl
 ```
 
-## export\_orthologs.py
+## export\_orthologs
 
 Export ortholog sequences from ideal components for a single RNA-clique
 analysis.
@@ -594,7 +597,7 @@ command-line options.
 
 If you wish to export orthologs for multiple analyses with typical settings or
 would like to search exported orthologs using typical settings, you may prefer
-to use [`export_and_search.py`](#export_and_searchpy).
+to use [`export_and_search`](#export_and_search).
 
 ### Options
 
@@ -676,17 +679,17 @@ graph](formats.md#gene-matches-graph).
 
 #### Directory structure
 
-`export_orthologs.py` organizes the output transcripts into multiple files; how
-the output files are organized is specified using the `--by` parameter.
-Optionally, when `--all` is specified, this script will also produce an
-`all_ideal.fasta` file containing all of the output transcripts from the other
-files. Such a file is useful for searching with BLAST. The `all_ideal.fasta`
-file should contain all of the exported transcripts from ideal components. It
-differs from the file that would be produced by simply concatenating all of the
-other exported FASTA files in that the `all_ideal.fasta` file appends
-identifiers to each transcript's FASTA sequence header indicating in which file
-the sequence was originally found. For example, where an individual ideal
-component file `ideal_component_0.fasta` would have a sequence with FASTA header
+`export_orthologs` organizes the output transcripts into multiple files; how the
+output files are organized is specified using the `--by` parameter.  Optionally,
+when `--all` is specified, this script will also produce an `all_ideal.fasta`
+file containing all of the output transcripts from the other files. Such a file
+is useful for searching with BLAST. The `all_ideal.fasta` file should contain
+all of the exported transcripts from ideal components. It differs from the file
+that would be produced by simply concatenating all of the other exported FASTA
+files in that the `all_ideal.fasta` file appends identifiers to each
+transcript's FASTA sequence header indicating in which file the sequence was
+originally found. For example, where an individual ideal component file
+`ideal_component_0.fasta` would have a sequence with FASTA header
 `NODE_1_length_15383_cov_32.255511_g0_i0:SRR2321385`, the same sequence would
 have the FASTA header
 `NODE_1_length_15383_cov_32.255511_g0_i0:SRR2321385:ideal_component_0` in the
@@ -719,7 +722,7 @@ Export orthologs from ideal components identified in the analysis located at
 `my_analysis` to a directory called `export`. Organize the results by component.
 
 ```bash
-python export_orthologs.py -O my_analysis -X export -b component
+python -m rna_clique.export_orthologs -O my_analysis -X export -b component
 ```
 
 Export orthologs from ideal components identified in the analysis located at
@@ -729,10 +732,10 @@ regions of the transcripts, and create a combined `all_ideal.fasta` file
 containing all of the other exported transcripts.
 
 ```bash
-python export_orthologs.py -O my_analysis -X export2 -b sample -N -a
+python -m rna_clique.export_orthologs -O my_analysis -X export2 -b sample -N -a
 ```
 
-## filtered\_distance.py
+## filtered\_distance
 
 Compute pairwise distances from gene matches tables and graph. 
 
@@ -761,7 +764,25 @@ tables](formats.md#gene-matches-tables).
 
 The output of this script is the [distance matrix](formats.md#distance-matrix).
 
-## filtering\_step.py
+### Example
+
+Compute a distance matrix using the gene matches graph and gene matches tables
+found under `rna_clique_out/graph.pkl` and `rna_clique_out/od2`,
+respectively. Write the matrix to `rna_clique_out/distance_matrix.h5`.
+
+```bash
+python -m rna_clique.filtered_distance -O rna_clique_out
+```
+
+Compute a distance matrix using the gene matches graph at `graph.pkl` and the
+gene matches tables under `tables_dir`. Write the matrix to `matrix.h5`.
+
+```bash
+python -m rna_clique.filtered_distance -g graph.pkl -O2 tables_dir -m matrix.h5
+```
+
+
+## filtering\_step
 
 This script automates "phase 1" of RNA-clique in which the following steps
 occur:
@@ -836,7 +857,7 @@ representing the comparisons between `input1` and `input2`, `input1` and
 The gene matches graph will be at `my_analysis/graph.pkl`.
 
 ```bash
-python filtering_step.py -O my_analysis input1 input2 input3
+python -m rna_clique.filtering_step -O my_analysis input1 input2 input3
 ```
 
 Run phase 1 of RNA-clique for input files located at `sample1`, `sample2`, and
@@ -866,17 +887,17 @@ tables for `sample1` and `sample2`, `sample1` and `sample3`, and `sample2` and
 The gene matches graph will be at `my_gene_matches_graph.pkl`.
 
 ```bash
-python filtering_step.py -O1 my_top_genes \
-                         -O2 my_gene_matches_tables \
-						 -g my_gene_matches_graph.pkl \
-						 --no-keep-all \
-						 -e 10e-50 \
-						 -j 10 \
-						 -C db_caches \
-						 sample1 sample2 sample3
+python -m rna_clique.filtering_step -O1 my_top_genes \
+                                    -O2 my_gene_matches_tables \
+                                    -g my_gene_matches_graph.pkl \
+                                    --no-keep-all \
+                                    -e 10e-50 \
+                                    -j 10 \
+                                    -C db_caches \
+                                    sample1 sample2 sample3
 ```
 
-## find\_all\_pairs.py
+## find\_all\_pairs
 
 This script calculates the gene matches tables for all pairs of samples by
 BLASTing each sample against every other.
@@ -916,7 +937,7 @@ $n$ genes by $k$-mer coverage are expected to be in `my_analysis/od1`. Gene
 matches tables will be written under `my_analysis/od2`
 
 ```python
-python find_all_pairs.py -O my_analysis
+python -m rna_clique.find_all_pairs -O my_analysis
 ```
 
 Get gene matches tables from top $n$ genes located under `my_top_genes_dir` and
@@ -924,19 +945,19 @@ write the gene matches tables under `my_gene_matches_tables`. Use an $e$-value
 cutoff of $10^{-50}$. Write intermediate BLAST DB caches under `db_caches`.
 
 ```python
-python find_all_pairs.py -O1 my_top_genes_dir \
-                         -O2 my_gene_matches_tables \
-						 -C db_caches \
-						 -e 1e-50
+python -m rna_clique.find_all_pairs -O1 my_top_genes_dir \
+                                    -O2 my_gene_matches_tables \
+                                    -C db_caches \
+                                    -e 1e-50
 ```
 
-## find\_homologs.py
+## find\_homologs
 
 This script computes a genetic similarity for a single pair of samples. By
 default, it also reports best matching pairs of genes between the two samples.
 
 **Warning: This script should not be used if you are analyzing more than two
-samples total! Use [`rna_clique.py`](#rna_cliquepy) instead!**
+samples total! Use [`rna-clique`](#rna-clique) instead!**
 
 ### Positional arguments
 
@@ -1002,7 +1023,7 @@ Find an *unfiltered* genetic distance between the transcripts in
 two files appear to best match.
 
 ```bash
-python find_homologs.py transcripts1.fasta transcripts2.fasta
+python -m rna_clique.find_homologs transcripts1.fasta transcripts2.fasta
 ```
 
 Find an unfiltered genetic distance between the transcripts in
@@ -1010,14 +1031,14 @@ Find an unfiltered genetic distance between the transcripts in
 floating point number.
 
 ```bash
-python find_homologs.py transcripts1.fasta transcripts2.fasta -q -f
+python -m rna_clique.find_homologs transcripts1.fasta transcripts2.fasta -q -f
 ```
 
-## make\_subset.py
+## make\_subset
 
 This script creates links to gene matches tables and a gene matches graph for a
 subset of samples from a previously completed run of phase 1 of RNA-clique.
-`make_subset.py` is useful when you want to compute distances for a subset of
+`make_subset` is useful when you want to compute distances for a subset of
 samples that you've already analyzed with RNA-clique. This script is typically
 much faster than re-running Phase 1 on a subset of the input FASTA files since
 this script does not need to repeat any of the BLAST searches from the prior
@@ -1061,9 +1082,9 @@ the tables directory containing symlinks and the gene matches graph under
 `my_subset`.
 
 ```python
-python make_subset.py -I my_analysis/config.yaml \
-                      -O my_subset \
-					  -x sample2 sample4
+python -m rna_clique.make_subset -I my_analysis/config.yaml \
+                                 -O my_subset \
+					             -x sample2 sample4
 ```
 
 Create an analysis for a subset of samples from the analysis described by
@@ -1072,16 +1093,16 @@ Create an analysis for a subset of samples from the analysis described by
 and create the gene matches graph at `subset_graph.pkl`
 
 ```python
-python make_subset.py -I my_analysis/config.yaml \
-	                  -O2 subset_tables \
-					  -g subset_graph.pkl
-					  -Y 'sample.*2'
+python -m rna_clique.make_subset -I my_analysis/config.yaml \
+                                 -O2 subset_tables \
+                                 -g subset_graph.pkl
+                                 -Y 'sample.*2'
 ```
 
-## plot\_component\_sizes.py
+## plot\_component\_sizes
 
-Despite its name, `plot_component_sizes.py` offers a variety of features useful
-for working with gene matches graphs:
+Despite its name, `plot_component_sizes` offers a variety of features useful for
+working with gene matches graphs:
 
 * [Visualizations](#visualizations)
     * [Component size histogram](#component-size-histogram)
@@ -1114,8 +1135,8 @@ for working with gene matches graphs:
 
 ### Visualizations
 
-`plot_component_sizes.py` can produce several different plots related to
-components of the gene matches graph.
+`plot_component_sizes` can produce several different plots related to components
+of the gene matches graph.
 
 #### Component size histogram
 
@@ -1199,12 +1220,12 @@ respectively, for the analysis rooted at `my_analysis`. Report statistics in
 human-readable format.
 
 ```bash
-python plot_component_sizes.py -O my_analysis \
-                               -s size.svg \
-							   -S sample_cout.svg \
-							   -r ratio.svg \
-							   -d density.svg \
-							   --statistics
+python -m rna_clique.plot_component_sizes -O my_analysis \
+                                          -s size.svg \
+							              -S sample_cout.svg \
+							              -r ratio.svg \
+							              -d density.svg \
+							              --statistics
 ```
 
 Create a density KDE plot at `density.png` for the gene matches graph at
@@ -1212,13 +1233,13 @@ Create a density KDE plot at `density.png` for the gene matches graph at
 machine-readable format.
 
 ```bash
-python plot_component_sizes.py -O1 top_genes \
-                               -g graph.pkl \
-							   -d density.png \
-							   --statistics m
+python -m rna_clique.plot_component_sizes -O1 top_genes \
+                                          -g graph.pkl \
+							              -d density.png \
+							              --statistics m
 ```
 
-## search\_ideal\_components.py
+## search\_ideal\_components
 
 BLAST search the nucleotide sequences of orthologous transcripts belonging to
 genes in ideal components.
@@ -1226,9 +1247,9 @@ genes in ideal components.
 This script can be used, for example, to determine whether some possible
 contaminant could be contributing to distances observed.
 
-This script is designed to be used on output from the `export_orthologs.py`
-script, but it does more than simply perform a BLAST search on the exported
-ortholog sequences. This script can perform an "extended" search
+This script is designed to be used on output from `export_orthologs`, but it
+does more than simply perform a BLAST search on the exported ortholog
+sequences. This script can perform an "extended" search
 (`--extended-search`/`-e`), which automatically searches other isoforms of the
 same gene with relaxed parameters when a query sequences matches one isoform of
 a gene. The extended search is designed to find alignments between query
@@ -1244,7 +1265,7 @@ the transcript belongs. To enable this behavior, provide the
 
 If you would like to both export orthologs and search their sequences at once
 with typical settings, you may prefer to use
-[`export_and_search.py`](#export_and_searchpy) instead.
+[`export_and_search`](#export_and_search) instead.
 
 ### Options
 
@@ -1276,16 +1297,16 @@ with typical settings, you may prefer to use
 This script expects as its input a single [FASTA
 file](https://blast.ncbi.nlm.nih.gov/doc/blast-topics/#fasta) containing all
 exported transcripts from ideal components. Since
-[`export_orthologs.py`](#export_orthologspy) ordinarily separates exported
+[`export_orthologs`](#export_orthologs) ordinarily separates exported
 transcripts into multiple files, it is necessary to provide the `--all`/`-a`
-command-line option to `export_orthologs.py` to combine the output files into an
+command-line option to `export_orthologs` to combine the output files into an
 `all_ideal.fasta` file.
 
 ### Output format
 
 #### Directory structure
 
-`search_ideal_components.py` places all of its output directly under a directory
+`search_ideal_components` places all of its output directly under a directory
 provided via the `--search-output-dir`/`-S` command-line option.
 
 BLAST alignments for the initial search are saved as `queries.sam`. If an
@@ -1326,10 +1347,10 @@ Search orthologs for the analysis `rna_clique_out`, exported at at
 `search_out`.
 
 ```bash
-python search_ideal_components.py -A rna_clique_out \
-                                  -X export \
-								  -q queries.fasta \
-								  -S search_out
+python -m rna_clique.search_ideal_components -A rna_clique_out \
+                                             -X export \
+								             -q queries.fasta \
+								             -S search_out
 ```
 
 Perform an extended search for queries at `queries.fasta` in the orthologs
@@ -1340,36 +1361,36 @@ search. Merge results from extended searches into one file. Export the matches
 ideal components. Write the results under `search_out`. 
 
 ```bash
-python search_ideal_components.py -q queries.fasta \
-                                  -g graph.pkl \
-								  -O2 tables_dir \
-								  -a combined.fasta \
-								  -D db_cache \
-								  -e -m -S search_out
+python -m rna_clique.search_ideal_components -q queries.fasta \
+                                             -g graph.pkl \
+                                             -O2 tables_dir \
+								             -a combined.fasta \
+								             -D db_cache \
+								             -e -m -S search_out
 ```
 
-## select\_top\_genes.py
+## select\_top\_genes
 
 Select top $n$ genes by $k$-mer coverage in a transcripts FASTA file and write
 them to the standard output. This gets only the genes best supported by RNA-seq
 reads.
 
-`select_top_genes_py` takes the coverage of a gene to be the maximum coverage
-among the gene's isoforms. For example, suppose gene 10 has two isoforms. If
-gene 10 isoform 0 has coverage 10.0, and gene 10 isoform 1 has coverage 10.5,
-then the coverage of gene 10 is 10.5.
+`select_top_genes` takes the coverage of a gene to be the maximum coverage among
+the gene's isoforms. For example, suppose gene 10 has two isoforms. If gene 10
+isoform 0 has coverage 10.0, and gene 10 isoform 1 has coverage 10.5, then the
+coverage of gene 10 is 10.5.
 
 Although the top $n$ genes are selected, genes are not sorted by $k$-mer
 coverage in the output. 
 
-`select_top_genes.py` always selects exactly $\text{min}(n, |G|)$ genes, where
+`select_top_genes` always selects exactly $\text{min}(n, |G|)$ genes, where
 $|G|$ is the total number of genes. When there are $c > 1$ genes with the same
-$k$-mer coverage $\kappa$, and there are no more than  $n - c$ genes with
-$k$-mer coverage strictly less than $\kappa$, all $c$ genes will be included in
-the output. If there are more than $n - c$ genes with $k$-mer coverage strictly
-less than $\kappa$, then only of the $n - d$ genes will be selected, where $d$
-is the number of genes with $k$-mer coverage strictly less than $\kappa$. Which
-of the $c$ genes are included is deterministic but arbitrary.
+$k$-mer coverage $\kappa$, and there are no more than $n - c$ genes with $k$-mer
+coverage strictly less than $\kappa$, all $c$ genes will be included in the
+output. If there are more than $n - c$ genes with $k$-mer coverage strictly less
+than $\kappa$, then only of the $n - d$ genes will be selected, where $d$ is the
+number of genes with $k$-mer coverage strictly less than $\kappa$. Which of the
+$c$ genes are included is deterministic but arbitrary.
 
 ### Options
 
@@ -1391,8 +1412,8 @@ The input to the script is an individual
 format](https://blast.ncbi.nlm.nih.gov/doc/blast-topics/#fasta), but the
 transcriptome is provided to this script differently than it is to other
 programs RNA-clique.  Unlike other scripts accepting transcriptomes,
-`select_top_genes.py` expects a  path to FASTA file itself be provided rather
-than a directory containing the transcripts FASTA file. Alternatively, the
+`select_top_genes` expects a path to FASTA file itself be provided rather than a
+directory containing the transcripts FASTA file. Alternatively, the
 transcriptome can be provided via standard input.
 
 ### Output format
@@ -1407,7 +1428,7 @@ using the default regex for parsing FASTA headers. Write the results to standard
 output. 
 
 ```bash
-python select_top_genes.py transcripts.fasta -n 1000
+python -m rna_clique.select_top_genes transcripts.fasta -n 1000
 ```
 
 Select the top $20000$ genes by $k$-mer coverage from `genes.fasta.gz`. Use the
@@ -1415,14 +1436,14 @@ regular expression `foo([^_]*)_bar([^_]*)_baz([^_]*)` to parse the transcript
 IDs in `genes.fasta.gz`.
 
 ```bash
-zcat genes.fasta.gz | python select_top_Genes.py -n 20000 \
-                             -p 'foo([^_]*)_bar([^_]*)_baz([^_]*)'
+zcat genes.fasta.gz | python -m rna_clique.select_top_genes -n 20000 \
+                                -p 'foo([^_]*)_bar([^_]*)_baz([^_]*)'
 ```
 
-## select\_top\_genes\_all.py
+## select\_top\_genes\_all
 
 Select $n$ top genes by $k$-mer coverage for each of multiple samples, in
-parallel. See the section on [`select_top_genes.py`](#select_top_genespy) for an
+parallel. See the section on [`select_top_genes`](#select_top_genes) for an
 explanation of how selection is performed.
 
 
@@ -1464,7 +1485,8 @@ Select top $50000$ genes for the transcriptomes located at `input1`, `input2`,
 and `input3`. Write the output to `rna_clique_out/od1`.
 
 ```bash
-python select_top_genes_all.py input1 input2 input3 -O rna_clique_out -n 50000
+python -m rna_clique.select_top_genes_all input1 input2 input3 \
+                                          -O rna_clique_out -n 50000
 ```
 
 Select the top $1000$ genes for the transcriptomes located at `input1`,
@@ -1474,17 +1496,17 @@ named `genes.fasta`. Use the regular expression
 file. Write the output under `top_genes`.
 
 ```bash
-python select_top_genes_all.py input1 input2 input3 input4 \
-                               -p 'foo([^_]*)_bar([^_]*)_baz([^_]*)' \
-							   -O1 top_genes
+python -m rna_clique.select_top_genes_all input1 input2 input3 input4 \
+          -p 'foo([^_]*)_bar([^_]*)_baz([^_]*)' \
+		  -O1 top_genes
 ```
 
-## unfiltered\_distance.py
+## unfiltered\_distance
 
 Compute pairwise distasnces from gene matches tables alone. This script behaves
-similarly to [`filtered_distance.py`](#filtered_distancepy) but does not use a
-gene matches graph to filter the gene matches tables to include only genes
-having orthologs in all samples. 
+similarly to [`filtered_distance`](#filtered_distance) but does not use a gene
+matches graph to filter the gene matches tables to include only genes having
+orthologs in all samples. 
 
 Although in principle filtering is preferred because it gives a fairer
 comparison, a distance based on the unfiltered gene matches tables might be
@@ -1522,18 +1544,12 @@ Compute an unfiltered distance matrix using gene matches tables at
 `rna_clique_out/distance_matrix.h5`. 
 
 ```python
-python unfiltered_distance.py -O rna_clique_out
+python -m rna_clique.unfiltered_distance -O rna_clique_out
 ```
 
 Compute an unfiltered distance matrix using gene matches tables at
 `tables_dir`. Write the output matrix to `matrix.h5`.
 
 ```python
-python unfiltered_distance.py -O2 tables_dir -m matrix.h5
+python -m rna_clique.unfiltered_distance -O2 tables_dir -m matrix.h5
 ```
-
-## typical\_filtering\_step.sh
-
-`typical_filtering_step.sh` is deprecated and is now a simple shell script that
-forward its arguments to `rna_clique.py`. It is recommended to use
-[`rna_clique.py`](#rna_cliquepy) directly instead.

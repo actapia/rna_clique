@@ -48,10 +48,22 @@ that quantifies pairwise differences in the genomes of the samples.
 
 ## Setup
 
-This tutorial expects the reader to have a POSIX-compatible shell like
-`bash` or `zsh`, and common command-line utilities like `wget` or `curl`,
-`tail`, `cut`, and `basename`. Some commands can also be run via GNU Parallel,
-but this is optional.
+This tutorial expects the reader to have a POSIX-compatible shell like `bash` or
+`zsh`, and common command-line utilities like `tail`, `cut`, and
+`basename`. Some commands can also be run via GNU Parallel, but this is
+optional.
+
+### Activate the environment
+
+If you haven't already, activate the environment we created during the
+setup.
+
+```bash
+. rna_clique_venv/bin/activate
+```
+
+If the environment has been activated, you should see `(rna_clique_venv)` appear
+at the beginning of your prompt.
 
 ### Installing additional tools
 
@@ -71,10 +83,6 @@ We also need `git` to download various repositories and `wget` or
 
 This section provides brief installation instructions for each piece of
 software.
-
-It is recommended that the software be downloaded somewhere outside the
-RNA-clique git repository. For example, you may wish to put the software in your
-`~/Documents` directory.
 
 #### git
 
@@ -136,7 +144,7 @@ export PATH="$PATH:$(realpath sratoolkit*/bin)"
     included in the software release zip. If you don't want to download them
     yourself, you don't need `download_sra` and can skip this step.
 
-Make sure the `rna-clique` environment created during the RNA-clique
+Make sure the `rna_clique_venv` environment created during the RNA-clique
 installation is activated. Then, install dependencies for `download_sra`.
 
 ```bash
@@ -206,7 +214,7 @@ than one logical core ("thread").
 Although we've already installed the RNA-clique software, a few additional files
 from RNA-clique's repository will be needed for this tutorial. If you don't
 already have a copy of the RNA-clique source code, clone the GitHub repository
-WITH `git`.
+with `git`.
 
 <!--{{clone_command(git_branch()) | code_fence("zsh") | comment_surround}}{{empty("-->
 ```bash
@@ -216,9 +224,9 @@ git clone --recurse-submodules https://github.com/actapia/rna_clique
 
 We will want to keep track of the root of the RNA-clique repository in a
 variable. To do this easily, change to the RNA-clique directory and then set
-`RNA_CLIQUE` to `$PWD`. Note that the name of the RNA-clique directory might
-differ if you obtained RNA-clique by some other method than the one described
-above.
+`RNA_CLIQUE` to `$PWD`. Finally, switch back to the parent directory. Note that
+the name of the RNA-clique directory might differ if you obtained RNA-clique by
+some other method than the one described above.
 
 ```bash
 cd rna_clique
@@ -243,10 +251,10 @@ export TUTORIAL_DIR=$PWD
 
 ## Obtaining sequence data
 
-!!! note
-    If you downloaded this software from Zenodo, you already have the SRA files
-    in the `test_data/sra` of the repository. Instead of completing this step,
-    you can extract the provided data by running
+!!! note 
+    If you downloaded this software from Zenodo, you already have the SRA
+    files in `test_data/sra` under the root of the repository. Instead of
+    completing this step, you can extract the provided data by running
     
     ```bash
     for f in "$RNA_CLIQUE/test_data/sra/*"; do
@@ -270,9 +278,9 @@ We will start out with RNA-seq reads for six samples of tall fescue. These
 samples are a subset of the sixteen used in the paper *RNA-clique: A method for
 computing genetic distances from RNA-seq data*. The sample metadata shown
 previously in the [Background](#background) section is also present in the file
-[`tall_fescue_accs.csv`](./tall_fescue_accs.csv). We can easily download all of
-the RNA-seq data we need using the `tall_fescue_accs.csv` file and the
-`download_sra` tool.
+[`docs/tutorials/reads2tree/tall_fescue_accs.csv`](./tall_fescue_accs.csv) in
+the RNA-clique repository. We can easily download all of the RNA-seq data we
+need using the `tall_fescue_accs.csv` file and the `download_sra` tool.
 
 First, change to your `$TUTORIAL_DIR`.
 
@@ -390,21 +398,7 @@ components](#counting-ideal-components), [see the distance
 matrix](#viewing-the-distance-matrix), and possibly use the matrix as input to
 downstream analyses, such as [construction of a phylogenetic
 tree](#getting-a-tree) or a [PCoA plot](#getting-a-pcoa-plot), or a more direct
-visualization of the matrix like a [heatmap](#getting-a-heatmap). Although
-RNA-clique does not seek to integrate code for every possible downstream
-analysis that could be performed on a distance matrix, and it is assumed that
-many users of RNA-clique will prefer to export the matrix and use other software
-for these analyses, RNA-clique nevertheless does provide a handful of Python
-functions that are useful for creating trees, PCoA plots, and heatmaps.
-
-Since RNA-clique's downstream analysis utility functions rely on metadata about
-the samples, and metadata could be expressed in a variety of formats, RNA-clique
-currently does not expose the downstream analysis functions via a command-line
-interface. To take advantage of the visualization functions RNA-clique provides,
-one must write code that calls the visualization functions. The sections below
-provide sample code that works for the data in this particular tutorial, but the
-provided code might also be useful as a template for creating similar
-visualizations with custom data.
+visualization of the matrix like a [heatmap](#getting-a-heatmap).
 
 ### Counting ideal components
 
@@ -415,12 +409,12 @@ on a number of ideal components in the single or low double digits might be too
 error prone.
 
 To check the number of ideal components, use the
-[`plot_component_sizes.py`](../../usage.md#plot_component_sizespy) script, which
-can report statistics about gene matches graph components, among other things.
+[`plot_component_sizes`](../../usage.md#plot_component_sizes) program, which can
+report statistics about gene matches graph components, among other things.
 
 ```bash
-python -m rna_clique.plot_component_size --statistics \
-                                         -A "$TUTORIAL_DIR/rna_clique_out"
+python -m rna_clique.plot_component_sizes --statistics \
+                                          -A "$TUTORIAL_DIR/rna_clique_out"
 ```
 
 You should see that we obtained around $9848$ ideal components, which is plenty
@@ -428,8 +422,8 @@ for our analysis.
 
 ### Viewing the distance matrix
 
-To simply view the distance matrix, use the [`export_matrix.py`
-script](../../usage.md#export_matrixpy).
+To simply view the distance matrix, use the [`export_matrix`
+program](../../usage.md#export_matrix).
 
 ```python
 python -m rna_clique.export_matrix -O "$TUTORIAL_DIR/rna_clique_out"
@@ -455,7 +449,25 @@ python -m rna_clique.export_matrix --format table \
                                    -O "$TUTORIAL_DIR/rna_clique_out"
 ```
 
-### Getting a tree
+### Downstream analyses
+
+Although RNA-clique does not seek to integrate code for every possible
+downstream analysis that could be performed on a distance matrix, and it is
+assumed that many users of RNA-clique will prefer to export the matrix and use
+other software for these analyses, RNA-clique nevertheless does provide a
+handful of Python functions that are useful for creating trees, PCoA plots, and
+heatmaps.
+
+Since RNA-clique's downstream analysis utility functions rely on metadata about
+the samples, and metadata could be expressed in a variety of formats, RNA-clique
+currently does not expose the downstream analysis functions via a command-line
+interface. To take advantage of the visualization functions RNA-clique provides,
+one must write code that calls the visualization functions. The sections below
+provide sample code that works for the data in this particular tutorial, but the
+provided code might also be useful as a template for creating similar
+visualizations with custom data.
+
+#### Getting a tree
 
 If you want a tree, you can create one using RNA-clique and Biopython. The code
 below, also found in 
@@ -486,7 +498,7 @@ that genotype are color coded and labeled with calipers on the right side of the
 figure. CTE46, CTE27, NTE, and FATG4 are in orange, blue, red, and green,
 respectively.](../../images/nj_tree.svg)
 
-### Getting a PCoA plot
+#### Getting a PCoA plot
 
 We can use the `pcoa` module to create a PCoA plot from our distance matrix. (In
 turn, `pcoa` uses [`scikit-bio`](https://scikit.bio/index.html).)  To
@@ -529,7 +541,7 @@ and red points NTE. The principal component axes are labeled with their relative
 contributions, measured as the percentage of the sum of eigenvalues of the
 distance matrix.](../../images/pcoa_3d.svg)
 
-### Getting a heatmap
+#### Getting a heatmap
 
 We can use the `draw_heatmap` function of RNA-clique to display a similarity or
 distance matrix as a heatmap. The function uses the Seaborn `heatmap` function

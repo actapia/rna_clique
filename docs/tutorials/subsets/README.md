@@ -1,7 +1,7 @@
 # Quickly computing subsets of existing analyses
 
 This tutorial explains how (and why) to use the
-[`make_subset.py`](../../usage.md#make_subsetpy) script to create subsets of
+[`make_subset`](../../usage.md#make_subset) program to create subsets of
 existing RNA-clique analyses. This guide should be useful to anyone who wishes
 to analyze a subset of the samples analyzed in a previously completed RNA-clique
 analysis.

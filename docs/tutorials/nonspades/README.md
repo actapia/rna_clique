@@ -411,7 +411,7 @@ rna-clique "$TUTORIAL_DIR"/trinity_assemblies/SRR* -n 50000 \
 
 ## Viewing results
 
-As always, we can get a distance matrix with the `export_matrix.py` script.
+As always, we can get a distance matrix with the `export_matrix` program.
 
 ```bash
 python -m rna_clique.export_matrix --format table \

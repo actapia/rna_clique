@@ -424,10 +424,10 @@ tables](formats.md#gene-matches-tables), the `subset_of` setting should be set
 in the subset configuration file to a file path to the superset configuration
 file. 
 
-The [`make_subset.py`](usage.md#make_subsetpy) script uses `subset_of` to
-determine which analysis to subset, but no other scripts in RNA-clique currently
-read and use the `subset_of` parameter. Nevertheless, `subset_of` is useful as
-metadata to keep track of the relationships between analyses.
+[`make_subset`](usage.md#make_subset) uses `subset_of` to determine which
+analysis to subset, but no other programs in RNA-clique currently read and use
+the `subset_of` parameter. Nevertheless, `subset_of` is useful as metadata to
+keep track of the relationships between analyses.
 
 ## Troubleshooting configuration
 
