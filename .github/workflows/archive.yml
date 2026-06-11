@@ -47,7 +47,7 @@ jobs:
     name: Publish release to Zenodo
     environment: Zenodo
     runs-on: ubuntu-latest
-    if: ! ${{ github.event.release.prerelease }}
+    if:  ${{ ! github.event.release.prerelease }}
     steps:
       - uses: actions/checkout@v4
         with:
