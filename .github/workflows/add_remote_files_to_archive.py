@@ -41,7 +41,7 @@ openers = {
 
 decompressors = {
     "application/gzip": lambda x, *a, **kw: gzip.GzipFile(*a, fileobj=x, **kw),
-    "application/xz": lambda x, *a, **kw: lzma.LZMAFile(x, *a, **kw),
+    "application/x-xz": lambda x, *a, **kw: lzma.LZMAFile(x, *a, **kw),
 }
 
 def main():
