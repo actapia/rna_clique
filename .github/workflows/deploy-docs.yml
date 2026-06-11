@@ -24,7 +24,9 @@ jobs:
         with:
           python-version: 3.x
       - name: Install mkdocs and friends
-        run: pip install properdocs mkdocs-material mike mkdocs-macros-plugin
+        run: >
+          pip install properdocs mkdocs-material mike mkdocs-macros-plugin
+          mkdocstrings[python] mkdocs-autoapi
       - name: Set default version
         run: mike set-default --allow-undefined latest
       - name: Try build with strict
