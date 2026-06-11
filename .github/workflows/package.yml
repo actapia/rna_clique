@@ -48,7 +48,7 @@ jobs:
 
     environment:
       name: pypi
-      url: https://pypi.org/project/multiset-key-dict/
+      url: https://pypi.org/project/rna-clique/
 
     steps:
       - name: Retrieve release distributions
