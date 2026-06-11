@@ -36,4 +36,7 @@ jobs:
         if: ${{ github.event_name == 'push' }}
       - name: Deploy release
         run: mike deploy --push -u ${{github.event.release.tag_name}} latest
-        if: ${{ github.event_name == 'release' }}
+        if: ${{ github.event_name == 'release' }} && ! ${{ github.event.release.prerelease }}
+      - name: Deploy prerelease
+        run: mike deploy --push -u ${{github.event.release.tag_name}}
+        if: ${{ github.event_name == 'release' }} && ${{ github.event.release.prerelease }}
