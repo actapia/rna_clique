@@ -7,6 +7,11 @@ from .gene_matches_tables import get_table_files
 from .app import set_except_hook, eprint
 
 class UnfilteredSimilarity(ComparisonSimilarityComputer):
+    """Computes similarities using gene matches tables, without filtering.
+    
+    Attributes:
+        comparison_dfs: An iterable mapping sample pairs to comparisons.
+    """
     def _similarity_helper(self):
         return similarities_from_dfs(self.comparison_dfs)
     

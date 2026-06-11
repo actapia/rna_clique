@@ -11,21 +11,37 @@ nav:
         - General:
             - Requirements: requirements.md
             - Testing installation: testing_installation.md
+            - building.md
     - Tutorials:
-        - tutorials/reads2tree/README.md
+        - From RNA-seq reads to a phylogenetic tree with RNA-clique: tutorials/reads2tree/README.md
         - tutorials/subsets/README.md
         - tutorials/export_and_search/README.md
         - Non-SPAdes data:
-            - tutorials/nonspades/README.md
+            - Using RNA-clique with non-SPAdes data: tutorials/nonspades/README.md
             - tutorials/nonspades/trinity_assembly.md
     - API:
-        - api/README.md
-        - api/visualization.md        
+        - Getting started: api/README.md
+        - api/visualization.md   
+        - API Reference: api/autoapi/     
 plugins:
   - mike:
       canonical_version: 'latest'
       version_selector: true
   - search
+  - mkdocs-autoapi:
+        autoapi_dir: src
+        autoapi_root: api/autoapi
+        autoapi_add_nav_entry: False
+        autoapi_ignore:
+            - '**/app.py'
+            - '**/docs/**'
+  - mkdocstrings:
+        handlers:
+            python:
+                paths: [src]
+                options:
+                    docstring_options:
+                        warnings: False
   - macros:
      module_name: mkdocs_functions
 markdown_extensions:

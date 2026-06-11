@@ -81,10 +81,10 @@ def filtering_step(
     been referred to as "phase 1" in some RNA-clique documentation. Phase 1
     consists of the following steps:
 
-        1. Selection of top n genes by k-mer coverage for every sample.
-        2. BLASTn searching for top n genes of every ordered sample pair.
-        3. Processing of the BLASTn searches to get gene matches tables.
-        4. Building the gene matches graph.
+    1. Selection of top n genes by k-mer coverage for every sample.
+    2. BLASTn searching for top n genes of every ordered sample pair.
+    3. Processing of the BLASTn searches to get gene matches tables.
+    4. Building the gene matches graph.
 
     The third step involves finding for each unordered pair of samples the best
     matches in both directions for every gene belonging to one of the samples. A

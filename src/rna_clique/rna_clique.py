@@ -52,12 +52,12 @@ def rna_clique(
 
     Specifically, the steps this function takes are:
 
-        1. Selecting transcripts of top n genes per sample by k-mer coverage.
-        2. Pairwise BLASTing every sample's top n genes against every other's.
-        3. Making gene matches tables for each sample pair from BLASTn results.
-        4. Building the gene matches graph from the gene matches tables.
-        5. Filtering the gene matches tables using the gene matches graph.
-        6. Computing similarities (or distances) using filtered tables.
+    1. Selecting transcripts of top n genes per sample by k-mer coverage.
+    2. Pairwise BLASTing every sample's top n genes against every other's.
+    3. Making gene matches tables for each sample pair from BLASTn results.
+    4. Building the gene matches graph from the gene matches tables.
+    5. Filtering the gene matches tables using the gene matches graph.
+    6. Computing similarities (or distances) using filtered tables.
 
     These steps can also be performed separately using other function available
     in the RNA-clique package.

@@ -46,20 +46,21 @@ def custom_field(
     was modeled.
 
     By default, a created field will have no default value (specified with
-    default or default_factory), will appear in the dataclass __init__ function
-    and __repr__, will be used for comparisons and in __hash__, has no metadata,
-    and is not a keyword-only argument in __init__.
+    default or default_factory), will appear in the dataclass \\_\\_init\\_\\_
+    function and \\_\\_repr\\_\\_, will be used for comparisons and in
+    \\_\\_hash\\_\\_, has no metadata, and is not a keyword-only argument in
+    \\_\\_init\\_\\_.
 
     Parameters:
         cls (type):      Field subclass for which to make an instance.
         default:         Default value to be used.
         default_factory: Nullary function for setting a default value.
-        init (bool):     Should appear in the dataclass's __init__?
-        repr (bool):     Should appear in the dataclass's __repr__?
-        hash (bool):     Should be used in the dataclass's __hash__?
+        init (bool):     Should appear in the dataclass's \\_\\_init\\_\\_?
+        repr (bool):     Should appear in the dataclass's \\_\\_repr\\_\\_?
+        hash (bool):     Should be used in the dataclass's \\_\\_hash\\_\\_?
         compare (bool):  Should be used for comparisons on the dataclass?
         metadata (dict): Arbitrary data to store with the field.
-        kw_only (bool):  Should be keyword-only in dataclass's __init__?
+        kw_only (bool):  Should be keyword-only in dataclass's \\_\\_init\\_\\_?
         doc (str):       Docstring for the field.
 
     Returns:
@@ -235,9 +236,9 @@ def marshalling_field(
     
     By default, a created field will not perform marshalling, will have no
     default value (specified with default or default_factory), will appear in
-    the dataclass __init__ function and __repr__, will be used for comparisons
-    and in __hash__, has no metadata, and is not a keyword-only argument in
-    __init__.
+    the dataclass \\_\\_init\\_\\_ function and \\_\\_repr\\_\\_, will be used
+    for comparisons and in \\_\\_hash\\_\\_, has no metadata, and is not a
+    keyword-only argument in \\_\\_init\\_\\_.
 
     Parameters:
         marshal: Function to use for marshalling values of the field.
@@ -329,24 +330,24 @@ def marshalling_dataclass(
     annotated with Optional types, the _marshal attribute will be made Optional
     automatically. Likewise, if unmarshal_type_optional and optional are both
     true, then for all MarshallingFields that are annotated with Optional types
-    and speciy a custom unmarshalling function, the function will automatically
+    and specify a custom unmarshalling function, the function will automatically
     be wrapped to pass through None values.
 
     Marshalling of marshalling dataclass is performed using the class's marshal
     method. This method returns a dict, the marshalled representation of the
     instance's data. Optionally, the marshalled representation can exclude None
-    values. the hidee_none parameter to this function specifies whether to do
+    values. the hide_none parameter to this function specifies whether to do
     this by default. Regardless of the setting, the default behavior can also be
     overridden by passing a value for hide_none to the marshal method itself.
 
     By default, no unmarshalling is performed when an instance of a marshalling
     datacalss is constructed. This enables easy copying of marshalling
     dataclasses by passing the return value of the asdict method as keyword
-    arguments to __init__. To perform unmarshalling while constructing an
-    instance, the from_marshalled_representation classmethod should normally be
-    used instead. In some cases, it might make more sense to have unmarshalling
-    performed at __init__. To enable this, pass True for the unmarshal_init
-    parameter.
+    arguments to \\_\\_init\\_\\_. To perform unmarshalling while constructing
+    an instance, the from_marshalled_representation classmethod should normally
+    be used instead. In some cases, it might make more sense to have
+    unmarshalling performed at \\_\\_init\\_\\_. To enable this, pass True for
+    the unmarshal_init parameter.
 
     Parameters:        
         optional (bool):                Use None as default default for Optional
@@ -359,7 +360,7 @@ def marshalling_dataclass(
                                         True.
         hide_none (bool):               Exclude fields with None value from
                                         marshalled representation.
-        unmarshal_init (bool):          Unmarshal values in __init__.
+        unmarshal_init (bool):          Unmarshal values in \\_\\_init\\_\\_.
 
     Returns:
         Function mapping classes to marshalling dataclasses with given options.
@@ -430,8 +431,8 @@ def marshalling_dataclass(
             def marshal(self, hide_none: bool = hide_none) -> dict:
                 """Make a marshalled representation of this dataclass instance.
 
-                This function uses the marshal functions associated with each
-                ofthe dataclass's fields to create a "marshalled representation"
+                This function uses the marshal functions associated with each of
+                the dataclass's fields to create a "marshalled representation"
                 of the dataclass instance.
 
                 Parameters:

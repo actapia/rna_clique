@@ -126,7 +126,7 @@ def get_analysis_name(config: config_module.RNACliqueConfig) -> str:
     name of the output directory is used. If neither is present in the
     configuration, this function raises a ValueError.
 
-    Parasmeters:
+    Parameters:
         config: RNACliqueConfig representing analysis for which to get a name.
 
     Returns:

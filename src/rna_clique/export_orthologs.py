@@ -386,13 +386,13 @@ def build_strand_graph(
     The strand graph consists of vertices representing specific isotigs; they
     are tuples of sample, gene, and isoform IDs. An edge exists between two
     isotigs when the relative orientation of the isotigs---either forward or
-    reverse compelement---is known. When the two isotigs are in the same
+    reverse complement---is known. When the two isotigs are in the same
     orientation, the edge has "weight" attribute +1. Otherwise, the edge has
     weight -1.
 
     This function also constructs a "meta-strand graph" in which each vertex is
     a connected component of the strand graph. There is a one-to-one
-    correspondance between components of the meta-strand graph and ideal
+    correspondence between components of the meta-strand graph and ideal
     components in the gene matches graph.
 
     Detection of relative orientations is error prone; some edges may have
@@ -400,7 +400,7 @@ def build_strand_graph(
 
     Vertices in the strand graph can be assigned "strand" attributes indicating
     whether they need to be reoriented to ensure all isotigs in the component
->    are in the same orientation. When the strand attribute is +1, no
+    are in the same orientation. When the strand attribute is +1, no
     reorientation is necessary. When the strand attribute is -1, the isotig
     needs to be reoriented as its reverse complement. This function returns an
     unassigned graph; other functions can be used to assign the strand

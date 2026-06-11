@@ -16,9 +16,10 @@ def cast_namedtuple(
     """Get a namedtuple-like class that converts its attributes on construction.
 
     This function behaves similarly to namedtuple and ultimately uses that
-    function, but this function also gives the created class a custom __new__
-    function that uses the provided converters parameter to "cast" the arguments
-    to the correct types when constructing a new instance of the class.
+    function, but this function also gives the created class a custom
+    \\_\\_new\\_\\_ function that uses the provided converters parameter to
+    "cast" the arguments to the correct types when constructing a new instance
+    of the class.
 
     Like namedtuple, this function requires the name of the class to create and
     the names of the attributes, in order. This function additionally requires
@@ -29,9 +30,9 @@ def cast_namedtuple(
     also supported.
 
     Parameters:
-        name (str):         Name of the namedtuple class to create.
-        field_names (list): Names of fields of the tuple, in order.
-        converters (list):  Functions to convert field values in constructor.
+        name (str):         Name of the namedtuple class to create. field_names
+        (list): Names of fields of the tuple, in order. converters (list):
+        Functions to convert field values in constructor.
 
     Returns:
         A namedtuple that converts attributes using provided converters.
