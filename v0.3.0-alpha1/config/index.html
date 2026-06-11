@@ -1,0 +1,3285 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../usage/">
+      
+      
+        <link rel="next" href="../formats/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Configuration files - RNA-clique user guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../stylesheets/style.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configuration-files" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="RNA-clique user guide" class="md-header__button md-logo" aria-label="RNA-clique user guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            RNA-clique user guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuration files
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/actapia/rna_clique" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="RNA-clique user guide" class="md-nav__button md-logo" aria-label="RNA-clique user guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    RNA-clique user guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/actapia/rna_clique" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command-line usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration files
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration files
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#derived-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Derived settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interaction-with-command-line-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interaction with command-line arguments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional values
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#config_version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        config_version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input_dirs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        input_dirs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top_genes_dir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        top_genes_dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tables_dir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tables_dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache_dir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cache_dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output_dir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        output_dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        graph
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top_genes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        top_genes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transcripts_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        transcripts_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top_matches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        top_matches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transcript_id_regex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        transcript_id_regex
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="transcript_id_regex">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep_all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        keep_all
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path_to_sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        path_to_sample
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="path_to_sample">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subset_of" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        subset_of
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../formats/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    File formats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation_guides/ubuntu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ubuntu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation_guides/macos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    macOS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    General
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    General
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requirements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing_installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../building/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building the RNA-clique Python package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/reads2tree/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    From RNA-seq reads to a phylogenetic tree with RNA-clique
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/subsets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickly computing subsets of existing analyses
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/export_and_search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exporting and searching ideal components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Non-SPAdes data
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Non-SPAdes data
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/nonspades/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using RNA-clique with non-SPAdes data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/nonspades/trinity_assembly/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assembling tall fescue transcriptomes with Trinity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/visualization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visualization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3_1" id="__nav_7_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    rna_clique
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    rna_clique
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/build_graph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build_graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/export_and_search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    export_and_search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/export_graph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    export_graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/export_matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    export_matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/export_orthologs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    export_orthologs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/filtered_distance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    filtered_distance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/filtering_step/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    filtering_step
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/find_all_pairs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    find_all_pairs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/find_homologs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    find_homologs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/gene_matches_tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    gene_matches_tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/graph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    graph
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/identity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/make_subset/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    make_subset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/marshalling_dataclass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    marshalling_dataclass
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/path_to_sample/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    path_to_sample
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/plot_component_sizes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plot_component_sizes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/rna_clique/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    rna_clique
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/search_ideal_components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    search_ideal_components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/select_top_genes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    select_top_genes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/select_top_genes_all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    select_top_genes_all
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/similarity_computer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    similarity_computer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/strand_sat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    strand_sat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/sublisted_colormap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    sublisted_colormap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/subset_comparisons/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    subset_comparisons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/transcripts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    transcripts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/unfiltered_distance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    unfiltered_distance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_1_29" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3_1_29" id="__nav_7_3_1_29_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    viz
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_7_3_1_29_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_1_29">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    viz
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/viz/auto_markers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    auto_markers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/viz/confidence_ellipsoid/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    confidence_ellipsoid
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/viz/heatmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    heatmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/viz/pcoa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pcoa
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/viz/phylo_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    phylo_utils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/autoapi/rna_clique/viz/plots/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#derived-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Derived settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interaction-with-command-line-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interaction with command-line arguments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional values
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#config_version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        config_version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input_dirs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        input_dirs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top_genes_dir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        top_genes_dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tables_dir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tables_dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache_dir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cache_dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output_dir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        output_dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        graph
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top_genes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        top_genes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transcripts_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        transcripts_name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top_matches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        top_matches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transcript_id_regex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        transcript_id_regex
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="transcript_id_regex">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep_all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        keep_all
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path_to_sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        path_to_sample
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="path_to_sample">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subset_of" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        subset_of
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="configuration-files">Configuration files</h1>
+<p>In addition to a basic <a href="../usage/">command-line interface</a>, most of the scripts
+that are part of RNA-clique can be controlled via <a href="https://yaml.org/">YAML</a>
+configuration files. Configuration files can be useful for making analyses more
+reproducible or for performing multiple analyses with similar parameters. Many
+RNA-clique programs can also <em>output</em> configuration files to store the 
+parameters of the analysis performed in a machine-readable format that can be
+readily used to repeat the analysis or as a template for further analyses with
+similar parameters.</p>
+<p>The document first provides a <a href="#template">basic template</a> configuration file
+with default or empty values for all settings. This document then describes how
+configuration settings may be <a href="#derived-settings">derived automatically</a> from
+others and how configuration files interact with the <a href="#interaction-with-command-line-arguments">command-line
+interface</a>. This document discusses
+<a href="#optional-values">optional values</a> and how <a href="#file-paths">file paths</a> are
+interpreted.  Finally, this document provides a reference for the
+<a href="#settings">settings</a> that can be provided in RNA-clique configuration files and
+explains how to <a href="#troubleshooting-configuration">troubleshoot</a> RNA-clique's
+configuration.</p>
+<h2 id="template">Template</h2>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Version of the configuration schema used.</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">config_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.1</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Name to assign to the analysis.</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">title</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Directories containing the transcript FASTA files.</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">input_dirs</span><span class="p">:</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Output directory containing top n genes by coverage.</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">top_genes_dir</span><span class="p">:</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Output directory containing gene matches tables.</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nt">tables_dir</span><span class="p">:</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Intermediate directory containing BLAST DB caches.</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nt">cache_dir</span><span class="p">:</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Output directory root.</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nt">output_dir</span><span class="p">:</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Output gene matches graph.</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nt">graph</span><span class="p">:</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Number of top genes by k-mer coverate to select.</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nt">top_genes</span><span class="p">:</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Name of transcripts files in input directories.</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nt">transcripts_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">transcripts.fasta</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Threshold for counting a match between two genes.</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nt">top_matches</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># e-value threshold to use for BLASTn searches.</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="nt">evalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1e-99</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Keep all matches between genes in the case of ties.</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="nt">keep_all</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="c1"># Number of parallel jobs to use.</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="nt">jobs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">31</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1"># Python regex to use for parsing transcript IDs.</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="nt">transcript_id_regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="c1"># Mapping from paths to sample names.</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="nt">path_to_sample</span><span class="p">:</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="c1"># Output distance matrix location.</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="nt">matrix</span><span class="p">:</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="c1"># When the last analysis associated with this config file finished.</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="nt">finished</span><span class="p">:</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="c1"># Version of RNA-clique used to create this analysis.</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.2.0</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="c1"># Path to analysis of which this is a subset.</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="nt">subset_of</span><span class="p">:</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="c1"># Print more output than usual.</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="nt">verbose</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span></code></pre></div>
+<h2 id="derived-settings">Derived settings</h2>
+<p>In some cases, RNA-clique will derive good default values for some settings
+automatically from the values of other settings. Those default values can be
+used if the user does not specify a value for the setting explicitly. RNA-clique
+produces such default settings to simplify RNA-clique commands for common use
+cases by allowing users to provide fewer command-line arguments. Although
+RNA-clique allows command-line invocations simplified in this way, it retains
+the flexibility gained from having many command-line arguments by still allowing
+potentially derived settings to be specified explicitly.</p>
+<p>For example, RNA-clique will automatically derive values for <code>top_genes_dir</code>,
+<code>cache_dir</code>, <code>tables_dir</code>, <code>graph</code>, <code>matrix</code>, and <code>output_config</code> from
+<code>output_dir</code>, which means only a root <code>output_dir</code> value must be provided. Any
+of the derived default values for these settings can be overridden, however,
+when the setting is defined explicitly by the user.</p>
+<p>How settings can be derived from others depends on the script being used, though
+many scripts share similar rules. These rules are documented for each script in
+the <a href="../usage/">Command-line usage guide</a>. When a setting can be derived from
+another for some script, the rule is described in the "default value" column of
+the row for the derived setting in the table under the script's "Options"
+subsection. In most cases, the rule is described in a kind of succinct
+pseudocode, but when the rule cannot be expressed so succinctly, the table
+simply documents the settings on which the derived setting depends. Rarely,
+there may be multiple possible rules for deriving a value. In such cases, the
+table simply lists the default value as "dynamic," and the rules are explained
+in more detail beneath the table.</p>
+<h2 id="interaction-with-command-line-arguments">Interaction with command-line arguments</h2>
+<p>RNA-clique can be controlled via command-line arguments and configuration files
+simultaneously by providing both command-line arguments and a configuration file
+via the <code>--input-config/-C</code> option. Using settings from both sources can make
+RNA-clique more convenient to use; for example, it makes it possible to put
+common settings in a configuration file and make further adjustments to settings
+without requiring that the user open an editor to change the configuration file
+each time the user wants to try a different setting. Unfortunately, accepting
+settings from multiple sources inevitably raises questions about how those
+sources should interact, and the problem is exacerbated somewhat when certain
+settings can be derived automatically from other settings, as they are in many
+of RNA-clique's programs. This section briefly discusses rules for using
+command-line arguments and configuration files simultaneously. Of course, a user
+can always opt to use only one source at a time should they prefer to avoid the
+complexity of the interactions described here.</p>
+<p>Currently, RNA-clique initially processes the arguments provided directly on the
+command line. Where possible, any rules for deriving settings not provided
+explicitly are applied until no further derivations are possible.</p>
+<p>After the command-line arguments have been processed, RNA-clique loads the
+settings provided in the configuration file (if specified). Settings specified
+explicitly in the configuration file <em>do not</em> override any settings specified
+explicitly at the command line or derived from the command-line settings. After
+the explicit configuration file settings have been loaded, the rules for
+deriving settings not provided explicitly are again applied to derive missing
+settings. </p>
+<!-- At this stage, the derived settings from the previous step might be overwritten, -->
+<!-- depending on what settings are available and the priorities of the rules used -->
+<!-- for deriving the settings. In most cases in RNA-clique, however, no such -->
+<!-- overwriting will happen. -->
+
+<p>Since the rules above are slightly complex, it is recommended that users
+manually using configuration files and command-line arguments simultaneously
+take advantage of the <a href="#troubleshooting-configuration"><code>--show-config</code> option</a>
+to verify that RNA-clique is using the expected settings. </p>
+<h2 id="optional-values">Optional values</h2>
+<p>Configuration files provided to RNA-clique programs need not provide values for
+all possible settings. Values missing from the configuration can be provided
+<a href="#interaction-with-command-line-arguments">via command-line arguments</a> or
+<a href="#derived-settings">derived from the provided values automatically</a>, and an
+RNA-clique program will not fail if settings it does not need are missing. The
+<a href="../usage/">Command-line usage guide</a> documents which settings must be present
+(from any source) in the "Required" column of each script's "Options" table.</p>
+<h2 id="file-paths">File paths</h2>
+<p>When a setting is assigned a relative file path, the file path is interpreted as
+relative to the working directory of the <em>running script</em> rather than the
+directory of the configuration file or the analysis root. This behavior ensures
+that relative paths are treated the same whether they are provided via a
+configuration file or via a command-line argument, but it can cause some
+confusion when reusing a config file from a different directory. Future versions
+of the RNA-clique configuration schema may introduce a <code>working_directory</code>
+setting to document where the analysis was executed. </p>
+<!-- RNA-clique may require that -->
+<!-- the `working_directory` be the same as the working directory from which the -->
+<!-- script is running, or RNA-clique might reinterpret paths provided in the -->
+<!-- configuration file based on the `working_directory` setting. -->
+
+<h2 id="settings">Settings</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting</th>
+<th style="text-align: left;">Python type</th>
+<th style="text-align: left;">YAML type</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a href="./#config_version"><code>config_version</code></a></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Version of the configuration schema used.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>title</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Name to assign to the analysis.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#input_dirs"><code>input_dirs</code></a></td>
+<td style="text-align: left;"><code>list[pathlib.Path]</code></td>
+<td style="text-align: left;">Sequence of Scalar</td>
+<td style="text-align: left;">Directories containing the transcript FASTA files.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#top_genes_dir"><code>top_genes_dir</code></a></td>
+<td style="text-align: left;"><code>pathlib.Path</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Directory containing top n genes by coverage.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#tables_dir"><code>tables_dir</code></a></td>
+<td style="text-align: left;"><code>pathlib.Path</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Directory containing gene matches tables.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#cache_dir"><code>cache_dir</code></a></td>
+<td style="text-align: left;"><code>pathlib.Path</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Directory containing BLAST DB caches.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#output_dir"><code>output_dir</code></a></td>
+<td style="text-align: left;"><code>pathlib.Path</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">RNA-clique analysis output root directory.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#graph"><code>graph</code></a></td>
+<td style="text-align: left;"><code>pathlib.Path</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Gene matches graph.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#top_genes"><code>top_genes</code></a></td>
+<td style="text-align: left;"><code>int</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Number of top genes by k-mer coverate to select.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#transcripts_name"><code>transcripts_name</code></a></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Name of transcripts files in input directories.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#top_matches"><code>top_matches</code></a></td>
+<td style="text-align: left;"><code>int</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Threshold for counting a match between two genes.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>evalue</code></td>
+<td style="text-align: left;"><code>float</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">e-value threshold to use for BLASTn searches.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#keep_all"><code>keep_all</code></a></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Keep all matches between genes in the case of ties.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>jobs</code></td>
+<td style="text-align: left;"><code>int</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Number of parallel jobs to use.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#transcript_id_regex"><code>transcript_id_regex</code></a></td>
+<td style="text-align: left;"><code>re.Pattern</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Python regex to use for parsing transcript IDs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#path_to_sample"><code>path_to_sample</code></a></td>
+<td style="text-align: left;"><code>dict[pathlib.Path, str]</code></td>
+<td style="text-align: left;">Mapping from Scalar to Scalar</td>
+<td style="text-align: left;">Mapping from paths to sample names.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#matrix"><code>matrix</code></a></td>
+<td style="text-align: left;"><code>pathlib.Path</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Output distance matrix location.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>finished</code></td>
+<td style="text-align: left;"><code>datetime.datetime</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">When the last analysis associated with this config file finished.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>version</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Version of RNA-clique used to create this analysis.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a href="./#subset_of"><code>subset_of</code></a></td>
+<td style="text-align: left;"><code>pathlib.Path</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Path to analysis of which this is a subset.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>verbose</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;">Scalar</td>
+<td style="text-align: left;">Print more output than usual. (Useful for debugging.)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config_version">config_version</h3>
+<p>RNA-clique configuration files can state what version of the configuration
+schema they use. This setting is designed to provide a measure of
+future-proofing in case eventual changes to the schema require explicit
+detection of the schema version to provide backwards compatibility. Currently,
+the schema version is <code>0.0.2</code>, but no programs in RNA-clique use the schema
+version.</p>
+<h3 id="input_dirs">input_dirs</h3>
+<p>The <code>input_dirs</code> setting should be a list (YAML Sequence) of file paths to
+<a href="../formats/#transcriptomes">directories containing the transcriptome files</a>.</p>
+<h3 id="top_genes_dir">top_genes_dir</h3>
+<p>The <code>top_genes_dir</code> setting should be a path to a 
+<a href="../formats/#top-genes">directory containing the top genes</a> file.</p>
+<h3 id="tables_dir">tables_dir</h3>
+<p>The <code>tables_dir</code> setting should be a path to a <a href="../formats/#gene-matches-tables">directory containing the gene
+matches tables</a>.</p>
+<h3 id="cache_dir">cache_dir</h3>
+<p>The <code>cache_dir</code> is a directory in which RNA-clique will store a <code>simple_blast</code>
+<a href="https://github.com/actapia/simple_blast/blob/main/README.md#db-caches">BLAST database
+cache</a>
+containing BLAST databases for the top genes files. <code>cache_dir</code> is an
+intermediate output directory not intended to be used by the RNA-clique user.</p>
+<h3 id="output_dir">output_dir</h3>
+<p><code>output_dir</code>, when provided, is used as the default "root" for the RNA-clique
+analysis. Paths for for <code>top_genes_dir</code>, <code>cache_dir</code>, <code>tables_dir</code>, <code>graph</code>,
+<code>matrix</code>, and <code>output_config</code> will usually be <a href="#derived-settings">automatically
+placed</a> under the <code>output_dir</code> when those settings are
+not provided explicitly. (Check the relevant "Options" section for the script in
+the <a href="../usage/">Command-line usage guide</a> to verify this behavior for the script
+being used.) </p>
+<h3 id="graph">graph</h3>
+<p>The <code>graph</code> setting should be a path to the <a href="../formats/#gene-matches-graph">gene matches
+graph</a>. </p>
+<h3 id="top_genes">top_genes</h3>
+<p><code>top_genes</code> is the number of top genes to select by <span class="arithmatex">\(k\)</span>-mer coverage when
+creating the <a href="../formats/#top-genes">top genes files</a>. In the original RNA-clique
+paper, <code>top_genes</code> is referred to as parameter <span class="arithmatex">\(n\)</span>. </p>
+<p><span class="arithmatex">\(k\)</span>-mer coverage quantifies the amount of sequence data that contributes to an
+assembled transcript. Some assemblers, including
+<a href="https://github.com/ablab/spades">rnaSPAdes</a>, report <span class="arithmatex">\(k\)</span>-mer coverage values for
+each assembled transcript. When an assembler can report multiple isoforms of a
+single transcript, transcripts can be grouped into "isotig sets" representing
+isoforms of the same gene. (rnaSPAdes does this grouping automatically, but a
+separate program could also be used to organize transcripts into isotig sets.)
+Although the assembler only assigns <span class="arithmatex">\(k\)</span>-mer coverage values to individual
+transcripts, RNA-clique takes the <span class="arithmatex">\(k\)</span>-mer coverage of a gene to be the maximum
+<span class="arithmatex">\(k\)</span>-mer coverage among all transcripts that belong to the same gene (isotig
+set).</p>
+<p>When RNA-clique selects the top <span class="arithmatex">\(n\)</span> genes by <span class="arithmatex">\(k\)</span>-mer coverage, it is intended to
+select those genes best supported by the RNA-seq data. This step is intended to
+both reduce errors caused by poorly assembled transcripts and reduce the amount
+of time needed to perform the remainder of the analysis. What setting of <span class="arithmatex">\(n\)</span> is
+best depends on the data, but <span class="arithmatex">\(n = 50000\)</span> worked well for the analyses performed
+in the original RNA-clique.</p>
+<h3 id="transcripts_name">transcripts_name</h3>
+<p>RNA-clique expects all input <a href="../formats/#transcriptomes">transcriptome</a> FASTA
+files to have the same filename. By default, RNA-clique expects them all to be
+named <code>transcripts.fasta</code> since this is the default output filename for
+<a href="https://github.com/ablab/spades">rnaSPAdes</a>, but this name can be customized
+using the <code>transcripts_name</code> setting.</p>
+<h3 id="top_matches">top_matches</h3>
+<p>When comparing sample <span class="arithmatex">\(A\)</span> and sample <span class="arithmatex">\(B\)</span>, we BLAST <span class="arithmatex">\(A\)</span> against <span class="arithmatex">\(B\)</span> and <span class="arithmatex">\(B\)</span>
+against <span class="arithmatex">\(A\)</span>. Ordinarily, we keep a pair of genes <span class="arithmatex">\(g\)</span> (from <span class="arithmatex">\(A\)</span>) and <span class="arithmatex">\(h\)</span> (from
+<span class="arithmatex">\(B\)</span>) when merging the results from the two directions if and only if <span class="arithmatex">\(g\)</span> is
+among the best matches for <span class="arithmatex">\(h\)</span> in <span class="arithmatex">\(A\)</span>, <em>and</em> <span class="arithmatex">\(h\)</span> is among the best matches for
+<span class="arithmatex">\(g\)</span> in <span class="arithmatex">\(B\)</span>, according to bitscore. (We allow ties, so <span class="arithmatex">\(h\)</span> may not be the <em>only</em>
+best match for <span class="arithmatex">\(g\)</span> in <span class="arithmatex">\(B\)</span>, and, likewise, <span class="arithmatex">\(g\)</span> may not be the <em>only</em> best match
+for <span class="arithmatex">\(h\)</span> in <span class="arithmatex">\(A\)</span>.) This behavior corresponds to a parameter setting of
+<code>top_matches = 1</code> (<span class="arithmatex">\(N = 1\)</span> in the original RNA-clique paper) because we are
+consider only the matches with top <span class="arithmatex">\(N = 1\)</span> bitscore in both directions.</p>
+<p>We could alternatively set <span class="arithmatex">\(N\)</span> to some value greater than 1. In that case, when
+we merge the two directions, we could keep a pair of genes <span class="arithmatex">\(g\)</span> and <span class="arithmatex">\(h\)</span> if and
+only if <span class="arithmatex">\(g\)</span> is among the matches with top <span class="arithmatex">\(N\)</span> bitscore for <span class="arithmatex">\(h\)</span> in <span class="arithmatex">\(A\)</span>, and <span class="arithmatex">\(h\)</span>
+is among the matches with top <span class="arithmatex">\(N\)</span> bitscore for <span class="arithmatex">\(g\)</span> in <span class="arithmatex">\(B\)</span>.</p>
+<p>As of this writing, values for <code>top_matches</code> greater than <span class="arithmatex">\(1\)</span> are mostly
+untested, and it is recommended that this parameter simply be set to <span class="arithmatex">\(1\)</span> in
+practice.</p>
+<h3 id="transcript_id_regex">transcript_id_regex</h3>
+<p>The <code>transcript_id_regex</code> setting should be a Python regular expression that can
+be used to parse the FASTA sequence header lines of the transcript FASTA
+files. The following capture groups are expected and can be identified by
+position or by
+<a href="https://docs.python.org/3/library/re.html#regular-expression-syntax">name</a>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Position</th>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">coverage</td>
+<td style="text-align: left;"><span class="arithmatex">\(k\)</span>-mer coverage, expressed as a floating-point number</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">gene</td>
+<td style="text-align: left;">Gene ID, a non-negative integer</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">isoform</td>
+<td style="text-align: left;">Transcript isoform ID within the gene.</td>
+</tr>
+</tbody>
+</table>
+<p>When some capture groups in a regular expression are named, and others are
+unnamed, the unnamed capture groups are assumed to be the remaining capture
+groups from the table above, in order by their position.</p>
+<p>Any extra capture groups beyond those in the table above are ignored.</p>
+<h4 id="examples">Examples</h4>
+<p>In the regular expression below, the default order of capture groups is
+used. The first capture group (after the string <code>foo</code>, but before <code>bar</code>) is the
+coverage. The second capture group (after the string <code>bar</code>, but before <code>baz</code>) is
+the gene ID. The third and last capture group (after the string <code>baz</code>, but
+before <code>_</code>) is the isoform ID.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>foo(.*)bar(.*)baz(.*)_.*
+</span></code></pre></div>
+<p>The regular expression below is the same, but capture groups are identified
+explicitly.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>foo(?Pcoverage.*)bar(?Pgene.*)baz(?Pisoform.*)_.*
+</span></code></pre></div>
+<p>In the regular expression below, any text after the isoform ID is captured, but
+RNA-clique will ignore it.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>foo(.*)bar(.*)baz(.*)_(.*)
+</span></code></pre></div>
+<p>In the following regular expression, the first capture group is the gene ID. The
+second represents the coverage, and the third represents the isoform ID.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>tane(?Pgene.*)slafto(.*)dogge(.*)
+</span></code></pre></div>
+<h3 id="keep_all">keep_all</h3>
+<p>The last step in creating a <a href="../formats/#gene-matches-tables">gene matches table</a>
+is selecting the top gene pair for each sample 1 gene by bitscore. When
+<code>keep_all</code> is False, this step produces a table such that every sample 1 gene in
+the table is implicitly mapped to a single best match in sample 2. If for some
+sample 1 gene there are multiple gene pairs with highest bitscore, ties are
+broken arbitrarily by keeping only the row that comes first in the table.</p>
+<p>When <code>keep_all</code> is True, RNA-clique allows more than one gene pair to be kept
+for a sample 1 gene in the case of ties.</p>
+<h3 id="path_to_sample">path_to_sample</h3>
+<p>The <code>path_to_sample</code> setting should be a <code>dict</code> (YAML mapping) mapping <a href="../formats/#top-genes">top
+genes</a> files to the names of the samples they
+represent. By default, RNA-clique assumes that each sample is named after the
+directory in which its transcripts FASTA file is found. This default behavior
+is reflected in output YAML files produced by RNA-clique, but the mapping can be
+changed manually to assign different names to samples.</p>
+<h4 id="examples_1">Examples</h4>
+<p>The example below uses the set of 16 tall fescue samples analyzed in the
+original RNA-clique paper. All top genes files here are mapped to their default
+sample names.</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">path_to_sample</span><span class="p">:</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321383_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR2321383</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321384_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR2321384</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321385_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR2321385</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321386_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR2321386</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321387_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR2321387</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321388_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR2321388</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR7990321_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR7990321</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR7990322_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR7990322</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003736_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003736</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003737_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003737</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003753_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003753</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003754_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003754</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003755_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003755</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003756_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003756</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003761_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003761</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003762_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SRR8003762</span>
+</span></code></pre></div>
+<p>In the example below, the samples have been renamed to reflect their genotypes.</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">path_to_sample</span><span class="p">:</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321383_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE46_1</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321384_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE46_2</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321385_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE46_3</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321386_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE46_4</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321387_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE46_5</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR2321388_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE46_6</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR7990321_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FATG4_1</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR7990322_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FATG4_2</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003736_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NTE_1</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003737_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NTE_2</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003753_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE27_1</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003754_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE27_2</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003755_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE27_3</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003756_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE27_4</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003761_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE27_5</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span><span class="nt">f16_rna_clique_out/od1/SRR8003762_top.fasta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CTE27_6</span>
+</span></code></pre></div>
+<h3 id="matrix">matrix</h3>
+<p>The <code>matrix</code> setting is a path to the <a href="../formats/#distance-matrix">distance
+matrix</a>.</p>
+<h3 id="subset_of">subset_of</h3>
+<p>When one analysis uses a subset of samples from another, reusing its <a href="../formats/#top-genes">top
+genes</a> and <a href="../formats/#gene-matches-tables">gene matches
+tables</a>, the <code>subset_of</code> setting should be set
+in the subset configuration file to a file path to the superset configuration
+file. </p>
+<p><a href="../usage/#make_subset"><code>make_subset</code></a> uses <code>subset_of</code> to determine which
+analysis to subset, but no other programs in RNA-clique currently read and use
+the <code>subset_of</code> parameter. Nevertheless, <code>subset_of</code> is useful as metadata to
+keep track of the relationships between analyses.</p>
+<h2 id="troubleshooting-configuration">Troubleshooting configuration</h2>
+<p>If RNA-clique doesn't seem to be working as you expected, or if you would simply
+like to verify that RNA-clique is processing your command-line arguments and/or
+configuration file correctly before running a long analysis, it can be helpful
+to see exactly what parameters RNA-clique will use to run a script. All scripts
+in RNA-clique that support configuration files provide this feature via the
+<code>--show-config</code> option, which allows the user to see the configuration or
+arguments that RNA-clique will use.</p>
+<p>By default, <code>--show-config</code> prints to standard output a YAML configuration file
+containing the effective settings that will be used by the program. Arguments
+can also be provided along with <code>--show-config</code> to show the original "raw"
+parsed command-line arguments (<code>original_args</code>), the processed command-line
+arguments (<code>args</code>), or the processed configuration (<code>config</code>, the
+default). Multiple such arguments can be provided to show multiple sets of
+settings. For example, <code>--show-config args config</code> will show both the processed
+command-line arguments and the processed configuration.</p>
+<p>The format used for showing the requested sets of settings can be controlled
+with the <code>--show-config-format</code> option. By default, YAML (<code>yaml</code>) is preferred
+for displaying the processed configuration, but the sets of settings will
+instead be displayed as a <code>dict</code> of Python <code>reprs</code>s (<code>dict</code>) by default when
+<code>args</code> or <code>original_args</code> have been requested. In addition to the <code>yaml</code> and
+<code>dict</code> formats, RNA-clique supports displaying sets of settings in JSON
+(<code>json</code>). If <code>yaml</code> or <code>json</code> have been specified and the requested sets of
+settings can not be serialized automatically in those formats, RNA-clique will
+produce an error message.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
