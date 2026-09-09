@@ -1,14 +1,24 @@
 import argparse
 import importlib.util
+import io
 import sys
 import functools
 import re
 import numbers
+import tomllib
+import pkgutil
+import contextlib
+import textwrap
 
 import pandas as pd
+import mistletoe
+import mistletoe.markdown_renderer
+import llist
 
 from pathlib import Path
 from typing import Optional
+from importlib import import_module
+from collections import deque
 
 from IPython import embed
 
@@ -21,11 +31,17 @@ checks = ["missing-argument-description", "missing-program-description"]
 
 def build_parser():
     parser = config_module.ArgumentManager()
+    # parser.add_argument(
+    #     "modules",
+    #     nargs="*",
+    #     type=Path,
+    #     help="Modules for which to automatically generate usage info."
+    # )
     parser.add_argument(
-        "modules",
-        nargs="+",
+        "--source",
+        "-s",
         type=Path,
-        help="Modules for which to automatically generate usage info."
+        help="Source file on which to base updated documentation."
     )
     parser.add_argument(
         "--depth",
@@ -57,6 +73,18 @@ def build_parser():
         const=checks,
         choices=checks,
         help="Checkers to run."
+    )
+    parser.add_argument(
+        "--front",
+        "-f",
+        nargs="*",
+        help="Modules to put at the top of the file."
+    )
+    parser.add_argument(
+        "--pyproject",
+        "-p",
+        type=Path,
+        help="Path to pyproject.toml file declaring script names."
     )
     return parser
 
@@ -263,106 +291,308 @@ def default_columns(df, l):
     return col
 
 def sort_existing(df, by, *args, **kwargs):
-    return df.sort_values([b for b in by if b in df.index], *args, **kwargs)    
+    return df.sort_values([b for b in by if b in df.index], *args, **kwargs)
+
+def get_content(elem):
+    with mistletoe.base_renderer.BaseRenderer() as renderer:
+        return renderer.render(elem).rstrip()
+
+def make_heading(heading_text, level):
+    return "{} {}".format("#"*level, MarkdownDocument.escape(heading_text))
+
+class MarkdownSection:
+    def __init__(self, level=0):
+        self.elements = llist.dllist()
+        self.sections = {}
+        self.level = level
+
+    def _make_section(self, heading):
+        section = MarkdownSection(level=heading.level)
+        self.sections[get_content(heading)] = self.add_element(section)
+
+    def add_element(self, element, after=None):
+        node = llist.dllistnode(element)
+        if after is None:
+            after = self.elements.last
+        if after is None:
+            self.elements.appendnode(node)
+        else:
+            try:
+                self.elements.insertafter(node, after)
+            except ValueError:
+                embed()
+        return node
+
+    def add_subsection(self, heading_text: str, after=None):
+        section = MarkdownSection(level=self.level+1)
+        self.sections[heading_text] = self.add_element(section)
+        section.add_element(
+            make_heading(
+                heading_text,
+                self.level + 1
+            ),
+            after=after
+        )
+
+    def get_or_add_section(self, section, after=None):
+        if not section in self.sections:
+            self.add_subsection(section, after=after)
+        return self.sections[section].value
+
+    @classmethod
+    def parse_markdown_sections(cls, elements):
+        sections = [cls()]
+        for element in elements:
+            if isinstance(element, mistletoe.block_token.Heading):
+                while sections[-1].level >= element.level:
+                    sections.pop()
+                if element.level > sections[-1].level:
+                    sections[-1]._make_section(element)
+                    sections.append(sections[-1].elements[-1])
+            sections[-1].elements.append(element)
+        return sections[0]
+
+    @property
+    def all_elements(self):
+        for element in self.elements:
+            try:
+                yield from element.all_elements
+            except AttributeError:
+                yield element
+
+    def render(self, f=None, wrap=80):
+        ret = False
+        if f is None:
+            f = io.StringIO()
+            ret = True
+        with mistletoe.markdown_renderer.MarkdownRenderer(
+                max_line_length=wrap
+        ) as renderer:
+            for element in self.all_elements:
+                if isinstance(
+                        element,
+                        mistletoe.block_token.BlockToken
+                ):
+                    f.write(renderer.render(element))
+                else:
+                    f.write(element)
+                    f.write("\n")
+                f.write("\n")
+        if ret:
+            return f.getvalue()
+                
+                        
+
+
+
+def replace_table(section, table):
+    try:
+        node = next(
+            node for node in section.elements.iternodes() if
+            isinstance(node.value, mistletoe.block_token.Table)
+        )
+    except StopIteration:
+        node = None
+    if node is not None:
+        prev = node.prev
+        section.elements.remove(node)
+        section.add_element(table, after=prev)
+    else:
+        section.add_element(table, after=section.elements.first)
+    
+    
+
+# class MarkdownMerger:
+#     def __init__(self, source_lines, md, elements):
+#         self.source_lines = source_lines
+#         self.md = md
+#         self.elements = elements
+#         self.start = 0
+
+#     @contextlib.contextmanager
+#     def forward_to_section(self, section):
+#         if self.elements:
+#             while self.elements and not (
+#                     isinstance(
+#                         self.elements[0],
+#                         mistletoe.block_token.Heading
+#                     ) and get_content(self.elements[0]) == section
+#             ):
+#                 self.elements.popleft()
+#         if self.elements:
+#             res = "".join(
+#                 self.source_lines[
+#                     self.start:self.elements[0].line_number
+#                 ]
+#             )
+#             self.md.enter_section(section, write=False)
+#             self.start = self.elements[0].line_number
+#             self.elements.popleft()
+#         else:
+#             res = "".join(self.source_lines[self.start:])
+#             self.md.enter_section(section)
+#         print(res, end="")
+#         yield self
+#         self.md.exit_section()
+
+#     def write_until_next_heading(self):
+#         if self.elements:
+#             while self.elements and not isinstance(
+#                     self.elements[0],
+#                     mistletoe.block_token.Heading
+#             ):
+#                 self.elements.popleft()
+#             if self.elements:
+#                 content = "".join(
+#                     self.source_lines[
+#                         self.start:self.elements[0].line_number-1
+#                     ]
+#                 )
+#                 self.start = self.elements[0].line_number - 1
+#             else:
+#                 content = "".join(self.source_lines[self.start:])
+#             print(content, end="")
+#             return bool(content.strip())
+#         return False
     
 def main():
     _, args = build_parser().get_arguments()
-    md = MarkdownDocument(depth=args.depth)
-    with md.section("Command-line usage guide"):
-        for module_file in args.modules:
-            module = import_file(module_file)
-            try:
-                bp = module.build_parser
-            except AttributeError as e:
-                if args.ignore_missing_parsers:
-                    eprint(f"Missing parser in {module_file}.")
-                    continue
-                raise e
-            parser = bp()
-            with md.section(MarkdownDocument.escape(str(module_file))):
-                if parser.parser.description:
-                    md.paragraph(parser.parser.description)
-                elif "missing-program-description" in args.check:
-                    eprint(f"Missing program description for {module_file}.")
-                positional_args, optional_args = summarize_cli_args(parser)
-                if "missing-argument-description" in args.check:
-                    if not positional_args.empty:
-                        for ix, row in positional_args.loc[
-                                positional_args["description"].isna()
-                        ].iterrows():
-                            eprint(
-                                "Missing description for positional argument "
-                                f"{ix} in {module_file}"
-                            )
-                    if not optional_args.empty:
-                        for ix, row in optional_args.loc[
-                                optional_args["description"].isna()
-                        ].iterrows():
-                            eprint(
-                                "Missing description for {} in {}".format(
-                                    row["sort_name"],
-                                    module_file,
-                                )
-                            )
-                     
-                #embed()
-                optional_args["required"] = optional_args["required"].replace(
-                    {
-                        False: "No",
-                        True: "Yes"
-                    }
-                )
-                if not positional_args.empty:
-                    with md.section("Positional arguments"):
-                        md.paragraph(
-                            positional_args.fillna(
-                                ""
-                            ).rename_axis(
-                                "Position"
-                            ).filter(
-                                [
-                                    "config_option",
-                                    "description",                       
-                                    "nargs",
-                                    "type",
-                                ]
-                            ).rename(
-                                columns=new_column_names
-                            ).rename(
-                                columns=column_to_text
-                            ).to_markdown(),
-                            wrap=False
-                        )
-                if not optional_args.empty:
-                    with md.section("Options"):
-                        #embed()
-                        md.paragraph(
-                            sort_existing(
-                                optional_args,
-                                [
-                                    "config_option",
-                                    "sort_name"
-                                ]
-                            ).fillna("").filter(
-                                [
-                                    "config_option",
-                                    "long_name",
-                                    "short_name",
-                                    "description",
-                                    "nargs",
-                                    "type",
-                                    "choices",
-                                    "default",
-                                    "const",
-                                    "required",
-                                ]
-                            ).rename(
-                                columns=new_column_names
-                            ).rename(
-                                columns=column_to_text
-                            ).to_markdown(index=None),
-                            wrap=False
-                        )
+    if args.source:
+        with open(args.source, "r") as source_file:
+            source_lines = list(source_file)
+        source_document = mistletoe.Document(source_lines)
+    else:
+        source_lines = []
+        source_document = mistletoe.Document([])
+    script_mapping = {}
+    if args.pyproject:
+        with open(args.pyproject, "rb") as pyproject_file:
+            pyproject_toml = tomllib.load(pyproject_file)
+        script_mapping = {
+            v.split(":")[0]: k
+            for (k, v) in pyproject_toml["project"].get("scripts", {}).items()
+        }
+        #embed()
+    # md = MarkdownDocument(depth=args.depth)
+    doc = MarkdownSection.parse_markdown_sections(source_document.children)
+    usage_section = doc.get_or_add_section("Command-line usage guide")
+    #embed()
+    parent_package = __package__.split(".")[0]
+    module_files = [m.name for m in pkgutil.iter_modules([parent_package])]
+    wrapper = textwrap.TextWrapper(args.width)
+    for module_file in module_files:
+        full_name = f"{parent_package}.{module_file}"
+        section_name = script_mapping.get(full_name, module_file)
+        module = import_module(full_name)
+        try:
+            bp = module.build_parser
+        except AttributeError as e:
+            if args.ignore_missing_parsers:
+                eprint(f"Missing parser in {module_file}.")
+                continue
+            raise e
+        parser = bp()
+        module_section = usage_section.get_or_add_section(section_name)
+        if not parser.parser.description and \
+           "missing-program-description" in args.check:
+            eprint(f"Missing program description for {module_file}.")
 
+        # Find description.
+        for node in module_section.elements.iternodes():
+            if isinstance(node.next.value, MarkdownSection):
+                break
+        if isinstance(node.value, mistletoe.block_token.Heading):
+            node = module_section.add_element(
+                wrapper.fill(parser.parser.description),
+                after=node
+            )
+        # embed()        
+        positional_args, optional_args = summarize_cli_args(parser)
+        if "missing-argument-description" in args.check:
+            if not positional_args.empty:
+                for ix, row in positional_args.loc[
+                        positional_args["description"].isna()
+                ].iterrows():
+                    eprint(
+                        "Missing description for positional argument "
+                        f"{ix} in {module_file}"
+                    )
+            if not optional_args.empty:
+                for ix, row in optional_args.loc[
+                        optional_args["description"].isna()
+                ].iterrows():
+                    eprint(
+                        "Missing description for {} in {}".format(
+                            row["sort_name"],
+                            module_file,
+                        )
+                    )
+
+        #embed()
+        optional_args["required"] = optional_args["required"].replace(
+            {
+                False: "No",
+                True: "Yes"
+            }
+        )
+        if not positional_args.empty:
+            pos_args_section = module_section.get_or_add_section(
+                "Positional arguments",
+                after=node
+            )
+            replace_table(
+                pos_args_section,
+                positional_args.fillna(
+                    ""
+                ).rename_axis(
+                    "Position"
+                ).filter(
+                    [
+                        "config_option",
+                        "description",                       
+                        "nargs",
+                        "type",
+                    ]
+                ).rename(
+                    columns=new_column_names
+                ).rename(
+                    columns=column_to_text
+                ).to_markdown(),
+            )
+        if not optional_args.empty:
+            optional_args_section = module_section.get_or_add_section(
+                "Options",
+                after=module_section.sections.get("Positional arguments", node)
+            )
+            replace_table(
+                optional_args_section,
+                sort_existing(
+                    optional_args,
+                    [
+                        "config_option",
+                        "sort_name"
+                    ]
+                ).fillna("").filter(
+                    [
+                        "config_option",
+                        "long_name",
+                        "short_name",
+                        "description",
+                        "nargs",
+                        "type",
+                        "choices",
+                        "default",
+                        "const",
+                        "required",
+                    ]
+                ).rename(
+                    columns=new_column_names
+                ).rename(
+                    columns=column_to_text
+                ).to_markdown(index=None),
+            )
+    #embed()
+    usage_section.render(f=sys.stdout, wrap=args.width)
+            
 if __name__ == "__main__":
     main()

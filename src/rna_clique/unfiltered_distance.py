@@ -18,7 +18,7 @@ class UnfilteredSimilarity(ComparisonSimilarityComputer):
 def build_parser():
     arg_config = config_module.RNACliqueConfigArgumentManager(
         description=(
-            "Compute pairwise distasnces from gene matches tables alone."
+            "Compute pairwise distances from gene matches tables alone."
         ),
     )
     arg_config.expose_fields_with_default_aliases(

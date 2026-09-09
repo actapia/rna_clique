@@ -13,8 +13,9 @@ class MarkdownDocument:
         self._need_title = False
         self._wrapper = textwrap.TextWrapper(width=wrap)
 
-    def enter_section(self, title):
-        self._file.write("{} {}\n\n".format("#"*self._depth, title))
+    def enter_section(self, title, write=True):
+        if write:
+            self._file.write("{} {}\n\n".format("#"*self._depth, title))
         self._need_title = False
         self._depth += 1
 

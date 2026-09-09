@@ -14,28 +14,28 @@ differences in the genomes of the provided samples.
 
 ### Options
 
-| Config option                                          | Long name               | Short name | Description                                            | Argument count | Type           | Choices                              | Default value                                     | Default value (flag only) | Required |
-|:-------------------------------------------------------|:------------------------|:-----------|:-------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:--------------------------------------------------|:--------------------------|:---------|
-|                                                        | `--input-config`        | `-c`       | File from which to load configuration settings.        | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-|                                                        | `--show-config`         |            | Display the computed configuration or arguments.       | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`              | No       |
-|                                                        | `--show-config-format`  |            | Format for displaying computed config or arguments.    | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                           | No       |
-|                                                        | `--help`                | `-h`       | Display a help message and exit.                       | $0$            |                |                                      |                                                   |                           | No       |
-| [`top_genes`](config.md#top_genes)                     | `--top-genes`           | `-n`       | Number of top genes by k-mer coverate to select.       | $1$            | `int`          |                                      |                                                   |                           | Yes      |
-| [`top_matches`](config.md#top_matches)                 | `--top-matches`         | `-N`       | Threshold for counting a match between two genes.      | $1$            | `int`          |                                      | $1$                                               |                           | Yes      |
-| [`transcripts_name`](config.md#transcripts_name)       | `--transcripts-name`    | `-t`       | Name of transcripts files in input directories.        | $1$            | `str`          |                                      | `transcripts.fasta`                               |                           | Yes      |
-| [`top_genes_dir`](config.md#top_genes_dir)             | `--top-genes-dir`       | `-O1`      | Directory containing top n genes by coverage.          | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od1`                                  |                           | Yes      |
-| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`          | `-O2`      | Directory containing gene matches tables.              | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                                  |                           | Yes      |
-| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`       | Python regex to use for parsing transcript IDs.        | $1$            | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                           | Yes      |
-| `evalue`                                               | `--evalue`              | `-e`       | e-value threshold to use for BLASTn searches.          | $1$            | `float`        |                                      | $1 \times 10^{-99}$                               |                           | Yes      |
-| `jobs`                                                 | `--jobs`                | `-j`       | Number of parallel jobs to use.                        | $1$            | `int`          |                                      | `THREADS - 1`                                     |                           | Yes      |
-| [`cache_dir`](config.md#cache_dir)                     | `--cache-dir`           | `-C`       | Directory containing BLAST DB caches.                  | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/db_cache`                             |                           | Yes      |
-| [`graph`](config.md#graph)                             | `--graph`               | `-g`       | Gene matches graph.                                    | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`                            |                           | Yes      |
-| [`output_dir`](config.md#output_dir)                   | `--output-dir`          | `-O`       | RNA-clique analysis output root directory.             | $1$            | `pathlib.Path` |                                      |                                                   |                           | No       |
-| `title`                                                | `--title`               | `-T`       | Name to assign to the analysis.                        | $1$            | `str`          |                                      | `OUTPUT_DIR.name`                                 |                           | No       |
-| [`keep_all`](config.md#keep_all)                       | `--no-keep-all`         |            | Do not keep all matches in case of a tie.              | $0$            | `bool`         |                                      | `True`                                            | `False`                   | No       |
-|                                                        | `--output-config`       | `-c2`      | File in which to store computed config after analysis. | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-| [`matrix`](config.md#matrix)                           | `--matrix`              | `-m`       | Output distance matrix location.                       | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/distance_matrix.h5`                   |                           | No       |
-| `verbose`                                              | `--verbose`             | `-v`       | Print more output than usual.                          | $0$            | `bool`         |                                      | `False`                                           | `True`                    | No       |
+| Config option                                          | Long name               | Short name   | Description                                            | Argument count   | Type           | Choices                              | Default value                                     | Default value (flag only)   | Required   |
+|:-------------------------------------------------------|:------------------------|:-------------|:-------------------------------------------------------|:-----------------|:---------------|:-------------------------------------|:--------------------------------------------------|:----------------------------|:-----------|
+|                                                        | `--input-config`        | `-c`         | File from which to load configuration settings.        | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
+|                                                        | `--show-config`         |              | Display the computed configuration or arguments.       | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`                | No         |
+|                                                        | `--show-config-format`  |              | Format for displaying computed config or arguments.    | $1$              | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                             | No         |
+|                                                        | `--help`                | `-h`         | Display a help message and exit.                       | $0$              |                |                                      |                                                   |                             | No         |
+| `verbose`                                              | `--verbose`             | `-v`         | Print more output than usual.                          | $0$              | `bool`         |                                      | `False`                                           | `True`                      | No         |
+| [`top_genes`](config.md#top_genes)                     | `--top-genes`           | `-n`         | Number of top genes by k-mer coverate to select.       | $1$              | `int`          |                                      |                                                   |                             | Yes        |
+| [`top_matches`](config.md#top_matches)                 | `--top-matches`         | `-N`         | Threshold for counting a match between two genes.      | $1$              | `int`          |                                      | $1$                                               |                             | Yes        |
+| [`transcripts_name`](config.md#transcripts_name)       | `--transcripts-name`    | `-t`         | Name of transcripts files in input directories.        | $1$              | `str`          |                                      | `transcripts.fasta`                               |                             | Yes        |
+| [`top_genes_dir`](config.md#top_genes_dir)             | `--top-genes-dir`       | `-O1`        | Directory containing top n genes by coverage.          | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/od1`                                  |                             | Yes        |
+| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`          | `-O2`        | Directory containing gene matches tables.              | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                                  |                             | Yes        |
+| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`         | Python regex to use for parsing transcript IDs.        | $1$              | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                             | Yes        |
+| `evalue`                                               | `--evalue`              | `-e`         | e-value threshold to use for BLASTn searches.          | $1$              | `float`        |                                      | $1 \times 10^{-99}$                               |                             | Yes        |
+| `jobs`                                                 | `--jobs`                | `-j`         | Number of parallel jobs to use.                        | $1$              | `int`          |                                      | `THREADS - 1`                                     |                             | Yes        |
+| [`cache_dir`](config.md#cache_dir)                     | `--cache-dir`           | `-C`         | Directory containing BLAST DB caches.                  | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/db_cache`                             |                             | Yes        |
+| [`graph`](config.md#graph)                             | `--graph`               | `-g`         | Gene matches graph.                                    | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`                            |                             | Yes        |
+| [`output_dir`](config.md#output_dir)                   | `--output-dir`          | `-O`         | RNA-clique analysis output root directory.             | $1$              | `pathlib.Path` |                                      |                                                   |                             | No         |
+| `title`                                                | `--title`               | `-T`         | Name to assign to the analysis.                        | $1$              | `str`          |                                      | `OUTPUT_DIR.name`                                 |                             | No         |
+| [`keep_all`](config.md#keep_all)                       | `--no-keep-all`         |              | Do not keep all matches in case of a tie.              | $0$              | `bool`         |                                      | `True`                                            | `False`                     | No         |
+|                                                        | `--output-config`       | `-c2`        | File in which to store computed config after analysis. | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
+| [`matrix`](config.md#matrix)                           | `--matrix`              | `-m`         | Output distance matrix location.                       | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/distance_matrix.h5`                   |                             | No         |
 
 ### Input format
 
@@ -52,11 +52,11 @@ graph](formats.md#gene-matches-graph).
 
 ### Examples
 
-Run RNA-clique on the transcriptomes at `sample1`, `sample2`, and
-`sample3`. RNA-clique expects that the transcriptome FASTA files for these
-samples are located at `sample1/transcripts.fasta`, `sample2/transcripts.fasta`,
-and `sample3/transcripts.fasta`, respectively. Select only the top $5000$ genes
-by $k$-mer coverage for each sample. Write output under `rna_clique_out`.
+Run RNA-clique on the transcriptomes at `sample1`, `sample2`, and `sample3`.
+RNA-clique expects that the transcriptome FASTA files for these samples are
+located at `sample1/transcripts.fasta`, `sample2/transcripts.fasta`, and
+`sample3/transcripts.fasta`, respectively. Select only the top $5000$ genes by
+$k$-mer coverage for each sample. Write output under `rna_clique_out`.
 
 ```bash
 rna-clique sample1 sample2 sample3 -n 50000 -O rna_clique_out
@@ -84,18 +84,17 @@ Build the gene matches graph from the gene matches tables.
 
 ### Options
 
-| Config option                        | Long name              | Short name | Description                                            | Argument count | Type           | Choices                              | Default value              | Default value (flag only) | Required |
-|:-------------------------------------|:-----------------------|:-----------|:-------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:---------------------------|:--------------------------|:---------|
-|                                      | `--input-config`       | `-c`       | File from which to load configuration settings.        | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`   |                           | No       |
-|                                      | `--show-config`        |            | Display the computed configuration or arguments.       | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                            | `['config']`              | No       |
-|                                      | `--show-config-format` |            | Format for displaying computed config or arguments.    | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config` |                           | No       |
-|                                      | `--help`               | `-h`       | Display a help message and exit.                       | $0$            |                |                                      |                            |                           | No       |
-| [`tables_dir`](config.md#tables_dir) | `--tables-dir`         | `-O2`      | Directory containing gene matches tables.              | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`           |                           | Yes      |
-| [`graph`](config.md#graph)           | `--graph`              | `-g`       | Gene matches graph.                                    | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`     |                           | Yes      |
-| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-O`       | RNA-clique analysis output root directory.             | $1$            | `pathlib.Path` |                                      |                            |                           | No       |
-|                                      | `--output-config`      | `-c2`      | File in which to store computed config after analysis. | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`   |                           | No       |
-| `verbose`                            | `--verbose`            | `-v`       | Print more output than usual.                          | $0$            | `bool`         |                                      | `False`                    | `True`                    | No       |
-
+| Config option                        | Long name              | Short name   | Description                                            | Argument count   | Type           | Choices                              | Default value              | Default value (flag only)   | Required   |
+|:-------------------------------------|:-----------------------|:-------------|:-------------------------------------------------------|:-----------------|:---------------|:-------------------------------------|:---------------------------|:----------------------------|:-----------|
+|                                      | `--input-config`       | `-c`         | File from which to load configuration settings.        | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`   |                             | No         |
+|                                      | `--show-config`        |              | Display the computed configuration or arguments.       | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config` |                            | `['config']`                | No         |
+|                                      | `--show-config-format` |              | Format for displaying computed config or arguments.    | $1$              | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config` |                             | No         |
+|                                      | `--help`               | `-h`         | Display a help message and exit.                       | $0$              |                |                                      |                            |                             | No         |
+| `verbose`                            | `--verbose`            | `-v`         | Print more output than usual.                          | $0$              | `bool`         |                                      | `False`                    | `True`                      | No         |
+| [`tables_dir`](config.md#tables_dir) | `--tables-dir`         | `-O2`        | Directory containing gene matches tables.              | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`           |                             | Yes        |
+| [`graph`](config.md#graph)           | `--graph`              | `-g`         | Gene matches graph.                                    | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`     |                             | Yes        |
+| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-O`         | RNA-clique analysis output root directory.             | $1$              | `pathlib.Path` |                                      |                            |                             | No         |
+|                                      | `--output-config`      | `-c2`        | File in which to store computed config after analysis. | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`   |                             | No         |
 
 ### Input format
 
@@ -147,7 +146,7 @@ specified via their config files using the `-C` option.
 | `--jobs`                   | `-j`         | Number of parallel jobs to use.                              | $1$              | `int`                                     |                           |                                                                  |                             | No         |
 | `--export-only`            | `-x`         | Only export the orthologs; don't search.                     | $0$              |                                           |                           |                                                                  | `True`                      | No         |
 | `--queries`                | `-Q`         | FASTA files containing sequences to search in orthologs.     | $\ge 1$          | `list[pathlib.Path]`                      |                           |                                                                  |                             | No         |
-| `--transcript-id-regex`    | `-p`         | Python regex for parsing sequence IDs                        | $1$              | `re.<function compile at 0x76cbc12eb2e0>` |                           | `re.compile('^.*cov_([0-9]+(?:\\.[0-9]+))_g([0-9]+)_i([0-9]+)')` |                             | No         |
+| `--transcript-id-regex`    | `-p`         | Python regex for parsing sequence IDs                        | $1$              | `re.<function compile at 0x7d7b6d2e3ec0>` |                           | `re.compile('^.*cov_([0-9]+(?:\\.[0-9]+))_g([0-9]+)_i([0-9]+)')` |                             | No         |
 | `--extended-search-evalue` | `-E`         | Search other isoforms of a gene that produces a hit.         | $0--1$           | `float`                                   |                           |                                                                  | $1 \times 10^{-20}$         | No         |
 | `--search-evalue`          | `-e`         | e-value cutoff to use for initial searches.                  | $1$              | `float`                                   |                           | $1 \times 10^{-50}$                                              |                             | No         |
 | `--verbose`                | `-v`         | Print more output than ususal.                               | $0$              |                                           |                           |                                                                  | `True`                      | No         |
@@ -164,17 +163,16 @@ configuration file must provide the [`graph`](config.md#graph) and
 
 #### Directory structure
 
-The exported orthologs and search results for an analysis are placed under
-a subdirectory of the provided export output directory
-(`--export-output-dir`). This subdirectory is ordinarily named after title of
-the analysis (`title`), or else the name of the analysis root directory
-(`out_dir`). If a config file specifies neither a `title` nor an `out_dir`,
-`export_and_search` will fail.
+The exported orthologs and search results for an analysis are placed under a
+subdirectory of the provided export output directory (`--export-output-dir`).
+This subdirectory is ordinarily named after title of the analysis (`title`), or
+else the name of the analysis root directory (`out_dir`). If a config file
+specifies neither a `title` nor an `out_dir`, `export_and_search` will fail.
 
 In the case that multiple analyses have the same name, the script will fail with
 an error message by default. To have the script instead rename the outputs
 automatically to avoid conflicting analysis names, the `--resolve-name-conflict`
-option can be provided. 
+option can be provided.
 
 Exported orthologs for an analysis are placed in a directory named `export`
 within the analysis's directory under the `--export-output-dir` directory. See
@@ -182,9 +180,9 @@ the output format section for [`export_orthologs`](#export_orthologs) for a more
 detailed description of the structure out these `export` directories.
 
 BLAST results and statistics for each provided query FASTA file are placed in
-separate subdirectories beginning with `search_` under the analysis's
-directory. The structure of these directories is described in the output format
-section for [`search_ideal_compoenents`](#search_ideal_components).
+separate subdirectories beginning with `search_` under the analysis's directory.
+The structure of these directories is described in the output format section for
+[`search_ideal_compoenents`](#search_ideal_components).
 
 In some cases, parameters that can be provided to `export_orthologs` or
 `search_ideal_components` affect the output directory structure but are preset
@@ -211,11 +209,11 @@ To simplify its usage, `export_and_search` does not support some options
 accepted by `export_orthologs` and `search_ideal_components`. Importantly,
 `export_and_search` does not allow the user to specify how orthologs should be
 grouped into files (normally specified using the `--by` option to
-`export_orthologs`); `export_and_search` always groups by ideal
-component. `export_and_search` also always tries to put all transcripts
-belonging to genes in an ideal component in the same orientation (the default
-behavior for `export_orthologs`) and will attempt to fix orthologs using an
-inexact MaxSAT based method if the naive approach fails (behaving as though
+`export_orthologs`); `export_and_search` always groups by ideal component.
+`export_and_search` also always tries to put all transcripts belonging to genes
+in an ideal component in the same orientation (the default behavior for
+`export_orthologs`) and will attempt to fix orthologs using an inexact MaxSAT
+based method if the naive approach fails (behaving as though
 `--allow-inconsistent` were provided).
 
 `export_and_search` appends the original sequence name *after* the ideal
@@ -277,17 +275,17 @@ Currently, this script supports the following formats:
 
 ### Options
 
-| Config option                        | Long name              | Short name | Description                                         | Argument count | Type           | Choices                               | Default value              | Default value (flag only) | Required |
-|:-------------------------------------|:-----------------------|:-----------|:----------------------------------------------------|:---------------|:---------------|:--------------------------------------|:---------------------------|:--------------------------|:---------|
-|                                      | `--input-config`       | `-c`       | File from which to load configuration settings.     | $1$            | `pathlib.Path` |                                       | `OUTPUT_DIR/config.yaml`   |                           | No       |
-|                                      | `--show-config`        |            | Display the computed configuration or arguments.    | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config`  |                            | `['config']`              | No       |
-|                                      | `--show-config-format` |            | Format for displaying computed config or arguments. | $1$            | `str`          | `dict`, `yaml`, or `json`             | Depends on `--show-config` |                           | No       |
-|                                      | `--help`               | `-h`       | Display a help message and exit.                    | $0$            |                |                                       |                            |                           | No       |
-| [`graph`](config.md#graph)           | `--graph`              | `-g`       | Gene matches graph.                                 | $1$            | `pathlib.Path` |                                       | `OUTPUT_DIR/graph.pkl`     |                           | Yes      |
-| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-A`       | RNA-clique analysis output root directory.          | $1$            | `pathlib.Path` |                                       |                            |                           | No       |
-|                                      | `--export-out`         | `-x`       | Path to which to export the graph.                  | $1$            | `pathlib.Path` |                                       |                            |                           | No       |
-|                                      | `--format`             | `-f`       | Format for writing graph.                           | $1$            | `str`          | `cytoscape`, `graphml`, or `graphviz` | Depends on `export_out`    |                           | Yes      |
-| `verbose`                            | `--verbose`            | `-v`       | Print more output than usual.                       | $0$            | `bool`         |                                       | `False`                    | `True`                    | No       |
+| Config option                        | Long name              | Short name   | Description                                         | Argument count   | Type           | Choices                               | Default value              | Default value (flag only)   | Required   |
+|:-------------------------------------|:-----------------------|:-------------|:----------------------------------------------------|:-----------------|:---------------|:--------------------------------------|:---------------------------|:----------------------------|:-----------|
+|                                      | `--input-config`       | `-c`         | File from which to load configuration settings.     | $1$              | `pathlib.Path` |                                       | `OUTPUT_DIR/config.yaml`   |                             | No         |
+|                                      | `--show-config`        |              | Display the computed configuration or arguments.    | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config`  |                            | `['config']`                | No         |
+|                                      | `--show-config-format` |              | Format for displaying computed config or arguments. | $1$              | `str`          | `dict`, `yaml`, or `json`             | Depends on `--show-config` |                             | No         |
+|                                      | `--help`               | `-h`         | Display a help message and exit.                    | $0$              |                |                                       |                            |                             | No         |
+| `verbose`                            | `--verbose`            | `-v`         | Print more output than usual.                       | $0$              | `bool`         |                                       | `False`                    | `True`                      | No         |
+| [`graph`](config.md#graph)           | `--graph`              | `-g`         | Gene matches graph.                                 | $1$              | `pathlib.Path` |                                       | `OUTPUT_DIR/graph.pkl`     |                             | Yes        |
+| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-A`         | RNA-clique analysis output root directory.          | $1$              | `pathlib.Path` |                                       |                            |                             | No         |
+|                                      | `--export-out`         | `-x`         | Path to which to export the graph.                  | $1$              | `pathlib.Path` |                                       |                            |                             | No         |
+|                                      | `--format`             | `-f`         | Format for writing graph.                           | $1$              | `str`          | `cytoscape`, `graphml`, or `graphviz` | Depends on `export_out`    |                             | Yes        |
 
 ### Input format
 
@@ -299,13 +297,13 @@ its input.
 #### Cytoscape JSON
 
 Export to the Cytoscape JSON format used by
-[Cytoscape.js](https://js.cytoscape.org/). 
+[Cytoscape.js](https://js.cytoscape.org/).
 
 !!! note
 
     Despite the format's name, it is not compatible with the original Java-based
-	[Cytoscape desktop application](https://cytoscape.org/). For exporting to
-	Cytoscape, use [GraphML](#graphml) instead.
+    [Cytoscape desktop application](https://cytoscape.org/). For exporting to
+    Cytoscape, use [GraphML](#graphml) instead.
 
 ##### Example
 
@@ -368,6 +366,7 @@ Export to the Cytoscape JSON format used by
     }
 }
 ```
+
 #### GraphML
 
 Export to [GraphML](http://graphml.graphdrawing.org/), an XML-based format for
@@ -441,18 +440,18 @@ Currently, this script supports exporting to the following formats:
 
 ### Options
 
-| Config option                        | Long name              | Short name | Description                                         | Argument count | Type           | Choices                                      | Default value                   | Default value (flag only) | Required |
-|:-------------------------------------|:-----------------------|:-----------|:----------------------------------------------------|:---------------|:---------------|:---------------------------------------------|:--------------------------------|:--------------------------|:---------|
-|                                      | `--input-config`       | `-c`       | File from which to load configuration settings.     | $1$            | `pathlib.Path` |                                              | `OUTPUT_DIR/config.yaml`        |                           | No       |
-|                                      | `--show-config`        |            | Display the computed configuration or arguments.    | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config`         |                                 | `['config']`              | No       |
-|                                      | `--show-config-format` |            | Format for displaying computed config or arguments. | $1$            | `str`          | `dict`, `yaml`, or `json`                    | Depends on `--show-config`      |                           | No       |
-|                                      | `--help`               | `-h`       | Display a help message and exit.                    | $0$            |                |                                              |                                 |                           | No       |
-| [`matrix`](config.md#matrix)         | `--matrix`             | `-m`       | Output distance matrix location.                    | $1$            | `pathlib.Path` |                                              | `OUTPUT_DIR/distance_matrix.h5` |                           | Yes      |
-| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-O`       | RNA-clique analysis output root directory.          | $1$            | `pathlib.Path` |                                              |                                 |                           | No       |
-|                                      | `--export-out`         | `-x`       | Path to which to export the matrix.                 | $1$            | `pathlib.Path` |                                              |                                 |                           | No       |
-|                                      | `--format`             | `-f`       | Format for writing distance matrix.                 | $1$            | `str`          | `matrix`, `table`, `csv`, `hdf`, or `pickle` | Dynamic                         |                           | No       |
-|                                      | `--header`             |            | Include header in distance matrix written.          | $0$            |                |                                              |                                 | `True`                    | No       |
-| `verbose`                            | `--verbose`            | `-v`       | Print more output than usual.                       | $0$            | `bool`         |                                              | `False`                         | `True`                    | No       |
+| Config option                        | Long name              | Short name   | Description                                         | Argument count   | Type           | Choices                                      | Default value                   | Default value (flag only)   | Required   |
+|:-------------------------------------|:-----------------------|:-------------|:----------------------------------------------------|:-----------------|:---------------|:---------------------------------------------|:--------------------------------|:----------------------------|:-----------|
+|                                      | `--input-config`       | `-c`         | File from which to load configuration settings.     | $1$              | `pathlib.Path` |                                              | `OUTPUT_DIR/config.yaml`        |                             | No         |
+|                                      | `--show-config`        |              | Display the computed configuration or arguments.    | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config`         |                                 | `['config']`                | No         |
+|                                      | `--show-config-format` |              | Format for displaying computed config or arguments. | $1$              | `str`          | `dict`, `yaml`, or `json`                    | Depends on `--show-config`      |                             | No         |
+|                                      | `--help`               | `-h`         | Display a help message and exit.                    | $0$              |                |                                              |                                 |                             | No         |
+| `verbose`                            | `--verbose`            | `-v`         | Print more output than usual.                       | $0$              | `bool`         |                                              | `False`                         | `True`                      | No         |
+| [`matrix`](config.md#matrix)         | `--matrix`             | `-m`         | Output distance matrix location.                    | $1$              | `pathlib.Path` |                                              | `OUTPUT_DIR/distance_matrix.h5` |                             | Yes        |
+| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-O`         | RNA-clique analysis output root directory.          | $1$              | `pathlib.Path` |                                              |                                 |                             | No         |
+|                                      | `--export-out`         | `-x`         | Path to which to export the matrix.                 | $1$              | `pathlib.Path` |                                              |                                 |                             | No         |
+|                                      | `--format`             | `-f`         | Format for writing distance matrix.                 | $1$              | `str`          | `matrix`, `table`, `csv`, `hdf`, or `pickle` | Dynamic                         |                             | No         |
+|                                      | `--header`             |              | Include header in distance matrix written.          | $0$              |                |                                              |                                 | `True`                      | No         |
 
 The `--format` option defaults to `matrix` when writing to standard output. When
 `--export-out` is provided, `export_matrix` tries to determine the output format
@@ -501,7 +500,7 @@ and columns, use the [`table`](#table) format instead.
 The `table` format produces a 2D space-separated array of floating-point values
 with labeled rows. The orders of samples in the rows and columns are the same,
 so column labels are not necessary. To get labels on the columns as well,
-provide the `--header` flag. 
+provide the `--header` flag.
 
 To omit labels altogether, use the [`matrix`](#matrix) format instead.
 
@@ -571,7 +570,7 @@ matrix Pandas dataframe in the format used by Python's Pickle virtual machine.
 
 Export the distance matrix for the analysis located at `my_analysis` to a
 space-separated table with labels for both rows and columns, writing to standard
-output. 
+output.
 
 ```bash
 python -m rna_clique.export_matrix -O my_analysis -f table --header
@@ -601,31 +600,31 @@ to use [`export_and_search`](#export_and_search).
 
 ### Options
 
-| Config option                                          | Long name                   | Short name  | Description                                                   | Argument count | Type           | Choices                              | Default value                                     | Default value (flag only) | Required |
-|:-------------------------------------------------------|:----------------------------|:------------|:--------------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:--------------------------------------------------|:--------------------------|:---------|
-|                                                        | `--input-config`            | `-c`        | File from which to load configuration settings.               | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-|                                                        | `--show-config`             |             | Display the computed configuration or arguments.              | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`              | No       |
-|                                                        | `--show-config-format`      |             | Format for displaying computed config or arguments.           | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                           | No       |
-|                                                        | `--help`                    | `-h`        | Display a help message and exit.                              | $0$            |                |                                      |                                                   |                           | No       |
-| [`graph`](config.md#graph)                             | `--graph`                   | `-g`        | Gene matches graph.                                           | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`                            |                           | Yes      |
-| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`              | `-O2`       | Directory containing gene matches tables.                     | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                                  |                           | Yes      |
-| `jobs`                                                 | `--jobs`                    | `-j`        | Number of parallel jobs to use.                               | $1$            | `int`          |                                      | `THREADS - 1`                                     |                           | Yes      |
-| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex`     | `-p`        | Python regex to use for parsing transcript IDs.               | $1$            | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                           | Yes      |
-| [`output_dir`](config.md#output_dir)                   | `--output-dir`              | `-A`        | RNA-clique analysis root.                                     | $1$            | `pathlib.Path` |                                      |                                                   |                           | No       |
-|                                                        | `--export-output-dir`       | `-X`        | Output directory in which to store exported orthologs.        | $1$            | `pathlib.Path` |                                      |                                                   |                           | Yes      |
-|                                                        | [`--by`](#by)               | [`-b`](#by) | Attribute by which to organize orthologs in export.           | $1$            | `str`          | `sample` or `component`              | `sample`                                          |                           | No       |
-|                                                        | `--remove-non-contributing` | `-N`        | Remove ideal components that contribute no differences.       | $0$            |                |                                      |                                                   | `True`                    | No       |
-|                                                        | `--debug`                   |             | Enable debug behavior.                                        | $0$            |                |                                      |                                                   | `True`                    | No       |
-|                                                        | `--concat-id-order`         | `-o`        | Where to place original sequence ID relative to group name.   | $1$            | `str`          | `before` or `after`                  | `after`                                           |                           | No       |
-|                                                        | `--no-fix-strand`           |             | Do not attempt to put transcripts in consistent orientations. | $0$            |                |                                      |                                                   | `True`                    | No       |
-|                                                        | `--allow-inconsistent`      | `-i`        | Approximate transcript reorientation instead of failing.      | $0$            |                |                                      |                                                   | `True`                    | No       |
-|                                                        | `--all`                     | `-a`        | Create combined `all_ideal.fasta` file.                       | $0$            |                |                                      |                                                   | `True`                    | No       |
-| `verbose`                                              | `--verbose`                 | `-v`        | Print more output than usual.                                 | $0$            | `bool`         |                                      | `False`                                           | `True`                    | No       |
+| Config option                                          | Long name                   | Short name   | Description                                                   | Argument count   | Type           | Choices                              | Default value                                     | Default value (flag only)   | Required   |
+|:-------------------------------------------------------|:----------------------------|:-------------|:--------------------------------------------------------------|:-----------------|:---------------|:-------------------------------------|:--------------------------------------------------|:----------------------------|:-----------|
+|                                                        | `--input-config`            | `-c`         | File from which to load configuration settings.               | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
+|                                                        | `--show-config`             |              | Display the computed configuration or arguments.              | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`                | No         |
+|                                                        | `--show-config-format`      |              | Format for displaying computed config or arguments.           | $1$              | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                             | No         |
+|                                                        | `--help`                    | `-h`         | Display a help message and exit.                              | $0$              |                |                                      |                                                   |                             | No         |
+| `verbose`                                              | `--verbose`                 | `-v`         | Print more output than usual.                                 | $0$              | `bool`         |                                      | `False`                                           | `True`                      | No         |
+| [`graph`](config.md#graph)                             | `--graph`                   | `-g`         | Gene matches graph.                                           | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`                            |                             | Yes        |
+| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`              | `-O2`        | Directory containing gene matches tables.                     | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                                  |                             | Yes        |
+| `jobs`                                                 | `--jobs`                    | `-j`         | Number of parallel jobs to use.                               | $1$              | `int`          |                                      | `THREADS - 1`                                     |                             | Yes        |
+| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex`     | `-p`         | Python regex to use for parsing transcript IDs.               | $1$              | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                             | Yes        |
+| [`output_dir`](config.md#output_dir)                   | `--output-dir`              | `-A`         | RNA-clique analysis root (output_dir).                        | $1$              | `pathlib.Path` |                                      |                                                   |                             | No         |
+|                                                        | `--export-output-dir`       | `-X`         | Output directory in which to store exported orthologs.        | $1$              | `pathlib.Path` |                                      |                                                   |                             | Yes        |
+|                                                        | `--by`                      | `-b`         | Attribute by which to organize orthologs in export.           | $1$              | `str`          | `sample` or `component`              | `sample`                                          |                             | No         |
+|                                                        | `--remove-non-contributing` | `-N`         | Remove ideal components that contribute no differences.       | $0$              |                |                                      |                                                   | `True`                      | No         |
+|                                                        | `--debug`                   |              | Enable debug behavior.                                        | $0$              |                |                                      |                                                   | `True`                      | No         |
+|                                                        | `--concat-id-order`         | `-o`         | Where to place original sequence ID relative to group name.   | $1$              | `str`          | `before` or `after`                  | `after`                                           |                             | No         |
+|                                                        | `--no-fix-strand`           |              | Do not attempt to put transcripts in consistent orientations. | $0$              |                |                                      |                                                   | `True`                      | No         |
+|                                                        | `--allow-inconsistent`      | `-i`         | Approximate transcript reorientation instead of failing.      | $0$              |                |                                      |                                                   | `True`                      | No         |
+|                                                        | `--all`                     | `-a`         | Create combined all_ideal.fasta file.                         | $0$              |                |                                      |                                                   | `True`                      | No         |
 
 #### by
 
 The `--by` option changes the way in which the output orthologs are organized
-into files. The are currently two ways to organize the output orthologs&mdash;by
+into files. The are currently two ways to organize the output orthologs—by
 `sample` or by `component`.
 
 ##### sample
@@ -680,7 +679,7 @@ graph](formats.md#gene-matches-graph).
 #### Directory structure
 
 `export_orthologs` organizes the output transcripts into multiple files; how the
-output files are organized is specified using the `--by` parameter.  Optionally,
+output files are organized is specified using the `--by` parameter. Optionally,
 when `--all` is specified, this script will also produce an `all_ideal.fasta`
 file containing all of the output transcripts from the other files. Such a file
 is useful for searching with BLAST. The `all_ideal.fasta` file should contain
@@ -726,10 +725,10 @@ python -m rna_clique.export_orthologs -O my_analysis -X export -b component
 ```
 
 Export orthologs from ideal components identified in the analysis located at
-`my_analysis` to a directory called `export2`. Organize the results by
-sample. Ignore ideal components where there are no differences in the aligned
-regions of the transcripts, and create a combined `all_ideal.fasta` file
-containing all of the other exported transcripts.
+`my_analysis` to a directory called `export2`. Organize the results by sample.
+Ignore ideal components where there are no differences in the aligned regions of
+the transcripts, and create a combined `all_ideal.fasta` file containing all of
+the other exported transcripts.
 
 ```bash
 python -m rna_clique.export_orthologs -O my_analysis -X export2 -b sample -N -a
@@ -737,22 +736,22 @@ python -m rna_clique.export_orthologs -O my_analysis -X export2 -b sample -N -a
 
 ## filtered\_distance
 
-Compute pairwise distances from gene matches tables and graph. 
+Compute pairwise distances from gene matches tables and graph.
 
 ### Options
 
-| Config option                        | Long name              | Short name | Description                                            | Argument count | Type           | Choices                              | Default value                   | Default value (flag only) | Required |
-|:-------------------------------------|:-----------------------|:-----------|:-------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:--------------------------------|:--------------------------|:---------|
-|                                      | `--input-config`       | `-c`       | File from which to load configuration settings.        | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`        |                           | No       |
-|                                      | `--show-config`        |            | Display the computed configuration or arguments.       | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                                 | `['config']`              | No       |
-|                                      | `--show-config-format` |            | Format for displaying computed config or arguments.    | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`      |                           | No       |
-|                                      | `--help`               | `-h`       | Display a help message and exit.                       | $0$            |                |                                      |                                 |                           | No       |
-| [`graph`](config.md#graph)           | `--graph`              | `-g`       | Gene matches graph.                                    | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`          |                           | Yes      |
-| [`tables_dir`](config.md#tables_dir) | `--tables-dir`         | `-O2`      | Directory containing gene matches tables.              | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                |                           | Yes      |
-| [`matrix`](config.md#matrix)         | `--matrix`             | `-m`       | Output distance matrix location.                       | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/distance_matrix.h5` |                           | Yes      |
-| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-O`       | RNA-clique analysis output root directory.             | $1$            | `pathlib.Path` |                                      |                                 |                           | No       |
-|                                      | `--output-config`      | `-c2`      | File in which to store computed config after analysis. | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`        |                           | No       |
-| `verbose`                            | `--verbose`            | `-v`       | Print more output than usual.                          | $0$            | `bool`         |                                      | `False`                         | `True`                    | No       |
+| Config option                        | Long name              | Short name   | Description                                            | Argument count   | Type           | Choices                              | Default value                   | Default value (flag only)   | Required   |
+|:-------------------------------------|:-----------------------|:-------------|:-------------------------------------------------------|:-----------------|:---------------|:-------------------------------------|:--------------------------------|:----------------------------|:-----------|
+|                                      | `--input-config`       | `-c`         | File from which to load configuration settings.        | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`        |                             | No         |
+|                                      | `--show-config`        |              | Display the computed configuration or arguments.       | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config` |                                 | `['config']`                | No         |
+|                                      | `--show-config-format` |              | Format for displaying computed config or arguments.    | $1$              | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`      |                             | No         |
+|                                      | `--help`               | `-h`         | Display a help message and exit.                       | $0$              |                |                                      |                                 |                             | No         |
+| `verbose`                            | `--verbose`            | `-v`         | Print more output than usual.                          | $0$              | `bool`         |                                      | `False`                         | `True`                      | No         |
+| [`graph`](config.md#graph)           | `--graph`              | `-g`         | Gene matches graph.                                    | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`          |                             | Yes        |
+| [`tables_dir`](config.md#tables_dir) | `--tables-dir`         | `-O2`        | Directory containing gene matches tables.              | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                |                             | Yes        |
+| [`matrix`](config.md#matrix)         | `--matrix`             | `-m`         | Output distance matrix location.                       | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/distance_matrix.h5` |                             | Yes        |
+| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-O`         | RNA-clique analysis output root directory.             | $1$              | `pathlib.Path` |                                      |                                 |                             | No         |
+|                                      | `--output-config`      | `-c2`        | File in which to store computed config after analysis. | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`        |                             | No         |
 
 ### Input format
 
@@ -767,8 +766,8 @@ The output of this script is the [distance matrix](formats.md#distance-matrix).
 ### Example
 
 Compute a distance matrix using the gene matches graph and gene matches tables
-found under `rna_clique_out/graph.pkl` and `rna_clique_out/od2`,
-respectively. Write the matrix to `rna_clique_out/distance_matrix.h5`.
+found under `rna_clique_out/graph.pkl` and `rna_clique_out/od2`, respectively.
+Write the matrix to `rna_clique_out/distance_matrix.h5`.
 
 ```bash
 python -m rna_clique.filtered_distance -O rna_clique_out
@@ -780,7 +779,6 @@ gene matches tables under `tables_dir`. Write the matrix to `matrix.h5`.
 ```bash
 python -m rna_clique.filtered_distance -g graph.pkl -O2 tables_dir -m matrix.h5
 ```
-
 
 ## filtering\_step
 
@@ -801,27 +799,27 @@ occur:
 
 ### Options
 
-| Config option                                          | Long name               | Short name | Description                                            | Argument count | Type           | Choices                              | Default value                                     | Default value (flag only) | Required |
-|:-------------------------------------------------------|:------------------------|:-----------|:-------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:--------------------------------------------------|:--------------------------|:---------|
-|                                                        | `--input-config`        | `-c`       | File from which to load configuration settings.        | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-|                                                        | `--show-config`         |            | Display the computed configuration or arguments.       | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`              | No       |
-|                                                        | `--show-config-format`  |            | Format for displaying computed config or arguments.    | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                           | No       |
-|                                                        | `--help`                | `-h`       | Display a help message and exit.                       | $0$            |                |                                      |                                                   |                           | No       |
-| [`top_genes`](config.md#top_genes)                     | `--top-genes`           | `-n`       | Number of top genes by k-mer coverate to select.       | $1$            | `int`          |                                      |                                                   |                           | Yes      |
-| [`top_matches`](config.md#top_matches)                 | `--top-matches`         | `-N`       | Threshold for counting a match between two genes.      | $1$            | `int`          |                                      | $1$                                               |                           | Yes      |
-| [`transcripts_name`](config.md#transcripts_name)       | `--transcripts-name`    | `-t`       | Name of transcripts files in input directories.        | $1$            | `str`          |                                      | `transcripts.fasta`                               |                           | Yes      |
-| [`top_genes_dir`](config.md#top_genes_dir)             | `--top-genes-dir`       | `-O1`      | Directory containing top n genes by coverage.          | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od1`                                  |                           | Yes      |
-| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`          | `-O2`      | Directory containing gene matches tables.              | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                                  |                           | Yes      |
-| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`       | Python regex to use for parsing transcript IDs.        | $1$            | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                           | Yes      |
-| `evalue`                                               | `--evalue`              | `-e`       | e-value threshold to use for BLASTn searches.          | $1$            | `float`        |                                      | $1 \times 10^{-99}$                               |                           | Yes      |
-| `jobs`                                                 | `--jobs`                | `-j`       | Number of parallel jobs to use.                        | $1$            | `int`          |                                      | `THREADS - 1`                                     |                           | Yes      |
-| [`cache_dir`](config.md#cache_dir)                     | `--cache-dir`           | `-C`       | Directory containing BLAST DB caches.                  | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/db_cache`                             |                           | Yes      |
-| [`graph`](config.md#graph)                             | `--graph`               | `-g`       | Gene matches graph.                                    | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`                            |                           | Yes      |
-| [`output_dir`](config.md#output_dir)                   | `--output-dir`          | `-O`       | RNA-clique analysis output root directory.             | $1$            | `pathlib.Path` |                                      |                                                   |                           | No       |
-| `title`                                                | `--title`               | `-T`       | Name to assign to the analysis.                        | $1$            | `str`          |                                      | `OUTPUT_DIR.name`                                 |                           | No       |
-| [`keep_all`](config.md#keep_all)                       | `--no-keep-all`         |            | Do not keep all matches in case of a tie.              | $0$            | `bool`         |                                      | `True`                                            | `False`                   | No       |
-|                                                        | `--output-config`       | `-c2`      | File in which to store computed config after analysis. | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-| `verbose`                                              | `--verbose`             | `-v`       | Print more output than usual.                          | $0$            | `bool`         |                                      | `False`                                           | `True`                    | No       |
+| Config option                                          | Long name               | Short name   | Description                                            | Argument count   | Type           | Choices                              | Default value                                     | Default value (flag only)   | Required   |
+|:-------------------------------------------------------|:------------------------|:-------------|:-------------------------------------------------------|:-----------------|:---------------|:-------------------------------------|:--------------------------------------------------|:----------------------------|:-----------|
+|                                                        | `--input-config`        | `-c`         | File from which to load configuration settings.        | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
+|                                                        | `--show-config`         |              | Display the computed configuration or arguments.       | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`                | No         |
+|                                                        | `--show-config-format`  |              | Format for displaying computed config or arguments.    | $1$              | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                             | No         |
+|                                                        | `--help`                | `-h`         | Display a help message and exit.                       | $0$              |                |                                      |                                                   |                             | No         |
+| `verbose`                                              | `--verbose`             | `-v`         | Print more output than usual.                          | $0$              | `bool`         |                                      | `False`                                           | `True`                      | No         |
+| [`top_genes`](config.md#top_genes)                     | `--top-genes`           | `-n`         | Number of top genes by k-mer coverate to select.       | $1$              | `int`          |                                      |                                                   |                             | Yes        |
+| [`top_matches`](config.md#top_matches)                 | `--top-matches`         | `-N`         | Threshold for counting a match between two genes.      | $1$              | `int`          |                                      | $1$                                               |                             | Yes        |
+| [`transcripts_name`](config.md#transcripts_name)       | `--transcripts-name`    | `-t`         | Name of transcripts files in input directories.        | $1$              | `str`          |                                      | `transcripts.fasta`                               |                             | Yes        |
+| [`top_genes_dir`](config.md#top_genes_dir)             | `--top-genes-dir`       | `-O1`        | Directory containing top n genes by coverage.          | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/od1`                                  |                             | Yes        |
+| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`          | `-O2`        | Directory containing gene matches tables.              | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                                  |                             | Yes        |
+| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`         | Python regex to use for parsing transcript IDs.        | $1$              | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                             | Yes        |
+| `evalue`                                               | `--evalue`              | `-e`         | e-value threshold to use for BLASTn searches.          | $1$              | `float`        |                                      | $1 \times 10^{-99}$                               |                             | Yes        |
+| `jobs`                                                 | `--jobs`                | `-j`         | Number of parallel jobs to use.                        | $1$              | `int`          |                                      | `THREADS - 1`                                     |                             | Yes        |
+| [`cache_dir`](config.md#cache_dir)                     | `--cache-dir`           | `-C`         | Directory containing BLAST DB caches.                  | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/db_cache`                             |                             | Yes        |
+| [`graph`](config.md#graph)                             | `--graph`               | `-g`         | Gene matches graph.                                    | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`                            |                             | Yes        |
+| [`output_dir`](config.md#output_dir)                   | `--output-dir`          | `-O`         | RNA-clique analysis output root directory.             | $1$              | `pathlib.Path` |                                      |                                                   |                             | No         |
+| `title`                                                | `--title`               | `-T`         | Name to assign to the analysis.                        | $1$              | `str`          |                                      | `OUTPUT_DIR.name`                                 |                             | No         |
+| [`keep_all`](config.md#keep_all)                       | `--no-keep-all`         |              | Do not keep all matches in case of a tie.              | $0$              | `bool`         |                                      | `True`                                            | `False`                     | No         |
+|                                                        | `--output-config`       | `-c2`        | File in which to store computed config after analysis. | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
 
 ### Input format
 
@@ -831,7 +829,7 @@ The inputs to this script are the [transcriptomes](formats.md#transcriptomes).
 
 The outputs of this script are the [top genes](formats.md#top-genes), [gene
 matches tables](formats.md#gene-matches-tables), and the [gene matches
-graph](formats.md#gene-matches-graph). 
+graph](formats.md#gene-matches-graph).
 
 ### Examples
 
@@ -840,16 +838,15 @@ and `input3`. Input transcriptomes are assumed to be named `transcripts.fasta`,
 so the actual input transcriptomes are located at `input1/transcripts.fasta`,
 `inputs2/transcripts.fasta`, and `input3/transcripts.fasta`. The samples' names
 are assumed to be the directory names, `input1`, `input2`, and `input3`. Write
-the top genes, gene matches tables, and graph under the `my_analysis`
-directory. 
+the top genes, gene matches tables, and graph under the `my_analysis` directory.
 
 Top genes will be under `my_analysis/od1`; the top genes for `input1`, `input2`,
 and `input3` will be located at `my_analysis/od1/input1_top.fasta`,
 `my_analysis/od2/input2_top.fasta`, and `my_analysis/od1/input3_top.fasta`,
 respectively.
 
-Gene matches tables for each pair of samples will be under
-`my_analysis/od2`. The files will be `my_analysis/od2/input1--input2.h5`,
+Gene matches tables for each pair of samples will be under `my_analysis/od2`.
+The files will be `my_analysis/od2/input1--input2.h5`,
 `my_analysis_od2/input1--input3.h5`, and `my_analysis/od2/input2--input3.h5`,
 representing the comparisons between `input1` and `input2`, `input1` and
 `input3`, and `input2` and `input3`, respectively.
@@ -904,22 +901,23 @@ BLASTing each sample against every other.
 
 ### Options
 
-| Config option                                          | Long name               | Short name | Description                                            | Argument count | Type                                      | Choices                              | Default value                                     | Default value (flag only) | Required |
-|:-------------------------------------------------------|:------------------------|:-----------|:-------------------------------------------------------|:---------------|:------------------------------------------|:-------------------------------------|:--------------------------------------------------|:--------------------------|:---------|
-|                                                        | `--input-config`        | `-c`       | File from which to load configuration settings.        | $1$            | `pathlib.Path`                            |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-|                                                        | `--show-config`         |            | Display the computed configuration or arguments.       | $\ge 0$        | `list[str]`                               | `original_args`, `args`, or `config` |                                                   | `['config']`              | No       |
-|                                                        | `--show-config-format`  |            | Format for displaying computed config or arguments.    | $1$            | `str`                                     | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                           | No       |
-|                                                        | `--help`                | `-h`       | Display a help message and exit.                       | $0$            |                                           |                                      |                                                   |                           | No       |
-| [`top_genes_dir`](config.md#top_genes_dir)             | `--top-genes-dir`       | `-O1`      | Directory containing top n genes by coverage.          | $1$            | `pathlib.Path`                            |                                      | `OUTPUT_DIR/od1`                                  |                           | Yes      |
-| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`       | Python regex to use for parsing transcript IDs.        | $1$            | `re.Pattern`                              |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                           | Yes      |
-| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`          | `-O2`      | Directory containing gene matches tables.              | $1$            | `pathlib.Path`                            |                                      | `OUTPUT_DIR/od2`                                  |                           | Yes      |
-| [`cache_dir`](config.md#cache_dir)                     | `--cache-dir`           | `-C`       | Directory containing BLAST DB caches.                  | $1$            | `pathlib.Path`                            |                                      | `OUTPUT_DIR/db_cache`                             |                           | No       |
-| `evalue`                                               | `--evalue`              | `-e`       | e-value threshold to use for BLASTn searches.          | $1$            | `float`                                   |                                      | $1 \times 10^{-99}$                               |                           | No       |
-| `title`                                                | `--title`               | `-T`       | Name to assign to the analysis.                        | $1$            | `str`                                     |                                      | `OUTPUT_DIR.name`                                 |                           | No       |
-| [`output_dir`](config.md#output_dir)                   | `--output-dir`          | `-O`       | RNA-clique analysis output root directory.             | $1$            | `pathlib.Path`                            |                                      |                                                   |                           | No       |
-|                                                        | `--sample-regex`        | `-R`       | Python regex for parsing sample names                  | $1$            | `re.<function compile at 0x7893728eb2e0>` |                                      | `re.compile('^(.*?)_.*$')`                        |                           | No       |
-|                                                        | `--output-config`       | `-c2`      | File in which to store computed config after analysis. | $1$            | `pathlib.Path`                            |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-| `verbose`                                              | `--verbose`             | `-v`       | Print more output than usual.                          | $0$            | `bool`                                    |                                      | `False`                                           | `True`                    | No       |
+| Config option                                          | Long name               | Short name   | Description                                            | Argument count   | Type                                      | Choices                              | Default value                                     | Default value (flag only)   | Required   |
+|:-------------------------------------------------------|:------------------------|:-------------|:-------------------------------------------------------|:-----------------|:------------------------------------------|:-------------------------------------|:--------------------------------------------------|:----------------------------|:-----------|
+|                                                        | `--input-config`        | `-c`         | File from which to load configuration settings.        | $1$              | `pathlib.Path`                            |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
+|                                                        | `--show-config`         |              | Display the computed configuration or arguments.       | $\ge 0$          | `list[str]`                               | `original_args`, `args`, or `config` |                                                   | `['config']`                | No         |
+|                                                        | `--show-config-format`  |              | Format for displaying computed config or arguments.    | $1$              | `str`                                     | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                             | No         |
+|                                                        | `--help`                | `-h`         | Display a help message and exit.                       | $0$              |                                           |                                      |                                                   |                             | No         |
+| `verbose`                                              | `--verbose`             | `-v`         | Print more output than usual.                          | $0$              | `bool`                                    |                                      | `False`                                           | `True`                      | No         |
+| [`top_genes_dir`](config.md#top_genes_dir)             | `--top-genes-dir`       | `-O1`        | Directory containing top n genes by coverage.          | $1$              | `pathlib.Path`                            |                                      | `OUTPUT_DIR/od1`                                  |                             | Yes        |
+| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`         | Python regex to use for parsing transcript IDs.        | $1$              | `re.Pattern`                              |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                             | Yes        |
+| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`          | `-O2`        | Directory containing gene matches tables.              | $1$              | `pathlib.Path`                            |                                      | `OUTPUT_DIR/od2`                                  |                             | Yes        |
+| [`cache_dir`](config.md#cache_dir)                     | `--cache-dir`           | `-C`         | Directory containing BLAST DB caches.                  | $1$              | `pathlib.Path`                            |                                      | `OUTPUT_DIR/db_cache`                             |                             | Yes        |
+| `evalue`                                               | `--evalue`              | `-e`         | e-value threshold to use for BLASTn searches.          | $1$              | `float`                                   |                                      | $1 \times 10^{-99}$                               |                             | No         |
+| `title`                                                | `--title`               | `-T`         | Name to assign to the analysis.                        | $1$              | `str`                                     |                                      | `OUTPUT_DIR.name`                                 |                             | No         |
+| [`output_dir`](config.md#output_dir)                   | `--output-dir`          | `-O`         | RNA-clique analysis output root directory.             | $1$              | `pathlib.Path`                            |                                      |                                                   |                             | No         |
+| `jobs`                                                 | `--jobs`                | `-j`         | Number of parallel jobs to use.                        | $1$              | `int`                                     |                                      | `THREADS - 1`                                     |                             | No         |
+|                                                        | `--sample-regex`        | `-R`         | Python regex for parsing sample names                  | $1$              | `re.<function compile at 0x7d7b6d2e3ec0>` |                                      | `re.compile('^(.*?)_.*$')`                        |                             | No         |
+|                                                        | `--output-config`       | `-c2`        | File in which to store computed config after analysis. | $1$              | `pathlib.Path`                            |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
 
 ### Input format
 
@@ -968,19 +966,19 @@ samples total! Use [`rna-clique`](#rna-clique) instead!**
 
 ### Options
 
-| Config option                                          | Long name               | Short name | Description                                                 | Argument count | Type           | Choices                              | Default value                                     | Default value (flag only) | Required |
-|:-------------------------------------------------------|:------------------------|:-----------|:------------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:--------------------------------------------------|:--------------------------|:---------|
-|                                                        | `--input-config`        | `-c`       | File from which to load configuration settings.             | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-|                                                        | `--show-config`         |            | Display the computed configuration or arguments.            | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`              | No       |
-|                                                        | `--show-config-format`  |            | Format for displaying computed config or arguments.         | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                           | No       |
-|                                                        | `--help`                | `-h`       | Display a help message and exit.                            | $0$            |                |                                      |                                                   |                           | No       |
-| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`       | Python regex to use for parsing transcript IDs.             | $1$            | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                           | Yes      |
-| `evalue`                                               | `--evalue`              | `-e`       | e-value threshold to use for BLASTn searches.               | $1$            | `float`        |                                      | $1 \times 10^{-99}$                               |                           | Yes      |
-| [`top_matches`](config.md#top_matches)                 | `--top-matches`         | `-N`       | Threshold for counting a match between two genes (big $N$). | $1$            | `int`          |                                      | $1$                                               |                           | Yes      |
-| [`keep_all`](config.md#keep_all)                       | `--keep-all`            |            | Keep all matches between genes in the case of ties.         | $0$            | `bool`         |                                      | `True`                                            | `True`                    | Yes      |
-|                                                        | `--quiet`               | `-q`       | hide the matches found                                      | $0$            |                |                                      |                                                   | `True`                    | No       |
-|                                                        | `--report-float`        | `-f`       | report float instead of fraction                            | $0$            |                |                                      |                                                   | `True`                    | No       |
-| `verbose`                                              | `--verbose`             | `-v`       | Print more output than usual.                               | $0$            | `bool`         |                                      | `False`                                           | `True`                    | No       |
+| Config option                                          | Long name               | Short name   | Description                                         | Argument count   | Type           | Choices                              | Default value                                     | Default value (flag only)   | Required   |
+|:-------------------------------------------------------|:------------------------|:-------------|:----------------------------------------------------|:-----------------|:---------------|:-------------------------------------|:--------------------------------------------------|:----------------------------|:-----------|
+|                                                        | `--input-config`        | `-c`         | File from which to load configuration settings.     | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
+|                                                        | `--show-config`         |              | Display the computed configuration or arguments.    | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`                | No         |
+|                                                        | `--show-config-format`  |              | Format for displaying computed config or arguments. | $1$              | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                             | No         |
+|                                                        | `--help`                | `-h`         | Display a help message and exit.                    | $0$              |                |                                      |                                                   |                             | No         |
+| `verbose`                                              | `--verbose`             | `-v`         | Print more output than usual.                       | $0$              | `bool`         |                                      | `False`                                           | `True`                      | No         |
+| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`         | Python regex to use for parsing transcript IDs.     | $1$              | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                             | Yes        |
+| `evalue`                                               | `--evalue`              | `-e`         | e-value threshold to use for BLASTn searches.       | $1$              | `float`        |                                      | $1 \times 10^{-99}$                               |                             | Yes        |
+| [`top_matches`](config.md#top_matches)                 | `--top-matches`         | `-N`         | Threshold for counting a match between two genes.   | $1$              | `int`          |                                      | $1$                                               |                             | Yes        |
+| [`keep_all`](config.md#keep_all)                       | `--keep-all`            |              | Keep all matches between genes in the case of ties. | $0$              | `bool`         |                                      | `True`                                            | `True`                      | Yes        |
+|                                                        | `--quiet`               | `-q`         | hide the matches found                              | $0$              |                |                                      |                                                   | `True`                      | No         |
+|                                                        | `--report-float`        | `-f`         | report float instead of fraction                    | $0$              |                |                                      |                                                   | `True`                      | No         |
 
 ### Input format
 
@@ -1046,25 +1044,25 @@ analysis.
 
 ### Options
 
-| Config option                        | Long name              | Short name | Description                                                 | Argument count | Type                                      | Choices                              | Default value              | Default value (flag only) | Required |
-|:-------------------------------------|:-----------------------|:-----------|:------------------------------------------------------------|:---------------|:------------------------------------------|:-------------------------------------|:---------------------------|:--------------------------|:---------|
-|                                      | `--input-config`       | `-c`       | File from which to load configuration settings.             | $1$            | `pathlib.Path`                            |                                      | `OUTPUT_DIR/config.yaml`   |                           | No       |
-|                                      | `--show-config`        |            | Display the computed configuration or arguments.            | $\ge 0$        | `list[str]`                               | `original_args`, `args`, or `config` |                            | `['config']`              | No       |
-|                                      | `--show-config-format` |            | Format for displaying computed config or arguments.         | $1$            | `str`                                     | `dict`, `yaml`, or `json`            | Depends on `--show-config` |                           | No       |
-|                                      | `--help`               | `-h`       | Display a help message and exit.                            | $0$            |                                           |                                      |                            |                           | No       |
-| [`tables_dir`](config.md#tables_dir) | `--tables-dir`         | `-O2`      | Directory containing gene matches tables.                   | $1$            | `pathlib.Path`                            |                                      | `OUTPUT_DIR/od2`           |                           | Yes      |
-| [`graph`](config.md#graph)           | `--graph`              | `-g`       | Gene matches graph.                                         | $1$            | `pathlib.Path`                            |                                      | `OUTPUT_DIR/graph.pkl`     |                           | Yes      |
-| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-O`       | RNA-clique analysis output root directory.                  | $1$            | `pathlib.Path`                            |                                      |                            |                           | No       |
-| `title`                              | `--title`              | `-T`       | Name to assign to the analysis.                             | $1$            | `str`                                     |                                      | `OUTPUT_DIR.name`          |                           | No       |
-| [`subset_of`](config.md#subset_of)   | `--subset-of`          | `-I`       | Path to analysis of which this is a subset.                 | $1$            | `pathlib.Path`                            |                                      |                            |                           | Yes      |
-|                                      | `--exclude`            | `-x`       | samples to exclude (default is none)                        | $\ge 1$        | `list[str]`                               |                                      | `[]`                       |                           | No       |
-|                                      | `--include`            | `-y`       | samples to include (default is all)                         | $\ge 1$        | `list[str]`                               |                                      | `[]`                       |                           | No       |
-|                                      | `--include-regex`      | `-Y`       | regular expression specifying which sample names to include | $1$            | `re.<function compile at 0x7893728eb2e0>` |                                      |                            |                           | No       |
-|                                      | `--output-config`      | `-c2`      | File in which to store computed config after analysis.      | $1$            | `pathlib.Path`                            |                                      | `OUTPUT_DIR/config.yaml`   |                           | No       |
-|                                      | `--include-file`       |            | file containing samples to include                          | $1$            | `pathlib.Path`                            |                                      |                            |                           | No       |
-|                                      | `--exclude-file`       |            | file containing samples to exclude                          | $1$            | `pathlib.Path`                            |                                      |                            |                           | No       |
-|                                      | `--show-included`      |            | show which samples would be included and exit               | $0$            |                                           |                                      |                            | `True`                    | No       |
-| `verbose`                            | `--verbose`            | `-v`       | Print more output than usual.                               | $0$            | `bool`                                    |                                      | `False`                    | `True`                    | No       |
+| Config option                        | Long name              | Short name   | Description                                                 | Argument count   | Type                                      | Choices                              | Default value              | Default value (flag only)   | Required   |
+|:-------------------------------------|:-----------------------|:-------------|:------------------------------------------------------------|:-----------------|:------------------------------------------|:-------------------------------------|:---------------------------|:----------------------------|:-----------|
+|                                      | `--input-config`       | `-c`         | File from which to load configuration settings.             | $1$              | `pathlib.Path`                            |                                      | `OUTPUT_DIR/config.yaml`   |                             | No         |
+|                                      | `--show-config`        |              | Display the computed configuration or arguments.            | $\ge 0$          | `list[str]`                               | `original_args`, `args`, or `config` |                            | `['config']`                | No         |
+|                                      | `--show-config-format` |              | Format for displaying computed config or arguments.         | $1$              | `str`                                     | `dict`, `yaml`, or `json`            | Depends on `--show-config` |                             | No         |
+|                                      | `--help`               | `-h`         | Display a help message and exit.                            | $0$              |                                           |                                      |                            |                             | No         |
+| `verbose`                            | `--verbose`            | `-v`         | Print more output than usual.                               | $0$              | `bool`                                    |                                      | `False`                    | `True`                      | No         |
+| [`tables_dir`](config.md#tables_dir) | `--tables-dir`         | `-O2`        | Directory containing gene matches tables.                   | $1$              | `pathlib.Path`                            |                                      | `OUTPUT_DIR/od2`           |                             | Yes        |
+| [`graph`](config.md#graph)           | `--graph`              | `-g`         | Gene matches graph.                                         | $1$              | `pathlib.Path`                            |                                      | `OUTPUT_DIR/graph.pkl`     |                             | Yes        |
+| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-O`         | RNA-clique analysis output root directory.                  | $1$              | `pathlib.Path`                            |                                      |                            |                             | No         |
+| `title`                              | `--title`              | `-T`         | Name to assign to the analysis.                             | $1$              | `str`                                     |                                      | `OUTPUT_DIR.name`          |                             | No         |
+| [`subset_of`](config.md#subset_of)   | `--subset-of`          | `-I`         | Path to analysis of which this is a subset.                 | $1$              | `pathlib.Path`                            |                                      |                            |                             | Yes        |
+|                                      | `--exclude`            | `-x`         | samples to exclude (default is none)                        | $\ge 1$          | `list[str]`                               |                                      | `[]`                       |                             | No         |
+|                                      | `--include`            | `-y`         | samples to include (default is all)                         | $\ge 1$          | `list[str]`                               |                                      | `[]`                       |                             | No         |
+|                                      | `--include-regex`      | `-Y`         | regular expression specifying which sample names to include | $1$              | `re.<function compile at 0x7d7b6d2e3ec0>` |                                      |                            |                             | No         |
+|                                      | `--output-config`      | `-c2`        | File in which to store computed config after analysis.      | $1$              | `pathlib.Path`                            |                                      | `OUTPUT_DIR/config.yaml`   |                             | No         |
+|                                      | `--include-file`       |              | file containing samples to include                          | $1$              | `pathlib.Path`                            |                                      |                            |                             | No         |
+|                                      | `--exclude-file`       |              | file containing samples to exclude                          | $1$              | `pathlib.Path`                            |                                      |                            |                             | No         |
+|                                      | `--show-included`      |              | show which samples would be included and exit               | $0$              |                                           |                                      |                            | `True`                      | No         |
 
 ### Output format
 
@@ -1107,7 +1105,8 @@ working with gene matches graphs:
 * [Visualizations](#visualizations)
     * [Component size histogram](#component-size-histogram)
     * [Represented sample count histogram](#represented-sample-count-histogram)
-    * [Sample count to component size ratio KDE plot](#sample-count-to-component-size-ratio-kde-plot)
+    * [Sample count to component size ratio KDE
+      plot](#sample-count-to-component-size-ratio-kde-plot)
     * [Component density KDE plot](#component-density-kde-plot)
 * Statistics
     * Ideal components
@@ -1116,22 +1115,21 @@ working with gene matches graphs:
 
 ### Options
 
-| Config option                              | Long name              | Short name | Description                                                        | Argument count | Type           | Choices                              | Default value              | Default value (flag only) | Required |
-|:-------------------------------------------|:-----------------------|:-----------|:-------------------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:---------------------------|:--------------------------|:---------|
-|                                            | `--input-config`       | `-c`       | File from which to load configuration settings.                    | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`   |                           | No       |
-|                                            | `--show-config`        |            | Display the computed configuration or arguments.                   | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                            | `['config']`              | No       |
-|                                            | `--show-config-format` |            | Format for displaying computed config or arguments.                | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config` |                           | No       |
-|                                            | `--help`               | `-h`       | Display a help message and exit.                                   | $0$            |                |                                      |                            |                           | No       |
-| [`graph`](config.md#graph)                 | `--graph`              | `-g`       | Gene matches graph.                                                | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`     |                           | Yes      |
-| [`top_genes_dir`](config.md#top_genes_dir) | `--top-genes-dir`      | `-O1`      | Directory containing top n genes by coverage.                      | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od1`           |                           | No       |
-| [`tables_dir`](config.md#tables_dir)       | `--tables-dir`         | `-O2`      | Directory containing gene matches tables.                          | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`           |                           | No       |
-| [`output_dir`](config.md#output_dir)       | `--output-dir`         | `-A`       | RNA-clique analysis output root directory.                         | $1$            | `pathlib.Path` |                                      |                            |                           | No       |
-|                                            | `--size-plot`          | `-s`       | output path for component size histogram                           | $1$            | `pathlib.Path` |                                      |                            |                           | No       |
-|                                            | `--sample-plot`        | `-S`       | output path for represented sample count plot                      | $1$            | `pathlib.Path` |                                      |                            |                           | No       |
-|                                            | `--ratio-plot`         | `-r`       | output path for KDE of represented sample count / component size   | $1$            | `pathlib.Path` |                                      |                            |                           | No       |
-|                                            | `--density-plot`       | `-d`       | output path for KDE of component density                           | $1$            | `pathlib.Path` |                                      |                            |                           | No       |
-|                                            | `--statistics`         |            | print statistics in the desired format (human or machine-readable) | $0--1$         | `str`          | `h` or `m`                           |                            | `h`                       | No       |
-| `verbose`                                  | `--verbose`            | `-v`       | Print more output than usual.                                      | $0$            | `bool`         |                                      | `False`                    | `True`                    | No       |
+| Config option                        | Long name              | Short name   | Description                                                        | Argument count   | Type           | Choices                              | Default value              | Default value (flag only)   | Required   |
+|:-------------------------------------|:-----------------------|:-------------|:-------------------------------------------------------------------|:-----------------|:---------------|:-------------------------------------|:---------------------------|:----------------------------|:-----------|
+|                                      | `--input-config`       | `-c`         | File from which to load configuration settings.                    | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`   |                             | No         |
+|                                      | `--show-config`        |              | Display the computed configuration or arguments.                   | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config` |                            | `['config']`                | No         |
+|                                      | `--show-config-format` |              | Format for displaying computed config or arguments.                | $1$              | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config` |                             | No         |
+|                                      | `--help`               | `-h`         | Display a help message and exit.                                   | $0$              |                |                                      |                            |                             | No         |
+| `verbose`                            | `--verbose`            | `-v`         | Print more output than usual.                                      | $0$              | `bool`         |                                      | `False`                    | `True`                      | No         |
+| [`graph`](config.md#graph)           | `--graph`              | `-g`         | Gene matches graph.                                                | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`     |                             | Yes        |
+| [`tables_dir`](config.md#tables_dir) | `--tables-dir`         | `-O2`        | Directory containing gene matches tables.                          | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`           |                             | No         |
+| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-A`         | RNA-clique analysis output root directory.                         | $1$              | `pathlib.Path` |                                      |                            |                             | No         |
+|                                      | `--size-plot`          | `-s`         | output path for component size histogram                           | $1$              | `pathlib.Path` |                                      |                            |                             | No         |
+|                                      | `--sample-plot`        | `-S`         | output path for represented sample count plot                      | $1$              | `pathlib.Path` |                                      |                            |                             | No         |
+|                                      | `--ratio-plot`         | `-r`         | output path for KDE of represented sample count / component size   | $1$              | `pathlib.Path` |                                      |                            |                             | No         |
+|                                      | `--density-plot`       | `-d`         | output path for KDE of component density                           | $1$              | `pathlib.Path` |                                      |                            |                             | No         |
+|                                      | `--statistics`         |              | print statistics in the desired format (human or machine-readable) | $0--1$           | `str`          | `h` or `m`                           |                            | `h`                         | No         |
 
 ### Visualizations
 
@@ -1248,15 +1246,14 @@ This script can be used, for example, to determine whether some possible
 contaminant could be contributing to distances observed.
 
 This script is designed to be used on output from `export_orthologs`, but it
-does more than simply perform a BLAST search on the exported ortholog
-sequences. This script can perform an "extended" search
-(`--extended-search`/`-e`), which automatically searches other isoforms of the
-same gene with relaxed parameters when a query sequences matches one isoform of
-a gene. The extended search is designed to find alignments between query
-sequences and other gene isoforms that might be missed by a single BLAST
-search. The extended search does not necessarily search *all* isoforms of a
-given gene; only those that are connected to the originally matches isoform(s)
-in the orientation graph are searched.
+does more than simply perform a BLAST search on the exported ortholog sequences.
+This script can perform an "extended" search (`--extended-search`/`-e`), which
+automatically searches other isoforms of the same gene with relaxed parameters
+when a query sequences matches one isoform of a gene. The extended search is
+designed to find alignments between query sequences and other gene isoforms that
+might be missed by a single BLAST search. The extended search does not
+necessarily search *all* isoforms of a given gene; only those that are connected
+to the originally matches isoform(s) in the orientation graph are searched.
 
 When a BLAST hit for a query sequence is found in one of the exported ortholog
 sequences, this script can also optionally export the ideal component to which
@@ -1269,28 +1266,29 @@ with typical settings, you may prefer to use
 
 ### Options
 
-| Config option                                          | Long name               | Short name | Description                                                    | Argument count | Type           | Choices                              | Default value                                     | Default value (flag only) | Required |
-|:-------------------------------------------------------|:------------------------|:-----------|:---------------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:--------------------------------------------------|:--------------------------|:---------|
-|                                                        | `--input-config`        | `-c`       | File from which to load configuration settings.                | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-|                                                        | `--show-config`         |            | Display the computed configuration or arguments.               | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`              | No       |
-|                                                        | `--show-config-format`  |            | Format for displaying computed config or arguments.            | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                           | No       |
-|                                                        | `--help`                | `-h`       | Display a help message and exit.                               | $0$            |                |                                      |                                                   |                           | No       |
-| [`graph`](config.md#graph)                             | `--graph`               | `-g`       | Gene matches graph.                                            | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`                            |                           | Yes      |
-| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`          | `-O2`      | Directory containing gene matches tables.                      | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                                  |                           | Yes      |
-| `jobs`                                                 | `--jobs`                | `-j`       | Number of parallel jobs to use.                                | $1$            | `int`          |                                      | `THREADS - 1`                                     |                           | Yes      |
-| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`       | Python regex to use for parsing transcript IDs.                | $1$            | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                           | Yes      |
-| [`output_dir`](config.md#output_dir)                   | `--output-dir`          | `-A`       | RNA-clique analysis root (output_dir).                         | $1$            | `pathlib.Path` |                                      |                                                   |                           | No       |
-|                                                        | `--export-output-dir`   | `-X`       | Directory containing exported orthologs to search.             | $1$            | `pathlib.Path` |                                      |                                                   |                           | No       |
-|                                                        | `--all-ideal`           | `-a`       | FASTA file containing all sequences from ideal components.     | $1$            | `pathlib.Path` |                                      | Depends on `export_output_dir`                    |                           | Yes      |
-|                                                        | `--ortholog-db-cache`   | `-D`       | Directory in which to store BLAST databases for orthologs.     | $1$            | `pathlib.Path` |                                      | Depends on `export_output_dir`                    |                           | No       |
-|                                                        | `--search-output-dir`   | `-S`       | Output directory in which to store BLAST results.              | $1$            | `pathlib.Path` |                                      |                                                   |                           | Yes      |
-|                                                        | `--query`               | `-q`       | FASTA file containing query sequences.                         | $1$            | `pathlib.Path` |                                      |                                                   |                           | Yes      |
-|                                                        | `--debug`               |            | Enable debug behavior.                                         | $0$            |                |                                      |                                                   | `True`                    | No       |
-|                                                        | `--clean`               |            | Delete existing BLAST DB cache before beginning search.        | $0$            |                |                                      |                                                   | `True`                    | No       |
-|                                                        | `--merge-sams`          | `-m`       | Merge extended search results into one file.                   | $0$            |                |                                      |                                                   | `True`                    | No       |
-|                                                        | `--extended-search`     | `-e`       | Search other isoforms of a gene that produces a hit.           | $0$            |                |                                      |                                                   | `True`                    | No       |
-|                                                        | `--export-components`   | `-x`       | Save matching orientation graph components in extended search. | $0$            |                |                                      |                                                   | `True`                    | No       |
-| `verbose`                                              | `--verbose`             | `-v`       | Print more output than usual.                                  | $0$            | `bool`         |                                      | `False`                                           | `True`                    | No       |
+| Config option                                          | Long name                  | Short name   | Description                                                    | Argument count   | Type           | Choices                              | Default value                                     | Default value (flag only)   | Required   |
+|:-------------------------------------------------------|:---------------------------|:-------------|:---------------------------------------------------------------|:-----------------|:---------------|:-------------------------------------|:--------------------------------------------------|:----------------------------|:-----------|
+|                                                        | `--input-config`           | `-c`         | File from which to load configuration settings.                | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
+|                                                        | `--show-config`            |              | Display the computed configuration or arguments.               | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`                | No         |
+|                                                        | `--show-config-format`     |              | Format for displaying computed config or arguments.            | $1$              | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                             | No         |
+|                                                        | `--help`                   | `-h`         | Display a help message and exit.                               | $0$              |                |                                      |                                                   |                             | No         |
+| `verbose`                                              | `--verbose`                | `-v`         | Print more output than usual.                                  | $0$              | `bool`         |                                      | `False`                                           | `True`                      | No         |
+| [`graph`](config.md#graph)                             | `--graph`                  | `-g`         | Gene matches graph.                                            | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/graph.pkl`                            |                             | Yes        |
+| [`tables_dir`](config.md#tables_dir)                   | `--tables-dir`             | `-O2`        | Directory containing gene matches tables.                      | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                                  |                             | Yes        |
+| `jobs`                                                 | `--jobs`                   | `-j`         | Number of parallel jobs to use.                                | $1$              | `int`          |                                      | `THREADS - 1`                                     |                             | Yes        |
+| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex`    | `-p`         | Python regex to use for parsing transcript IDs.                | $1$              | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                             | Yes        |
+| [`output_dir`](config.md#output_dir)                   | `--output-dir`             | `-A`         | RNA-clique analysis root (output_dir).                         | $1$              | `pathlib.Path` |                                      |                                                   |                             | No         |
+|                                                        | `--export-output-dir`      | `-X`         | Directory containing exported orthologs to search.             | $1$              | `pathlib.Path` |                                      |                                                   |                             | No         |
+|                                                        | `--all-ideal`              | `-a`         | FASTA file containing all sequences from ideal components.     | $1$              | `pathlib.Path` |                                      | Depends on `export_output_dir`                    |                             | Yes        |
+|                                                        | `--ortholog-db-cache`      | `-D`         | Directory in which to store BLAST databases for orthologs.     | $1$              | `pathlib.Path` |                                      | Depends on `export_output_dir`                    |                             | Yes        |
+|                                                        | `--search-output-dir`      | `-S`         | Output directory in which to store BLAST results.              | $1$              | `pathlib.Path` |                                      |                                                   |                             | Yes        |
+|                                                        | `--query`                  | `-q`         | FASTA file containing query sequences.                         | $1$              | `pathlib.Path` |                                      |                                                   |                             | Yes        |
+|                                                        | `--debug`                  |              | Enable debug behavior.                                         | $0$              |                |                                      |                                                   | `True`                      | No         |
+|                                                        | `--clean`                  |              | Delete existing BLAST DB cache before beginning search.        | $0$              |                |                                      |                                                   | `True`                      | No         |
+|                                                        | `--merge-sams`             | `-m`         | Merge extended search results into one file.                   | $0$              |                |                                      |                                                   | `True`                      | No         |
+|                                                        | `--extended-search-evalue` | `-E`         | Search other isoforms of a gene that produces a hit.           | $0--1$           | `float`        |                                      |                                                   | $1 \times 10^{-20}$         | No         |
+|                                                        | `--export-components`      | `-x`         | Save matching orientation graph components in extended search. | $0$              |                |                                      |                                                   | `True`                      | No         |
+|                                                        | `--search-evalue`          | `-e`         | e-value cutoff to use for initial searches.                    | $1$              | `float`        |                                      | $1 \times 10^{-50}$                               |                             | No         |
 
 ### Input format
 
@@ -1327,14 +1325,14 @@ ideal component `INDEX` is written to `ideal_component_INDEX.graphml`.
 
 #### File format
 
-All output files with the `.sam` file extension are alignments in  [Sequence
+All output files with the `.sam` file extension are alignments in [Sequence
 Alignment Map](https://samtools.github.io/hts-specs/SAMv1.pdf) (SAM) format. In
 the produced SAM files, the `QNAME` field values are names of input query
 sequences, and `RNAME` field values are names of transcripts from the input
 `--all-ideal`/`-a` FASTA file.
 
-The `subjects.fasta` file contains sequences of transcripts sourced from the input
-`--all-ideal`/`-a` FASTA file, and `subjects.fasta` is likewise in [FASTA
+The `subjects.fasta` file contains sequences of transcripts sourced from the
+input `--all-ideal`/`-a` FASTA file, and `subjects.fasta` is likewise in [FASTA
 format](https://blast.ncbi.nlm.nih.gov/doc/blast-topics/#fasta).
 
 The exported ideal components with `.graphml` file extensions are in [GraphML
@@ -1358,7 +1356,7 @@ exported from the analysis with gene matches graph `graph.pkl` and gene matches
 tables in `tables_dir`. Use the combined exported orthologs at `combined.fasta`,
 and put the BLAST DB cache for the search under `db_cache`. Perform an extended
 search. Merge results from extended searches into one file. Export the matches
-ideal components. Write the results under `search_out`. 
+ideal components. Write the results under `search_out`.
 
 ```bash
 python -m rna_clique.search_ideal_components -q queries.fasta \
@@ -1381,7 +1379,7 @@ isoform 0 has coverage 10.0, and gene 10 isoform 1 has coverage 10.5, then the
 coverage of gene 10 is 10.5.
 
 Although the top $n$ genes are selected, genes are not sorted by $k$-mer
-coverage in the output. 
+coverage in the output.
 
 `select_top_genes` always selects exactly $\text{min}(n, |G|)$ genes, where
 $|G|$ is the total number of genes. When there are $c > 1$ genes with the same
@@ -1394,16 +1392,16 @@ $c$ genes are included is deterministic but arbitrary.
 
 ### Options
 
-| Config option                                          | Long name               | Short name | Description                                                  | Argument count | Type           | Choices                              | Default value                                     | Default value (flag only) | Required |
-|:-------------------------------------------------------|:------------------------|:-----------|:-------------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:--------------------------------------------------|:--------------------------|:---------|
-|                                                        | `--input-config`        | `-c`       | File from which to load configuration settings.              | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-|                                                        | `--show-config`         |            | Display the computed configuration or arguments.             | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`              | No       |
-|                                                        | `--show-config-format`  |            | Format for displaying computed config or arguments.          | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                           | No       |
-|                                                        | `--help`                | `-h`       | Display a help message and exit.                             | $0$            |                |                                      |                                                   |                           | No       |
-| [`top_genes`](config.md#top_genes)                     | `--top-genes`           | `-n`       | Number of top genes by k-mer coverate to select.             | $1$            | `int`          |                                      |                                                   |                           | Yes      |
-| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`       | Python regex to use for parsing transcript IDs.              | $1$            | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                           | Yes      |
-|                                                        | `--transcripts`         | `-i`       | FASTA file from which to select top genes by k-mer coverage. | $1$            | `pathlib.Path` |                                      |                                                   |                           | No       |
-| `verbose`                                              | `--verbose`             | `-v`       | Print more output than usual.                                | $0$            | `bool`         |                                      | `False`                                           | `True`                    | No       |
+| Config option                                          | Long name               | Short name   | Description                                                  | Argument count   | Type           | Choices                              | Default value                                     | Default value (flag only)   | Required   |
+|:-------------------------------------------------------|:------------------------|:-------------|:-------------------------------------------------------------|:-----------------|:---------------|:-------------------------------------|:--------------------------------------------------|:----------------------------|:-----------|
+|                                                        | `--input-config`        | `-c`         | File from which to load configuration settings.              | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
+|                                                        | `--show-config`         |              | Display the computed configuration or arguments.             | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`                | No         |
+|                                                        | `--show-config-format`  |              | Format for displaying computed config or arguments.          | $1$              | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                             | No         |
+|                                                        | `--help`                | `-h`         | Display a help message and exit.                             | $0$              |                |                                      |                                                   |                             | No         |
+| `verbose`                                              | `--verbose`             | `-v`         | Print more output than usual.                                | $0$              | `bool`         |                                      | `False`                                           | `True`                      | No         |
+| [`top_genes`](config.md#top_genes)                     | `--top-genes`           | `-n`         | Number of top genes by k-mer coverate to select.             | $1$              | `int`          |                                      |                                                   |                             | Yes        |
+| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`         | Python regex to use for parsing transcript IDs.              | $1$              | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                             | Yes        |
+|                                                        | `--transcripts`         | `-i`         | FASTA file from which to select top genes by k-mer coverage. | $1$              | `pathlib.Path` |                                      |                                                   |                             | No         |
 
 ### Input format
 
@@ -1411,7 +1409,7 @@ The input to the script is an individual
 [transcriptome](formats.md#transcriptomes) in [FASTA
 format](https://blast.ncbi.nlm.nih.gov/doc/blast-topics/#fasta), but the
 transcriptome is provided to this script differently than it is to other
-programs RNA-clique.  Unlike other scripts accepting transcriptomes,
+programs RNA-clique. Unlike other scripts accepting transcriptomes,
 `select_top_genes` expects a path to FASTA file itself be provided rather than a
 directory containing the transcripts FASTA file. Alternatively, the
 transcriptome can be provided via standard input.
@@ -1425,7 +1423,7 @@ standard output.
 
 Select the top $1000$ genes by $k$-mer coverage in the file `transcripts.fasta`,
 using the default regex for parsing FASTA headers. Write the results to standard
-output. 
+output.
 
 ```bash
 python -m rna_clique.select_top_genes transcripts.fasta -n 1000
@@ -1446,7 +1444,6 @@ Select $n$ top genes by $k$-mer coverage for each of multiple samples, in
 parallel. See the section on [`select_top_genes`](#select_top_genes) for an
 explanation of how selection is performed.
 
-
 ### Positional arguments
 
 |   Position | Config option                        | Description                                        | Argument count   | Type                 |
@@ -1455,21 +1452,21 @@ explanation of how selection is performed.
 
 ### Options
 
-| Config option                                          | Long name               | Short name | Description                                            | Argument count | Type           | Choices                              | Default value                                     | Default value (flag only) | Required |
-|:-------------------------------------------------------|:------------------------|:-----------|:-------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:--------------------------------------------------|:--------------------------|:---------|
-|                                                        | `--input-config`        | `-c`       | File from which to load configuration settings.        | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-|                                                        | `--show-config`         |            | Display the computed configuration or arguments.       | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`              | No       |
-|                                                        | `--show-config-format`  |            | Format for displaying computed config or arguments.    | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                           | No       |
-|                                                        | `--help`                | `-h`       | Display a help message and exit.                       | $0$            |                |                                      |                                                   |                           | No       |
-| [`top_genes`](config.md#top_genes)                     | `--top-genes`           | `-n`       | Number of top genes by k-mer coverate to select.       | $1$            | `int`          |                                      |                                                   |                           | Yes      |
-| [`transcripts_name`](config.md#transcripts_name)       | `--transcripts-name`    | `-t`       | Name of transcripts files in input directories.        | $1$            | `str`          |                                      | `transcripts.fasta`                               |                           | Yes      |
-| [`top_genes_dir`](config.md#top_genes_dir)             | `--top-genes-dir`       | `-O1`      | Directory containing top n genes by coverage.          | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od1`                                  |                           | Yes      |
-| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`       | Python regex to use for parsing transcript IDs.        | $1$            | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                           | Yes      |
-| `jobs`                                                 | `--jobs`                | `-j`       | Number of parallel jobs to use.                        | $1$            | `int`          |                                      | `THREADS - 1`                                     |                           | Yes      |
-| [`output_dir`](config.md#output_dir)                   | `--output-dir`          | `-O`       | RNA-clique analysis output root directory.             | $1$            | `pathlib.Path` |                                      |                                                   |                           | No       |
-| `title`                                                | `--title`               | `-T`       | Name to assign to the analysis.                        | $1$            | `str`          |                                      | `OUTPUT_DIR.name`                                 |                           | No       |
-|                                                        | `--output-config`       | `-c2`      | File in which to store computed config after analysis. | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                           | No       |
-| `verbose`                                              | `--verbose`             | `-v`       | Print more output than usual.                          | $0$            | `bool`         |                                      | `False`                                           | `True`                    | No       |
+| Config option                                          | Long name               | Short name   | Description                                            | Argument count   | Type           | Choices                              | Default value                                     | Default value (flag only)   | Required   |
+|:-------------------------------------------------------|:------------------------|:-------------|:-------------------------------------------------------|:-----------------|:---------------|:-------------------------------------|:--------------------------------------------------|:----------------------------|:-----------|
+|                                                        | `--input-config`        | `-c`         | File from which to load configuration settings.        | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
+|                                                        | `--show-config`         |              | Display the computed configuration or arguments.       | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config` |                                                   | `['config']`                | No         |
+|                                                        | `--show-config-format`  |              | Format for displaying computed config or arguments.    | $1$              | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`                        |                             | No         |
+|                                                        | `--help`                | `-h`         | Display a help message and exit.                       | $0$              |                |                                      |                                                   |                             | No         |
+| `verbose`                                              | `--verbose`             | `-v`         | Print more output than usual.                          | $0$              | `bool`         |                                      | `False`                                           | `True`                      | No         |
+| [`top_genes`](config.md#top_genes)                     | `--top-genes`           | `-n`         | Number of top genes by k-mer coverate to select.       | $1$              | `int`          |                                      |                                                   |                             | Yes        |
+| [`transcripts_name`](config.md#transcripts_name)       | `--transcripts-name`    | `-t`         | Name of transcripts files in input directories.        | $1$              | `str`          |                                      | `transcripts.fasta`                               |                             | Yes        |
+| [`top_genes_dir`](config.md#top_genes_dir)             | `--top-genes-dir`       | `-O1`        | Directory containing top n genes by coverage.          | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/od1`                                  |                             | Yes        |
+| [`transcript_id_regex`](config.md#transcript_id_regex) | `--transcript-id-regex` | `-p`         | Python regex to use for parsing transcript IDs.        | $1$              | `re.Pattern`   |                                      | `^.*cov_([0-9]+(?:\.[0-9]+))_g([0-9]+)_i([0-9]+)` |                             | Yes        |
+| `jobs`                                                 | `--jobs`                | `-j`         | Number of parallel jobs to use.                        | $1$              | `int`          |                                      | `THREADS - 1`                                     |                             | Yes        |
+| [`output_dir`](config.md#output_dir)                   | `--output-dir`          | `-O`         | RNA-clique analysis output root directory.             | $1$              | `pathlib.Path` |                                      |                                                   |                             | No         |
+| `title`                                                | `--title`               | `-T`         | Name to assign to the analysis.                        | $1$              | `str`          |                                      | `OUTPUT_DIR.name`                                 |                             | No         |
+|                                                        | `--output-config`       | `-c2`        | File in which to store computed config after analysis. | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`                          |                             | No         |
 
 ### Input format
 
@@ -1492,8 +1489,8 @@ python -m rna_clique.select_top_genes_all input1 input2 input3 \
 Select the top $1000$ genes for the transcriptomes located at `input1`,
 `input2`, `input3`, and `input4`. Assume that the transcript FASTA files are all
 named `genes.fasta`. Use the regular expression
-`foo([^_]*)_bar([^_]*)_baz([^_]*)` to parse the transcript IDs in each
-file. Write the output under `top_genes`.
+`foo([^_]*)_bar([^_]*)_baz([^_]*)` to parse the transcript IDs in each file.
+Write the output under `top_genes`.
 
 ```bash
 python -m rna_clique.select_top_genes_all input1 input2 input3 input4 \
@@ -1506,7 +1503,7 @@ python -m rna_clique.select_top_genes_all input1 input2 input3 input4 \
 Compute pairwise distasnces from gene matches tables alone. This script behaves
 similarly to [`filtered_distance`](#filtered_distance) but does not use a gene
 matches graph to filter the gene matches tables to include only genes having
-orthologs in all samples. 
+orthologs in all samples.
 
 Although in principle filtering is preferred because it gives a fairer
 comparison, a distance based on the unfiltered gene matches tables might be
@@ -1516,17 +1513,17 @@ pairs of samples that are distantly related.)
 
 ### Options
 
-| Config option                        | Long name              | Short name | Description                                            | Argument count | Type           | Choices                              | Default value                   | Default value (flag only) | Required |
-|:-------------------------------------|:-----------------------|:-----------|:-------------------------------------------------------|:---------------|:---------------|:-------------------------------------|:--------------------------------|:--------------------------|:---------|
-|                                      | `--input-config`       | `-c`       | File from which to load configuration settings.        | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`        |                           | No       |
-|                                      | `--show-config`        |            | Display the computed configuration or arguments.       | $\ge 0$        | `list[str]`    | `original_args`, `args`, or `config` |                                 | `['config']`              | No       |
-|                                      | `--show-config-format` |            | Format for displaying computed config or arguments.    | $1$            | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`      |                           | No       |
-|                                      | `--help`               | `-h`       | Display a help message and exit.                       | $0$            |                |                                      |                                 |                           | No       |
-| [`tables_dir`](config.md#tables_dir) | `--tables-dir`         | `-O2`      | Directory containing gene matches tables.              | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                |                           | Yes      |
-| [`matrix`](config.md#matrix)         | `--matrix`             | `-m`       | Output distance matrix location.                       | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/distance_matrix.h5` |                           | Yes      |
-| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-O`       | RNA-clique analysis output root directory.             | $1$            | `pathlib.Path` |                                      |                                 |                           | No       |
-|                                      | `--output-config`      | `-c2`      | File in which to store computed config after analysis. | $1$            | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`        |                           | No       |
-| `verbose`                            | `--verbose`            | `-v`       | Print more output than usual.                          | $0$            | `bool`         |                                      | `False`                         | `True`                    | No       |
+| Config option                        | Long name              | Short name   | Description                                            | Argument count   | Type           | Choices                              | Default value                   | Default value (flag only)   | Required   |
+|:-------------------------------------|:-----------------------|:-------------|:-------------------------------------------------------|:-----------------|:---------------|:-------------------------------------|:--------------------------------|:----------------------------|:-----------|
+|                                      | `--input-config`       | `-c`         | File from which to load configuration settings.        | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`        |                             | No         |
+|                                      | `--show-config`        |              | Display the computed configuration or arguments.       | $\ge 0$          | `list[str]`    | `original_args`, `args`, or `config` |                                 | `['config']`                | No         |
+|                                      | `--show-config-format` |              | Format for displaying computed config or arguments.    | $1$              | `str`          | `dict`, `yaml`, or `json`            | Depends on `--show-config`      |                             | No         |
+|                                      | `--help`               | `-h`         | Display a help message and exit.                       | $0$              |                |                                      |                                 |                             | No         |
+| `verbose`                            | `--verbose`            | `-v`         | Print more output than usual.                          | $0$              | `bool`         |                                      | `False`                         | `True`                      | No         |
+| [`tables_dir`](config.md#tables_dir) | `--tables-dir`         | `-O2`        | Directory containing gene matches tables.              | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/od2`                |                             | Yes        |
+| [`matrix`](config.md#matrix)         | `--matrix`             | `-m`         | Output distance matrix location.                       | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/distance_matrix.h5` |                             | Yes        |
+| [`output_dir`](config.md#output_dir) | `--output-dir`         | `-O`         | RNA-clique analysis output root directory.             | $1$              | `pathlib.Path` |                                      |                                 |                             | No         |
+|                                      | `--output-config`      | `-c2`        | File in which to store computed config after analysis. | $1$              | `pathlib.Path` |                                      | `OUTPUT_DIR/config.yaml`        |                             | No         |
 
 ### Input format
 
@@ -1541,15 +1538,16 @@ The output of this script is the [distance matrix](formats.md#distance-matrix).
 
 Compute an unfiltered distance matrix using gene matches tables at
 `rna_clique_out/od2`. Write the output matrix to
-`rna_clique_out/distance_matrix.h5`. 
+`rna_clique_out/distance_matrix.h5`.
 
 ```python
 python -m rna_clique.unfiltered_distance -O rna_clique_out
 ```
 
-Compute an unfiltered distance matrix using gene matches tables at
-`tables_dir`. Write the output matrix to `matrix.h5`.
+Compute an unfiltered distance matrix using gene matches tables at `tables_dir`.
+Write the output matrix to `matrix.h5`.
 
 ```python
 python -m rna_clique.unfiltered_distance -O2 tables_dir -m matrix.h5
 ```
+

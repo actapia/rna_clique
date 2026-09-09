@@ -148,13 +148,13 @@ RNA-clique program will not fail if settings it does not need are missing. The
 ## File paths
 
 When a setting is assigned a relative file path, the file path is interpreted as
-relative to the working directory of the *running script* rather than the
-directory of the configuration file or the analysis root. This behavior ensures
-that relative paths are treated the same whether they are provided via a
-configuration file or via a command-line argument, but it can cause some
-confusion when reusing a config file from a different directory. Future versions
-of the RNA-clique configuration schema may introduce a `working_directory`
-setting to document where the analysis was executed. 
+relative to the *current working directory* rather than the directory of the
+configuration file or the analysis root. This behavior ensures that relative
+paths are treated the same whether they are provided via a configuration file or
+via a command-line argument, but it can cause some confusion when reusing a
+config file from a different directory. Future versions of the RNA-clique
+configuration schema may introduce a `working_directory` setting to document
+where the analysis was executed.
 
 <!-- RNA-clique may require that -->
 <!-- the `working_directory` be the same as the working directory from which the -->
@@ -205,7 +205,7 @@ The `input_dirs` setting should be a list (YAML Sequence) of file paths to
 ### top\_genes\_dir
 
 The `top_genes_dir` setting should be a path to a 
-[directory containing the top genes](formats.md#top-genes) file.
+[directory containing the top genes](formats.md#top-genes) files.
 
 ### tables\_dir
 
@@ -246,12 +246,10 @@ assembled transcript. Some assemblers, including
 [rnaSPAdes](https://github.com/ablab/spades), report $k$-mer coverage values for
 each assembled transcript. When an assembler can report multiple isoforms of a
 single transcript, transcripts can be grouped into "isotig sets" representing
-isoforms of the same gene. (rnaSPAdes does this grouping automatically, but a
-separate program could also be used to organize transcripts into isotig sets.)
-Although the assembler only assigns $k$-mer coverage values to individual
-transcripts, RNA-clique takes the $k$-mer coverage of a gene to be the maximum
-$k$-mer coverage among all transcripts that belong to the same gene (isotig
-set).
+isoforms of the same gene.  Although the assembler only assigns $k$-mer coverage
+values to individual transcripts, RNA-clique takes the $k$-mer coverage of a
+gene to be the maximum $k$-mer coverage among all transcripts that belong to the
+same gene (isotig set).
 
 When RNA-clique selects the top $n$ genes by $k$-mer coverage, it is intended to
 select those genes best supported by the RNA-seq data. This step is intended to
