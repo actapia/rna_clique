@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -2692,8 +2692,8 @@ check this intuition using RNA-clique's export and searching features.</p>
 <p>Before we begin, check that your <code>RNA_CLIQUE</code> and <code>TUTORIAL_DIR</code> environment
 variables are set and pointing to the RNA-clique root directory and the working
 directory for the tutorial, respectively.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">&quot;</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$RNA_CLIQUE</span><span class="s2">"</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>
 </span></code></pre></div>
 <p>If either of these commands prints an empty line or prints a path to a directory
 that does not exist, you may need to reset the environment variables to the
@@ -2711,17 +2711,17 @@ the <code>activate</code> script to activate the environment.</p>
 <p>If you downloaded this software from Zenodo, you already have the <em>Epichloë
 coenophiala</em> genomes at <code>test_data/ec_genomes</code>. Instead of downloading them
 again, you can skip this step and simply move them to the intended location.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">/test_data/ec_genomes&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mv<span class="w"> </span><span class="s2">"</span><span class="nv">$RNA_CLIQUE</span><span class="s2">/test_data/ec_genomes"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>
 </span></code></pre></div>
 </div>
 <p>We will download two genome assemblies of <em>Epichloë coenophiala</em> to use as query
 sequences for searching the exported ideal components in both the original and
 the infected subset RNA-clique analyses. First, create a directory for the
 genomes</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mkdir<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/ec_genomes
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mkdir<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/ec_genomes
 </span></code></pre></div>
 <p>Change to the new directory.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/ec_genomes
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/ec_genomes
 </span></code></pre></div>
 <p>To download the genomes, run</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Ubuntu</label><label for="__tabbed_1_2">macOS</label></div>
@@ -2750,9 +2750,9 @@ genomes</p>
 <code>export_and_search</code> module. We'll use a low e-value threshold, <code>1e-99</code>, to
 ensure that we only get very close matches.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>python<span class="w"> </span>-m<span class="w"> </span>rna_clique.export_and_search<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">          </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/rna_clique_out/config.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">          </span>-Q<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/ec_genomes/*.fasta<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">          </span>-X<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/full_ec_search_out<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">          </span>-C<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/rna_clique_out/config.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">          </span>-Q<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/ec_genomes/*.fasta<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">          </span>-X<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/full_ec_search_out<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">          </span>-e<span class="w"> </span>1e-99
 </span></code></pre></div>
 <p>The results should be written to
@@ -2805,11 +2805,11 @@ the number of distinct transcripts matched in the search, and <code>components</
 the number of ideal components in which at least one transcript matched.</p>
 <p>For <code>search_e19_scaffolds-JAFEMN000000000</code> directory, the <code>stats</code> file should
 look something like this:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span><span class="nt">&quot;hits&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;seqs&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">43</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;components&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span><span class="nt">"hits"</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span><span class="w"> </span><span class="nt">"seqs"</span><span class="p">:</span><span class="w"> </span><span class="mi">43</span><span class="p">,</span><span class="w"> </span><span class="nt">"components"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">}</span>
 </span></code></pre></div>
 <p>For the <code>search_e4305_Mas339_20200623_Ref_Scaffolds_CLS</code> directory, the <code>stats</code>
 file should look something like this:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span><span class="nt">&quot;hits&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;seqs&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;components&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span><span class="nt">"hits"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w"> </span><span class="nt">"seqs"</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="p">,</span><span class="w"> </span><span class="nt">"components"</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">}</span>
 </span></code></pre></div>
 <p>Surprisingly, in both cases, several components contained matching sequences,
 even though some of the input samples possessed no endophyte. It's possible,
@@ -2841,8 +2841,8 @@ hybrid transcripts. If that were the case, then we would expect all hits to
 occur in E+ samples where such endophyte reads would be present.</p>
 <p>We can use the sequence headers in <code>subjects.fasta</code> to check whether matches all
 come from E+ samples.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>grep<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/full_ec_search_out/*/search_*/subjects.fasta<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">     </span>-e<span class="w"> </span><span class="s1">&#39;&gt;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;[^:]*:[^:]*$&#39;</span><span class="w"> </span>-o<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t:<span class="w"> </span>-k2
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>grep<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/full_ec_search_out/*/search_*/subjects.fasta<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">     </span>-e<span class="w"> </span><span class="s1">'&gt;'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">'[^:]*:[^:]*$'</span><span class="w"> </span>-o<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t:<span class="w"> </span>-k2
 </span></code></pre></div>
 <p>The command above gets the sample name and ideal component from every FASTA
 header in <code>subjects.fasta</code>. <code>sort</code> is then used twice to get the unique
@@ -2943,15 +2943,15 @@ components <span class="arithmatex">\(6249\)</span> and <span class="arithmatex"
 <a href="#checking-represented-samples-in-matching-components">"Checking represented samples in matching
 component"</a> section to
 make sure you are using the right ideal component IDs here.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>cat<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/full_ec_search_out/*/export/ideal_component_6249.fasta<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/full_ec_search_out/*/export/ideal_component_6777.fasta<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/matching_components.fasta
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>cat<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/full_ec_search_out/*/export/ideal_component_6249.fasta<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/full_ec_search_out/*/export/ideal_component_6777.fasta<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span>&gt;<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/matching_components.fasta
 </span></code></pre></div>
 <p>Now, we will search the created <code>matching_components.fasta</code> against the NCBI
 Nucleotide database. (You may prefer to do this step in the web BLAST interface
 to avoid rate limits.)</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>blastn<span class="w"> </span>-query<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/matching_components.fasta<span class="w"> </span>-evalue<span class="w"> </span>1e-99<span class="w"> </span>-remote<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">       </span>-db<span class="w"> </span>nr<span class="w"> </span>-outfmt<span class="w"> </span><span class="m">6</span><span class="w"> </span>-out<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/remote_results
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>blastn<span class="w"> </span>-query<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/matching_components.fasta<span class="w"> </span>-evalue<span class="w"> </span>1e-99<span class="w"> </span>-remote<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">       </span>-db<span class="w"> </span>nr<span class="w"> </span>-outfmt<span class="w"> </span><span class="m">6</span><span class="w"> </span>-out<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/remote_results
 </span></code></pre></div>
 <p>If you view the subject sequence IDs in the resulting <code>remote_results</code> file and
 search for them within the
@@ -2967,9 +2967,9 @@ results differ for the subset analysis that included only E&minus; samples. Run
 <code>export_and_search</code> again but provide it with the configuration file for the
 subset analysis and a different output directory.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>python<span class="w"> </span>-m<span class="w"> </span>rna_clique.export_and_search
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">          </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/infected_subset_out/config.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">          </span>-Q<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/ec_genomes/*.fasta<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">          </span>-X<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/subset_ec_search_out<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">          </span>-C<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/infected_subset_out/config.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">          </span>-Q<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/ec_genomes/*.fasta<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">          </span>-X<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/subset_ec_search_out<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">          </span>-e<span class="w"> </span>1e-99
 </span></code></pre></div>
 <h2 id="examining-results-for-the-subset-analysis">Examining results for the subset analysis</h2>
@@ -3037,7 +3037,7 @@ all the samples are E+.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../javascripts/mathjax.js"></script>
       

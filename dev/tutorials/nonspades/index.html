@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -2513,8 +2513,8 @@ isoform IDs described above.</p>
 <p>Before we begin, check that your <code>RNA_CLIQUE</code> and <code>TUTORIAL_DIR</code> environment
 variables are set and pointing to the RNA-clique root directory and the working
 directory for the tutorial, respectively.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">&quot;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$RNA_CLIQUE</span><span class="s2">"</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>
 </span></code></pre></div>
 <p>If either of these commands prints an empty line or prints a path to a directory
 that does not exist, you may need to reset the environment variables to the
@@ -2533,7 +2533,7 @@ activating the environment with</p>
 Trinity assemblies in the <code>test_data/trinity_assemblies</code> directory under the
 root of the repository. Instead of following the steps in this section, you
 can simply move them to the expected destination.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>mv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">/test_data/trinity_assemblies&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>mv<span class="w"> </span><span class="s2">"</span><span class="nv">$RNA_CLIQUE</span><span class="s2">/test_data/trinity_assemblies"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>
 </span></code></pre></div>
 </div>
 <p>For the remainder of this tutorial, we will be using transcriptomes assembled
@@ -2592,7 +2592,7 @@ assemble the transcriptomes with Trinity, see the supplemental <a href="trinity_
 guide</a>. If you choose to follow that tutorial, you can skip
 to the next section.</p>
 <p>First, make sure you are in your <code>$TUTORIAL_DIR</code></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">cd</span><span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>
 </span></code></pre></div>
 <p>Then, create a new directory for the Trinity assemblies and change to that
 directory.</p>
@@ -2603,12 +2603,12 @@ directory.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Ubuntu</label><label for="__tabbed_1_2">macOS</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>wget<span class="w"> </span><span class="s2">&quot;http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>wget<span class="w"> </span><span class="s2">"http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz"</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>tar<span class="w"> </span>xJvf<span class="w"> </span>trinity_assemblies.tar.xz
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-zsh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-L<span class="w"> </span>-O<span class="w"> </span><span class="s2">&quot;http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz&quot;</span>
+<div class="language-zsh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-L<span class="w"> </span>-O<span class="w"> </span><span class="s2">"http://rna-clique-data.s3-website.us-east-2.amazonaws.com/trinity_assemblies.tar.xz"</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>tar<span class="w"> </span>xJvf<span class="w"> </span>trinity_assemblies.tar.xz
 </span></code></pre></div>
 </div>
@@ -2690,24 +2690,24 @@ under the root of the repository.</p>
 </span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
 </span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
 </span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;transcripts&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">)</span>
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;quant&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">)</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"transcripts"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">)</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"quant"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">)</span>
 </span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="n">quant</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">quant</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">)</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="n">quant</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">quant</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"Name"</span><span class="p">)</span>
 </span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    <span class="c1">#from IPython import embed; embed()</span>
-</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    <span class="k">for</span> <span class="n">transcript</span> <span class="ow">in</span> <span class="n">Bio</span><span class="o">.</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">transcripts</span><span class="p">,</span> <span class="s2">&quot;fasta&quot;</span><span class="p">):</span>
-</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>        <span class="n">transcript</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;tpm</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    <span class="k">for</span> <span class="n">transcript</span> <span class="ow">in</span> <span class="n">Bio</span><span class="o">.</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">transcripts</span><span class="p">,</span> <span class="s2">"fasta"</span><span class="p">):</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>        <span class="n">transcript</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s2">"tpm</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
 </span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>            <span class="n">quant</span><span class="o">.</span><span class="n">TPM</span><span class="p">[</span><span class="n">transcript</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
 </span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>            <span class="n">transcript</span><span class="o">.</span><span class="n">description</span>
 </span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>        <span class="p">)</span>
-</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>        <span class="n">transcript</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s2">&quot;tpm</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>        <span class="n">transcript</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s2">"tpm</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
 </span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>            <span class="n">quant</span><span class="o">.</span><span class="n">TPM</span><span class="p">[</span><span class="n">transcript</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
 </span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>            <span class="n">transcript</span><span class="o">.</span><span class="n">id</span>
 </span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>        <span class="p">)</span>
-</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>        <span class="n">transcript</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>        <span class="n">Bio</span><span class="o">.</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">transcript</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s2">&quot;fasta&quot;</span><span class="p">)</span>
+</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>        <span class="n">transcript</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">""</span>
+</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>        <span class="n">Bio</span><span class="o">.</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">transcript</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s2">"fasta"</span><span class="p">)</span>
 </span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>
-</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 </span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>    <span class="n">main</span><span class="p">()</span>
 </span></code></pre></div>
 <p>The script writes the updated file to standard output. Let's create a new
@@ -2717,9 +2717,9 @@ directory for the transcriptomes with TPM values added.</p>
 <p>Then, run the script on all of the transcriptomes and write them to files named
 after their samples in the <code>with_tpm</code> directory.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>SRR2321385<span class="w"> </span>SRR2321388<span class="w"> </span>SRR7990321<span class="w"> </span>SRR8003736<span class="w"> </span>SRR8003761<span class="w"> </span>SRR8003762<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span>python<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">/docs/tutorials/nonspades/add_tpm.py&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">           </span><span class="s2">&quot;trinity_</span><span class="nv">$f</span><span class="s2">.Trinity.fasta&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">           </span><span class="s2">&quot;trinity_</span><span class="nv">$f</span><span class="s2">/salmon_outdir/quant.sf&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;with_tpm/</span><span class="nv">$f</span><span class="s2">.fasta&quot;</span><span class="p">;</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span>python<span class="w"> </span><span class="s2">"</span><span class="nv">$RNA_CLIQUE</span><span class="s2">/docs/tutorials/nonspades/add_tpm.py"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">           </span><span class="s2">"trinity_</span><span class="nv">$f</span><span class="s2">.Trinity.fasta"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">           </span><span class="s2">"trinity_</span><span class="nv">$f</span><span class="s2">/salmon_outdir/quant.sf"</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"with_tpm/</span><span class="nv">$f</span><span class="s2">.fasta"</span><span class="p">;</span>
 </span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">done</span>
 </span></code></pre></div>
 <p>If you examine one of the files in the <code>with_tpm</code> directory, you will see that
@@ -2743,7 +2743,7 @@ under the root of the repository.</p>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">Bio.SeqIO</span>
 </span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
 </span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">counter</span><span class="p">():</span>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a function returning and incrementing counter i on each call.&quot;&quot;&quot;</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="sd">"""Returns a function returning and incrementing counter i on each call."""</span>
 </span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">increment</span><span class="p">():</span>
 </span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>        <span class="k">nonlocal</span> <span class="n">i</span>
 </span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -2751,13 +2751,13 @@ under the root of the repository.</p>
 </span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 </span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="k">return</span> <span class="n">increment</span>
 </span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
-</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="n">trinity_gene_id_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;TRINITY_DN\d+_c\d+_g\d+&quot;</span><span class="p">)</span>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="n">trinity_gene_id_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"TRINITY_DN\d+_c\d+_g\d+"</span><span class="p">)</span>
 </span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
 </span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
 </span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>    <span class="n">ids</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">counter</span><span class="p">())</span>
-</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    <span class="k">for</span> <span class="n">transcript</span> <span class="ow">in</span> <span class="n">Bio</span><span class="o">.</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">,</span> <span class="s2">&quot;fasta&quot;</span><span class="p">):</span>
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    <span class="k">for</span> <span class="n">transcript</span> <span class="ow">in</span> <span class="n">Bio</span><span class="o">.</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">,</span> <span class="s2">"fasta"</span><span class="p">):</span>
 </span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>        <span class="n">gene_match</span> <span class="o">=</span> <span class="n">trinity_gene_id_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">transcript</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-</span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>        <span class="n">new_id</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_gid</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+</span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>        <span class="n">new_id</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">_gid</span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
 </span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>            <span class="n">gene_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
 </span><span id="__span-12-25"><a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>            <span class="n">ids</span><span class="p">[</span><span class="n">gene_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span>
 </span><span id="__span-12-26"><a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>        <span class="p">)</span>
@@ -2766,9 +2766,9 @@ under the root of the repository.</p>
 </span><span id="__span-12-29"><a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>            <span class="n">new_id</span><span class="p">,</span>
 </span><span id="__span-12-30"><a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>            <span class="n">transcript</span><span class="o">.</span><span class="n">description</span>
 </span><span id="__span-12-31"><a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>        <span class="p">)</span>
-</span><span id="__span-12-32"><a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>        <span class="n">Bio</span><span class="o">.</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">transcript</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s2">&quot;fasta&quot;</span><span class="p">)</span>
+</span><span id="__span-12-32"><a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>        <span class="n">Bio</span><span class="o">.</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">transcript</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s2">"fasta"</span><span class="p">)</span>
 </span><span id="__span-12-33"><a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>
-</span><span id="__span-12-34"><a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-12-34"><a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 </span><span id="__span-12-35"><a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a>    <span class="n">main</span><span class="p">()</span>
 </span></code></pre></div>
 <p>We'll create another new directory for the transcriptomes with integer gene IDs
@@ -2778,8 +2778,8 @@ added. </p>
 <p>Then, use the script to add integer gene IDs for each of the files in
 <code>with_tpm</code>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>SRR2321385<span class="w"> </span>SRR2321388<span class="w"> </span>SRR7990321<span class="w"> </span>SRR8003736<span class="w"> </span>SRR8003761<span class="w"> </span>SRR8003762<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span>python<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">/docs/tutorials/nonspades/assign_gene_ids.py&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">        </span>&lt;<span class="w"> </span><span class="s2">&quot;with_tpm/</span><span class="nv">$f</span><span class="s2">.fasta&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;integer_ids/</span><span class="nv">$f</span><span class="s2">.fasta&quot;</span><span class="p">;</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span>python<span class="w"> </span><span class="s2">"</span><span class="nv">$RNA_CLIQUE</span><span class="s2">/docs/tutorials/nonspades/assign_gene_ids.py"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">        </span>&lt;<span class="w"> </span><span class="s2">"with_tpm/</span><span class="nv">$f</span><span class="s2">.fasta"</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"integer_ids/</span><span class="nv">$f</span><span class="s2">.fasta"</span><span class="p">;</span>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">done</span>
 </span></code></pre></div>
 <p>If you look at the files in the <code>integer_ids</code> directory, you should see that
@@ -2795,8 +2795,8 @@ free to delete them if you are low on space.</p>
 directory and then rename all of the transcriptomes to have the same name. This
 can be done with a <code>for</code> loop and standard command-line Unix tools.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">for</span><span class="w"> </span>f<span class="w"> </span><span class="k">in</span><span class="w"> </span>SRR2321385<span class="w"> </span>SRR2321388<span class="w"> </span>SRR7990321<span class="w"> </span>SRR8003736<span class="w"> </span>SRR8003761<span class="w"> </span>SRR8003762<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span>mkdir<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span>mv<span class="w"> </span><span class="s2">&quot;integer_ids/</span><span class="nv">$f</span><span class="s2">.fasta&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span>/transcripts.fasta
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span>mkdir<span class="w"> </span><span class="s2">"</span><span class="nv">$f</span><span class="s2">"</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span>mv<span class="w"> </span><span class="s2">"integer_ids/</span><span class="nv">$f</span><span class="s2">.fasta"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$f</span><span class="s2">"</span>/transcripts.fasta
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">done</span>
 </span></code></pre></div>
 <p>After running the <code>for</code> loop, the <code>integer_ids</code> directory should be empty, so go
@@ -2822,22 +2822,22 @@ explain a regex like the one given above. Make sure the tester you are using
 supports Python-flavor regexes.</p>
 </div>
 <p>Run RNA-clique on the transformed data.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>rna-clique<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/trinity_assemblies/SRR*<span class="w"> </span>-n<span class="w"> </span><span class="m">50000</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">           </span>-O<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">/trinity_rna_clique_out&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">           </span>-p<span class="w"> </span><span class="s1">&#39;^.*tpm([0-9]+(?:\.[0-9]+)).*gid([0-9]+)_i([0-9]+)&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>rna-clique<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/trinity_assemblies/SRR*<span class="w"> </span>-n<span class="w"> </span><span class="m">50000</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">           </span>-O<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">/trinity_rna_clique_out"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">           </span>-p<span class="w"> </span><span class="s1">'^.*tpm([0-9]+(?:\.[0-9]+)).*gid([0-9]+)_i([0-9]+)'</span>
 </span></code></pre></div>
 <h2 id="viewing-results">Viewing results</h2>
 <p>As always, we can get a distance matrix with the <code>export_matrix</code> program.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>python<span class="w"> </span>-m<span class="w"> </span>rna_clique.export_matrix<span class="w"> </span>--format<span class="w"> </span>table<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">                                   </span>--header<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">                                   </span>-O<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">/trinity_rna_clique_out&quot;</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">                                   </span>-O<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">/trinity_rna_clique_out"</span>
 </span></code></pre></div>
 <p>Since we are using the same samples (with the same names) from the end-to-end
 tutorial, we can also use the <a href="../reads2tree/#getting-a-pcoa-plot">PCoA plotting
 script</a> from that tutorial to get a
 PCoA plot for the matrix based on the Trinity transcriptomes.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>python<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">&quot;</span>/docs/tutorials/reads2tree/make_pcoa.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">       </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/trinity_rna_clique_out
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>python<span class="w"> </span><span class="s2">"</span><span class="nv">$RNA_CLIQUE</span><span class="s2">"</span>/docs/tutorials/reads2tree/make_pcoa.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">       </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/trinity_rna_clique_out
 </span></code></pre></div>
 <p>As in the end-to-end tutorial, the PCoA plots are written to the RNA-clique
 output directory (in this case, <code>"$TUTORIAL_DIR"/trinity_rna_clique_out</code>).</p>
@@ -2912,7 +2912,7 @@ assemblies</a>.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../javascripts/mathjax.js"></script>
       

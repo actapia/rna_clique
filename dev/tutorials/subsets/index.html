@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -2229,8 +2229,8 @@ analysis to work from.</p>
 <p>Before we begin, check that your <code>RNA_CLIQUE</code> and <code>TUTORIAL_DIR</code> environment
 variables are set and pointing to the RNA-clique root directory and the working
 directory for the tutorial, respectively.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$RNA_CLIQUE</span><span class="s2">&quot;</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$RNA_CLIQUE</span><span class="s2">"</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>
 </span></code></pre></div>
 <p>If either of these commands prints an empty line or prints a path to a directory
 that does not exist, you may need to reset the environment variables to the
@@ -2353,8 +2353,8 @@ example, we'll specify the infected samples directly on the command line.</p>
 <p>In the <code>make_subset</code> command, we must also tell the script which analysis we are
 subsetting, specified via a path to the configuration file for the analysis, and
 the output directory in which the subset analysis files will reside.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>-m<span class="w"> </span>rna_clique.make_subset<span class="w"> </span>-I<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/rna_clique_out/config.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">                                 </span>-O<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/infected_subset_out<span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>-m<span class="w"> </span>rna_clique.make_subset<span class="w"> </span>-I<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/rna_clique_out/config.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">                                 </span>-O<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/infected_subset_out<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">                                 </span>-y<span class="w"> </span>SRR2321388<span class="w"> </span>SRR8003761<span class="w"> </span>SRR7990321<span class="w"> </span>SRR8003736
 </span></code></pre></div>
 <p>You should find that the above command completes <em>much</em> more quickly than a full
@@ -2362,13 +2362,13 @@ RNA-clique run would, but if you check the subset output directory at
 <code>"$TUTORIAL_DIR"/infected_subset_out</code>, you'll see that we don't have a distance
 matrix yet. To get the distance matrix, we also need to run <code>filtered_distance</code>
 on the subset analysis.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>-m<span class="w"> </span>rna_clique.filtered_distance<span class="w"> </span>-O<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/infected_subset_out
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>-m<span class="w"> </span>rna_clique.filtered_distance<span class="w"> </span>-O<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/infected_subset_out
 </span></code></pre></div>
 <p>If you check <code>"$TUTORIAL_DIR"/infected_subset_out</code> again, you should now see a
 <code>distance_matrix.h5</code> file.</p>
 <p>We can also check the number of ideal components.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>-m<span class="w"> </span>rna_clique.plot_component_sizes<span class="w"> </span>--statistics<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">                                          </span>-A<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">&quot;</span>/infected_subset_out
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">                                          </span>-A<span class="w"> </span><span class="s2">"</span><span class="nv">$TUTORIAL_DIR</span><span class="s2">"</span>/infected_subset_out
 </span></code></pre></div>
 <p>You should see that we have more ideal components (around <span class="arithmatex">\(12676\)</span>) with just the
 four infected samples.</p>
@@ -2424,7 +2424,7 @@ four infected samples.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../javascripts/mathjax.js"></script>
       

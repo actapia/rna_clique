@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -2584,21 +2584,21 @@ summarized in the table below.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rna_clique.rna_clique</span><span class="w"> </span><span class="kn">import</span> <span class="n">rna_clique</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">out_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;rna_clique_out&quot;</span><span class="p">)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">out_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"rna_clique_out"</span><span class="p">)</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">out_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Get the SampleSimilarity object and a dict mapping paths to their sample</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># names.</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">sim</span><span class="p">,</span> <span class="n">path_to_sample</span> <span class="o">=</span> <span class="n">rna_clique</span><span class="p">(</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="p">[</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;path/to/transcriptome1_dir&quot;</span><span class="p">),</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;path/to/transcriptome2_dir&quot;</span><span class="p">),</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;path/to/transcriptome3_dir&quot;</span><span class="p">),</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">"path/to/transcriptome1_dir"</span><span class="p">),</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">"path/to/transcriptome2_dir"</span><span class="p">),</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">"path/to/transcriptome3_dir"</span><span class="p">),</span>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="p">],</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">out_dir_1</span><span class="o">=</span><span class="n">out_dir</span> <span class="o">/</span> <span class="s2">&quot;od1&quot;</span><span class="p">,</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">out_dir_2</span><span class="o">=</span><span class="n">out_dir</span> <span class="o">/</span> <span class="s2">&quot;od2&quot;</span><span class="p">,</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">cache_dir</span><span class="o">=</span><span class="n">out_dir</span> <span class="o">/</span> <span class="s2">&quot;db_cache&quot;</span><span class="p">,</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">output_graph</span><span class="o">=</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;graph.pkl&quot;</span><span class="p">,</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">output_matrix</span><span class="o">=</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;matrix.h5&quot;</span><span class="p">,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">out_dir_1</span><span class="o">=</span><span class="n">out_dir</span> <span class="o">/</span> <span class="s2">"od1"</span><span class="p">,</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">out_dir_2</span><span class="o">=</span><span class="n">out_dir</span> <span class="o">/</span> <span class="s2">"od2"</span><span class="p">,</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">cache_dir</span><span class="o">=</span><span class="n">out_dir</span> <span class="o">/</span> <span class="s2">"db_cache"</span><span class="p">,</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">output_graph</span><span class="o">=</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">"graph.pkl"</span><span class="p">,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">output_matrix</span><span class="o">=</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">"matrix.h5"</span><span class="p">,</span>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">top_genes</span><span class="o">=</span><span class="mi">50000</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="p">)</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">get_dissimilarity_df</span><span class="p">())</span>
@@ -2627,8 +2627,8 @@ filtering process.</p>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Get specific gene matches table.</span>
 </span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="n">transcriptome1_vs_2</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">tables</span><span class="p">[</span>
 </span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="p">[</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        <span class="s2">&quot;path/to/trancsriptome1_dir&quot;</span><span class="p">,</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="s2">&quot;path/to/transcriptome2_dir&quot;</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        <span class="s2">"path/to/trancsriptome1_dir"</span><span class="p">,</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="s2">"path/to/transcriptome2_dir"</span>
 </span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="p">]</span>
 </span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="p">]</span>
 </span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
@@ -2691,12 +2691,12 @@ information about functions for parsing transcript IDs, see the <a href="#workin
 transcript IDs"</a> section.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rna_clique.select_top_genes_all</span><span class="w"> </span><span class="kn">import</span> <span class="n">select_top_and_save</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Select top genes for &quot;path/to/transcriptome1/transcripts.fasta&quot; and save to</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># &quot;top_genes_dir&quot;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Select top genes for "path/to/transcriptome1/transcripts.fasta" and save to</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># "top_genes_dir"</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">top_genes_file</span><span class="p">,</span> <span class="n">sample_name</span> <span class="o">=</span> <span class="n">select_top_genes_and_save</span><span class="p">(</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="s2">&quot;top_genes_dir&quot;</span><span class="p">,</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="s2">&quot;transcripts.fasta&quot;</span><span class="p">,</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;path/to/transcriptome1&quot;</span><span class="p">),</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="s2">"top_genes_dir"</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="s2">"transcripts.fasta"</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"path/to/transcriptome1"</span><span class="p">),</span>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="mi">50000</span><span class="p">,</span>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">)</span>
 </span></code></pre></div>
@@ -2737,7 +2737,7 @@ constructor. <code>from_path</code> requires at least two arguments.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rna_clique.select_top_genes</span><span class="w"> </span><span class="kn">import</span> <span class="n">TopGeneSelector</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">selector</span> <span class="o">=</span> <span class="n">TopGeneSelector</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;path/to/transcriptome1/transcripts.fasta&quot;</span><span class="p">),</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"path/to/transcriptome1/transcripts.fasta"</span><span class="p">),</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="mi">50000</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">)</span>
 </span></code></pre></div>
@@ -2890,17 +2890,17 @@ these top <span class="arithmatex">\(n\)</span> genes are the parameters to the 
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">tables_iter</span><span class="p">,</span> <span class="n">paths_iter</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="n">find_all_pairs</span><span class="p">(</span>
 </span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="p">[</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;top/transcriptome1_top.fasta&quot;</span><span class="p">),</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;top/transcriptome2_top.fasta&quot;</span><span class="p">),</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;top/transcriptome2_top.fasta&quot;</span><span class="p">),</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">"top/transcriptome1_top.fasta"</span><span class="p">),</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">"top/transcriptome2_top.fasta"</span><span class="p">),</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">"top/transcriptome2_top.fasta"</span><span class="p">),</span>
 </span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="p">],</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;gene_matches_tables&quot;</span><span class="p">),</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;db_cache&quot;</span><span class="p">),</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"gene_matches_tables"</span><span class="p">),</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"db_cache"</span><span class="p">),</span>
 </span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="c1"># Could also just use rna_clique.path_to_sample.path_to_sample here.</span>
 </span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="n">path_to_sample</span><span class="o">=</span><span class="p">{</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;top/transcriptome1_top.fasta&quot;</span><span class="p">):</span> <span class="s2">&quot;transcriptome1&quot;</span><span class="p">,</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;top/transcriptome2_top.fasta&quot;</span><span class="p">):</span> <span class="s2">&quot;transcriptome2&quot;</span><span class="p">,</span>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;top/transcriptome2_top.fasta&quot;</span><span class="p">):</span> <span class="s2">&quot;transcriptome3&quot;</span><span class="p">,</span> 
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">"top/transcriptome1_top.fasta"</span><span class="p">):</span> <span class="s2">"transcriptome1"</span><span class="p">,</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">"top/transcriptome2_top.fasta"</span><span class="p">):</span> <span class="s2">"transcriptome2"</span><span class="p">,</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">"top/transcriptome2_top.fasta"</span><span class="p">):</span> <span class="s2">"transcriptome3"</span><span class="p">,</span> 
 </span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="p">}</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">,</span>
 </span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    <span class="n">hf_args</span><span class="o">=</span><span class="p">[</span>
 </span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>        <span class="n">default_parser</span><span class="p">,</span>
@@ -2914,9 +2914,9 @@ these top <span class="arithmatex">\(n\)</span> genes are the parameters to the 
 </span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rna_clique.find_all_pairs</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_homologs_and_save</span>
 </span><span id="__span-6-30"><a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>
 </span><span id="__span-6-31"><a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="n">table</span> <span class="o">=</span> <span class="n">find_homologs_and_save</span><span class="p">(</span>
-</span><span id="__span-6-32"><a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;top/transcriptome1_top.fasta&quot;</span><span class="p">),</span>
-</span><span id="__span-6-33"><a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;top/transcriptome2_top.fasta&quot;</span><span class="p">),</span>
-</span><span id="__span-6-34"><a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;gene_matches_tables/transcriptome1--transcriptome2.h5&quot;</span><span class="p">),</span>
+</span><span id="__span-6-32"><a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"top/transcriptome1_top.fasta"</span><span class="p">),</span>
+</span><span id="__span-6-33"><a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"top/transcriptome2_top.fasta"</span><span class="p">),</span>
+</span><span id="__span-6-34"><a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"gene_matches_tables/transcriptome1--transcriptome2.h5"</span><span class="p">),</span>
 </span><span id="__span-6-35"><a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>    <span class="n">hf_args</span><span class="o">=</span><span class="p">[</span>
 </span><span id="__span-6-36"><a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>        <span class="n">default_parser</span><span class="p">,</span>
 </span><span id="__span-6-37"><a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a>        <span class="mi">1</span><span class="p">,</span>
@@ -2935,8 +2935,8 @@ these top <span class="arithmatex">\(n\)</span> genes are the parameters to the 
 </span><span id="__span-6-50"><a id="__codelineno-6-50" name="__codelineno-6-50" href="#__codelineno-6-50"></a>    <span class="kc">True</span>
 </span><span id="__span-6-51"><a id="__codelineno-6-51" name="__codelineno-6-51" href="#__codelineno-6-51"></a><span class="p">)</span>
 </span><span id="__span-6-52"><a id="__codelineno-6-52" name="__codelineno-6-52" href="#__codelineno-6-52"></a><span class="n">tble</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">get_match_table</span><span class="p">(</span>
-</span><span id="__span-6-53"><a id="__codelineno-6-53" name="__codelineno-6-53" href="#__codelineno-6-53"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;top/transcriptome1_top.fasta&quot;</span><span class="p">),</span>
-</span><span id="__span-6-54"><a id="__codelineno-6-54" name="__codelineno-6-54" href="#__codelineno-6-54"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;top/transcriptome2_top.fasta&quot;</span><span class="p">),</span>
+</span><span id="__span-6-53"><a id="__codelineno-6-53" name="__codelineno-6-53" href="#__codelineno-6-53"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"top/transcriptome1_top.fasta"</span><span class="p">),</span>
+</span><span id="__span-6-54"><a id="__codelineno-6-54" name="__codelineno-6-54" href="#__codelineno-6-54"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"top/transcriptome2_top.fasta"</span><span class="p">),</span>
 </span><span id="__span-6-55"><a id="__codelineno-6-55" name="__codelineno-6-55" href="#__codelineno-6-55"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="getting-a-gene-matches-graph">Getting a gene matches graph</h3>
@@ -3030,8 +3030,8 @@ tables.</p>
 </span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Get an individual table.</span>
 </span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">table</span> <span class="o">=</span> <span class="n">filtered_tables</span><span class="p">[</span>
 </span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="p">[</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;od1/transcriptome1_top.fasta&quot;</span><span class="p">),</span>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;od1/transcriptome2_top.fasta&quot;</span><span class="p">)</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">"od1/transcriptome1_top.fasta"</span><span class="p">),</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        <span class="n">Path</span><span class="p">(</span><span class="s2">"od1/transcriptome2_top.fasta"</span><span class="p">)</span>
 </span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="p">]</span>
 </span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="p">]</span>
 </span></code></pre></div>
@@ -3111,15 +3111,15 @@ takes the last three elements as the transcript ID is shown below.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rna_clique.transcripts</span><span class="w"> </span><span class="kn">import</span> <span class="n">TranscriptID</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">custom_transcript_id_parser</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="k">return</span> <span class="n">TranscriptID</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="k">return</span> <span class="n">TranscriptID</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">)[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span>
 </span></code></pre></div>
 <p>You can also create a parser from a regular expression in the same fashion as
 the command-line interface using the <code>TranscriptID.parser_from_re</code> classmethod.
 For example,</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">my_parser</span> <span class="o">=</span> <span class="n">TranscriptID</span><span class="o">.</span><span class="n">parser_from_re</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([^:]*):([^:]*):([^:]*)$&quot;</span><span class="p">))</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="n">parsed</span> <span class="o">=</span> <span class="n">my_parser</span><span class="p">(</span><span class="s2">&quot;12:13:14&quot;</span><span class="p">)</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">my_parser</span> <span class="o">=</span> <span class="n">TranscriptID</span><span class="o">.</span><span class="n">parser_from_re</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"([^:]*):([^:]*):([^:]*)$"</span><span class="p">))</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="n">parsed</span> <span class="o">=</span> <span class="n">my_parser</span><span class="p">(</span><span class="s2">"12:13:14"</span><span class="p">)</span>
 </span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span> <span class="c1"># TranscriptID(coverage=12.0, gene=13, isoform=14)</span>
 </span></code></pre></div>
 <h2 id="loading-gene-matches-tables">Loading gene matches tables</h2>
@@ -3130,13 +3130,13 @@ argument, the path to the gene matches table to load, and it returns a Pandas
 DataFrame representing the loaded gene matches table.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rna_clique.gene_matches_tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_table</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">table</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;od2/transcriptome1--transcriptome2.h5&quot;</span><span class="p">))</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">table</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"od2/transcriptome1--transcriptome2.h5"</span><span class="p">))</span>
 </span></code></pre></div>
 <p>To get a list of gene matches tables in a directory, use <code>get_table_files</code> from
 the same module.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rna_clique.gene_matches_tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_table_files</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">table_files</span> <span class="o">=</span> <span class="n">get_table_files</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;od2&quot;</span><span class="p">))</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">table_files</span> <span class="o">=</span> <span class="n">get_table_files</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"od2"</span><span class="p">))</span>
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="n">tables</span> <span class="o">=</span> <span class="p">[</span><span class="n">read_table</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">table_files</span><span class="p">]</span>
 </span></code></pre></div>
 <h2 id="exporting-orthologs-ideal-components">Exporting orthologs (ideal components)</h2>
@@ -3245,7 +3245,7 @@ integer) to the file in which orthologs from that ideal component are stored.</p
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rna_clique.transcripts</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_parser</span>
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
 </span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="n">exporter</span> <span class="o">=</span> <span class="n">OrthologExporter</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">default_parser</span><span class="p">)</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="n">component_to_path</span> <span class="o">=</span> <span class="n">exporter</span><span class="o">.</span><span class="n">by_component</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;exported_orthologs&quot;</span><span class="p">))</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="n">component_to_path</span> <span class="o">=</span> <span class="n">exporter</span><span class="o">.</span><span class="n">by_component</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"exported_orthologs"</span><span class="p">))</span>
 </span></code></pre></div>
 <h2 id="searching-ideal-components-exported-orthologs">Searching ideal components (exported orthologs)</h2>
 <p>Exported orthologs can be searched using the <code>search</code> function from the
@@ -3351,10 +3351,10 @@ components producing HSPs.</p>
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
 </span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="n">result</span><span class="p">:</span> <span class="n">SearchResult</span> <span class="o">=</span> <span class="n">search</span><span class="p">(</span>
 </span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="n">sim</span><span class="p">,</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;exported_orthologs/all_ideal.fasta&quot;</span><span class="p">),</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;db_cache&quot;</span><span class="p">),</span>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;search_results),</span>
-</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;queries.fasta&quot;</span><span class="p">),</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"exported_orthologs/all_ideal.fasta"</span><span class="p">),</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"db_cache"</span><span class="p">),</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"search_results),</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"queries.fasta"</span><span class="p">),</span>
 </span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="p">)</span>
 </span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Print the number of total HSPs, transcripts and components producing HSPs.</span>
 </span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">result</span><span class="p">)</span>
@@ -3363,10 +3363,10 @@ components producing HSPs.</p>
 </span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="c1"># OrthologExporter.</span>
 </span><span id="__span-18-15"><a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="n">fast_result</span><span class="p">:</span> <span class="n">SearchResult</span> <span class="o">=</span> <span class="n">search</span><span class="p">(</span>
 </span><span id="__span-18-16"><a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>    <span class="n">sim</span><span class="p">,</span>
-</span><span id="__span-18-17"><a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;exported_orthologs/all_ideal.fasta&quot;</span><span class="p">),</span>
-</span><span id="__span-18-18"><a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;db_cache&quot;</span><span class="p">),</span>
-</span><span id="__span-18-19"><a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;search_results),</span>
-</span><span id="__span-18-20"><a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;queries.fasta&quot;</span><span class="p">),</span>
+</span><span id="__span-18-17"><a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"exported_orthologs/all_ideal.fasta"</span><span class="p">),</span>
+</span><span id="__span-18-18"><a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"db_cache"</span><span class="p">),</span>
+</span><span id="__span-18-19"><a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"search_results),</span>
+</span><span id="__span-18-20"><a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"queries.fasta"</span><span class="p">),</span>
 </span><span id="__span-18-21"><a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>    <span class="n">strand_graph</span><span class="o">=</span><span class="n">exporter</span><span class="o">.</span><span class="n">strand_graph</span><span class="p">,</span>
 </span><span id="__span-18-22"><a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>    <span class="n">node_to_ccc</span><span class="o">=</span><span class="n">exporter</span><span class="o">.</span><span class="n">node_to_component_component</span><span class="p">,</span>
 </span><span id="__span-18-23"><a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a><span class="p">)</span>
@@ -3384,12 +3384,12 @@ just one argument&mdash;the path to the configuration file&mdash;and loads and
 returns the configuration at that path.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">config</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">config_module</span>
 </span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">config_module</span><span class="o">.</span><span class="n">RNACliqueConfig</span><span class="o">.</span><span class="n">yaml_load</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;path/to/config.yaml&quot;</span><span class="p">))</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">config_module</span><span class="o">.</span><span class="n">RNACliqueConfig</span><span class="o">.</span><span class="n">yaml_load</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"path/to/config.yaml"</span><span class="p">))</span>
 </span></code></pre></div>
 <p>The attributes of configuration objects are documented in the <a href="../config/">Configuration
 guide</a>. To save an <code>RNACliqueConfig</code> object, use the <code>yaml_save</code>
 method. <code>yaml_save</code> takes one argument, the output path.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">config</span><span class="o">.</span><span class="n">yaml_save</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;path/to/config.yaml&quot;</span><span class="p">))</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">config</span><span class="o">.</span><span class="n">yaml_save</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"path/to/config.yaml"</span><span class="p">))</span>
 </span></code></pre></div>
 <h2 id="making-subsets">Making subsets</h2>
 <p>To create a subset of an existing analysis from Python code, you can use the
@@ -3443,11 +3443,11 @@ instance will be a complete <code>RNACliqueConfig</code> for the subset analysis
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rna_clique.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RNACliqueConfig</span>
 </span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
 </span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="n">child_config</span> <span class="o">=</span> <span class="n">RNACliqueConfig</span><span class="p">()</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="n">child_config</span><span class="o">.</span><span class="n">tables_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;subset/tables_dir&quot;</span><span class="p">)</span>
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="n">child_confid</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;subset/graph.pkl&quot;</span><span class="p">)</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="n">child_config</span><span class="o">.</span><span class="n">tables_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"subset/tables_dir"</span><span class="p">)</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="n">child_confid</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"subset/graph.pkl"</span><span class="p">)</span>
 </span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="n">subsetter</span> <span class="o">=</span> <span class="n">SubsetAnalysisCreator</span><span class="p">(</span>
-</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    <span class="c1"># Exclude samples that start with the letter &quot;B&quot;.</span>
-</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">),</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    <span class="c1"># Exclude samples that start with the letter "B".</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"B"</span><span class="p">),</span>
 </span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>    <span class="n">parent_config</span><span class="p">,</span>
 </span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>    <span class="n">child_config</span>
 </span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="p">)</span>
@@ -3488,11 +3488,11 @@ described in the table below.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rna_clique.make_subset</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubsetAnalysisCreator</span>
 </span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="n">subsetter</span> <span class="o">=</span> <span class="n">SubsetAnalysisCreator</span><span class="o">.</span><span class="n">from_paths</span><span class="p">(</span>
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>    <span class="c1"># Exclude samples that start with the letter &quot;B&quot;.</span>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">),</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>    <span class="c1"># Exclude samples that start with the letter "B".</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"B"</span><span class="p">),</span>
 </span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>    <span class="n">parent_config</span><span class="p">,</span>
-</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;subset/tables_dir&quot;</span><span class="p">),</span>
-</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;subset/graph.pkl&quot;</span><span class="p">),</span>   
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"subset/tables_dir"</span><span class="p">),</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>    <span class="n">Path</span><span class="p">(</span><span class="s2">"subset/graph.pkl"</span><span class="p">),</span>   
 </span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="p">)</span>
 </span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="n">subsetter</span><span class="o">.</span><span class="n">make</span><span class="p">()</span>
 </span></code></pre></div>
@@ -3552,7 +3552,7 @@ for those function is described <a href="visualization/">in a separate document<
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../javascripts/mathjax.js"></script>
       

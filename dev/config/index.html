@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -2843,13 +2843,13 @@ RNA-clique program will not fail if settings it does not need are missing. The
 (from any source) in the "Required" column of each script's "Options" table.</p>
 <h2 id="file-paths">File paths</h2>
 <p>When a setting is assigned a relative file path, the file path is interpreted as
-relative to the working directory of the <em>running script</em> rather than the
-directory of the configuration file or the analysis root. This behavior ensures
-that relative paths are treated the same whether they are provided via a
-configuration file or via a command-line argument, but it can cause some
-confusion when reusing a config file from a different directory. Future versions
-of the RNA-clique configuration schema may introduce a <code>working_directory</code>
-setting to document where the analysis was executed. </p>
+relative to the <em>current working directory</em> rather than the directory of the
+configuration file or the analysis root. This behavior ensures that relative
+paths are treated the same whether they are provided via a configuration file or
+via a command-line argument, but it can cause some confusion when reusing a
+config file from a different directory. Future versions of the RNA-clique
+configuration schema may introduce a <code>working_directory</code> setting to document
+where the analysis was executed.</p>
 <!-- RNA-clique may require that -->
 <!-- the `working_directory` be the same as the working directory from which the -->
 <!-- script is running, or RNA-clique might reinterpret paths provided in the -->
@@ -3006,7 +3006,7 @@ version.</p>
 <a href="../formats/#transcriptomes">directories containing the transcriptome files</a>.</p>
 <h3 id="top_genes_dir">top_genes_dir</h3>
 <p>The <code>top_genes_dir</code> setting should be a path to a 
-<a href="../formats/#top-genes">directory containing the top genes</a> file.</p>
+<a href="../formats/#top-genes">directory containing the top genes</a> files.</p>
 <h3 id="tables_dir">tables_dir</h3>
 <p>The <code>tables_dir</code> setting should be a path to a <a href="../formats/#gene-matches-tables">directory containing the gene
 matches tables</a>.</p>
@@ -3036,12 +3036,10 @@ assembled transcript. Some assemblers, including
 <a href="https://github.com/ablab/spades">rnaSPAdes</a>, report <span class="arithmatex">\(k\)</span>-mer coverage values for
 each assembled transcript. When an assembler can report multiple isoforms of a
 single transcript, transcripts can be grouped into "isotig sets" representing
-isoforms of the same gene. (rnaSPAdes does this grouping automatically, but a
-separate program could also be used to organize transcripts into isotig sets.)
-Although the assembler only assigns <span class="arithmatex">\(k\)</span>-mer coverage values to individual
-transcripts, RNA-clique takes the <span class="arithmatex">\(k\)</span>-mer coverage of a gene to be the maximum
-<span class="arithmatex">\(k\)</span>-mer coverage among all transcripts that belong to the same gene (isotig
-set).</p>
+isoforms of the same gene.  Although the assembler only assigns <span class="arithmatex">\(k\)</span>-mer coverage
+values to individual transcripts, RNA-clique takes the <span class="arithmatex">\(k\)</span>-mer coverage of a
+gene to be the maximum <span class="arithmatex">\(k\)</span>-mer coverage among all transcripts that belong to the
+same gene (isotig set).</p>
 <p>When RNA-clique selects the top <span class="arithmatex">\(n\)</span> genes by <span class="arithmatex">\(k\)</span>-mer coverage, it is intended to
 select those genes best supported by the RNA-seq data. This step is intended to
 both reduce errors caused by poorly assembled transcripts and reduce the amount
@@ -3274,7 +3272,7 @@ produce an error message.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../javascripts/mathjax.js"></script>
       

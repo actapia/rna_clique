@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -2446,7 +2446,7 @@
 
 
 <h2 id="rna_clique.viz.auto_markers.assign_markers" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">assign_markers</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">encodings</span><span class="p">,</span> <span class="n">assigners</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">default_color_assigner</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="n">default_shape_assigner</span><span class="p">,</span> <span class="s1">&#39;fill&#39;</span><span class="p">:</span> <span class="n">default_fill_assigner</span><span class="p">},</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">assign_markers</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">encodings</span><span class="p">,</span> <span class="n">assigners</span><span class="o">=</span><span class="p">{</span><span class="s1">'color'</span><span class="p">:</span> <span class="n">default_color_assigner</span><span class="p">,</span> <span class="s1">'shape'</span><span class="p">:</span> <span class="n">default_shape_assigner</span><span class="p">,</span> <span class="s1">'fill'</span><span class="p">:</span> <span class="n">default_fill_assigner</span><span class="p">},</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2459,7 +2459,7 @@ columns of the data. Every distinct row in the provided dataframe will be
 mapped to a set of kwargs to use for matplotlib's scatter function.</p>
 <p>This functions requires that the visual variables to use for encoding
 columns in the dataframe be provided explicitly. For example,</p>
-<div class="language-text highlight"><pre><span></span><code>encodings={&quot;column_a&quot;: &quot;color&quot;, &quot;column_b&quot;: &quot;shape&quot;}
+<div class="language-text highlight"><pre><span></span><code>encodings={"column_a": "color", "column_b": "shape"}
 </code></pre></div>
 <p>encodes different values for column_a using color and different values for
 column_b using shape. In this case (the simplest case), each key is a single
@@ -2688,22 +2688,22 @@ fill:  Whether the marker is filled.
 </span><span id="__span-0-164"><a id="__codelineno-0-164" name="__codelineno-0-164"></a>        <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
 </span><span id="__span-0-165"><a id="__codelineno-0-165" name="__codelineno-0-165"></a>        <span class="n">encodings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
 </span><span id="__span-0-166"><a id="__codelineno-0-166" name="__codelineno-0-166"></a>        <span class="n">assigners</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>  <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-0-167"><a id="__codelineno-0-167" name="__codelineno-0-167"></a>            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">default_color_assigner</span><span class="p">,</span>
-</span><span id="__span-0-168"><a id="__codelineno-0-168" name="__codelineno-0-168"></a>            <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="n">default_shape_assigner</span><span class="p">,</span>
-</span><span id="__span-0-169"><a id="__codelineno-0-169" name="__codelineno-0-169"></a>            <span class="s2">&quot;fill&quot;</span><span class="p">:</span> <span class="n">default_fill_assigner</span><span class="p">,</span>
+</span><span id="__span-0-167"><a id="__codelineno-0-167" name="__codelineno-0-167"></a>            <span class="s2">"color"</span><span class="p">:</span> <span class="n">default_color_assigner</span><span class="p">,</span>
+</span><span id="__span-0-168"><a id="__codelineno-0-168" name="__codelineno-0-168"></a>            <span class="s2">"shape"</span><span class="p">:</span> <span class="n">default_shape_assigner</span><span class="p">,</span>
+</span><span id="__span-0-169"><a id="__codelineno-0-169" name="__codelineno-0-169"></a>            <span class="s2">"fill"</span><span class="p">:</span> <span class="n">default_fill_assigner</span><span class="p">,</span>
 </span><span id="__span-0-170"><a id="__codelineno-0-170" name="__codelineno-0-170"></a>        <span class="p">},</span>
 </span><span id="__span-0-171"><a id="__codelineno-0-171" name="__codelineno-0-171"></a>        <span class="n">dropna</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 </span><span id="__span-0-172"><a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-</span><span id="__span-0-173"><a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Automatically encode distinct values using the provided assigners.</span>
+</span><span id="__span-0-173"><a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="w">    </span><span class="sd">"""Automatically encode distinct values using the provided assigners.</span>
 </span><span id="__span-0-174"><a id="__codelineno-0-174" name="__codelineno-0-174"></a>
 </span><span id="__span-0-175"><a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">    The first argument the function, data, must contain only the relevant</span>
 </span><span id="__span-0-176"><a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">    columns of the data. Every distinct row in the provided dataframe will be</span>
-</span><span id="__span-0-177"><a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">    mapped to a set of kwargs to use for matplotlib&#39;s scatter function.</span>
+</span><span id="__span-0-177"><a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">    mapped to a set of kwargs to use for matplotlib's scatter function.</span>
 </span><span id="__span-0-178"><a id="__codelineno-0-178" name="__codelineno-0-178"></a>
 </span><span id="__span-0-179"><a id="__codelineno-0-179" name="__codelineno-0-179"></a><span class="sd">    This functions requires that the visual variables to use for encoding</span>
 </span><span id="__span-0-180"><a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">    columns in the dataframe be provided explicitly. For example,</span>
 </span><span id="__span-0-181"><a id="__codelineno-0-181" name="__codelineno-0-181"></a>
-</span><span id="__span-0-182"><a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">        encodings={&quot;column_a&quot;: &quot;color&quot;, &quot;column_b&quot;: &quot;shape&quot;}</span>
+</span><span id="__span-0-182"><a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">        encodings={"column_a": "color", "column_b": "shape"}</span>
 </span><span id="__span-0-183"><a id="__codelineno-0-183" name="__codelineno-0-183"></a>
 </span><span id="__span-0-184"><a id="__codelineno-0-184" name="__codelineno-0-184"></a><span class="sd">    encodes different values for column_a using color and different values for</span>
 </span><span id="__span-0-185"><a id="__codelineno-0-185" name="__codelineno-0-185"></a><span class="sd">    column_b using shape. In this case (the simplest case), each key is a single</span>
@@ -2722,8 +2722,8 @@ fill:  Whether the marker is filled.
 </span><span id="__span-0-198"><a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">    the names of the visual variables for the scatter plot markers, which</span>
 </span><span id="__span-0-199"><a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">    correspond to keyword arguments of the style_to_scatter_kwargs</span>
 </span><span id="__span-0-200"><a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    function. Note that these arguments are distinct from the variables used for</span>
-</span><span id="__span-0-201"><a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">    matplotlib&#39;s scatter function. The style_to_scatter_kwargs function is used</span>
-</span><span id="__span-0-202"><a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    to convert between this code&#39;s custom representation of marker style and the</span>
+</span><span id="__span-0-201"><a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">    matplotlib's scatter function. The style_to_scatter_kwargs function is used</span>
+</span><span id="__span-0-202"><a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    to convert between this code's custom representation of marker style and the</span>
 </span><span id="__span-0-203"><a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">    kwargs used by matplotlib.</span>
 </span><span id="__span-0-204"><a id="__codelineno-0-204" name="__codelineno-0-204"></a>
 </span><span id="__span-0-205"><a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">    Each value in the assigner dict is a function that takes an iterable of</span>
@@ -2732,7 +2732,7 @@ fill:  Whether the marker is filled.
 </span><span id="__span-0-208"><a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">    variable.</span>
 </span><span id="__span-0-209"><a id="__codelineno-0-209" name="__codelineno-0-209"></a>
 </span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    Some assigners are already specified by default; the author of this code</span>
-</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    believes they should be useful and won&#39;t need to be changed in most</span>
+</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    believes they should be useful and won't need to be changed in most</span>
 </span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    circumstances.</span>
 </span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a>
 </span><span id="__span-0-214"><a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">    The recognized keys in the assigner dict (i.e., the valid keyword arguments</span>
@@ -2750,7 +2750,7 @@ fill:  Whether the marker is filled.
 </span><span id="__span-0-226"><a id="__codelineno-0-226" name="__codelineno-0-226"></a>
 </span><span id="__span-0-227"><a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="sd">    Returns:</span>
 </span><span id="__span-0-228"><a id="__codelineno-0-228" name="__codelineno-0-228"></a><span class="sd">        A dictionary mapping distinct data values to scatter kwargs.</span>
-</span><span id="__span-0-229"><a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-229"><a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="sd">    """</span>
 </span><span id="__span-0-230"><a id="__codelineno-0-230" name="__codelineno-0-230"></a>    <span class="n">encodings</span> <span class="o">=</span> <span class="p">{</span>
 </span><span id="__span-0-231"><a id="__codelineno-0-231" name="__codelineno-0-231"></a>        <span class="n">as_tuple</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">as_tuple</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 </span><span id="__span-0-232"><a id="__codelineno-0-232" name="__codelineno-0-232"></a>        <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">encodings</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
@@ -2881,7 +2881,7 @@ fill:  Whether the marker is filled.
 <span class="normal"><a href="#__codelineno-0-358">358</a></span>
 <span class="normal"><a href="#__codelineno-0-359">359</a></span>
 <span class="normal"><a href="#__codelineno-0-360">360</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-345"><a id="__codelineno-0-345" name="__codelineno-0-345"></a><span class="k">def</span><span class="w"> </span><span class="nf">naive_pars</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
-</span><span id="__span-0-346"><a id="__codelineno-0-346" name="__codelineno-0-346"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the first element of naive_pars_seq with m elements and product &gt;= n.</span>
+</span><span id="__span-0-346"><a id="__codelineno-0-346" name="__codelineno-0-346"></a><span class="w">    </span><span class="sd">"""Get the first element of naive_pars_seq with m elements and product &gt;= n.</span>
 </span><span id="__span-0-347"><a id="__codelineno-0-347" name="__codelineno-0-347"></a>
 </span><span id="__span-0-348"><a id="__codelineno-0-348" name="__codelineno-0-348"></a><span class="sd">    This uses the naive_pars_seq generator directly.</span>
 </span><span id="__span-0-349"><a id="__codelineno-0-349" name="__codelineno-0-349"></a>
@@ -2891,7 +2891,7 @@ fill:  Whether the marker is filled.
 </span><span id="__span-0-353"><a id="__codelineno-0-353" name="__codelineno-0-353"></a>
 </span><span id="__span-0-354"><a id="__codelineno-0-354" name="__codelineno-0-354"></a><span class="sd">    Returns:</span>
 </span><span id="__span-0-355"><a id="__codelineno-0-355" name="__codelineno-0-355"></a><span class="sd">        A tuple of length m in naive_pars_seq with product &gt;= n. </span>
-</span><span id="__span-0-356"><a id="__codelineno-0-356" name="__codelineno-0-356"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-356"><a id="__codelineno-0-356" name="__codelineno-0-356"></a><span class="sd">    """</span>
 </span><span id="__span-0-357"><a id="__codelineno-0-357" name="__codelineno-0-357"></a>    <span class="n">root</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">m</span><span class="p">))</span>
 </span><span id="__span-0-358"><a id="__codelineno-0-358" name="__codelineno-0-358"></a>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">naive_pars_seq</span><span class="p">([</span><span class="n">root</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
 </span><span id="__span-0-359"><a id="__codelineno-0-359" name="__codelineno-0-359"></a>        <span class="k">if</span> <span class="n">prod</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
@@ -3013,7 +3013,7 @@ minimal in lexicographic order.</p>
 <span class="normal"><a href="#__codelineno-0-338">338</a></span>
 <span class="normal"><a href="#__codelineno-0-339">339</a></span>
 <span class="normal"><a href="#__codelineno-0-340">340</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-287"><a id="__codelineno-0-287" name="__codelineno-0-287"></a><span class="k">def</span><span class="w"> </span><span class="nf">naive_pars_seq</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
-</span><span id="__span-0-288"><a id="__codelineno-0-288" name="__codelineno-0-288"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Yields a sequence of pairwise coprime integer tuples, ordered by product.</span>
+</span><span id="__span-0-288"><a id="__codelineno-0-288" name="__codelineno-0-288"></a><span class="w">    </span><span class="sd">"""Yields a sequence of pairwise coprime integer tuples, ordered by product.</span>
 </span><span id="__span-0-289"><a id="__codelineno-0-289" name="__codelineno-0-289"></a>
 </span><span id="__span-0-290"><a id="__codelineno-0-290" name="__codelineno-0-290"></a><span class="sd">    This is a generalization of the sequence in pars_seq to tuples of size</span>
 </span><span id="__span-0-291"><a id="__codelineno-0-291" name="__codelineno-0-291"></a><span class="sd">    m. However, my method obtaining the next element of the sequence for m &gt; 2</span>
@@ -3031,28 +3031,28 @@ minimal in lexicographic order.</p>
 </span><span id="__span-0-303"><a id="__codelineno-0-303" name="__codelineno-0-303"></a>
 </span><span id="__span-0-304"><a id="__codelineno-0-304" name="__codelineno-0-304"></a><span class="sd">    Parameters:</span>
 </span><span id="__span-0-305"><a id="__codelineno-0-305" name="__codelineno-0-305"></a><span class="sd">        start (tuple): The tuple at which start yielding the sequence.</span>
-</span><span id="__span-0-306"><a id="__codelineno-0-306" name="__codelineno-0-306"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-306"><a id="__codelineno-0-306" name="__codelineno-0-306"></a><span class="sd">    """</span>
 </span><span id="__span-0-307"><a id="__codelineno-0-307" name="__codelineno-0-307"></a>    <span class="n">nums</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">start</span><span class="p">))</span>
 </span><span id="__span-0-308"><a id="__codelineno-0-308" name="__codelineno-0-308"></a>    <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-0-309"><a id="__codelineno-0-309" name="__codelineno-0-309"></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-</span><span id="__span-0-310"><a id="__codelineno-0-310" name="__codelineno-0-310"></a>        <span class="c1">#print(&quot;pos is&quot;,pos)</span>
+</span><span id="__span-0-310"><a id="__codelineno-0-310" name="__codelineno-0-310"></a>        <span class="c1">#print("pos is",pos)</span>
 </span><span id="__span-0-311"><a id="__codelineno-0-311" name="__codelineno-0-311"></a>        <span class="k">if</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
 </span><span id="__span-0-312"><a id="__codelineno-0-312" name="__codelineno-0-312"></a>            <span class="n">pos</span>
 </span><span id="__span-0-313"><a id="__codelineno-0-313" name="__codelineno-0-313"></a>            <span class="n">nums</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 </span><span id="__span-0-314"><a id="__codelineno-0-314" name="__codelineno-0-314"></a>            <span class="n">pos</span> <span class="o">-=</span> <span class="mi">1</span>
 </span><span id="__span-0-315"><a id="__codelineno-0-315" name="__codelineno-0-315"></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-316"><a id="__codelineno-0-316" name="__codelineno-0-316"></a>            <span class="c1">#print(&quot;A&quot;)</span>
+</span><span id="__span-0-316"><a id="__codelineno-0-316" name="__codelineno-0-316"></a>            <span class="c1">#print("A")</span>
 </span><span id="__span-0-317"><a id="__codelineno-0-317" name="__codelineno-0-317"></a>            <span class="n">f</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-</span><span id="__span-0-318"><a id="__codelineno-0-318" name="__codelineno-0-318"></a>            <span class="c1">#print(&quot;range&quot;,nums[pos]+1, nums[pos + 1])</span>
+</span><span id="__span-0-318"><a id="__codelineno-0-318" name="__codelineno-0-318"></a>            <span class="c1">#print("range",nums[pos]+1, nums[pos + 1])</span>
 </span><span id="__span-0-319"><a id="__codelineno-0-319" name="__codelineno-0-319"></a>            <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
 </span><span id="__span-0-320"><a id="__codelineno-0-320" name="__codelineno-0-320"></a>            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nums</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]):</span>
-</span><span id="__span-0-321"><a id="__codelineno-0-321" name="__codelineno-0-321"></a>                <span class="c1">#print(f,&quot;for&quot;,pos)</span>
+</span><span id="__span-0-321"><a id="__codelineno-0-321" name="__codelineno-0-321"></a>                <span class="c1">#print(f,"for",pos)</span>
 </span><span id="__span-0-322"><a id="__codelineno-0-322" name="__codelineno-0-322"></a>                <span class="c1">#print(nums)</span>
 </span><span id="__span-0-323"><a id="__codelineno-0-323" name="__codelineno-0-323"></a>                <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]:</span>
 </span><span id="__span-0-324"><a id="__codelineno-0-324" name="__codelineno-0-324"></a>                    <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">gcd</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
 </span><span id="__span-0-325"><a id="__codelineno-0-325" name="__codelineno-0-325"></a>                        <span class="k">break</span>
 </span><span id="__span-0-326"><a id="__codelineno-0-326" name="__codelineno-0-326"></a>                <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">gcd</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="__span-0-327"><a id="__codelineno-0-327" name="__codelineno-0-327"></a>                    <span class="c1">#print(f,&quot;is good&quot;)</span>
+</span><span id="__span-0-327"><a id="__codelineno-0-327" name="__codelineno-0-327"></a>                    <span class="c1">#print(f,"is good")</span>
 </span><span id="__span-0-328"><a id="__codelineno-0-328" name="__codelineno-0-328"></a>                    <span class="k">break</span>
 </span><span id="__span-0-329"><a id="__codelineno-0-329" name="__codelineno-0-329"></a>            <span class="k">else</span><span class="p">:</span>
 </span><span id="__span-0-330"><a id="__codelineno-0-330" name="__codelineno-0-330"></a>                <span class="n">nums</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -3064,7 +3064,7 @@ minimal in lexicographic order.</p>
 </span><span id="__span-0-336"><a id="__codelineno-0-336" name="__codelineno-0-336"></a>                <span class="k">if</span> <span class="n">pos</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 </span><span id="__span-0-337"><a id="__codelineno-0-337" name="__codelineno-0-337"></a>                    <span class="k">yield</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span>
 </span><span id="__span-0-338"><a id="__codelineno-0-338" name="__codelineno-0-338"></a>                <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-339"><a id="__codelineno-0-339" name="__codelineno-0-339"></a>                    <span class="c1">#print(&quot;Decrease pos.&quot;)</span>
+</span><span id="__span-0-339"><a id="__codelineno-0-339" name="__codelineno-0-339"></a>                    <span class="c1">#print("Decrease pos.")</span>
 </span><span id="__span-0-340"><a id="__codelineno-0-340" name="__codelineno-0-340"></a>                    <span class="n">pos</span> <span class="o">-=</span> <span class="mi">1</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
@@ -3235,7 +3235,7 @@ provided to ensure consistency across runs.</p>
 </span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>        <span class="n">prefer_mpl</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 </span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">485</span>
 </span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">H</span><span class="p">]],</span> <span class="nb">dict</span><span class="p">[</span><span class="n">H</span><span class="p">,</span> <span class="n">rgb</span><span class="p">]]:</span>
-</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a function that assigns colors to hashable objects.</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">    </span><span class="sd">"""Get a function that assigns colors to hashable objects.</span>
 </span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>
 </span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">    The parameter n can optionally be provided to limit the number of colors</span>
 </span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">    that can be used. If the parameter provided to the returned function has</span>
@@ -3245,7 +3245,7 @@ provided to ensure consistency across runs.</p>
 </span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">    case, it is recommended to use other visual variables in conjunction with</span>
 </span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">    color to encode your data.</span>
 </span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>
-</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="sd">    By default, the colors assigned come from matplotlib&#39;s tab10 colorset. If </span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="sd">    By default, the colors assigned come from matplotlib's tab10 colorset. If </span>
 </span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">    n &gt; 10, or if prefer_mpl is False, then a set of maximally distinct colors</span>
 </span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">    is approximated using the glasbeyish library instead. The color palette</span>
 </span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">    generated by the glasbeyish library are (pseudo-)random. A seed may be</span>
@@ -3258,14 +3258,14 @@ provided to ensure consistency across runs.</p>
 </span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a>
 </span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">    Returns:</span>
 </span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">        A function that assigns data to colors.</span>
-</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">    """</span>
 </span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">color_assigner</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">H</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">H</span><span class="p">,</span> <span class="n">rgb</span><span class="p">]:</span>
 </span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a>        <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79"></a>            <span class="n">nn</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="k">else</span><span class="p">:</span>
 </span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81"></a>            <span class="n">nn</span> <span class="o">=</span> <span class="n">n</span>
 </span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82"></a>        <span class="k">if</span> <span class="n">nn</span> <span class="o">&lt;=</span> <span class="mi">10</span> <span class="ow">and</span> <span class="n">prefer_mpl</span><span class="p">:</span>
-</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83"></a>            <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">cycle</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">colormaps</span><span class="p">[</span><span class="s2">&quot;tab10&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">colors</span><span class="p">[:</span><span class="n">nn</span><span class="p">])))</span>
+</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83"></a>            <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">cycle</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">colormaps</span><span class="p">[</span><span class="s2">"tab10"</span><span class="p">]</span><span class="o">.</span><span class="n">colors</span><span class="p">[:</span><span class="n">nn</span><span class="p">])))</span>
 </span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84"></a>        <span class="k">else</span><span class="p">:</span>
 </span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85"></a>            <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
 </span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86"></a>                <span class="nb">zip</span><span class="p">(</span>
@@ -3380,7 +3380,7 @@ hashable objects, then shapes will be reused.</p>
 <span class="normal"><a href="#__codelineno-0-131">131</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="k">def</span><span class="w"> </span><span class="nf">nshape_assigner</span><span class="p">(</span>
 </span><span id="__span-0-112"><a id="__codelineno-0-112" name="__codelineno-0-112"></a>        <span class="n">n</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 </span><span id="__span-0-113"><a id="__codelineno-0-113" name="__codelineno-0-113"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">H</span><span class="p">]],</span> <span class="nb">dict</span><span class="p">[</span><span class="n">H</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-</span><span id="__span-0-114"><a id="__codelineno-0-114" name="__codelineno-0-114"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a function that assigns matplotlib marker shapes to hashable objects.</span>
+</span><span id="__span-0-114"><a id="__codelineno-0-114" name="__codelineno-0-114"></a><span class="w">    </span><span class="sd">"""Get a function that assigns matplotlib marker shapes to hashable objects.</span>
 </span><span id="__span-0-115"><a id="__codelineno-0-115" name="__codelineno-0-115"></a>
 </span><span id="__span-0-116"><a id="__codelineno-0-116" name="__codelineno-0-116"></a><span class="sd">    The parameter n can optionally be provided to limit the number of shapes</span>
 </span><span id="__span-0-117"><a id="__codelineno-0-117" name="__codelineno-0-117"></a><span class="sd">    that can be used. If n is not provided or is greater than len(shapes), then</span>
@@ -3394,7 +3394,7 @@ hashable objects, then shapes will be reused.</p>
 </span><span id="__span-0-125"><a id="__codelineno-0-125" name="__codelineno-0-125"></a>
 </span><span id="__span-0-126"><a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="sd">    Returns:</span>
 </span><span id="__span-0-127"><a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">        A function that assigns marker shapes to objects.</span>
-</span><span id="__span-0-128"><a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-128"><a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">    """</span>
 </span><span id="__span-0-129"><a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-130"><a id="__codelineno-0-130" name="__codelineno-0-130"></a>        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shapes</span><span class="p">)</span>
 </span><span id="__span-0-131"><a id="__codelineno-0-131" name="__codelineno-0-131"></a>    <span class="k">return</span> <span class="n">pool_assigner</span><span class="p">(</span><span class="n">shapes</span><span class="p">[:</span><span class="n">n</span><span class="p">])</span>
@@ -3511,7 +3511,7 @@ instead.</p>
 <span class="normal"><a href="#__codelineno-0-381">381</a></span>
 <span class="normal"><a href="#__codelineno-0-382">382</a></span>
 <span class="normal"><a href="#__codelineno-0-383">383</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-364"><a id="__codelineno-0-364" name="__codelineno-0-364"></a><span class="k">def</span><span class="w"> </span><span class="nf">pars</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
-</span><span id="__span-0-365"><a id="__codelineno-0-365" name="__codelineno-0-365"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the first element of naive_pars_seq with m elements and product &gt;= n.</span>
+</span><span id="__span-0-365"><a id="__codelineno-0-365" name="__codelineno-0-365"></a><span class="w">    </span><span class="sd">"""Get the first element of naive_pars_seq with m elements and product &gt;= n.</span>
 </span><span id="__span-0-366"><a id="__codelineno-0-366" name="__codelineno-0-366"></a>
 </span><span id="__span-0-367"><a id="__codelineno-0-367" name="__codelineno-0-367"></a><span class="sd">    This uses naiv_pars_seq for m &gt; 2. For m = 2, the faster pars_seq is used</span>
 </span><span id="__span-0-368"><a id="__codelineno-0-368" name="__codelineno-0-368"></a><span class="sd">    instead.</span>
@@ -3523,7 +3523,7 @@ instead.</p>
 </span><span id="__span-0-374"><a id="__codelineno-0-374" name="__codelineno-0-374"></a><span class="sd">    Returns:</span>
 </span><span id="__span-0-375"><a id="__codelineno-0-375" name="__codelineno-0-375"></a><span class="sd">        A tuple of length m in naive_pars_seq with product &gt;= n. </span>
 </span><span id="__span-0-376"><a id="__codelineno-0-376" name="__codelineno-0-376"></a>
-</span><span id="__span-0-377"><a id="__codelineno-0-377" name="__codelineno-0-377"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-377"><a id="__codelineno-0-377" name="__codelineno-0-377"></a><span class="sd">    """</span>
 </span><span id="__span-0-378"><a id="__codelineno-0-378" name="__codelineno-0-378"></a>    <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
 </span><span id="__span-0-379"><a id="__codelineno-0-379" name="__codelineno-0-379"></a>        <span class="k">return</span> <span class="p">(</span><span class="n">n</span><span class="p">,)</span>
 </span><span id="__span-0-380"><a id="__codelineno-0-380" name="__codelineno-0-380"></a>    <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
@@ -3558,7 +3558,7 @@ instead.</p>
 <span class="normal"><a href="#__codelineno-0-283">283</a></span>
 <span class="normal"><a href="#__codelineno-0-284">284</a></span>
 <span class="normal"><a href="#__codelineno-0-285">285</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-280"><a id="__codelineno-0-280" name="__codelineno-0-280"></a><span class="k">def</span><span class="w"> </span><span class="nf">pars2</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-</span><span id="__span-0-281"><a id="__codelineno-0-281" name="__codelineno-0-281"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the smallest element of the pars_seq sequence with product &gt;= n.&quot;&quot;&quot;</span>
+</span><span id="__span-0-281"><a id="__codelineno-0-281" name="__codelineno-0-281"></a><span class="w">    </span><span class="sd">"""Get the smallest element of the pars_seq sequence with product &gt;= n."""</span>
 </span><span id="__span-0-282"><a id="__codelineno-0-282" name="__codelineno-0-282"></a>    <span class="n">sqrt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
 </span><span id="__span-0-283"><a id="__codelineno-0-283" name="__codelineno-0-283"></a>    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">pars_seq</span><span class="p">(</span><span class="n">sqrt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">):</span>
 </span><span id="__span-0-284"><a id="__codelineno-0-284" name="__codelineno-0-284"></a>        <span class="k">if</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
@@ -3665,7 +3665,7 @@ max(c, d) such that (c, d) are coprime and c * d &gt; a * b.</p>
 <span class="normal"><a href="#__codelineno-0-276">276</a></span>
 <span class="normal"><a href="#__codelineno-0-277">277</a></span>
 <span class="normal"><a href="#__codelineno-0-278">278</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-252"><a id="__codelineno-0-252" name="__codelineno-0-252"></a><span class="k">def</span><span class="w"> </span><span class="nf">pars_seq</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
-</span><span id="__span-0-253"><a id="__codelineno-0-253" name="__codelineno-0-253"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Yields a sequence of coprime integer pairs, ordered by product.</span>
+</span><span id="__span-0-253"><a id="__codelineno-0-253" name="__codelineno-0-253"></a><span class="w">    </span><span class="sd">"""Yields a sequence of coprime integer pairs, ordered by product.</span>
 </span><span id="__span-0-254"><a id="__codelineno-0-254" name="__codelineno-0-254"></a>
 </span><span id="__span-0-255"><a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="sd">    The sequence, p, is defined as follows:</span>
 </span><span id="__span-0-256"><a id="__codelineno-0-256" name="__codelineno-0-256"></a>
@@ -3680,7 +3680,7 @@ max(c, d) such that (c, d) are coprime and c * d &gt; a * b.</p>
 </span><span id="__span-0-265"><a id="__codelineno-0-265" name="__codelineno-0-265"></a><span class="sd">    Parameters:</span>
 </span><span id="__span-0-266"><a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="sd">        a (int): The first element of the pair to start the sequence.</span>
 </span><span id="__span-0-267"><a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">        b (int): The second element of the pair to start the sequence.</span>
-</span><span id="__span-0-268"><a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-268"><a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">    """</span>
 </span><span id="__span-0-269"><a id="__codelineno-0-269" name="__codelineno-0-269"></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
 </span><span id="__span-0-270"><a id="__codelineno-0-270" name="__codelineno-0-270"></a>        <span class="k">yield</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span>
 </span><span id="__span-0-271"><a id="__codelineno-0-271" name="__codelineno-0-271"></a>        <span class="k">if</span> <span class="n">a</span> <span class="o">%</span> <span class="mi">2</span><span class="p">:</span>
@@ -3701,7 +3701,7 @@ max(c, d) such that (c, d) are coprime and c * d &gt; a * b.</p>
 
 
 <h2 id="rna_clique.viz.auto_markers.parsimonious_markers" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">parsimonious_markers</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">encodings</span><span class="p">,</span> <span class="n">assigners</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;fill&#39;</span><span class="p">:</span> <span class="n">default_fill_assigner</span><span class="p">},</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">parsimonious_markers</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">encodings</span><span class="p">,</span> <span class="n">assigners</span><span class="o">=</span><span class="p">{</span><span class="s1">'fill'</span><span class="p">:</span> <span class="n">default_fill_assigner</span><span class="p">},</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 </h2>
 
@@ -3858,10 +3858,10 @@ values.</p>
 <span class="normal"><a href="#__codelineno-0-423">423</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-387"><a id="__codelineno-0-387" name="__codelineno-0-387"></a><span class="k">def</span><span class="w"> </span><span class="nf">parsimonious_markers</span><span class="p">(</span>
 </span><span id="__span-0-388"><a id="__codelineno-0-388" name="__codelineno-0-388"></a>        <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
 </span><span id="__span-0-389"><a id="__codelineno-0-389" name="__codelineno-0-389"></a>        <span class="n">encodings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-</span><span id="__span-0-390"><a id="__codelineno-0-390" name="__codelineno-0-390"></a>        <span class="n">assigners</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;fill&quot;</span><span class="p">:</span> <span class="n">default_fill_assigner</span><span class="p">},</span>
+</span><span id="__span-0-390"><a id="__codelineno-0-390" name="__codelineno-0-390"></a>        <span class="n">assigners</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"fill"</span><span class="p">:</span> <span class="n">default_fill_assigner</span><span class="p">},</span>
 </span><span id="__span-0-391"><a id="__codelineno-0-391" name="__codelineno-0-391"></a>        <span class="n">dropna</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 </span><span id="__span-0-392"><a id="__codelineno-0-392" name="__codelineno-0-392"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-</span><span id="__span-0-393"><a id="__codelineno-0-393" name="__codelineno-0-393"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Automatically encode distinct values with few colors and shapes.</span>
+</span><span id="__span-0-393"><a id="__codelineno-0-393" name="__codelineno-0-393"></a><span class="w">    </span><span class="sd">"""Automatically encode distinct values with few colors and shapes.</span>
 </span><span id="__span-0-394"><a id="__codelineno-0-394" name="__codelineno-0-394"></a>
 </span><span id="__span-0-395"><a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="sd">    This function select c colors and s shapes to cycle through such that</span>
 </span><span id="__span-0-396"><a id="__codelineno-0-396" name="__codelineno-0-396"></a><span class="sd">    at there are at least as many pairs of shapes possible as there are distinct</span>
@@ -3877,7 +3877,7 @@ values.</p>
 </span><span id="__span-0-406"><a id="__codelineno-0-406" name="__codelineno-0-406"></a>
 </span><span id="__span-0-407"><a id="__codelineno-0-407" name="__codelineno-0-407"></a><span class="sd">    Returns:</span>
 </span><span id="__span-0-408"><a id="__codelineno-0-408" name="__codelineno-0-408"></a><span class="sd">        A dictionary efficiently mapping distinct data values to scatter kwargs.</span>
-</span><span id="__span-0-409"><a id="__codelineno-0-409" name="__codelineno-0-409"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-409"><a id="__codelineno-0-409" name="__codelineno-0-409"></a><span class="sd">    """</span>
 </span><span id="__span-0-410"><a id="__codelineno-0-410" name="__codelineno-0-410"></a>    <span class="n">encodings</span> <span class="o">=</span> <span class="p">{</span>
 </span><span id="__span-0-411"><a id="__codelineno-0-411" name="__codelineno-0-411"></a>        <span class="n">as_tuple</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">as_tuple</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 </span><span id="__span-0-412"><a id="__codelineno-0-412" name="__codelineno-0-412"></a>        <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">encodings</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
@@ -3985,7 +3985,7 @@ then values from the pool will be reused.</p>
 <span class="normal"><a href="#__codelineno-0-107">107</a></span>
 <span class="normal"><a href="#__codelineno-0-108">108</a></span>
 <span class="normal"><a href="#__codelineno-0-109">109</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95"></a><span class="k">def</span><span class="w"> </span><span class="nf">pool_assigner</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="n">pool</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">H</span><span class="p">]],</span> <span class="nb">dict</span><span class="p">[</span><span class="n">H</span><span class="p">,</span> <span class="n">T</span><span class="p">]]:</span>
-</span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a function that assigns values to hashable objects from a pool.</span>
+</span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="w">    </span><span class="sd">"""Return a function that assigns values to hashable objects from a pool.</span>
 </span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97"></a>
 </span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98"></a><span class="sd">    If values must be assigned for more distinct objects than are in the pool,</span>
 </span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99"></a><span class="sd">    then values from the pool will be reused.</span>
@@ -3995,7 +3995,7 @@ then values from the pool will be reused.</p>
 </span><span id="__span-0-103"><a id="__codelineno-0-103" name="__codelineno-0-103"></a>
 </span><span id="__span-0-104"><a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="sd">    Returns:</span>
 </span><span id="__span-0-105"><a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="sd">        A function that assigns data to values from the pool.</span>
-</span><span id="__span-0-106"><a id="__codelineno-0-106" name="__codelineno-0-106"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-106"><a id="__codelineno-0-106" name="__codelineno-0-106"></a><span class="sd">    """</span>
 </span><span id="__span-0-107"><a id="__codelineno-0-107" name="__codelineno-0-107"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">assigner</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">H</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">H</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
 </span><span id="__span-0-108"><a id="__codelineno-0-108" name="__codelineno-0-108"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">cycle</span><span class="p">(</span><span class="n">pool</span><span class="p">)))</span>
 </span><span id="__span-0-109"><a id="__codelineno-0-109" name="__codelineno-0-109"></a>    <span class="k">return</span> <span class="n">assigner</span>
@@ -4009,7 +4009,7 @@ then values from the pool will be reused.</p>
 
 
 <h2 id="rna_clique.viz.auto_markers.style_to_scatter_kwargs" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">style_to_scatter_kwargs</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;c1&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">style_to_scatter_kwargs</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">'c1'</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">'o'</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 </h2>
 
@@ -4100,20 +4100,20 @@ then values from the pool will be reused.</p>
 <span class="normal"><a href="#__codelineno-0-40">40</a></span>
 <span class="normal"><a href="#__codelineno-0-41">41</a></span>
 <span class="normal"><a href="#__codelineno-0-42">42</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="k">def</span><span class="w"> </span><span class="nf">style_to_scatter_kwargs</span><span class="p">(</span>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="n">color</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="n">rgb</span>  <span class="o">=</span> <span class="s2">&quot;c1&quot;</span><span class="p">,</span>
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a>        <span class="n">shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="n">color</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="n">rgb</span>  <span class="o">=</span> <span class="s2">"c1"</span><span class="p">,</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a>        <span class="n">shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"o"</span><span class="p">,</span>
 </span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>        <span class="n">fill</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 </span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct matplotlib scatter kwargs for given marker style description.</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="w">    </span><span class="sd">"""Construct matplotlib scatter kwargs for given marker style description.</span>
 </span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33"></a>
 </span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">    Parameters:</span>
 </span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">        color (int): The color of the marker.</span>
 </span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">        shape (str): The shape of the marker.</span>
 </span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">        fill (bool): Whether the marker is filled.</span>
-</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">}</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">    """</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"marker"</span><span class="p">:</span> <span class="n">shape</span><span class="p">,</span> <span class="s2">"color"</span><span class="p">:</span> <span class="n">color</span><span class="p">}</span>
 </span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">fill</span><span class="p">:</span>
-</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;facecolors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"facecolors"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"none"</span>
 </span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="k">return</span> <span class="n">kwargs</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
@@ -4180,7 +4180,7 @@ then values from the pool will be reused.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../../../../..", "features": ["content.code.copy"], "search": "../../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
     
     
-      <script src="../../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../../../javascripts/mathjax.js"></script>
       

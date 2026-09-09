@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -2224,7 +2224,7 @@
 
 
 <h2 id="rna_clique.filtering_step.filtering_step" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">filtering_step</span><span class="p">(</span><span class="n">dirs</span><span class="p">,</span> <span class="n">out_dir_1</span><span class="p">,</span> <span class="n">out_dir_2</span><span class="p">,</span> <span class="n">cache_dir</span><span class="p">,</span> <span class="n">output_graph</span><span class="p">,</span> <span class="n">top_genes</span><span class="p">,</span> <span class="n">transcripts</span><span class="o">=</span><span class="s1">&#39;transcripts.fasta&#39;</span><span class="p">,</span> <span class="n">top_matches</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">id_parser</span><span class="o">=</span><span class="n">TranscriptID</span><span class="o">.</span><span class="n">parser_from_re</span><span class="p">(</span><span class="n">default_gene_re</span><span class="p">),</span> <span class="n">evalue</span><span class="o">=</span><span class="mf">1e-99</span><span class="p">,</span> <span class="n">keep_all</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">jobs</span><span class="o">=</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">filtering_step</span><span class="p">(</span><span class="n">dirs</span><span class="p">,</span> <span class="n">out_dir_1</span><span class="p">,</span> <span class="n">out_dir_2</span><span class="p">,</span> <span class="n">cache_dir</span><span class="p">,</span> <span class="n">output_graph</span><span class="p">,</span> <span class="n">top_genes</span><span class="p">,</span> <span class="n">transcripts</span><span class="o">=</span><span class="s1">'transcripts.fasta'</span><span class="p">,</span> <span class="n">top_matches</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">id_parser</span><span class="o">=</span><span class="n">TranscriptID</span><span class="o">.</span><span class="n">parser_from_re</span><span class="p">(</span><span class="n">default_gene_re</span><span class="p">),</span> <span class="n">evalue</span><span class="o">=</span><span class="mf">1e-99</span><span class="p">,</span> <span class="n">keep_all</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">jobs</span><span class="o">=</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2603,7 +2603,7 @@ tables are loaded from disk as the iteratable is iterated.</p>
 </span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="n">cache_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
 </span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="n">output_graph</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
 </span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="n">top_genes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>        <span class="n">transcripts</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;transcripts.fasta&quot;</span><span class="p">,</span>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>        <span class="n">transcripts</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"transcripts.fasta"</span><span class="p">,</span>
 </span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>        <span class="n">top_matches</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 </span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="n">id_parser</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
 </span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a>            <span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -2613,10 +2613,10 @@ tables are loaded from disk as the iteratable is iterated.</p>
 </span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a>        <span class="n">keep_all</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 </span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="n">jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
 </span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">]:</span>
-</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform the filtering step (phase 1) of RNA-clique.</span>
+</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="w">    </span><span class="sd">"""Perform the filtering step (phase 1) of RNA-clique.</span>
 </span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79"></a>
 </span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="sd">    This function performs the full filtering step of RNA-clique, which has also</span>
-</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="sd">    been referred to as &quot;phase 1&quot; in some RNA-clique documentation. Phase 1</span>
+</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="sd">    been referred to as "phase 1" in some RNA-clique documentation. Phase 1</span>
 </span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="sd">    consists of the following steps:</span>
 </span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83"></a>
 </span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="sd">    1. Selection of top n genes by k-mer coverage for every sample.</span>
@@ -2626,7 +2626,7 @@ tables are loaded from disk as the iteratable is iterated.</p>
 </span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88"></a>
 </span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89"></a><span class="sd">    The third step involves finding for each unordered pair of samples the best</span>
 </span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90"></a><span class="sd">    matches in both directions for every gene belonging to one of the samples. A</span>
-</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="sd">    pair of genes, one from each sample, makes it into the &quot;gene matches table&quot;</span>
+</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="sd">    pair of genes, one from each sample, makes it into the "gene matches table"</span>
 </span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="sd">    for the pair of samples only when that pair of genes appears among the top N</span>
 </span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="sd">    matches for the first sample in both directions. This parameter is usually</span>
 </span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="sd">    set to 1, so a match is only counted if it is (one of) the best in both</span>
@@ -2662,7 +2662,7 @@ tables are loaded from disk as the iteratable is iterated.</p>
 </span><span id="__span-0-124"><a id="__codelineno-0-124" name="__codelineno-0-124"></a>
 </span><span id="__span-0-125"><a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="sd">    Returns:</span>
 </span><span id="__span-0-126"><a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="sd">        Two iterables with gene matches tables and paths, gene matches graph.</span>
-</span><span id="__span-0-127"><a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-127"><a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">    """</span>
 </span><span id="__span-0-128"><a id="__codelineno-0-128" name="__codelineno-0-128"></a>    <span class="n">path_to_sample</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
 </span><span id="__span-0-129"><a id="__codelineno-0-129" name="__codelineno-0-129"></a>        <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">jobs</span><span class="p">)(</span>
 </span><span id="__span-0-130"><a id="__codelineno-0-130" name="__codelineno-0-130"></a>            <span class="nb">map</span><span class="p">(</span>
@@ -2693,7 +2693,7 @@ tables are loaded from disk as the iteratable is iterated.</p>
 </span><span id="__span-0-155"><a id="__codelineno-0-155" name="__codelineno-0-155"></a>        <span class="n">jobs</span><span class="o">=</span><span class="n">jobs</span><span class="p">,</span>
 </span><span id="__span-0-156"><a id="__codelineno-0-156" name="__codelineno-0-156"></a>    <span class="p">)</span>
 </span><span id="__span-0-157"><a id="__codelineno-0-157" name="__codelineno-0-157"></a>    <span class="n">graph</span> <span class="o">=</span> <span class="n">build_graph</span><span class="p">(</span><span class="n">tqdm</span><span class="p">(</span><span class="n">tables</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">num_tables</span><span class="p">))</span>
-</span><span id="__span-0-158"><a id="__codelineno-0-158" name="__codelineno-0-158"></a>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_graph</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span id="__span-0-158"><a id="__codelineno-0-158" name="__codelineno-0-158"></a>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_graph</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 </span><span id="__span-0-159"><a id="__codelineno-0-159" name="__codelineno-0-159"></a>        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
 </span><span id="__span-0-160"><a id="__codelineno-0-160" name="__codelineno-0-160"></a>    <span class="n">table_paths1</span><span class="p">,</span> <span class="n">table_paths2</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">tee</span><span class="p">(</span><span class="n">table_paths</span><span class="p">)</span>
 </span><span id="__span-0-161"><a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="k">return</span> <span class="nb">map</span><span class="p">(</span>
@@ -2765,7 +2765,7 @@ tables are loaded from disk as the iteratable is iterated.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["content.code.copy"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../../javascripts/mathjax.js"></script>
       

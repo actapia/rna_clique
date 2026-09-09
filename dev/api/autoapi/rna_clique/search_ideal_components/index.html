@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -2859,25 +2859,25 @@ were matching sequences.</p>
 </span><span id="__span-0-159"><a id="__codelineno-0-159" name="__codelineno-0-159"></a>        <span class="n">jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 </span><span id="__span-0-160"><a id="__codelineno-0-160" name="__codelineno-0-160"></a>        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 </span><span id="__span-0-161"><a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SearchResult</span><span class="p">:</span>
-</span><span id="__span-0-162"><a id="__codelineno-0-162" name="__codelineno-0-162"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Search for sequences within exported orthologs.</span>
+</span><span id="__span-0-162"><a id="__codelineno-0-162" name="__codelineno-0-162"></a><span class="w">    </span><span class="sd">"""Search for sequences within exported orthologs.</span>
 </span><span id="__span-0-163"><a id="__codelineno-0-163" name="__codelineno-0-163"></a>
 </span><span id="__span-0-164"><a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="sd">    This function requires a SampleSimilarity object from which it obtains the</span>
 </span><span id="__span-0-165"><a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="sd">    gene matches graph, gene matches tables, and sample count. The function also</span>
-</span><span id="__span-0-166"><a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">    needs a Path to a file containing the concatenated (&quot;all_ideal.fasta&quot;)</span>
+</span><span id="__span-0-166"><a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">    needs a Path to a file containing the concatenated ("all_ideal.fasta")</span>
 </span><span id="__span-0-167"><a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    exported orthologs, the output directory in which to store the search</span>
 </span><span id="__span-0-168"><a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    resutls, and a path to a FASTA file with the query sequences. The sequence</span>
 </span><span id="__span-0-169"><a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="sd">    IDs of the exported orthologs must be in a specific format---they should</span>
-</span><span id="__span-0-170"><a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    contain the original transcript FASTA ID followed by a colon (&#39;:&#39;) and then</span>
+</span><span id="__span-0-170"><a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    contain the original transcript FASTA ID followed by a colon (':') and then</span>
 </span><span id="__span-0-171"><a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">    the sample ID. To use this format for an export (using OrthologExporter),</span>
-</span><span id="__span-0-172"><a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">    use &quot;after&quot; for the order parameter to the by_components method.</span>
+</span><span id="__span-0-172"><a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">    use "after" for the order parameter to the by_components method.</span>
 </span><span id="__span-0-173"><a id="__codelineno-0-173" name="__codelineno-0-173"></a>
 </span><span id="__span-0-174"><a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">    By default, the function searches the exported orthologs for the given query</span>
-</span><span id="__span-0-175"><a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">    sequences, producing a SAM alignment named &quot;queries.sam&quot; in the provided</span>
-</span><span id="__span-0-176"><a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">    output directory. The function also produces a &quot;subjects.fasta&quot; file</span>
+</span><span id="__span-0-175"><a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">    sequences, producing a SAM alignment named "queries.sam" in the provided</span>
+</span><span id="__span-0-176"><a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">    output directory. The function also produces a "subjects.fasta" file</span>
 </span><span id="__span-0-177"><a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">    containing the sequences of the transcripts for which BLAST obtained</span>
 </span><span id="__span-0-178"><a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">    alignments with the query sequences.</span>
 </span><span id="__span-0-179"><a id="__codelineno-0-179" name="__codelineno-0-179"></a>
-</span><span id="__span-0-180"><a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">    Optionally, an &quot;extended search&quot; can be performed by passing True for the</span>
+</span><span id="__span-0-180"><a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">    Optionally, an "extended search" can be performed by passing True for the</span>
 </span><span id="__span-0-181"><a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">    extended_search parameter. In the extended search, when a transcript matches</span>
 </span><span id="__span-0-182"><a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">    one of the query sequences in the initial search, additional searches are</span>
 </span><span id="__span-0-183"><a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="sd">    performed to compare the query sequences with other isoforms of the same</span>
@@ -2896,10 +2896,10 @@ were matching sequences.</p>
 </span><span id="__span-0-196"><a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">    be enabled by passing a value of True for the export_component parameter.</span>
 </span><span id="__span-0-197"><a id="__codelineno-0-197" name="__codelineno-0-197"></a>
 </span><span id="__span-0-198"><a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">    When this function searches additional isoforms in the extended search,</span>
-</span><span id="__span-0-199"><a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">    every isoform&#39;s search results are written to separate SAM file with the</span>
-</span><span id="__span-0-200"><a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    pattern &quot;{sample_id}_g{gene_id}_i{isoform_id}.sam&quot;. Sometimes it is more</span>
+</span><span id="__span-0-199"><a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">    every isoform's search results are written to separate SAM file with the</span>
+</span><span id="__span-0-200"><a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    pattern "{sample_id}_g{gene_id}_i{isoform_id}.sam". Sometimes it is more</span>
 </span><span id="__span-0-201"><a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">    convenient to have all of these results in a single SAM file. To enable</span>
-</span><span id="__span-0-202"><a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    creation of such a &quot;graph.sam&quot; file, pass True for the merge_sams parameter.</span>
+</span><span id="__span-0-202"><a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    creation of such a "graph.sam" file, pass True for the merge_sams parameter.</span>
 </span><span id="__span-0-203"><a id="__codelineno-0-203" name="__codelineno-0-203"></a>
 </span><span id="__span-0-204"><a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">    One goal of the extended search is to help the user determine if a sequence</span>
 </span><span id="__span-0-205"><a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">    found among the exported orthologs is really present or if it might be an</span>
@@ -2945,7 +2945,7 @@ were matching sequences.</p>
 </span><span id="__span-0-245"><a id="__codelineno-0-245" name="__codelineno-0-245"></a>
 </span><span id="__span-0-246"><a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="sd">    Returns:</span>
 </span><span id="__span-0-247"><a id="__codelineno-0-247" name="__codelineno-0-247"></a><span class="sd">        The SearchResult object representing results of searching the exports.</span>
-</span><span id="__span-0-248"><a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-248"><a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="sd">    """</span>
 </span><span id="__span-0-249"><a id="__codelineno-0-249" name="__codelineno-0-249"></a>    <span class="k">if</span> <span class="n">extended_evalue</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
 </span><span id="__span-0-250"><a id="__codelineno-0-250" name="__codelineno-0-250"></a>        <span class="n">extended_evalue</span> <span class="o">=</span> <span class="n">default_extended_search_evalue</span>
 </span><span id="__span-0-251"><a id="__codelineno-0-251" name="__codelineno-0-251"></a>    <span class="n">db_cache_loc</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -2964,24 +2964,24 @@ were matching sequences.</p>
 </span><span id="__span-0-264"><a id="__codelineno-0-264" name="__codelineno-0-264"></a>    <span class="p">)</span>
 </span><span id="__span-0-265"><a id="__codelineno-0-265" name="__codelineno-0-265"></a>    <span class="n">tab_search</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">to_search</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 </span><span id="__span-0-266"><a id="__codelineno-0-266" name="__codelineno-0-266"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">tab_search</span><span class="o">.</span><span class="n">hits</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span id="__span-0-267"><a id="__codelineno-0-267" name="__codelineno-0-267"></a>        <span class="c1"># print(&quot;Found {} hits.&quot;.format(tab_search.hits.shape[0]))</span>
+</span><span id="__span-0-267"><a id="__codelineno-0-267" name="__codelineno-0-267"></a>        <span class="c1"># print("Found {} hits.".format(tab_search.hits.shape[0]))</span>
 </span><span id="__span-0-268"><a id="__codelineno-0-268" name="__codelineno-0-268"></a>        <span class="n">sample_to_path</span> <span class="o">=</span> <span class="p">{}</span>
 </span><span id="__span-0-269"><a id="__codelineno-0-269" name="__codelineno-0-269"></a>        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">samples</span><span class="p">:</span>            
 </span><span id="__span-0-270"><a id="__codelineno-0-270" name="__codelineno-0-270"></a>            <span class="k">try</span><span class="p">:</span>
 </span><span id="__span-0-271"><a id="__codelineno-0-271" name="__codelineno-0-271"></a>                <span class="n">sample_to_path</span><span class="p">[</span><span class="n">path_to_sample</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="n">v</span>
 </span><span id="__span-0-272"><a id="__codelineno-0-272" name="__codelineno-0-272"></a>            <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="n">PathToSampleError</span><span class="p">):</span>
 </span><span id="__span-0-273"><a id="__codelineno-0-273" name="__codelineno-0-273"></a>                <span class="k">raise</span> <span class="n">PathToSampleError</span><span class="p">(</span>
-</span><span id="__span-0-274"><a id="__codelineno-0-274" name="__codelineno-0-274"></a>                    <span class="sa">f</span><span class="s2">&quot;Cannot get sample name for path </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-0-274"><a id="__codelineno-0-274" name="__codelineno-0-274"></a>                    <span class="sa">f</span><span class="s2">"Cannot get sample name for path </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
 </span><span id="__span-0-275"><a id="__codelineno-0-275" name="__codelineno-0-275"></a>                    <span class="n">v</span>
 </span><span id="__span-0-276"><a id="__codelineno-0-276" name="__codelineno-0-276"></a>                <span class="p">)</span>
 </span><span id="__span-0-277"><a id="__codelineno-0-277" name="__codelineno-0-277"></a>        <span class="c1"># Save the initial search alignments in SAM format.</span>
 </span><span id="__span-0-278"><a id="__codelineno-0-278" name="__codelineno-0-278"></a>        <span class="n">Bio</span><span class="o">.</span><span class="n">Align</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
 </span><span id="__span-0-279"><a id="__codelineno-0-279" name="__codelineno-0-279"></a>            <span class="n">search</span><span class="o">.</span><span class="n">to_sam</span><span class="p">(</span><span class="n">subject_as_reference</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">hits</span><span class="p">,</span>
-</span><span id="__span-0-280"><a id="__codelineno-0-280" name="__codelineno-0-280"></a>            <span class="n">out_dir</span> <span class="o">/</span> <span class="s2">&quot;queries.sam&quot;</span><span class="p">,</span>
-</span><span id="__span-0-281"><a id="__codelineno-0-281" name="__codelineno-0-281"></a>            <span class="s2">&quot;sam&quot;</span>
+</span><span id="__span-0-280"><a id="__codelineno-0-280" name="__codelineno-0-280"></a>            <span class="n">out_dir</span> <span class="o">/</span> <span class="s2">"queries.sam"</span><span class="p">,</span>
+</span><span id="__span-0-281"><a id="__codelineno-0-281" name="__codelineno-0-281"></a>            <span class="s2">"sam"</span>
 </span><span id="__span-0-282"><a id="__codelineno-0-282" name="__codelineno-0-282"></a>        <span class="p">)</span>
 </span><span id="__span-0-283"><a id="__codelineno-0-283" name="__codelineno-0-283"></a>        <span class="n">subjects</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-</span><span id="__span-0-284"><a id="__codelineno-0-284" name="__codelineno-0-284"></a>        <span class="n">export_index</span> <span class="o">=</span> <span class="n">Bio</span><span class="o">.</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">exported</span><span class="p">,</span> <span class="s2">&quot;fasta&quot;</span><span class="p">)</span>
+</span><span id="__span-0-284"><a id="__codelineno-0-284" name="__codelineno-0-284"></a>        <span class="n">export_index</span> <span class="o">=</span> <span class="n">Bio</span><span class="o">.</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">exported</span><span class="p">,</span> <span class="s2">"fasta"</span><span class="p">)</span>
 </span><span id="__span-0-285"><a id="__codelineno-0-285" name="__codelineno-0-285"></a>        <span class="n">ideal</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">get_ideal_components</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">sim</span><span class="o">.</span><span class="n">sample_count</span><span class="p">))</span>
 </span><span id="__span-0-286"><a id="__codelineno-0-286" name="__codelineno-0-286"></a>        <span class="n">sample_gene_to_component</span> <span class="o">=</span> <span class="n">get_sample_gene_to_component</span><span class="p">(</span><span class="n">ideal</span><span class="p">)</span>
 </span><span id="__span-0-287"><a id="__codelineno-0-287" name="__codelineno-0-287"></a>        <span class="c1"># TODO: See if we can avoid rebuilding node_to_ccc when only</span>
@@ -2997,13 +2997,13 @@ were matching sequences.</p>
 </span><span id="__span-0-297"><a id="__codelineno-0-297" name="__codelineno-0-297"></a>        <span class="c1"># cccs ONLY contains the components for which the corresponding</span>
 </span><span id="__span-0-298"><a id="__codelineno-0-298" name="__codelineno-0-298"></a>        <span class="c1"># nodes can be found in the BLAST results.</span>
 </span><span id="__span-0-299"><a id="__codelineno-0-299" name="__codelineno-0-299"></a>        <span class="n">cccs</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-</span><span id="__span-0-300"><a id="__codelineno-0-300" name="__codelineno-0-300"></a>        <span class="k">for</span> <span class="n">full_seq_id</span> <span class="ow">in</span> <span class="n">tab_search</span><span class="o">.</span><span class="n">hits</span><span class="p">[</span><span class="s2">&quot;sseqid&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">():</span>
+</span><span id="__span-0-300"><a id="__codelineno-0-300" name="__codelineno-0-300"></a>        <span class="k">for</span> <span class="n">full_seq_id</span> <span class="ow">in</span> <span class="n">tab_search</span><span class="o">.</span><span class="n">hits</span><span class="p">[</span><span class="s2">"sseqid"</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">():</span>
 </span><span id="__span-0-301"><a id="__codelineno-0-301" name="__codelineno-0-301"></a>            <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-0-302"><a id="__codelineno-0-302" name="__codelineno-0-302"></a>                <span class="n">seq_id</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">full_seq_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+</span><span id="__span-0-302"><a id="__codelineno-0-302" name="__codelineno-0-302"></a>                <span class="n">seq_id</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">full_seq_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">)</span>
 </span><span id="__span-0-303"><a id="__codelineno-0-303" name="__codelineno-0-303"></a>            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
 </span><span id="__span-0-304"><a id="__codelineno-0-304" name="__codelineno-0-304"></a>                <span class="k">raise</span> <span class="n">TranscriptIDParseError</span><span class="p">(</span>
-</span><span id="__span-0-305"><a id="__codelineno-0-305" name="__codelineno-0-305"></a>                    <span class="sa">f</span><span class="s2">&quot;FASTA ID </span><span class="si">{</span><span class="n">full_seq_id</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">exported</span><span class="si">}</span><span class="s2"> is missing one or &quot;</span>
-</span><span id="__span-0-306"><a id="__codelineno-0-306" name="__codelineno-0-306"></a>                    <span class="s2">&quot;more group identifiers (expected 3).&quot;</span>
+</span><span id="__span-0-305"><a id="__codelineno-0-305" name="__codelineno-0-305"></a>                    <span class="sa">f</span><span class="s2">"FASTA ID </span><span class="si">{</span><span class="n">full_seq_id</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">exported</span><span class="si">}</span><span class="s2"> is missing one or "</span>
+</span><span id="__span-0-306"><a id="__codelineno-0-306" name="__codelineno-0-306"></a>                    <span class="s2">"more group identifiers (expected 3)."</span>
 </span><span id="__span-0-307"><a id="__codelineno-0-307" name="__codelineno-0-307"></a>                <span class="p">)</span>
 </span><span id="__span-0-308"><a id="__codelineno-0-308" name="__codelineno-0-308"></a>            <span class="n">node</span> <span class="o">=</span> <span class="p">(</span><span class="n">sample_to_path</span><span class="p">[</span><span class="n">sample</span><span class="p">],)</span> <span class="o">+</span> \
 </span><span id="__span-0-309"><a id="__codelineno-0-309" name="__codelineno-0-309"></a>                <span class="n">parse_transcript_id</span><span class="p">(</span><span class="n">seq_id</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
@@ -3014,12 +3014,12 @@ were matching sequences.</p>
 </span><span id="__span-0-314"><a id="__codelineno-0-314" name="__codelineno-0-314"></a>            <span class="c1"># Get a mapping from gene matches graph nodes to sequence IDs.</span>
 </span><span id="__span-0-315"><a id="__codelineno-0-315" name="__codelineno-0-315"></a>            <span class="n">node_to_seq_id</span> <span class="o">=</span> <span class="p">{}</span>
 </span><span id="__span-0-316"><a id="__codelineno-0-316" name="__codelineno-0-316"></a>            <span class="k">for</span> <span class="n">full_seq_id</span> <span class="ow">in</span> <span class="n">export_index</span><span class="p">:</span>
-</span><span id="__span-0-317"><a id="__codelineno-0-317" name="__codelineno-0-317"></a>                <span class="n">seq_id</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">full_seq_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+</span><span id="__span-0-317"><a id="__codelineno-0-317" name="__codelineno-0-317"></a>                <span class="n">seq_id</span><span class="p">,</span> <span class="n">sample</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">full_seq_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">)</span>
 </span><span id="__span-0-318"><a id="__codelineno-0-318" name="__codelineno-0-318"></a>                <span class="n">node</span> <span class="o">=</span> <span class="p">(</span><span class="n">sample_to_path</span><span class="p">[</span><span class="n">sample</span><span class="p">],)</span> <span class="o">+</span> \
 </span><span id="__span-0-319"><a id="__codelineno-0-319" name="__codelineno-0-319"></a>                    <span class="n">parse_transcript_id</span><span class="p">(</span><span class="n">full_seq_id</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
 </span><span id="__span-0-320"><a id="__codelineno-0-320" name="__codelineno-0-320"></a>                <span class="n">node_to_seq_id</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_seq_id</span>
 </span><span id="__span-0-321"><a id="__codelineno-0-321" name="__codelineno-0-321"></a>            <span class="c1"># Map sample-gene pairs to ideal component indices.</span>
-</span><span id="__span-0-322"><a id="__codelineno-0-322" name="__codelineno-0-322"></a>            <span class="c1"># print(&quot;Going over component connected components.&quot;)</span>
+</span><span id="__span-0-322"><a id="__codelineno-0-322" name="__codelineno-0-322"></a>            <span class="c1"># print("Going over component connected components.")</span>
 </span><span id="__span-0-323"><a id="__codelineno-0-323" name="__codelineno-0-323"></a>            <span class="k">for</span> <span class="n">ccc</span><span class="p">,</span> <span class="n">nodes</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">cccs</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
 </span><span id="__span-0-324"><a id="__codelineno-0-324" name="__codelineno-0-324"></a>                <span class="k">if</span> <span class="n">export_components</span><span class="p">:</span>
 </span><span id="__span-0-325"><a id="__codelineno-0-325" name="__codelineno-0-325"></a>                    <span class="c1"># Get the corresponding ideal component index for the</span>
@@ -3035,7 +3035,7 @@ were matching sequences.</p>
 </span><span id="__span-0-335"><a id="__codelineno-0-335" name="__codelineno-0-335"></a>                    <span class="c1"># component.</span>
 </span><span id="__span-0-336"><a id="__codelineno-0-336" name="__codelineno-0-336"></a>                    <span class="n">nx</span><span class="o">.</span><span class="n">write_graphml</span><span class="p">(</span>
 </span><span id="__span-0-337"><a id="__codelineno-0-337" name="__codelineno-0-337"></a>                        <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">union</span><span class="p">,</span> <span class="n">ccc</span><span class="o">.</span><span class="n">nodes</span><span class="p">),</span>
-</span><span id="__span-0-338"><a id="__codelineno-0-338" name="__codelineno-0-338"></a>                        <span class="n">out_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;ideal_component_</span><span class="si">{</span><span class="n">ideal_index</span><span class="si">}</span><span class="s2">.graphml&quot;</span>
+</span><span id="__span-0-338"><a id="__codelineno-0-338" name="__codelineno-0-338"></a>                        <span class="n">out_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"ideal_component_</span><span class="si">{</span><span class="n">ideal_index</span><span class="si">}</span><span class="s2">.graphml"</span>
 </span><span id="__span-0-339"><a id="__codelineno-0-339" name="__codelineno-0-339"></a>                    <span class="p">)</span>
 </span><span id="__span-0-340"><a id="__codelineno-0-340" name="__codelineno-0-340"></a>                <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
 </span><span id="__span-0-341"><a id="__codelineno-0-341" name="__codelineno-0-341"></a>                    <span class="c1"># Get the strand graph connected component corresponding to</span>
@@ -3070,7 +3070,7 @@ were matching sequences.</p>
 </span><span id="__span-0-370"><a id="__codelineno-0-370" name="__codelineno-0-370"></a>                                    <span class="n">queries</span><span class="p">,</span>
 </span><span id="__span-0-371"><a id="__codelineno-0-371" name="__codelineno-0-371"></a>                                    <span class="n">evalue</span><span class="o">=</span><span class="n">extended_evalue</span><span class="p">,</span>
 </span><span id="__span-0-372"><a id="__codelineno-0-372" name="__codelineno-0-372"></a>                            <span class="p">)</span> <span class="k">as</span> <span class="n">new_search</span><span class="p">:</span>
-</span><span id="__span-0-373"><a id="__codelineno-0-373" name="__codelineno-0-373"></a>                                <span class="n">out_path</span> <span class="o">=</span> <span class="n">out_dir</span> <span class="o">/</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_g</span><span class="si">{}</span><span class="s2">_i</span><span class="si">{}</span><span class="s2">.sam&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+</span><span id="__span-0-373"><a id="__codelineno-0-373" name="__codelineno-0-373"></a>                                <span class="n">out_path</span> <span class="o">=</span> <span class="n">out_dir</span> <span class="o">/</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">_g</span><span class="si">{}</span><span class="s2">_i</span><span class="si">{}</span><span class="s2">.sam"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
 </span><span id="__span-0-374"><a id="__codelineno-0-374" name="__codelineno-0-374"></a>                                    <span class="n">path_to_sample</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
 </span><span id="__span-0-375"><a id="__codelineno-0-375" name="__codelineno-0-375"></a>                                    <span class="o">*</span><span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 </span><span id="__span-0-376"><a id="__codelineno-0-376" name="__codelineno-0-376"></a>                                <span class="p">)</span>
@@ -3079,13 +3079,13 @@ were matching sequences.</p>
 </span><span id="__span-0-379"><a id="__codelineno-0-379" name="__codelineno-0-379"></a>                                        <span class="n">subject_as_reference</span><span class="o">=</span><span class="kc">False</span>
 </span><span id="__span-0-380"><a id="__codelineno-0-380" name="__codelineno-0-380"></a>                                    <span class="p">)</span><span class="o">.</span><span class="n">hits</span><span class="p">,</span>
 </span><span id="__span-0-381"><a id="__codelineno-0-381" name="__codelineno-0-381"></a>                                    <span class="n">out_path</span><span class="p">,</span>
-</span><span id="__span-0-382"><a id="__codelineno-0-382" name="__codelineno-0-382"></a>                                    <span class="s2">&quot;sam&quot;</span>
+</span><span id="__span-0-382"><a id="__codelineno-0-382" name="__codelineno-0-382"></a>                                    <span class="s2">"sam"</span>
 </span><span id="__span-0-383"><a id="__codelineno-0-383" name="__codelineno-0-383"></a>                                <span class="p">)</span>
 </span><span id="__span-0-384"><a id="__codelineno-0-384" name="__codelineno-0-384"></a>                                <span class="n">sam_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
 </span><span id="__span-0-385"><a id="__codelineno-0-385" name="__codelineno-0-385"></a>        <span class="k">if</span> <span class="n">sam_paths</span> <span class="ow">and</span> <span class="n">merge_sams</span><span class="p">:</span>
 </span><span id="__span-0-386"><a id="__codelineno-0-386" name="__codelineno-0-386"></a>            <span class="n">pysam</span><span class="o">.</span><span class="n">samtools</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-</span><span id="__span-0-387"><a id="__codelineno-0-387" name="__codelineno-0-387"></a>                <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
-</span><span id="__span-0-388"><a id="__codelineno-0-388" name="__codelineno-0-388"></a>                <span class="nb">str</span><span class="p">(</span><span class="n">out_dir</span> <span class="o">/</span> <span class="s2">&quot;graph.sam&quot;</span><span class="p">),</span>
+</span><span id="__span-0-387"><a id="__codelineno-0-387" name="__codelineno-0-387"></a>                <span class="s2">"-o"</span><span class="p">,</span>
+</span><span id="__span-0-388"><a id="__codelineno-0-388" name="__codelineno-0-388"></a>                <span class="nb">str</span><span class="p">(</span><span class="n">out_dir</span> <span class="o">/</span> <span class="s2">"graph.sam"</span><span class="p">),</span>
 </span><span id="__span-0-389"><a id="__codelineno-0-389" name="__codelineno-0-389"></a>                <span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">sam_paths</span><span class="p">)</span>
 </span><span id="__span-0-390"><a id="__codelineno-0-390" name="__codelineno-0-390"></a>            <span class="p">)</span>
 </span><span id="__span-0-391"><a id="__codelineno-0-391" name="__codelineno-0-391"></a>        <span class="n">Bio</span><span class="o">.</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
@@ -3093,15 +3093,15 @@ were matching sequences.</p>
 </span><span id="__span-0-393"><a id="__codelineno-0-393" name="__codelineno-0-393"></a>                <span class="n">export_index</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
 </span><span id="__span-0-394"><a id="__codelineno-0-394" name="__codelineno-0-394"></a>                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">subjects</span>
 </span><span id="__span-0-395"><a id="__codelineno-0-395" name="__codelineno-0-395"></a>            <span class="p">),</span>
-</span><span id="__span-0-396"><a id="__codelineno-0-396" name="__codelineno-0-396"></a>            <span class="n">out_dir</span> <span class="o">/</span> <span class="s2">&quot;subjects.fasta&quot;</span><span class="p">,</span>
-</span><span id="__span-0-397"><a id="__codelineno-0-397" name="__codelineno-0-397"></a>            <span class="s2">&quot;fasta&quot;</span>
+</span><span id="__span-0-396"><a id="__codelineno-0-396" name="__codelineno-0-396"></a>            <span class="n">out_dir</span> <span class="o">/</span> <span class="s2">"subjects.fasta"</span><span class="p">,</span>
+</span><span id="__span-0-397"><a id="__codelineno-0-397" name="__codelineno-0-397"></a>            <span class="s2">"fasta"</span>
 </span><span id="__span-0-398"><a id="__codelineno-0-398" name="__codelineno-0-398"></a>        <span class="p">)</span>
 </span><span id="__span-0-399"><a id="__codelineno-0-399" name="__codelineno-0-399"></a>        <span class="n">return_result</span> <span class="o">=</span> <span class="n">SearchResult</span><span class="p">(</span>
 </span><span id="__span-0-400"><a id="__codelineno-0-400" name="__codelineno-0-400"></a>            <span class="n">tab_search</span><span class="o">.</span><span class="n">hits</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-</span><span id="__span-0-401"><a id="__codelineno-0-401" name="__codelineno-0-401"></a>            <span class="nb">len</span><span class="p">(</span><span class="n">tab_search</span><span class="o">.</span><span class="n">hits</span><span class="p">[</span><span class="s2">&quot;sseqid&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()),</span>
+</span><span id="__span-0-401"><a id="__codelineno-0-401" name="__codelineno-0-401"></a>            <span class="nb">len</span><span class="p">(</span><span class="n">tab_search</span><span class="o">.</span><span class="n">hits</span><span class="p">[</span><span class="s2">"sseqid"</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()),</span>
 </span><span id="__span-0-402"><a id="__codelineno-0-402" name="__codelineno-0-402"></a>            <span class="nb">len</span><span class="p">(</span><span class="n">cccs</span><span class="p">)</span>
 </span><span id="__span-0-403"><a id="__codelineno-0-403" name="__codelineno-0-403"></a>        <span class="p">)</span>
-</span><span id="__span-0-404"><a id="__codelineno-0-404" name="__codelineno-0-404"></a>        <span class="c1"># print(&quot;Returning&quot;, return_result)</span>
+</span><span id="__span-0-404"><a id="__codelineno-0-404" name="__codelineno-0-404"></a>        <span class="c1"># print("Returning", return_result)</span>
 </span><span id="__span-0-405"><a id="__codelineno-0-405" name="__codelineno-0-405"></a>        <span class="k">return</span> <span class="n">return_result</span>
 </span><span id="__span-0-406"><a id="__codelineno-0-406" name="__codelineno-0-406"></a>    <span class="k">else</span><span class="p">:</span>
 </span><span id="__span-0-407"><a id="__codelineno-0-407" name="__codelineno-0-407"></a>        <span class="k">return</span> <span class="n">SearchResult</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -3170,7 +3170,7 @@ were matching sequences.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["content.code.copy"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../../../javascripts/mathjax.js"></script>
       
