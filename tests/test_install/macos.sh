@@ -12,7 +12,7 @@ cd
 sudo -v
 CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/opt/homebrew/bin/brew shellenv zsh)"
-brew install blast python@3.14
+brew install -y blast python@3.14
 python3.14 -m venv rna_clique_venv
 . rna_clique_venv/bin/activate
 git clone -b "$branch" --recurse-submodules https://github.com/actapia/rna_clique
